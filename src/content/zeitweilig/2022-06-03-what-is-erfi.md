@@ -3,7 +3,7 @@ title: The Study of Erfinism
 slug: what-is-erfi
 pubDate: 2022-06-03T06:06:06.000Z
 updatedDate: 2023-09-16T15:08:49.000Z
-tags: Zeitweilig
+tags: [ 'zeitweilig' ]
 description: The discipline of Erfinism is a relatively young field of studies, first established in 1994 in Singapore. Even after 28 years since its foundation, there are no known experts in the field as of yet due to the sheer complexity of its nature.
 ---
 

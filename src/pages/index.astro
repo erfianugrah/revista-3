@@ -1,7 +1,12 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-const { pageTitle } = Astro.props;;
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Greeting from "../components/Greeting.jsx";
+const { pageTitle } = Astro.props;
 ---
+
 <BaseLayout pageTitle={pageTitle}>
-  <h2>Life in review. A recollection of things experienced, and things felt.</h2>
+  <h2>
+    Life in review. A recollection of things experienced, and things felt.
+  </h2>
+  <Greeting client:load messages={["Hej", "Hallo", "Hola", "Habari"]} />
 </BaseLayout>
