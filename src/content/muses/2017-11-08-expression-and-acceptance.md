@@ -1,0 +1,51 @@
+---
+title: EXPRESSION AND ACCEPTANCE
+slug: expression-and-acceptance
+pubDate: 2017-11-08T19:44:37.000Z
+updatedDate: 2019-09-15T10:45:54.000Z
+tags: Muses
+---
+
+The need for balance is of utmost importance.
+
+> Emotion, clouds it. Objectivity, detaches you from it. Experience, from reflection. Connection, from empathy. Empathy, from conscious effort to understand. Understanding, requires thought, patience and time.
+
+Now that the pretentious part is done with, we can begin. (*they say writing is therapeutic, so here I am trying to keep my sanity for a little while longer*)
+
+Let's talk.
+
+Since this is a photography website or my photography portfolio or what have you. We'll talk about how I express myself through my images.
+
+(*if you care that is, continue to read*).
+
+You'll see that the black and white ones are dark. I mean, yes, it's black and white. But it's dark. Like this one for example:
+
+And for colour, I tend to go for pastel or muted in the tones. Like these examples (the middle one being my favourite for both obvious and less obvious reasons):
+
+There is a certain kind of balance required I feel. And what I think doesn't really matter. See, it's okay to be objective. And for the most part, it is desirable. What I have found best is to follow your gut or instinct or that little voice in your head. Okay, maybe not that little voice in your head.
+
+In addition to that, as the person taking the photo, or the person writing, or experiencing a certain situation. This idiom comes to mind, "*(right) under someone's (very) nose*". The closer we are to something, it can be an objective even. The less we see. Myopic is a good analogy for it. So we have to take a step back right?
+
+> Now this is the hard part. 
+
+I have made countless mistakes, most I can recover from. And some, I couldn't. And some, I just don't know. Those "*some mistakes" *are unfortunately really big ones, which they usually are. The kind that sticks with you for life, in good ways and bad, shapes you into a different kind of being or specifically person (*I'm just being species neutral here).*
+
+> Okay wait, what's the hard part? 
+
+Ops, got lost in my thoughts there. The hard part is actually doing it. Sounds obvious right? And half of it is actually being aware enough to catch yourself before it's too late. 
+
+> How do we make it easier? 
+
+Having good friends. Now, this is subjective. But in my opinion, friends should be people who can take a step back from whatever biases (*I mean there will always be a bias*), and judge what you did. They know you well enough and aren't afraid of saying harsh things to you. I know that friends should always get your back right? Well, not always. Friends should always tell you if you're doing something wrong, or stupid and especially not leave you to your own devices when your gut can't be trusted.
+
+It's the same reason why even Magnum photographers have editors to pick images for them. They are too close to it. It's also another reason why I tend to develop film late, or sit on it for a long period of time. (*although I should be better with developing it earlier*) I come to it with no memory or much memory of what has transpired during that shot. You can't really do that with life though, with relationships for example.
+
+Which is why you need to have that support structure. Everyone does. Even me. There are good ones and bad ones. If you're of sane mind at this time, there's no better time than now to think about it. Constant reflection is key to self-improvement. Even if you fail again. Even if you repeat again. Reflect always.
+
+If you don't have that support structure. Then, there's really not much *you alone* can do about it. You can try to rationalise your way out of it. Or distract yourself. But those are band-aid solutions. It has to go deeper. And few can do that alone. Try seek help. Ask for opinions. Then, just ride it out I suppose. I can't really offer any insight here. To each his own. Or her own.
+
+Which brings us back to expression. In other words, the colour of communication. If you got that part down right, most of your problems are gone. 
+
+The rest is really up to the interpretation of the recipient. And then, you just have to accept it. 
+
+> P.S: No more image posts on the site for now I think. But we'll see soon enough. Or not.

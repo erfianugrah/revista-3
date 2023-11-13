@@ -1,0 +1,25 @@
+---
+title: THE SEVENTH
+slug: the-seventh
+pubDate: 2018-08-01T14:55:23.000Z
+updatedDate: 2019-09-15T10:17:53.000Z
+tags: Muses
+---
+
+Iteration or evolution.
+
+I find myself thinking about whether humans are capable of influencing change in themselves. Do we change as people or do the actions themselves change? Would the actions represent us as a individuals capable of conscious thought and effort, or is it separate? Perhaps one way to look at it is the perennial conversation about separating who the artist is as a person and the art that is created. Action and person is separated. In a way.
+
+Why I said whether I have iterated upon myself or whether I have evolved pertains to this. Evolution means that I am entirely different being. Whereas iteration means that I have created a new shell around this core being that is myself. I have dictated some changes towards the actions or reactions that I do on a daily basis. Perhaps, a lot of the things that I do has changed, this includes the kind of art that I indulge in and occasionally create but to say that I have changed might be an egregious error on my part.
+
+I have talked about how we exist within a spectrum of being and this adds on to that idea that we are never really changing but just switching between the multitude of selves, just multifaceted people with evolving actions and habits that we exert upon the world. The intentions, the thought process, the process in itself might not be any different. That is not to say evolution is not possible but it is highly unusual, as far as I can tell.
+
+Change does not just happen, and change is uncomfortable. It takes time. Which is why educating children about ideas and concepts would be a lot easier than say, an adult. But at the same time, it is not about the age (it is the common denominator) but it is about the accumulation of things "I know".
+
+Leading this back, I never liked talking about specifics unless it pertains to my photography (well, not going to start now either). Things are moving along and "evolving" as it moves along. As it is highly dependent on the subjects that I choose to shoot with, the process and outcomes become disparate. Which is both intended and at the same time posing a problem, a rather big one, with coherence and consistency.
+
+Since I intend to create a zine, it is dawning upon me that it might not just be one. There is a consistent theme throughout but at the same time the unique quirks to each might just not make it possible to make one (with some semblance of consistency or a theme). Once I start churning out the images and laying them out then I should be able to see how I can arrange them. Sequencing might be the trickiest part yet.
+
+There are some months left to consolidate before the end of the project, and I would have to do that soon. There are a few more subjects to be shot however I do not know if I should get more or not. It depends entirely on how things pan out in these coming weeks.
+
+In the words of the *great *Josh Homme, "I can go with the flow."

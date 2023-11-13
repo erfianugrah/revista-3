@@ -1,0 +1,21 @@
+---
+title: SINGULARITY
+slug: singularity
+pubDate: 2017-11-21T11:23:18.000Z
+updatedDate: 2019-09-15T10:43:56.000Z
+tags: Muses
+---
+
+I started this post but totally forgot about it. Which was four days ago. Better late than never right?
+
+Let's begin.
+
+No, I'm not talking about black holes. But it is a metaphor. it is about focusing too much on one thing. Being a bit too myopic that you lose sight of everything else including yourself. In some occasions, it can be desirable. Like being in the zone when playing a sport competitively. Or just generally trying to drown out undesirable thoughts, and undesirable people.
+
+This is a thing that I have work on, for myself, with regards to academia and photography. Being that I should focus more. And get rid of the undesirable distractions. But at the same time, trying not to lose sight of things that do actually matter. Balance right?
+
+A little symmetry to drive the point.
+
+And to end off, if you're too myopic when taking photos on the streets, you'll miss out on everything else. However, if the point was to focus on that one thing, then the pay off from the quality of the images you get from focusing should overcome the lost potential of other great photos that could have been taken.
+
+But that's just it, *what ifs*.

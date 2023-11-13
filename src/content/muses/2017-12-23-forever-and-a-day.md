@@ -1,0 +1,27 @@
+---
+title: FOREVER AND A DAY
+slug: forever-and-a-day
+pubDate: 2017-12-23T17:07:39.000Z
+updatedDate: 2019-09-15T10:42:01.000Z
+tags: Muses
+---
+
+> The number 23 seems to a recurring theme throughout my life. I'm not into this mumbo-jumbo stuff but it is interesting nonetheless. For this year it seems to be more a bad omen than anything else. Well, besides my birthday which is in a month's time. And within a week, I'll be off to the Nordics (*I still haven't packed or prepared anything, tomorrow perhaps*).
+
+What's this about? Well, everything and nothing. Just figured I should write something today and see where my mind takes me. And I apologise for the recent posts, they haven't been about photography per se. But you know, my internal processes and my environment does affect it, so in a way, I am. It's a bit of a stretch but hey, it's my website. I think I get to do almost anything I want.
+
+*In perpetuum et unum diem *is where the title of this post came from. It might sound familiar, some romance films have it as their title. And it makes sense, it talks about undying devotion, well, until you're actually dead. It's a romance film, so having a romantic title fits the bill, romantic gestures. Idealism. But, it can be for yourself too. When you take away everything from a person, I believe what's left is the person's belief (*hah pun*). His/her (*I don't actually have to do this, in English, a general he/his/man is gender neutral, if I'm not mistaken*, *but you don't want SJWs coming in here*) principles. Or his/her word.
+
+Oftentimes, we tend to seek extrinsic sources of motivation, something to devote ourselves to, something to give us purpose. But maybe, it should be inward instead. Don't get me wrong. Having to live for something greater than yourself is, well, amazing. But not everyone can find that. I thought I did. Maybe, I still do. But yeah, now I don't know. Hence, today we talk about intrinsic motivation, devotion, belief ladida.
+
+Why does it have to be internal? It's hard, it's vague, it's slow. "*Find your inner strength*", for example, is a very vague expression. What do you even look for? Yet, those age old masters of wisdom expound this till their breath went stale.
+
+The best analogy I can come with up with is the base load.
+
+In electrical utility companies, they determine demand of electricity through the base load, intermediate, and peak load. Base load is something they absolutely have to be able to produce electricity at. And this is the argument against clean energy for example, since it's volatile. That's why battery technology is so important for the development of clean energy. But I digress.
+
+Internal motivations for example, is to target the base load. You can always rely on it. Because you can always rely on yourself. Unless you're mentally unstable or paraplegic. Or bipolar. But you get the point. Extrinsic motivations, are to target the peak loads, sudden bursts of energy that you can use to target those times whereby demand is spiking. Things like discipline and your principle are things that should never be able to be eroded away or changed willy-nilly. They are stable.
+
+So, why not devote yourself to yourself. To be a better version of yourself, whatever that means to you.
+
+Forever and a day.

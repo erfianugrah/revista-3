@@ -1,0 +1,219 @@
+---
+title: The Study of Erfinism
+slug: what-is-erfi
+pubDate: 2022-06-03T06:06:06.000Z
+updatedDate: 2023-09-16T15:08:49.000Z
+tags: Zeitweilig
+description: The discipline of Erfinism is a relatively young field of studies, first established in 1994 in Singapore. Even after 28 years since its foundation, there are no known experts in the field as of yet due to the sheer complexity of its nature.
+---
+
+## Exposé for a PhD thesis
+
+**Working title: What is Erfi?**
+
+Field research conducted by Lena
+
+## **Preface**
+
+The discipline of Erfinism1 is a relatively young field of studies, first established in 1994 in Singapore. Even after 28 years since its foundation, there are no known experts in the field as of yet due to the sheer complexity of its nature.
+
+The author of this exposé would like to establish herself as a respected scholar of Erfinism by attempting to narrow down on possible answers to the central question of "What is Erfi?". For this, the author conducted both personal field research as well as close monitoring of various test subjects that were brought into contact with the Erfi.
+
+The completed PhD dissertation shall include a list of common linguistic Erfinisms and a “Robo Manual” with the most important guidelines to handle the Erfi. While aiming for an eradication of "the Erfi effect"2 would be nothing but delusional, this research project might provide helpful resources in terms of lowering the risk of lasting psychological damage for people trying to get into closer contact with the Erfi.
+
+The author is well aware of the fact that a dedication to the study of Erfinism is a never-ending work in progress and therefore pledges to forever preserve the mindset of a padawan – a padawan hoping for a PhD title.
+
+1*Erfinism can refer to both the overall study of the Erfi – hereby centered around the driving question of “What is Erfi?” – as well as the Erfi’s linguistic peculiarities.*
+
+2*Definition to be found in the following chapter.*
+
+---
+
+*Disclaimer: Not in line with a traditional exposé structure, the following paragraphs provide a brief outline of the possible contents of a dissertation in Erfinism.*
+
+## Research Set-Up
+
+Over the past 1.5 years of field study, numerous test subjects got into touch with the Erfi. The common denominator between these guinea pigs has been their reaction towards this intense experience.
+
+While the Erfi is equipped with high levels of charisma, it does not follow social norms in terms of conversation, but instead opts for a technique dubbed as "going stabby on someone". This tactic consists of:
+
+ 1. Wooing the test subject (optional step) 
+
+2. Aiming for weak spots with direct conversational stabs in an attempt to uncover inconsistencies, provoke a reaction and/or get past the superficial and move on to deeper levels of connection.3
+
+In the vast majority of cases, a first encounter with the Erfi therefore proves to be of intimidating and/or challenging nature and the duration of the experiment largely depends on the ability of the subjects to deal with repeated stabs in a non-paggro manner. While many guinea pigs find themselves to be wooed by the intense levels of attention and charisma bestowed upon them (described as 'feeling truly *seen*') and therefore get attracted by the study of Erfinism (and to its professor), most end up dropping the challenge within weeks or mere days.4
+
+In academic circles this phenomenon is famously dubbed "the Erfi effect", a serious condition that can send the people affected by it into a deep state of psychological distress. Symptoms are not limited to but often include: a steep rise in passive-aggressive behavior, denial of facts and stress-induced escapism. In addition to this, majority of the victims show PTSD symptoms when presented pictures of highspeed trains. 
+
+While nearly all test subjects have been lost to "the Erfi effect" at the point of the submission of this exposé, they still provided insights into the dynamics of the Erfi in interpersonal relations and thereby made a valuable contribution to science.
+
+3*Sometimes it's also just done for funzies.*
+
+4*The sensation of 'feeling truly seen' is only charming as long as the ugly parts are politely overlooked - but the Erfi sees it all.*
+
+## Definitions
+
+The Erfi is a complex (human) being and as it is so often the case with matters that are difficult to grasp, there is the tendency to try to make sense of it by putting pre-existing simplifying labels on it.
+
+A selection of these labels shall be briefly outlined in the following paragraphs.
+
+### Not Quite Human
+
+One of the Erfi's characteristic traits is an immensely high level of rationality, which can lead to the assumption that the Erfi can't be quite human, but must be a very well-programmed robot instead. An assumption that gets supported by the Erfi's frequent use of robo sounds ("beep boop") and robotic-sounding statements like these:
+
+> "I think I should be mostly functional by tomorrow."
+
+> *- Erfi Anugrah, Feburary 17, 2021. In recovery from LASIK-surgery.*
+
+The lifestyle of the Erfi is characterized by an inhuman seeming high level of efficiency and routine; spontaneity is carefully planned into the schedule. Activities get tracked and monitored for improvement. This is not limited to, but includes: working out (incl. heart rate), daily water intake, steps walked in a day. Health also gets monitored closely with frequent check-ups planned in to prevent possible future defects to the Erfi system. 
+
+The living area of the Erfi can be described as "the robo cave", an indoor space measuring approx. 9m2, equipped with tech gear, cats and limited editions of all sorts. Household chores get partly taken care of by a vacuum robot named robo waifu, further feeding into the theory that the Erfi is in fact not human but a superior work of AI instead, enslaving lower-caste robots.
+
+The robo cave functions as a charging station to the Erfi. It is also a workshop for all sorts of tech-tinkering which is mostly targeted towards customization and optimization of various processes in the life of the Erfi (repair of robo waifu / film scanner, smart home installation, router set-up, etc.). Although the Garmin pulse tracker of the Erfi shows spikes when presented with athletic bodies in well-fitting crop tops, the Erfi lights up most when presented with high-quality tech-gear, especially routers, further feeding into the robo theory.
+
+> “I’m like Daneel. More perfect than human. (Just short)” 
+
+> - Erfi Anugrah, March 22, 2021
+
+An argument that might contradict the robo definition is the added human touch in form of empathy, flirts5 and general charisma. The question of whether the Erfi is a human being equipped with an incredibly stoic mindset or whether we are in fact dealing with superior AI hasn't been solved yet. 
+
+5*As human-seeming the flirty comments of the Erfi are, they tend to come up a tad too smooth and quickly, sowing the suspicion of a flirt-bot running its program.*
+
+### Stoic Opa
+
+Another label that is frequently put on the Erfi is that of a grandpa. 
+
+At first glance, this might be fitting since the Erfi follows a sleeping schedule similar to that of an 80-year old: Going to bed at 9-10pm and getting up at 4.30 - 5am. Another trait that plays into the grandpa theory is the fact that the Erfi frequently scolds people and drops wisdom on them, either in the form of stoic-themed quotes (preferred sources: Dune, The Count of Monte Cristo) or personal musings, ending up in Erfi train-styled lectures. The Erfi does not hesitate to do this even when opposite people much older than himself since age alone is no indicator of maturity. Due to the "get shit done"-mentality of the Erfi, he gives off the impression of having lived more than one life already.
+
+While the Opa-label therefore seems to be a fitting one, it wouldn't include other stereotypical grandpa behavior such as feeding ducks in the park or playing bingo. If the Erfi were a grandpa, Logan from the HBO series Succession would be the most fitting comparison: An extremely powerful grandpa that has built up his kingdom from scratch, challenging his possible successors in the most machiavellian ways (and looking on in disdain as they fail him all), putting his principles over human relationships.
+
+### Stranger than Fiction
+
+As unconventional of a person the Erfi may seem, there are some fictional characters that show similarities.
+
+> "Rich, smart, fit, funny, good looking. I'm just Batman aren't I. Sigh." 
+
+> - Erfi Anugrah, December 9, 2021
+
+At first glance, this label seems like a fitting one since both Batman and the Erfi fall into the category of Enneagram Type 1 personalities: perfectionists challenging the status quo, consistently striving towards an ideal with anger as the subconscious fuel that motivates them. Both Batman and the Erfi place immensely high standards on themselves. In the case of Batman, it goes into the direction of dedicating his life to keep Gotham safe, in the case of the Erfi those standards apply to self-optimization in all aspects of life. To some degree, this also includes the people the Erfi cares about, which can be perceived as overly critical and thereby result in a case of "the Erfi effect". To soften the impact of the crash with the approaching Erfi train, it is recommended to not see critique as an insult but rather as a form of care.
+
+Despite the similarities in their personalities, there's a major difference between the two of them: While Batman’s empire is built upon the legacy of his parents – both financially and in regards to the trauma associated with their deaths – the Erfi made it on its own. You could go so far as to say that the Erfi not only harbors a liking for various DIY-projects, but that the whole path of the Erfi is a DIY project of its own. 
+
+> "discipline baby."
+
+> - Erfi Anugrah, June 8, 2021
+
+Therefore, a comparison to Edmond Dantes might be a more fitting one: Growing up in a restricting environment which gave fuel to the Erfis levels of discipline, driving him towards success, no matter the task. 
+
+### ...So What IS Erfi?
+
+The Erfi is a creature not easily described by the limiting quality of pre-existing labels. Even in the face of the many years filled with the study of Erfinism that are yet to come, it is unlikely that scholars will ever find a truly satisfying answer to the question of "What is Erfi?". 
+
+Perhaps the image of a matroshka puppet would be most fitting: A never-ending series of boxes within boxes, only unlocked by sincere curiousity. 
+
+> "The closer we are to something (...) The less we see. Myopic is a good analogy for it. So we have to take a step back right?" 
+
+> - Erfi Anugrah, Expression and Acceptance
+
+There is always a certain level of uncertainty in regards to where the author - or anyone really - stands with the Erfi. It is a common misconception of scholars of Erfinism to assume they're being in too close of a distance to the Erfi already, which prompts them to take a few steps back to get the full view in. Lost in their ignorance, they might never notice they've been miles apart this whole time.
+
+... 
+
+Since this exposé does not quite follow the structure of a common exposé and since the author runs danger of digressing too much by now, let's just go with another quote by the one and only: 
+
+> "Anyways, I digress. But what is there to digress from anyway, and who reads this shit?" 
+
+> - Erfi Anugrah, Printing
+
+## Appendix
+
+### *Robo Manual (draft)*
+
+- The robo is equipped with methods to detect all types of inconsistencies and bs. Don’t try to find a loophole. There is none. Never forget: This is some superior AI you're dealing with here.
+- There's no brake pedal to the Erfi train. There is no safe zone: The Erfi train lays its own tracks as it approaches.
+- Beware: High amounts of aggressiveness. Practice the skill of rowing back to seek for the source of an argument.
+- Match its weirdness to see the robo beam.
+- Frequent recharging time in the robo cave needed.
+- Do NOT touch anything in the robo cave.
+- Appropriate robo fuel (selection): Five Guys burgers, protein powder, good dosa, Lantchips, Lidl-Berliner, pizza, kanelbullar.
+- No additional supplies of caffeinated drinks. The system of the robo is running at high speeds on its own, caffeine should be dosed carefully since it can send its system into overdrive. Warning signs: hectic robo sounds in high frequency ("bbrrrreeeeeeehhhh brrrboopbeepboopbeep")
+- Don’t ask to ask – but ask! Curiousity switches the robo on.
+
+### *Linguistic Peculiarities*
+
+Extensive field study unveiled a myriad of linguistic peculiarities characteristic of the Erfi, some of which are so distinct they can fall under the category of so-called “Erfinisms” (see list of selected quotes)
+
+**Category**
+
+**Example**
+
+Robo sounds
+
+Beep boop
+
+Brrrr beep 
+
+brbrbrbbr
+
+Skepticism / Probing for inconsistencies
+
+“Is it?”
+
+“sus”
+
+“Trust but verify”
+
+Slang
+
+“This meshuggah album *fucks*”
+
+"it's in my nature to trust and verify. *Yeet*"
+
+The ability to turn anything into
+  a self-compliment (which can’t be negated since it’s true)
+
+“i like your hands - i have nice hands. So i know how nice hands
+  should be."
+
+"I'm more impressed at myself."
+
+ 
+
+(for further examples refer to the list of Erfinisms)
+
+Sneking
+
+“buy buy”
+
+“heheheh”
+
+ 
+
+(accompanied by links to and/or
+  videos about various products)
+
+### *Erfinisms (selected quotes)*
+
+"How am I single? It's by choice." (March 30, 2021)
+
+"I robo for everyone. But where’s my thanks. No oil." (September 23, 2021)
+
+"Yes I would see you die as long as I'm right. It justifies everything." (November 30, 2021)
+
+"I should have a civil partnership. With myself." (December 9, 2021)
+
+"I flirt and do stuff at the same time. Efficient." (December 11, 2021)
+
+"Never use absolute terms. I can though." (April 4, 2022)
+
+“End of the day, it’s hard to live with God.” (April 24, 2022)
+
+“I’m a catalyst. Of Evil. Neyehehhe” (April 24, 2022)
+
+“I don’t care about anyone else but I need to be beyond doubt (...) it’s never me, always you” (May 6, 2022)
+
+"God looking for servants" (May 13, 2022)
+
+"She needs a boat to cross the river. And I'll shoot it down. With incendiary arrows." (May 20, 2022)
+
+"I think I give less of a fuck now. And I already give so little" (May 30, 2022)

@@ -1,0 +1,33 @@
+---
+title: THE FOURTH
+slug: the-fourth
+pubDate: 2018-05-01T11:21:13.000Z
+updatedDate: 2019-09-15T10:22:37.000Z
+tags: Muses
+---
+
+Not in reference to a particular day in May but if you have been keeping up with reading the monthlies, you would know that this is the fourth one in the series but in actuality it is the fifth because I broke the chain earlier this month.
+
+No matter.
+
+As to what has transpired over the past month would not be as different as you would think it should be. At this point, I would say that I have reached equilibrium during the time that I have spent here. Consequently, the disquiet, and the need for isolation becomes more apparent.
+
+There are some changes, not to say the least, regarding my emotional and mental state. However physically I have, for the better at least. School for the most part remains as unchallenging as it always has been. More and more I feel that it is failing to serve its purpose, especially business schools. We have way too many of those, and they should be bulldozed.
+
+It has reached a point whereby you would even say it has become dull. Although, I find it interesting that my usual life motto being that discipline is key to life, and that having too much freedom has the opposite effect of trapping you within your many fleeting desires, drawing parallels here. School is exactly that. When everything is a choice for the sake of being a choice. Added to the fact that level of difficulty really is something to brush off. And most importantly, there is no consequence.
+
+Sure, failure should be accepted but to a point. When there is no consequence to failing, and the societal acceptance of which leads me to believe that it creates uninspiring, ill-disciplined, weak-willed, social-confirming *individuals*. Strong words. And I can eat them later on (comment if you want). At the same time, it really does depends on the individual himself doesn't it? Still, a lot can be said about the environment required to nurture said individual.
+
+During the budding years, people learn laterally, parents have less of an impact on their children than you might think, especially in terms of how they learn. The question of whether it is required to change the status quo or not depends on whether the society wants to facilitate that change which depends if it is necessary to their eyes. Need meets want.
+
+I digress.
+
+Photography wise, still nothing for now. But I did receive my SX-70, and have taken a few shots on it, two failures so far but that is just how it is with analogue. The rest turned out pretty good. Definitely a conversation starter, perhaps also a decent-ish parting gift for having their portraits taken. Possibilities are endless.
+
+Well, I guess I have taken more on my phone than anything else I suppose (*the best camera is the one you have with you at that time that you need to take a photo)*. Which leads me to a point about getting a really good compact camera. Now you see a pattern here. As much as I would like to bring my Leica around, the place is not dynamic enough. It is not alive as I would like it to be. Everything is same-y. Then again, if I constantly have to justify my actions (*don't get me wrong, everyone should)*, nothing gets done.
+
+So a little *"folj med strömmen"* should be good.
+
+Then again, that is probably me with G-A-S.
+
+With a serious case of ennui*.*

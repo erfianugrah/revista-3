@@ -1,0 +1,21 @@
+---
+title: VIDEO LOGS
+slug: video-logs
+pubDate: 2017-12-17T15:05:45.000Z
+updatedDate: 2019-09-15T10:39:05.000Z
+tags: Muses
+---
+
+For those who are privy, you know that I have posted some video blogs or video logs or vlogs on Instagram. Not sure why I wanted to do this but I saw a video (*as always*) and decided to myself:
+
+> "You know what, I'll start making some as well."
+
+So, fast forward to today, which isn't that long ago to be honest, I have posted a few videos already. Two Five just went up today (*well just now*) as a part of a longer one. I realised it's near to impossible to sum up a three hour trip into just one 15 second video. So, breaking it up it is then.
+
+But it quickly dawned upon me that, sure, it has been said to be too much work for 15 second videos, no one is going to see again in 24 hours (*Instagram updated it with highlights, so it's no longer that much of a problem, rather it gives more options to pick and choose what you want to post indefinitely*), it didn't really hit me till I started doing it.
+
+Boy. It really is, a lot of work.
+
+But it's fun. And it's challenging. I'm learning as I go along. This is indeed a niche area to work on. But since I'm already on the Instagram bandwagon. Why the hell not? Diversifying risk as they say, with some adaptability of course.
+
+Well, um, enjoy?

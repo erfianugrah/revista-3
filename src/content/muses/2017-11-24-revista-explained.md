@@ -1,0 +1,13 @@
+---
+title: "REVISTA: EXPLAINED"
+slug: revista-explained
+pubDate: 2017-11-24T21:07:25.000Z
+updatedDate: 2019-09-15T10:42:52.000Z
+tags: Muses
+---
+
+The title of my website means *journal* in Spanish. But if you look at it in English, vista means pleasing view. And the "re" means looking back, or repeating. So all in all, should be pretty self explanatory.
+
+It is a collection of *vistas* that have happened in the past, and here we are looking back at them in retrospection. A collection of experiences that I have had, so in that way, it is a journal of my travels or of how I see things in my day to day. 
+
+Or rather what I deem as *pleasing* to my eye, or interesting to say the least.

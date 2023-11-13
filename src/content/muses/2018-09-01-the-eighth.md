@@ -1,0 +1,23 @@
+---
+title: THE EIGHTH
+slug: the-eighth
+pubDate: 2018-09-01T13:43:48.000Z
+updatedDate: 2019-09-15T10:16:06.000Z
+tags: Muses
+---
+
+Scarcity refers to the gap between finite resources and unlimited wants. And as an inherently introverted person, thinking about the things that I have to do socially requires (a lot of) thought and planning. Things that are good to do, or nice to have have to be balanced against the finite resource that is time, money and most importantly energy.
+
+I am definitely trying to move away from compartmentalising my life with regards to time, and instead to energy. With all that is said and done, I am running on steam, and constantly in state of semi-drunkenness. Which is funny since I am a teetotaler. I guess we all have our vices one way or another.
+
+I have got to thinking about my plans, and about how they are going according to what is planned but at the same time, the journey is not what I had imagined. The end would be, definitely, but the path towards that end is another thing entirely. Like in an open-ended, open world RPG - same goals, but different paths to approach it. Well, RPG worlds are created to be a parallel to our own anyway. Something different but believable.
+
+I digress.
+
+It has become a meme of itself now that I ramble in the beginning before actually talking about the photographic process.
+
+So, I have started scanning the B/W film. And on the last B/W roll (at the time of writing). But I have 10 other colour film rolls to go. Bought a bunch of gear as well. At the very least, there is a workflow going on. I may shown some to some people, but for the most part the photos are unseen by anyone but me. And it will take sometime before you can see them (end-of-year most likely).
+
+Once the scanning and editing is done. The sequencing and zine design process would begin. Then, after that calibrating the colours for prints. It is going to be quite the undertaking. But exciting.
+
+I will only get better as I keep doing more of these.

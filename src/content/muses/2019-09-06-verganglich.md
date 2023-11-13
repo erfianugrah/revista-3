@@ -1,0 +1,21 @@
+---
+title: VERGÄNGLICH
+slug: verganglich
+pubDate: 2019-09-06T16:06:15.000Z
+updatedDate: 2019-10-12T17:36:43.000Z
+tags: Muses
+---
+
+> I think I miss something, but I'm not sure what. -- Thom Yorke, Dawn Chorus
+
+I have often talked about the illusion of control, and for someone obsessed with the need for control through heavy expenses into daily routines and rituals, in efforts to erect a wall against the inevitability of entropy - the impact of which definitely has put me almost into a kind of catatonia. Grasping, floating around like flotsam and jetsam of a wrecked ship stripped layer by layer.
+
+It has afforded me a rather costly perspective, I have yet to process all of it, and will probably take quite a bit of time to ruminate each moment that has so easily slipped my hands. The aspect of how unprepared I was, a kind of blitzkrieg of situations that left me in a state of discombobulation. 
+
+What I do know is that it was (or still is) real, and that in many ways have veered me away from the path that I have set myself on, in terms of the mentality and physicality. I have thought about how easy for humans to forget and have been in that state sporadically, but such was the fury of which my mind has chosen to perceive that I am not immune as much as I like to think that I am. 
+
+As intensely negative as all that sounds, it is quite the opposite. Such an event would not have occurred would it not for the adaptive changes that I have made over the years to the core self. That is not to say that the entirety of which had been a markedly positive experience. There are aspects of bitterness and regret - only so due to the fleeting nature of these moments in time. The desperation, and I would say onslaught of emotions against the usual stability of my compartmentalised mind. 
+
+I do not know if this would pass, it seems to be something with more permanence - a state of a new normal would have to be attained in the foreseeable future. I am not sure hope should be in the equation. But I suppose as I have alluded to in the beginning, it is just the perceived sense of control. 
+
+Erraticism is not all bad.

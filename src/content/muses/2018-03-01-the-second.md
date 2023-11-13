@@ -1,0 +1,25 @@
+---
+title: THE SECOND
+slug: the-second
+pubDate: 2018-03-01T05:23:43.000Z
+updatedDate: 2019-09-15T10:31:30.000Z
+tags: Muses
+---
+
+After a bit of a sporadic first month, things are starting to stabilise. A lot of the time there is that feeling of jadedness within myself, with everything that I was experiencing. Social interactions became less and less interesting; onset of boredom, desolation and everything in between, hidden behind a facade of smiles and cheery voices.
+
+In spite of which, there are some bright spots. I have talked to the photography-in-charge of the county museum, and have seen the darkroom. It has an old school layout as pointed out by my photography teacher. It has a bunch (*a lot*) of photographic paper, some chemicals for printing but lacking on the film development front. Of which, I still have not worked out the logistics. Besides that, I was offered to teach courses there. But thinking of it now, I cannot really teach without the necessary materials to do so. So, there is that. Also, a small exhibition for myself (*or the class?*), which is amazing (*either way*).
+
+More people have accepted to be my subjects for the project. I have also gotten a new 50mm lens (*Carl Zeiss Planar*) for it. Has some dust specks within the lens elements but it should not be too much of a problem, I hope. Some are really interested in the project, and they have put quite a bit of thought into how they want themselves to be presented, which is again, amazing. Although, the conception of the idea of the project itself evolved over time. Which is fine, and is something to be seen as a good thing I feel. To a point.
+
+I went to Poland; Kraków and Warsaw. Met an old friend. Did not want to return. It was not something I can really tell tales with. But it is something significant nonetheless. The little things, the indescribables. Took portraits of her, quite a bit more than the usual but that also goes without saying, as to why I did.
+
+At this juncture, most of the school term is done, and what is left are the assignments. The assignments are not challenging by any means. And at this point, I feel that I did not really learn anything new. Ended up being a didactic motherfucker instead. I am not getting anything useful yet besides the things that I have already talked about in a positive light.
+
+What do I really take away from this month? I suppose it is more of the internal processes we go through. It is always good to think about the things that you are doing, and re-think them again and again. Soon, the decisions you have made before start to make less sense. The motivations change. You perhaps second guess yourself. Make more mistakes. Feelings dissipate. Confusion. Coldness.
+
+It is fine. All is well.
+
+We all have to go through our own versions of a thought process. It is about the journey, not the end. At least, as an academic exercise. We are this stage whereby we are still in a protective bubble. So, we can do that, and we should because soon it would not be the case any longer. But like with most things, this is something you have to go through yourself. The same idea about how you have the key, and all I can do is to show you the door.
+
+You are the one who has to go through it.
