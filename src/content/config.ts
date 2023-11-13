@@ -7,8 +7,8 @@ const muses = defineCollection({
   schema: z.object({
     title: z.string(),
     tags: z.array(z.string()),
-    //author: z.string(),
-    //description: z.string(),
+    author: z.string(),
+    description: z.string(),
     // image: z.object({
     //   src: z.string(),
     //   alt: z.string(),
@@ -23,8 +23,8 @@ const short_form = defineCollection({
   schema: z.object({
     title: z.string(),
     tags: z.array(z.string()),
-    //author: z.string(),
-    //description: z.string(),
+    author: z.string(),
+    description: z.string(),
     // image: z.object({
     //   src: z.string(),
     //   alt: z.string(),
@@ -39,8 +39,8 @@ const long_form = defineCollection({
   schema: z.object({
     title: z.string(),
     tags: z.array(z.string()),
-    //author: z.string(),
-    //description: z.string(),
+    author: z.string(),
+    description: z.string(),
     // image: z.object({
     //   src: z.string(),
     //   alt: z.string(),
@@ -55,8 +55,8 @@ const zeitweilig = defineCollection({
   schema: z.object({
     title: z.string(),
     tags: z.array(z.string()),
-    //author: z.string(),
-    //description: z.string(),
+    author: z.string(),
+    description: z.string(),
     // image: z.object({
     //   src: z.string(),
     //   alt: z.string(),

@@ -4,11 +4,13 @@ slug: marathon-man
 pubDate: 2017-12-04T17:00:43.000Z
 updatedDate: 2019-09-15T10:41:01.000Z
 tags: [ 'muses' ]
+author: Erfi Anugrah
+description: So yes, I ran a marathon yesterday. 
 ---
 
 Copyright claim on that title.
 
-So yes, I ran a marathon yesterday. 
+So yes, I ran a marathon yesterday.
 
 It still feels surreal that I actually have done it. There's that feeling euphoria of having completed it. But when all's settled. All of life's miseries came rushing back in spades. I did tear up at one point during the race. And my thoughts in the beginning of the race was filled by things *besides* the race. Not a good way to start. But, the first half was not too bad.
 

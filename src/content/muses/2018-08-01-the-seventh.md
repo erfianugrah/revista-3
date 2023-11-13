@@ -4,6 +4,8 @@ slug: the-seventh
 pubDate: 2018-08-01T14:55:23.000Z
 updatedDate: 2019-09-15T10:17:53.000Z
 tags: [ 'muses' ]
+author: Erfi Anugrah
+description: Iteration or evolution.
 ---
 
 Iteration or evolution.

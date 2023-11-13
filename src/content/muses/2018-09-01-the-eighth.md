@@ -4,6 +4,8 @@ slug: the-eighth
 pubDate: 2018-09-01T13:43:48.000Z
 updatedDate: 2019-09-15T10:16:06.000Z
 tags: [ 'muses' ]
+author: Erfi Anugrah
+description: Scarcity refers to the gap between finite resources and unlimited wants. And as an inherently introverted person, thinking about the things that I have to do socially requires (a lot of) thought and planning. Things that are good to do, or nice to have have to be balanced against the finite resource that is time, money and most importantly energy.
 ---
 
 Scarcity refers to the gap between finite resources and unlimited wants. And as an inherently introverted person, thinking about the things that I have to do socially requires (a lot of) thought and planning. Things that are good to do, or nice to have have to be balanced against the finite resource that is time, money and most importantly energy.

@@ -4,6 +4,8 @@ slug: obligatory
 pubDate: 2018-01-02T01:32:59.000Z
 updatedDate: 2019-09-15T10:35:38.000Z
 tags: [ 'muses' ]
+author: Erfi Anugrah
+description: As it goes, it's the new year, so we have to post something to reflect on the previous year, be it a change that one inspires to do or a reflection. But everyone does it. So, you decide not to do one. But then again, you give admission to the fact that people do. To not do one is reactionary due to the fact that you didn't do it because of others but even if you *didn't* think of that, and should you be asked, no one would believe it. But you don't really *care*, right?
 ---
 
 As it goes, it's the new year, so we have to post something to reflect on the previous year, be it a change that one inspires to do or a reflection. But everyone does it. So, you decide not to do one. But then again, you give admission to the fact that people do. To not do one is reactionary due to the fact that you didn't do it because of others but even if you *didn't* think of that, and should you be asked, no one would believe it. But you don't really *care*, right?

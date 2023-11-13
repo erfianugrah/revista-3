@@ -4,6 +4,8 @@ slug: forever-and-a-day
 pubDate: 2017-12-23T17:07:39.000Z
 updatedDate: 2019-09-15T10:42:01.000Z
 tags: [ 'muses' ]
+author: Erfi Anugrah
+description: What's this about? Well, everything and nothing. Just figured I should write something today and see where my mind takes me. And I apologise for the recent posts, they haven't been about photography per se. But you know, my internal processes and my environment does affect it, so in a way, I am. It's a bit of a stretch but hey, it's my website. I think I get to do almost anything I want.
 ---
 
 > The number 23 seems to a recurring theme throughout my life. I'm not into this mumbo-jumbo stuff but it is interesting nonetheless. For this year it seems to be more a bad omen than anything else. Well, besides my birthday which is in a month's time. And within a week, I'll be off to the Nordics (*I still haven't packed or prepared anything, tomorrow perhaps*).
