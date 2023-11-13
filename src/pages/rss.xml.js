@@ -1,5 +1,8 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
+import sanitizeHtml from 'sanitize-html';
+import MarkdownIt from 'markdown-it';
+const parser = new MarkdownIt();
 
 export async function GET(context) {
     const muses = await getCollection("muses");
@@ -7,6 +10,7 @@ export async function GET(context) {
     const long_form = await getCollection("long_form");
     const zeitweilig = await getCollection("zeitweilig");
     return rss({
+        stylesheet: '/rss/rss.xsl',
         title: 'Revista',
         description: 'Life in review. A recollection of things experienced, and things felt.',
         site: context.site,
@@ -15,6 +19,8 @@ export async function GET(context) {
             pubDate: post.data.pubDate,
             description: post.data.description,
             link: `/muses/${post.slug}/`,
+            content: sanitizeHtml(parser.render(post.body)),
+            ...post.data,
         })),
         // short_form.map((post) => ({
         //     title: post.data.title,
