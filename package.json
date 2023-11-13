@@ -12,6 +12,7 @@
   "dependencies": {
     "@astrojs/preact": "^3.0.1",
     "@astrojs/rss": "^3.0.0",
+    "@astrojs/sitemap": "^3.0.3",
     "astro": "^3.5.3",
     "dayjs": "^1.11.10",
     "markdown-it": "^13.0.2",
