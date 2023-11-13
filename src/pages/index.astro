@@ -1,24 +1,7 @@
 ---
-import Navigation from "../components/Navigation.astro";
-import Footer from "../components/Footer.astro";
-import '../styles/global.css';
-const pageTitle = 'Revista';
+import BaseLayout from '../layouts/BaseLayout.astro';
+const { pageTitle } = Astro.props;;
 ---
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{pageTitle}</title>
-  </head>
-  <body>
-    <Navigation />
-    <h1>{pageTitle}</h1>
-    <h1>
-      Life in review. A recollection of things experienced, and things felt.
-    </h1>
-    <Footer />
-  </body>
-</html>
+<BaseLayout pageTitle={pageTitle}>
+  <h2>Life in review. A recollection of things experienced, and things felt.</h2>
+</BaseLayout>
