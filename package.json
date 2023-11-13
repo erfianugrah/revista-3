@@ -10,6 +10,8 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/markdoc": "^0.7.1",
+    "@astrojs/mdx": "^1.1.4",
     "@astrojs/preact": "^3.0.1",
     "@astrojs/rss": "^3.0.0",
     "@astrojs/sitemap": "^3.0.3",
