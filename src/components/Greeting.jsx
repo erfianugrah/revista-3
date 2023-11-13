@@ -8,8 +8,8 @@ export default function Greeting({messages}) {
 
   return (
     <div>
-      <h3>{greeting}</h3>
-      <button onClick={() => setGreeting(randomMessage())}>
+      <h3 class="greeting">{greeting}</h3>
+      <button class="button" onClick={() => setGreeting(randomMessage())}>
         New Ron Burgundy Quote
       </button>
     </div>

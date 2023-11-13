@@ -89,3 +89,7 @@ h1 {
   }
 
 }
+
+.greeting {
+  min-height: 150px;
+}
