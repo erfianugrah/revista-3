@@ -3,7 +3,7 @@ title: VERGÄNGLICH
 slug: verganglich
 pubDate: 2019-09-06T16:06:15.000Z
 updatedDate: 2019-10-12T17:36:43.000Z
-tags: Muses
+tags: [ 'muses' ]
 ---
 
 > I think I miss something, but I'm not sure what. -- Thom Yorke, Dawn Chorus

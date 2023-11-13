@@ -1,12 +1,17 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import "../styles/global.css";
+import {  getEntry } from 'astro:content';
+
+const entry = await getEntry('muses', 'the-beginning');
+const { Content } = await entry.render();
 ---
 
 <BaseLayout>
-  <h1>My Astro Learning Blog</h1>
-  <p>This is where I will post about my journey learning Astro.</p>
-  <ul>
-    <li><a href="../content/muses/2017-09-02-the-beginning.md">Post 1</a></li>
-  </ul>
+<h1>{entry.data.title}</h1>
+<p>Published on: {entry.data.pubDate}</p>
+<p>Updated on: {entry.data.updatedDate}</p>
+<Content />
 </BaseLayout>
+
+

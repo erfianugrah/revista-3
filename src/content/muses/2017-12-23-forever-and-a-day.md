@@ -3,7 +3,7 @@ title: FOREVER AND A DAY
 slug: forever-and-a-day
 pubDate: 2017-12-23T17:07:39.000Z
 updatedDate: 2019-09-15T10:42:01.000Z
-tags: Muses
+tags: [ 'muses' ]
 ---
 
 > The number 23 seems to a recurring theme throughout my life. I'm not into this mumbo-jumbo stuff but it is interesting nonetheless. For this year it seems to be more a bad omen than anything else. Well, besides my birthday which is in a month's time. And within a week, I'll be off to the Nordics (*I still haven't packed or prepared anything, tomorrow perhaps*).

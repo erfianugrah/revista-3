@@ -3,7 +3,7 @@ title: SINGULARITY
 slug: singularity
 pubDate: 2017-11-21T11:23:18.000Z
 updatedDate: 2019-09-15T10:43:56.000Z
-tags: Muses
+tags: [ 'muses' ]
 ---
 
 I started this post but totally forgot about it. Which was four days ago. Better late than never right?

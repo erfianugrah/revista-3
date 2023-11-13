@@ -3,7 +3,7 @@ title: Sisyphean
 slug: sisyphean
 pubDate: 2020-12-23T08:10:57.000Z
 updatedDate: 2022-03-17T10:37:55.000Z
-tags: Muses
+tags: [ 'muses' ]
 ---
 
 It started with an idea or rather an intention to create something but certain things never come to light. Or rather in our attempt to keep it in the shadows, it would still be inadvertently found. I guess if and when this does go out, that would probably be an ironic statement to start off with.

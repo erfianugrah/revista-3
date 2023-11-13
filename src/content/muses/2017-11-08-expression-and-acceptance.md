@@ -3,7 +3,7 @@ title: EXPRESSION AND ACCEPTANCE
 slug: expression-and-acceptance
 pubDate: 2017-11-08T19:44:37.000Z
 updatedDate: 2019-09-15T10:45:54.000Z
-tags: Muses
+tags: [ 'muses' ]
 ---
 
 The need for balance is of utmost importance.

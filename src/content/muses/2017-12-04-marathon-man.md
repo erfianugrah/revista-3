@@ -3,7 +3,7 @@ title: MARATHON MAN
 slug: marathon-man
 pubDate: 2017-12-04T17:00:43.000Z
 updatedDate: 2019-09-15T10:41:01.000Z
-tags: Muses
+tags: [ 'muses' ]
 ---
 
 Copyright claim on that title.

@@ -3,7 +3,7 @@ title: "REVISTA: EXPLAINED"
 slug: revista-explained
 pubDate: 2017-11-24T21:07:25.000Z
 updatedDate: 2019-09-15T10:42:52.000Z
-tags: Muses
+tags: [ 'muses' ]
 ---
 
 The title of my website means *journal* in Spanish. But if you look at it in English, vista means pleasing view. And the "re" means looking back, or repeating. So all in all, should be pretty self explanatory.

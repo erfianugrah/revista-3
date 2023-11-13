@@ -3,7 +3,7 @@ title: VIDEO LOGS
 slug: video-logs
 pubDate: 2017-12-17T15:05:45.000Z
 updatedDate: 2019-09-15T10:39:05.000Z
-tags: Muses
+tags: [ 'muses' ]
 ---
 
 For those who are privy, you know that I have posted some video blogs or video logs or vlogs on Instagram. Not sure why I wanted to do this but I saw a video (*as always*) and decided to myself:

@@ -3,7 +3,7 @@ title: Gleichgesinnte
 slug: gleichgesinnte
 pubDate: 2019-01-24T16:07:35.000Z
 updatedDate: 2019-09-15T10:01:28.000Z
-tags: Muses
+tags: [ 'muses' ]
 ---
 
 I have not written anything for close to four months now. I just ... fell off of it. I even stopped writing on my journal, if I had kept it up. the book would have been finished by now. It is one those things that I have always tried to remind myself about or chided myself when I did not live up to that standard that I had set for myself.

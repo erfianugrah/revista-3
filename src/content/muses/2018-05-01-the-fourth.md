@@ -3,7 +3,7 @@ title: THE FOURTH
 slug: the-fourth
 pubDate: 2018-05-01T11:21:13.000Z
 updatedDate: 2019-09-15T10:22:37.000Z
-tags: Muses
+tags: [ 'muses' ]
 ---
 
 Not in reference to a particular day in May but if you have been keeping up with reading the monthlies, you would know that this is the fourth one in the series but in actuality it is the fifth because I broke the chain earlier this month.

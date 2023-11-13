@@ -4,7 +4,7 @@ slug: a-little-colour
 pubDate: 2017-09-12T19:03:54.000Z
 updatedDate: 2019-09-15T10:51:22.000Z
 description: 
-tags: Muses
+tags: [ 'muses' ]
 ---
 
 As you may have deduced from the title. I have started scanning my colour negatives, and I must say that it is hard. Very hard. It's tedious work getting the colour right. Then again, this is new for me. So it is a learning process. I have not yet decided whether this scanner was a good purchase or not. But time will tell. Till then, hold tight. Changes are a comin'. 
