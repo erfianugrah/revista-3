@@ -40,9 +40,9 @@ While the Erfi is equipped with high levels of charisma, it does not follow soci
 
 1. Wooing the test subject (optional step)
 
-2. Aiming for weak spots with direct conversational stabs in an attempt to uncover inconsistencies, provoke a reaction and/or get past the superficial and move on to deeper levels of connection.3
+2. Aiming for weak spots with direct conversational stabs in an attempt to uncover inconsistencies, provoke a reaction and/or get past the superficial and move on to deeper levels of connection.<sup>3</sup>
 
-In the vast majority of cases, a first encounter with the Erfi therefore proves to be of intimidating and/or challenging nature and the duration of the experiment largely depends on the ability of the subjects to deal with repeated stabs in a non-paggro manner. While many guinea pigs find themselves to be wooed by the intense levels of attention and charisma bestowed upon them (described as 'feeling truly *seen*') and therefore get attracted by the study of Erfinism (and to its professor), most end up dropping the challenge within weeks or mere days.4
+In the vast majority of cases, a first encounter with the Erfi therefore proves to be of intimidating and/or challenging nature and the duration of the experiment largely depends on the ability of the subjects to deal with repeated stabs in a non-paggro manner. While many guinea pigs find themselves to be wooed by the intense levels of attention and charisma bestowed upon them (described as 'feeling truly *seen*') and therefore get attracted by the study of Erfinism (and to its professor), most end up dropping the challenge within weeks or mere days.<sup>4</sup>
 
 In academic circles this phenomenon is famously dubbed "the Erfi effect", a serious condition that can send the people affected by it into a deep state of psychological distress. Symptoms are not limited to but often include: a steep rise in passive-aggressive behavior, denial of facts and stress-induced escapism. In addition to this, majority of the victims show PTSD symptoms when presented pictures of highspeed trains.
 
