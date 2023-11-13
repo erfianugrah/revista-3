@@ -3,7 +3,7 @@ title: Hypnagogia
 slug: hypnagogia
 pubDate: 2021-03-08T07:15:00.000Z
 updatedDate: 2021-11-05T11:33:12.000Z
-tags: Short-Form
+tags: [ 'short-form']
 description: The perception of time has changed for me, rather drastically in fact. I started seeing things a little bit differently, moments of wonder and awe was had even for the smallest of occurences, which normally would have been something I just ignore.
 ---
 

@@ -3,7 +3,7 @@ title: Palaestra
 slug: palaestra
 pubDate: 2022-06-13T06:27:15.000Z
 updatedDate: 2022-06-21T02:56:57.000Z
-tags: Short-Form
+tags: [ 'short-form']
 description: Muted sounds, tiny waves crashing. My limbs wading, cutting through. For a time, the only instance for when I could sequester myself away from the world.
 ---
 
