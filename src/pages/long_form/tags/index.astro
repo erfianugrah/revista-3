@@ -1,15 +1,15 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
-const allMuses = await getCollection("muses");
-const tags = [...new Set(allMuses.map((post) => post.data.tags).flat())];
+const allLongForm = await getCollection("long_form");
+const tags = [...new Set(allLongForm.map((post) => post.data.tags).flat())];
 const pageTitle = "Tag Index";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
 <div class="tags">
   {tags.map((tag) => (
-    <p class="tag"><a href={`/tags/${tag}`}>{tag}</a></p>
+    <p class="tag"><a href={`/long_form/tags/${tag}`}>{tag}</a></p>
   ))}
 </div>
 </BaseLayout>

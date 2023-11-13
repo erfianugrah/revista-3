@@ -13,6 +13,7 @@ const allZeitweilig = await getCollection("zeitweilig");
       allZeitweilig.map((post) => (
         <BlogPost url={`/zeitweilig/${post.slug}/`} title={post.data.title} />
       ))
+    }
   </ul>
 </BaseLayout>
 

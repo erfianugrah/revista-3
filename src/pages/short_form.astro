@@ -13,6 +13,7 @@ const allShortForm = await getCollection("short_form");
       allShortForm.map((post) => (
         <BlogPost url={`/short_form/${post.slug}/`} title={post.data.title} />
       ))
+    }
   </ul>
 </BaseLayout>
 

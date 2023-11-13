@@ -13,6 +13,7 @@ const allLong_form = await getCollection("long_form");
       allLong_form.map((post) => (
         <BlogPost url={`/long_form/${post.slug}/`} title={post.data.title} />
       ))
+    }
   </ul>
 </BaseLayout>
 

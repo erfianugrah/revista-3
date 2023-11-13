@@ -5,9 +5,7 @@ import BlogPost from "../../components/BlogPost.astro";
 
 export async function getStaticPaths() {
   const allMuses = await getCollection("muses");
-  const allShortForm = await getCollection("short_form");
-  const allLongForm = await getCollection("long_form");
-  const allZeitweilig = await getCollection("zeitweilig");
+  const allPosts = await Astro.glob("../../content/*/*.md");
   const uniqueTags = [
     ...new Set(allMuses.map((post) => post.data.tags).flat()),
   ];
@@ -30,25 +28,6 @@ const { posts } = Astro.props;
 <BaseLayout pageTitle={tag}>
   <p>Posts tagged with {tag}</p>
   <ul>
-    {
-      posts.map((post) => (
-        <BlogPost url={`/muses/${post.slug}/`} title={post.data.title} />
-      ))
-    }
-    {
-      posts.map((post) => (
-        <BlogPost url={`/short_form/${post.slug}/`} title={post.data.title} />
-      ))
-    }
-    {
-      posts.map((post) => (
-        <BlogPost url={`/long_form/${post.slug}/`} title={post.data.title} />
-      ))
-    }
-    {
-      posts.map((post) => (
-        <BlogPost url={`/zeitweilig/${post.slug}/`} title={post.data.title} />
-      ))
-    }
+      { posts.map((post) => <BlogPost url={`/muses/${post.slug}/`} title={post.data.title} />) }
   </ul>
 </BaseLayout>
