@@ -1,5 +1,4 @@
 ---
-import "../styles/global.css";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Prose from "../components/Prose.astro";
 const pageTitle = "About Me";
@@ -29,17 +28,6 @@ const textCase = "camelcase";
 
 <BaseLayout pageTitle={pageTitle}>
   <Prose>
-    <style define:vars={{ skillColor, fontWeight, textCase }}>
-      h1 {
-        color: purple;
-        font-size: 4rem;
-      }
-      .skill {
-        color: var(--skillColor);
-        font-weight: var(--fontWeight);
-        text-transform: var(--textCase);
-      }
-    </style>
     <h2>{pageTitle}</h2>
 
     <p>
