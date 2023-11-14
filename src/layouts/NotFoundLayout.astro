@@ -17,9 +17,9 @@ const { image, description, author, pubDate, updatedDate } = Astro.props;
     <meta name="og:title" content={pageTitle} />
     <meta name="og:description" content={description} />
     <meta name="og:image" content={image} />
-    <meta name="og:author" content={author} />
-    <meta name="og:article:published_time" content={pubDate} />
-    <meta name="og:article:modified_time" content={updatedDate} />
+    <meta name="author" content={author} />
+    <meta name="published_time" content={pubDate} />
+    <meta name="modified_time" content={updatedDate} />
     <meta name="og:url" content={Astro.url} />
     <title>{pageTitle}</title>
     <ViewTransitions />
