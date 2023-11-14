@@ -9,7 +9,7 @@ export default function Greeting({messages}) {
   return (
     <div>
       <h3 class="greeting">{greeting}</h3>
-      <button class="button" onClick={() => setGreeting(randomMessage())}>
+      <button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" onClick={() => setGreeting(randomMessage())}>
         Generate Random Ron Burgundy Quote
       </button>
     </div>
