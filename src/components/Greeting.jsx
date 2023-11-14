@@ -10,7 +10,7 @@ export default function Greeting({messages}) {
     <div>
       <h3 class="greeting">{greeting}</h3>
       <button class="button" onClick={() => setGreeting(randomMessage())}>
-        New Ron Burgundy Quote
+        Generate Random Ron Burgundy Quote
       </button>
     </div>
   );
