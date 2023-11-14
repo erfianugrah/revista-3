@@ -41,10 +41,10 @@ const long_form = defineCollection({
     tags: z.array(z.string()),
     author: z.string(),
     description: z.string(),
-    // image: z.object({
-    //   src: z.string(),
-    //   alt: z.string(),
-    // }),
+    image: z.object({
+      src: z.string(),
+      alt: z.string(),
+    }),
     pubDate: z.date(),
     updatedDate: z.date(),
   }),
