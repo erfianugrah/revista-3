@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 // import { fade } from "astro:transitions";
+import GLightbox from 'glightbox';
 const { frontmatter } = Astro.props;
 ---
 
@@ -40,3 +41,6 @@ const { frontmatter } = Astro.props;
     background-color: #f8fcfd;
   }
 </style>
+<script>
+ const lightbox = GLightbox({ elements: document.querySelectorAll('[data-gallery="gallery1"]') });
+</script>

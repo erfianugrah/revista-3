@@ -1,3 +1,7 @@
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+  
 html {
   background-color: #f1f5f9;
   font-family: sans-serif;
@@ -11,6 +15,7 @@ html.dark {
 .dark .nav-links a {
   color: #fff;
 }
+
 body {
   margin: 0 auto;
   width: 100%;
