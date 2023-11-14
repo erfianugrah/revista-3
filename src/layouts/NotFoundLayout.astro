@@ -1,10 +1,12 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import '../styles/global.css';
+import { ViewTransitions } from "astro:transitions";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
 const pageTitle = "The Page You Wanted Wasn't found but Ron Burgundy Found You";
+const { image, description } = Astro.props;
 ---
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -12,6 +14,10 @@ const pageTitle = "The Page You Wanted Wasn't found but Ron Burgundy Found You";
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="og:title" content={pageTitle} />
+    <meta name="og:description" content={description} />
+    <meta name="og:image" content={image} />
+    <meta name="og:url" content={Astro.url} />
     <title>{pageTitle}</title>
     <ViewTransitions />
   </head>

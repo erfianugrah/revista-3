@@ -87,11 +87,11 @@ h1 {
   .hamburger {
     display: none;
   }
-
 }
 
 .greeting {
   min-height: 250px;
-  margin: auto;
-  vertical-align: middle;
+  display: flex;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
