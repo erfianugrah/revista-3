@@ -8,7 +8,7 @@ html {
 }
 
 html.dark {
-  background-color: #0d0950;
+  background-color: rgb(34, 33, 37);
   color: #fff;
 }
 
