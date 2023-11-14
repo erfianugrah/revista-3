@@ -1,22 +1,21 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import BlogPost from '../components/BlogPost.astro';
+import BlogPost from "../components/BlogPost.astro";
+import Prose from "../components/Prose.astro";
 import "../styles/global.css";
 const pageTitle = "Short Form";
 const allShortForm = await getCollection("short_form");
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <ul>
-    {
-      allShortForm.map((post) => (
-        <BlogPost url={`/short_form/${post.slug}/`} title={post.data.title} />
-      ))
-    }
-  </ul>
+  <Prose>
+    <ul>
+      {
+        allShortForm.map((post) => (
+          <BlogPost url={`/short_form/${post.slug}/`} title={post.data.title} />
+        ))
+      }
+    </ul>
+  </Prose>
 </BaseLayout>
-
-
-
-

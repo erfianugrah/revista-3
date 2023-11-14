@@ -1,22 +1,21 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import BlogPost from '../components/BlogPost.astro';
+import BlogPost from "../components/BlogPost.astro";
+import Prose from "../components/Prose.astro";
 import "../styles/global.css";
 const pageTitle = "Long Form";
 const allLong_form = await getCollection("long_form");
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <ul>
-    {
-      allLong_form.map((post) => (
-        <BlogPost url={`/long_form/${post.slug}/`} title={post.data.title} />
-      ))
-    }
-  </ul>
+  <Prose>
+    <ul>
+      {
+        allLong_form.map((post) => (
+          <BlogPost url={`/long_form/${post.slug}/`} title={post.data.title} />
+        ))
+      }
+    </ul>
+  </Prose>
 </BaseLayout>
-
-
-
-

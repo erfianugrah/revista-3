@@ -1,10 +1,13 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Prose from "../components/Prose.astro";
 const { pageTitle } = Astro.props;
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <h2>
-    Life in review. A recollection of things experienced, and things felt.
-  </h2>
+  <Prose>
+    <h2>
+      Life in review. A recollection of things experienced, and things felt.
+    </h2>
+  </Prose>
 </BaseLayout>

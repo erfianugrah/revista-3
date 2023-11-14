@@ -1,7 +1,7 @@
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
-  
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html {
   background-color: #f1f5f9;
   font-family: sans-serif;
@@ -100,4 +100,3 @@ h1 {
   min-width: 0;
   overflow-wrap: break-word;
 }
-
