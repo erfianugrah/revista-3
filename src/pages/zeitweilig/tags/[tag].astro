@@ -2,8 +2,9 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import BlogPost from "../../../components/BlogPost.astro";
+import Prose from "../../../components/Prose.astro";
 export async function getStaticPaths() {
-  const allZeitweilig= await getCollection("zeitweilig");
+  const allZeitweilig = await getCollection("zeitweilig");
   const uniqueTags = [
     ...new Set(allZeitweilig.map((post) => post.data.tags).flat()),
   ];
@@ -24,8 +25,14 @@ const { posts } = Astro.props;
 ---
 
 <BaseLayout pageTitle={tag}>
-  <p>Posts tagged with {tag}</p>
-  <ul>
-        { posts.map((post) => <BlogPost url={`/zeitweilig/${post.slug}/`} title={post.data.title} />) }
-  </ul>
+  <Prose>
+    <p>Posts tagged with {tag}</p>
+    <ul>
+      {
+        posts.map((post) => (
+          <BlogPost url={`/zeitweilig/${post.slug}/`} title={post.data.title} />
+        ))
+      }
+    </ul>
+  </Prose>
 </BaseLayout>
