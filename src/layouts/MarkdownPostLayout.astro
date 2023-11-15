@@ -5,9 +5,6 @@ const { frontmatter } = Astro.props;
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
-    <script>
-      import "../scripts/fslightbox.js";
-    </script>
   <h1>{frontmatter.title}</h1>
   <p>{frontmatter.pubDate.toString().slice(0, 10)}</p>
   <!-- <p transition:animate={fade({ duration: '0.5s' })}><em>{frontmatter.description}</em></p> -->
@@ -43,3 +40,6 @@ const { frontmatter } = Astro.props;
     background-color: #f8fcfd;
   }
 </style>
+<script>
+  import "../scripts/fslightbox.js";
+</script>
