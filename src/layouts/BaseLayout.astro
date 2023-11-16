@@ -26,11 +26,11 @@ const { image, description, author, pubDate, updatedDate } = Astro.props;
   </head>
   <body>
     <Header />
-    <h1 transition:animate="slide">{pageTitle}</h1>
+    <h1 transition:animate="fade">{pageTitle}</h1>
     <slot />
-    <Footer />
     <script>
       import "../scripts/menu.js";
     </script>
+    <Footer />
   </body>
 </html>
