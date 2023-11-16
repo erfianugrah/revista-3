@@ -59,16 +59,15 @@ h1 {
 .nav-links a {
   display: block;
   text-align: center;
-  padding: 10px 0;
+  padding: 5px 0;
   text-decoration: none;
   font-size: 1.2rem;
-  text-transform: uppercase;
-}
+  text-transform: uppercase;}
 
-.nav-links a:hover,
+/* .nav-links a:hover,
 .nav-links a:focus {
   background-color: #3e458a;
-}
+} */
 
 .expanded {
   display: unset;
@@ -76,17 +75,19 @@ h1 {
 
 @media screen and (min-width: 636px) {
   .nav-links {
-    margin-left: 5em;
-    display: block;
+    /* margin-left: 5em; */
+    display: flex;
     position: static;
     width: auto;
     background: none;
+    justify-content: flex-start;
+    gap: 20px;
   }
 
   .nav-links a {
-    display: inline-block;
-    padding: 15px 20px;
+    display: flex;
   }
+
 
   .hamburger {
     display: none;
