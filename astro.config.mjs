@@ -8,7 +8,7 @@ import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://erfianugrah.com",
+  site: "https://www.erfianugrah.com",
   integrations: [preact(), sitemap(), mdx({
     syntaxHighlight: 'shiki',
     shikiConfig: {
