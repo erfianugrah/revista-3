@@ -2,13 +2,11 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import BlogPost from "../components/BlogPost.astro";
-import Prose from "../components/Prose.astro";
 const pageTitle = "Long Form";
 const allLong_form = await getCollection("long_form");
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <Prose>
     <ul>
       {
         allLong_form.map((post) => (
@@ -16,5 +14,4 @@ const allLong_form = await getCollection("long_form");
         ))
       }
     </ul>
-  </Prose>
 </BaseLayout>

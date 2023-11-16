@@ -9,12 +9,12 @@ const muses = defineCollection({
     tags: z.array(z.string()),
     author: z.string(),
     description: z.string(),
-    // image: z.object({
-    //   src: z.string(),
-    //   alt: z.string(),
-    // }),
-    pubDate: z.date(),
-    updatedDate: z.date(),
+    image: z.object({
+      src: z.string(),
+      alt: z.string(),
+    }).optional(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
   }),
 });
 
@@ -25,12 +25,12 @@ const short_form = defineCollection({
     tags: z.array(z.string()),
     author: z.string(),
     description: z.string(),
-    // image: z.object({
-    //   src: z.string(),
-    //   alt: z.string(),
-    // }),
-    pubDate: z.date(),
-    updatedDate: z.date(),
+    image: z.object({
+      src: z.string(),
+      alt: z.string(),
+    }).optional(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
   }),
 });
 
@@ -44,9 +44,9 @@ const long_form = defineCollection({
     image: z.object({
       src: z.string(),
       alt: z.string(),
-    }),
-    pubDate: z.date(),
-    updatedDate: z.date(),
+    }).optional(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
   }),
 });
 
@@ -57,12 +57,12 @@ const zeitweilig = defineCollection({
     tags: z.array(z.string()),
     author: z.string(),
     description: z.string(),
-    // image: z.object({
-    //   src: z.string(),
-    //   alt: z.string(),
-    // }),
-    pubDate: z.date(),
-    updatedDate: z.date(),
+    image: z.object({
+      src: z.string(),
+      alt: z.string(),
+    }).optional(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
   }),
 });
 

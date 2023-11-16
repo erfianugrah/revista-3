@@ -25,7 +25,6 @@ const { posts } = Astro.props;
 ---
 
 <BaseLayout pageTitle={tag}>
-  <Prose>
     <p>Posts tagged with {tag}</p>
     <ul>
       {
@@ -34,5 +33,4 @@ const { posts } = Astro.props;
         ))
       }
     </ul>
-  </Prose>
 </BaseLayout>

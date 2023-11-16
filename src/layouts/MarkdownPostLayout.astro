@@ -2,16 +2,13 @@
 import BaseLayout from "./BaseLayout.astro";
 // import { fade } from "astro:transitions";
 import Prose from "../components/Prose.astro";
+import FormattedDate from "../components/FormattedDate.astro";
 const { frontmatter } = Astro.props;
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
   <Prose>
     <h1>{frontmatter.title}</h1>
-    <p>{frontmatter.pubDate.toString().slice(0, 10)}</p>
-    <!-- <p transition:animate={fade({ duration: '0.5s' })}><em>{frontmatter.description}</em></p> -->
-    <p>Written by: <a href="/about/"> {frontmatter.author}</a></p>
-
     <div class="tags">
       {
         frontmatter.tags.map((tag) => (
@@ -21,8 +18,11 @@ const { frontmatter } = Astro.props;
         ))
       }
     </div>
+    <slot />
+    <p>{frontmatter.pubDate.toString().slice(0, 10)}</p>
+    <!-- <p transition:animate={fade({ duration: '0.5s' })}><em>{frontmatter.description}</em></p> -->
+    <p>Written by: <a href="/about/"> {frontmatter.author}</a></p>
   </Prose>
-  <slot />
 </BaseLayout>
 <style>
   a {

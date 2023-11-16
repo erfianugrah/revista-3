@@ -9,7 +9,6 @@ const allZeitweilig = await getCollection("zeitweilig");
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-<Prose >
   <ul>
     {
       allZeitweilig.map((post) => (
@@ -17,7 +16,6 @@ const allZeitweilig = await getCollection("zeitweilig");
       ))
     }
   </ul>
-</Prose>
 </BaseLayout>
 
 

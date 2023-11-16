@@ -1,4 +1,11 @@
 ---
 const { title, url } = Astro.props;
+import "@fontsource/sarabun";
+import "@fontsource-variable/jost";
+import "@fontsource-variable/josefin-sans";
 ---
-<li><a href={url}>{title}</a></li>
+
+<li>
+  <a
+    class="prose prose-slate dark:prose-invert uppercase text-blue-700 font-josefin no-underline" href={url}>{title}</a>
+</li>
