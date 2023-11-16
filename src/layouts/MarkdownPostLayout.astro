@@ -19,9 +19,8 @@ const { frontmatter } = Astro.props;
       }
     </div>
     <slot />
-    <p>{frontmatter.pubDate.toString().slice(0, 10)}</p>
     <!-- <p transition:animate={fade({ duration: '0.5s' })}><em>{frontmatter.description}</em></p> -->
-    <p>Written by: <a href="/about/"> {frontmatter.author}</a></p>
+    <p>Written by: <a href="/about/"> {frontmatter.author}</a> on {frontmatter.pubDate.toString().slice(0, 10)} </p>
   </Prose>
 </BaseLayout>
 <style>
