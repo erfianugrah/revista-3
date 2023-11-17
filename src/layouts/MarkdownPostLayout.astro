@@ -2,30 +2,38 @@
 import BaseLayout from "./BaseLayout.astro";
 // import { fade } from "astro:transitions";
 import Prose from "../components/Prose.astro";
-import FormattedDate from "../components/FormattedDate.astro";
+import ProseHeadings from "../components/Prose_headings.astro";
 const { frontmatter } = Astro.props;
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
   <Prose>
-    <h1>{frontmatter.title}</h1>
-    <div class="tags">
-      {
-        frontmatter.tags.map((tag) => (
-          <p class="tag">
-            <a href={`../tags/${tag}`}>{tag}</a>
-          </p>
-        ))
-      }
-    </div>
+    <ProseHeadings>
+      <h1>{frontmatter.title}</h1>
+      <div class="tags">
+        {
+          frontmatter.tags.map((tag) => (
+            <p class="tag">
+              <a href={`../tags/${tag}`}>{tag}</a>
+            </p>
+          ))
+        }
+      </div>
+      <!-- <p transition:animate={fade({ duration: '0.5s' })}><em>{frontmatter.description}</em></p> -->
+    </ProseHeadings>
+
     <slot />
-    <!-- <p transition:animate={fade({ duration: '0.5s' })}><em>{frontmatter.description}</em></p> -->
-    <p>Written by: <a href="/about/"> {frontmatter.author}</a> on {frontmatter.pubDate.toString().slice(0, 10)} </p>
+    <p>
+      By: <a href="/about/"> {frontmatter.author}</a> on {
+        frontmatter.pubDate.toDateString()
+      }
+    </p>
   </Prose>
 </BaseLayout>
 <style>
   a {
     color: #00539f;
+    text-decoration: none;
   }
 
   .tags {
@@ -34,7 +42,7 @@ const { frontmatter } = Astro.props;
   }
 
   .tag {
-    margin: 0.25em;
+    margin: 0em;
     border: dotted 1px #a1a1a1;
     border-radius: 0.5em;
     padding: 0.5em 1em;
