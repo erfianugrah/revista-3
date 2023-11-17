@@ -21,13 +21,22 @@ const { frontmatter } = Astro.props;
       </div>
       <!-- <p transition:animate={fade({ duration: '0.5s' })}><em>{frontmatter.description}</em></p> -->
     </ProseHeadings>
-
     <slot />
-    <p>
-      By: <a href="/about/"> {frontmatter.author}</a> on {
-        frontmatter.pubDate.toDateString()
-      }
-    </p>
+    <div class="flex">
+      <div class="w-1/2">
+        <p>-- <a href="/about/"> {frontmatter.author}</a></p>
+      </div>
+      <div class="w-1/2">
+        <ul class="list-none text-right">
+          <li>
+            Published: {frontmatter.pubDate.toDateString()}
+          </li>
+          <li>
+            Modified on {frontmatter.updatedDate.toDateString()}
+          </li>
+        </ul>
+      </div>
+    </div>
   </Prose>
 </BaseLayout>
 <style>
