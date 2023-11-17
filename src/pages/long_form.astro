@@ -10,7 +10,7 @@ const allLong_form = await getCollection("long_form");
     <ul>
       {
         allLong_form.map((post) => (
-          <BlogPost url={`/long_form/${post.slug}/`} title={post.data.title} />
+          <BlogPost url={`/long_form/${post.slug}/`} title={post.data.title} description={post.data.description} />
         ))
       }
     </ul>

@@ -11,7 +11,7 @@ const allMuses = await getCollection("muses");
     <ul>
       {
         allMuses.map((post) => (
-          <BlogPost url={`/muses/${post.slug}/`} title={post.data.title} />
+          <BlogPost url={`/muses/${post.slug}/`} title={post.data.title} description={post.data.description} />
         ))
       }
     </ul>
