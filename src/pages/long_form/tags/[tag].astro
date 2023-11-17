@@ -28,7 +28,7 @@ const { posts } = Astro.props;
     <ul>
       {
         posts.map((post) => (
-          <BlogPost url={`/long_form/${post.slug}/`} title={post.data.title} image={post.data.image.src} || '' description={post.data.description} />
+          <BlogPost url={`/long_form/${post.slug}/`} title={post.data.title} image={post.data.image.src || ''} description={post.data.description} />
 
         ))
       }
