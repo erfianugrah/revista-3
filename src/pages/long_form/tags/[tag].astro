@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import BlogPost from "../../../components/BlogPost.astro";
-import Prose from "../../../components/Prose.astro";
+import { Image, imageConfig } from "astro:assets";
 export async function getStaticPaths() {
   const allLongForm = await getCollection("long_form");
   const uniqueTags = [
@@ -28,7 +28,8 @@ const { posts } = Astro.props;
     <ul>
       {
         posts.map((post) => (
-          <BlogPost url={`/long_form/${post.slug}/`} title={post.data.title} />
+          <BlogPost url={`/long_form/${post.slug}/`} title={post.data.title} image={post.data.image.src} description={post.data.description} />
+
         ))
       }
     </ul>
