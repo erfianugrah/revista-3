@@ -4,6 +4,9 @@ import BaseLayout from "./BaseLayout.astro";
 import Prose from "../components/Prose.astro";
 import ProseHeadings from "../components/Prose_headings.astro";
 const { frontmatter } = Astro.props;
+const updatedDate = frontmatter.updatedDate.toDateString().split(' ').slice(1).join(' ');
+const publishedDate = frontmatter.updatedDate.toDateString().split(' ').slice(1).join(' ');
+
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
@@ -29,10 +32,10 @@ const { frontmatter } = Astro.props;
       <div class="w-1/2">
         <ul class="list-none text-right">
           <li>
-            Published: {frontmatter.pubDate.toDateString()}
+            Published: {publishedDate}
           </li>
           <li>
-            Modified: {frontmatter.updatedDate.toDateString()}
+            Modified: {updatedDate}
           </li>
         </ul>
       </div>
