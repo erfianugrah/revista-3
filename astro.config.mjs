@@ -3,7 +3,6 @@ import { remarkModifiedTime } from './src/scripts/remark-modified-time.mjs';
 import preact from "@astrojs/preact";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
-
 import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
