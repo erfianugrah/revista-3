@@ -25,16 +25,15 @@ const { posts } = Astro.props;
 ---
 
 <BaseLayout pageTitle={tag}>
-  <ul>
-    {
-      posts.map((post) => (
-        <BlogPost
-          url={`/muses/${post.slug}/`}
-          image={post.data.image ? post.data.image.src : ""}
-          title={post.data ? post.data.title : ""}
-          description={post.data ? post.data.description : ""}
-        />
-      ))
-    }
-  </ul>
+      {
+        posts.map((post) => (
+          <BlogPost
+              url={`/muses/${post.slug}/`}
+              image={post.data?.image?.src || ''}
+              title={post.data?.title || ''}
+              description={post.data?.description || ''}
+            }
+          />
+        ))
+      }
 </BaseLayout>

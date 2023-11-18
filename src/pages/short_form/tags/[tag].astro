@@ -2,7 +2,6 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import BlogPost from "../../../components/BlogPost.astro";
-import Prose from "../../../components/Prose.astro";
 export async function getStaticPaths() {
   const allShortForm = await getCollection("short_form");
   const uniqueTags = [
@@ -25,14 +24,16 @@ const { posts } = Astro.props;
 ---
 
 <BaseLayout pageTitle={tag}>
-    <ul>
       {
         posts.map((post) => (
-          <BlogPost url={`/short_form/${post.slug}/`}
-            image={post.data.image ? post.data.image.src : ''}
-            title={post.data ? post.data.title : ''}
-            description={post.data ? post.data.description: ''}
-            />
+          <BlogPost
+              url={`/short_form/${post.slug}/`}
+              image={post.data?.image?.src || ''}
+              title={post.data?.title || ''}
+              description={post.data?.description || ''}
+            }
+          />
+        ))
       }
-    </ul>
 </BaseLayout>
+

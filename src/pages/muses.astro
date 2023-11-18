@@ -2,17 +2,20 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import BlogPost from "../components/BlogPost.astro";
-import Prose_headings from "../components/Prose_headings.astro";
 const pageTitle = "Muses";
 const allMuses = await getCollection("muses");
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-    <ul>
       {
         allMuses.map((post) => (
-          <BlogPost url={`/muses/${post.slug}/`} title={post.data.title} description={post.data.description} />
+          <BlogPost
+              url={`/muses/${post.slug}/`}
+              image={post.data?.image?.src || ''}
+              title={post.data?.title || ''}
+              description={post.data?.description || ''}
+            }
+          />        
         ))
       }
-    </ul>
 </BaseLayout>

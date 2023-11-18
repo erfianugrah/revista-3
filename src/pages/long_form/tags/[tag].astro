@@ -27,10 +27,10 @@ const { posts } = Astro.props;
       {
         posts.map((post) => (
           <BlogPost
-            url={`/long_form/${post.slug}/`}
-            image={post.data.image ? post.data.image.src : ''}
-            title={post.data ? post.data.title : ''}
-            description={post.data ? post.data.description: ''}
+              url={`/long_form/${post.slug}/`}
+              image={post.data?.image?.src || ''}
+              title={post.data?.title || ''}
+              description={post.data?.description || ''}
             }
           />
         ))

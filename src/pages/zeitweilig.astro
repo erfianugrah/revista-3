@@ -2,20 +2,23 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import BlogPost from '../components/BlogPost.astro';
-import Prose from "../components/Prose.astro";
 import "../styles/global.css";
 const pageTitle = "Zeitweilig";
 const allZeitweilig = await getCollection("zeitweilig");
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <ul>
-    {
-      allZeitweilig.map((post) => (
-        <BlogPost url={`/zeitweilig/${post.slug}/`} title={post.data.title} description={post.data.description} />
-      ))
-    }
-  </ul>
+      {
+        allZeitweilig.map((post) => (
+          <BlogPost
+              url={`/zeitweilig/${post.slug}/`}
+              image={post.data?.image?.src || ''}
+              title={post.data?.title || ''}
+              description={post.data?.description || ''}
+            }
+          />        
+        ))
+      }
 </BaseLayout>
 
 

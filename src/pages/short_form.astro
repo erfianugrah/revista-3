@@ -8,11 +8,15 @@ const allShortForm = await getCollection("short_form");
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-    <ul>
       {
         allShortForm.map((post) => (
-          <BlogPost url={`/short_form/${post.slug}/`} title={post.data.title} description={post.data.description}/>
+          <BlogPost
+              url={`/short_form/${post.slug}/`}
+              image={post.data?.image?.src || ''}
+              title={post.data?.title || ''}
+              description={post.data?.description || ''}
+            }
+          />        
         ))
       }
-    </ul>
 </BaseLayout>

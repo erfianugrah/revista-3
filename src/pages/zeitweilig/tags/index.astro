@@ -1,21 +1,28 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
+import ProseHeadings from "../../../components/Prose_headings.astro";
 const allZeitweilig = await getCollection("zeitweilig");
 const tags = [...new Set(allZeitweilig.map((post) => post.data.tags).flat())];
 const pageTitle = "Tag Index";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-<div class="tags">
-  {tags.map((tag) => (
-    <p class="tag"><a href={`/zeitweilig/tags/${tag}`}>{tag}</a></p>
-  ))}
-</div>
+  <ProseHeadings>
+    <div class="tags">
+      {
+        tags.map((tag) => (
+          <p class="tag">
+            <a href={`/zeitweilig/tags/${tag}`}>{tag}</a>
+          </p>
+        ))
+      }
+    </div>
+  </ProseHeadings>
 </BaseLayout>
 <style>
   a {
-    color: #00539F;
+    color: #00539f;
   }
 
   .tags {
@@ -26,9 +33,9 @@ const pageTitle = "Tag Index";
   .tag {
     margin: 0.25em;
     border: dotted 1px #a1a1a1;
-    border-radius: .5em;
-    padding: .5em 1em;
+    border-radius: 0.5em;
+    padding: 0.5em 1em;
     font-size: 1.15em;
-    background-color: #F8FCFD;
+    background-color: #f8fcfd;
   }
 </style>
