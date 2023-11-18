@@ -6,21 +6,21 @@ import "@fontsource-variable/jost";
 import "@fontsource-variable/josefin-sans";
 ---
 
-  <div class="flex space-x-4 space-y-4 mb-14">
-    <div class="flex w-1/3 object-center">
+  <div class="flex space-x-4 mb-14">
+    <div class="flex w-2/3 relative h-64">
       <a
         href={url}
       >
-        <img src={image} class="object-cover" />
+        <img src={image} class="absolute inset-0 w-full h-full object-cover object-center" />
       </a>
     </div>
-    <div class="w-2/3 items-center flex flex-col">
+    <div class="w-1/3 items-center flex flex-col">
       <a
         class="prose prose-slate dark:prose-invert uppercase font-josefin no-underline"
         href={url}
       >
         <h3 class="font-josefin">{title}</h3>
-        <p class="font-jost normal-case">{description}</p>
+        <p class="font-jost normal-case line-clamp-3">{description}</p>
       </a>
     </div>
   </div>
