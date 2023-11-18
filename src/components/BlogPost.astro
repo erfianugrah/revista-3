@@ -1,17 +1,18 @@
 ---
 const { title, url, image, description } = Astro.props;
-import Prose from "./Prose.astro"
+import Prose from "./Prose.astro";
 import "@fontsource/sarabun";
 import "@fontsource-variable/jost";
 import "@fontsource-variable/josefin-sans";
 ---
 
-<li>
-    <a
-      class="prose prose-slate dark:prose-invert uppercase font-josefin no-underline"
+<div class="flex flex-nowrap">
+    <a class="prose prose-slate dark:prose-invert uppercase font-josefin no-underline"
       href={url}>
-      <img src={image} />
+      <div class="w-1/3"><img src={image} /></div>
+      <div class="w-2/3">
       <h3 class="font-josefin">{title}</h3>
       <p class="font-jost normal-case">{description}</p>
-  </a>
-</li>
+      </div>
+    </a>
+</div>
