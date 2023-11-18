@@ -6,7 +6,6 @@ import ProseHeadings from "../components/Prose_headings.astro";
 const { frontmatter } = Astro.props;
 const updatedDate = frontmatter.updatedDate.toDateString().split(' ').slice(1).join(' ');
 const publishedDate = frontmatter.pubDate.toDateString().split(' ').slice(1).join(' ');
-
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>

@@ -82,6 +82,7 @@ h1 {
     background: none;
     justify-content: flex-start;
     gap: 20px;
+    margin-top: 18px;
   }
 
   .nav-links a {

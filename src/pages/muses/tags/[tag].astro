@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import BlogPost from "../../../components/BlogPost.astro";
-import Prose from "../../../components/Prose.astro";
+import { sortByDate } from "../../../components/sortbydate";
 export async function getStaticPaths() {
   const allMuses = await getCollection("muses");
   const uniqueTags = [
@@ -26,7 +26,7 @@ const { posts } = Astro.props;
 
 <BaseLayout pageTitle={tag}>
       {
-        posts.map((post) => (
+        posts.sort(sortByDate).map((post) => (
           <BlogPost
               url={`/muses/${post.slug}/`}
               image={post.data?.image?.src || ''}

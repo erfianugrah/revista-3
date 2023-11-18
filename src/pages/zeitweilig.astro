@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import BlogPost from '../components/BlogPost.astro';
+import { sortByDate } from "../components/sortbydate";
 import "../styles/global.css";
 const pageTitle = "Zeitweilig";
 const allZeitweilig = await getCollection("zeitweilig");
@@ -9,7 +10,7 @@ const allZeitweilig = await getCollection("zeitweilig");
 
 <BaseLayout pageTitle={pageTitle}>
       {
-        allZeitweilig.map((post) => (
+        allZeitweilig.sort(sortByDate).map((post) => (
           <BlogPost
               url={`/zeitweilig/${post.slug}/`}
               image={post.data?.image?.src || ''}

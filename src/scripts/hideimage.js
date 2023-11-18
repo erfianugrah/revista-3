@@ -1,8 +1,8 @@
 document.addEventListener('astro:page-load', () => {
-    window.onload = function () {
+    document.addEventListener('DOMContentLoaded', function () {
         let imgElement = document.querySelector('#image img');
-        if (imgElement.getAttribute('src') === '') {
-            imgElement.parentElement.style.display = 'none';
+        if (imgElement.getAttribute('src') === "") {
+            imgElement.parentElement.remove();
         }
-    }
+    });
 });

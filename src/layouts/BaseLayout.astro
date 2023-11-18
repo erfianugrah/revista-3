@@ -1,7 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
+import Footer_2 from "../components/Footer_2.astro";
 import "../styles/global.css";
 const pageTitle = "Revista";
 const { image, description, author, pubDate, updatedDate } = Astro.props;
@@ -29,6 +29,6 @@ const { image, description, author, pubDate, updatedDate } = Astro.props;
     <!-- <h1 transition:animate="fade">{pageTitle}</h1> -->
     <slot />
     <script src="../scripts/menu.js"></script>
-    <Footer />
+    <Footer_2 />
   </body>
 </html>

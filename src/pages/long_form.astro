@@ -2,13 +2,14 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import BlogPost from "../components/BlogPost.astro";
+import { sortByDate } from "../components/sortbydate";
 const pageTitle = "Long Form";
 const allLong_form = await getCollection("long_form");
 ---
 
 <BaseLayout pageTitle={pageTitle}>
       {
-        allLong_form.map((post) => (
+        allLong_form.sort(sortByDate).map((post) => (
           <BlogPost
               url={`/short_form/${post.slug}/`}
               image={post.data?.image?.src || ''}

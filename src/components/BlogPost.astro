@@ -1,12 +1,11 @@
 ---
 const { title, url, image, description } = Astro.props;
-import Prose from "./Prose.astro";
 import "@fontsource/sarabun";
 import "@fontsource-variable/jost";
 import "@fontsource-variable/josefin-sans";
 ---
 
-<div class="flex space-x-4 mb-14">
+<div class="flex space-x-14 mb-14 mt-14">
     <div id="image" class="flex w-1/3 relative h-64">
       <a href={url}>
         <img
@@ -16,7 +15,7 @@ import "@fontsource-variable/josefin-sans";
       </a>
     </div>
 
-  <div id="description "class="w-2/3 items-center flex flex-col">
+  <div id="description "class="w-2/3 flex flex-col justify-start">
     <a
       class="prose prose-slate dark:prose-invert uppercase font-josefin no-underline"
       href={url}
@@ -25,6 +24,6 @@ import "@fontsource-variable/josefin-sans";
       <p class="font-jost normal-case line-clamp-3">{description}</p>
     </a>
   </div>
-  
+
 </div>
 <script src="../scripts/hideimage.js"></script>
