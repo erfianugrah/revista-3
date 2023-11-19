@@ -19,11 +19,13 @@ html.dark {
 
 body {
   margin: 0 auto;
-  width: 100%;
-  max-width: 150ch;
-  padding: 1rem;
+  width: 100vw;
+  /* max-width: 140ch; */
+  padding: 2rem 6rem 2rem 6rem;
   line-height: 1.5;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 * {
@@ -33,69 +35,6 @@ body {
 h1 {
   margin: 1rem 0;
   font-size: 2.5rem;
-}
-
-/* nav styles */
-.hamburger {
-  padding-right: 20px;
-  cursor: pointer;
-}
-
-.hamburger .line {
-  display: block;
-  width: 40px;
-  height: 5px;
-  margin-bottom: 10px;
-  background-color: #ff9776;
-}
-
-.nav-links {
-  width: 100%;
-  top: 5rem;
-  left: 48px;
-  background-color: #ff9776;
-  display: none;
-  margin: 0;
-}
-
-.nav-links a {
-  display: block;
-  text-align: center;
-  padding: 5px 0;
-  text-decoration: none;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-}
-
-/* .nav-links a:hover,
-.nav-links a:focus {
-  background-color: #3e458a;
-} */
-
-.expanded {
-  display: unset;
-}
-
-@media screen and (min-width: 636px) {
-  .nav-links {
-    /* margin-left: 5em; */
-    display: flex;
-    position: static;
-    width: auto;
-    background: none;
-    justify-content: flex-start;
-    gap: 20px;
-    margin-top: 18px;
-    margin-bottom: 18px;
-  }
-
-  .nav-links a {
-    display: flex;
-  }
-
-  .hamburger {
-    display: none;
-  }
 }
 
 .greeting {
