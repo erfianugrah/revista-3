@@ -17,25 +17,24 @@ import "@fontsource-variable/josefin-sans";
     <h3 class="font-josefin font-bold">{title}</h3>
     <p class="font-jost normal-case line-clamp-3">{description}</p>
     <a
-      class="prose prose-slate dark:prose-invert gap-3 no-underline font-jost normal-case mt-8 inline-flex items-center flex-shrink-0 hover:animate-bounce pointer-events-auto"
       href={url}
+      class="prose prose-slate dark:prose-invert space-x-4 no-underline font-jost normal-case mt-8 max-w-max max-h-max flex flex-row items-center flex-shrink-0 hover:animate-bounce"
     >
-        Read more
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-        </svg>
+      <p>See more</p>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6 mb-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+      </svg>
     </a>
+    <slot />
   </div>
-  <slot />
 </div>
-<script src="../scripts/hideimage.js"></script>
