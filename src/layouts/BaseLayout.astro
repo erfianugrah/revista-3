@@ -28,8 +28,7 @@ const { image, description, author, pubDate, updatedDate } = Astro.props;
     <title>{pageTitle}</title>
     <ViewTransitions />
   </head>
-
-  <body>
+  <body class="lg:pt-8 lg:pr-16 lg:pb-8 lg:pl-16">
     <Header />
     <!-- <h1 transition:animate="fade">{pageTitle}</h1> -->
     <slot />
