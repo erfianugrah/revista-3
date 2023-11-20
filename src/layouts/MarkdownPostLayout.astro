@@ -14,11 +14,11 @@ const publishedDate = frontmatter?.pubDate
   .split(" ")
   .slice(1)
   .join(" ");
-const title = frontmatter?.title
+const title = frontmatter.title
 const description = frontmatter?.description
-const author = frontmatter?.author 
+const author = frontmatter?.author
 const image = frontmatter.image?.src
-
+const minutesRead = frontmatter?.minutesRead
 ---
 
 <BaseLayout title={title} image={image} description={description} author={author} pubDate={updatedDate} updatedDate={publishedDate}>
@@ -34,7 +34,9 @@ const image = frontmatter.image?.src
           ))
         }
       </div>
-
+        <p class="prose prose-slate dark:prose-invert italic font-josefin">
+          {minutesRead}
+        </p>
       <!-- <p transition:animate={fade({ duration: '0.5s' })}><em>{frontmatter.description}</em></p> -->
     </ProseHeadings>
     <slot />
