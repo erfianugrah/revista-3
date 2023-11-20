@@ -18,10 +18,10 @@ const title = frontmatter.title
 const description = frontmatter.description
 const author = frontmatter.author 
 const image = frontmatter.image.src
-const url = frontmatter.url
+
 ---
 
-<BaseLayout title={title} image={image} url={url} description={description} author={author} pubDate={updatedDate} updatedDate={publishedDate}>
+<BaseLayout title={title} image={image} description={description} author={author} pubDate={updatedDate} updatedDate={publishedDate}>
   <Prose>
     <ProseHeadings>
       <h1>{title}</h1>
