@@ -14,12 +14,17 @@ const publishedDate = frontmatter.pubDate
   .split(" ")
   .slice(1)
   .join(" ");
+const title = frontmatter.title
+const description = frontmatter.description
+const author = frontmatter.author 
+const image = frontmatter.image.src
+const url = frontmatter.url
 ---
 
-<BaseLayout pageTitle={frontmatter.title}>
+<BaseLayout title={title} image={image} url={url} description={description} author={author} pubDate={updatedDate} updatedDate={publishedDate}>
   <Prose>
     <ProseHeadings>
-      <h1>{frontmatter.title}</h1>
+      <h1>{title}</h1>
       <div class="tags">
         {
           frontmatter.tags.map((tag) => (
@@ -35,7 +40,7 @@ const publishedDate = frontmatter.pubDate
     <slot />
     <div class="flex flex-col sm:flex-row">
       <div class="lg:w-1/2">
-        <p>-- <a href="/about/"> {frontmatter.author}</a></p>
+        <p>-- <a href="/about/"> {author}</a></p>
       </div>
       <div class="lg:w-1/2">
         <ul class="list-none text-right sm:align-left">
