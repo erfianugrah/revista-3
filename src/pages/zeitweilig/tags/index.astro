@@ -7,7 +7,7 @@ const tags = [...new Set(allZeitweilig.map((post) => post.data.tags).flat())];
 const pageTitle = "Tag Index";
 ---
 
-<BaseLayout pageTitle={pageTitle}>
+<BaseLayout title={pageTitle}>
   <ProseHeadings>
     <div class="tags">
       {

@@ -7,7 +7,7 @@ const pageTitle = "Long Form";
 const allLong_form = await getCollection("long_form");
 ---
 
-<BaseLayout pageTitle={pageTitle}>
+<BaseLayout title={pageTitle}>
       {
         allLong_form.sort(sortByDate).map((post) => (
           <BlogPost

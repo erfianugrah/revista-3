@@ -8,7 +8,7 @@ const pageTitle = "Zeitweilig";
 const allZeitweilig = await getCollection("zeitweilig");
 ---
 
-<BaseLayout pageTitle={pageTitle}>
+<BaseLayout title={pageTitle}>
       {
         allZeitweilig.sort(sortByDate).map((post) => (
           <BlogPost

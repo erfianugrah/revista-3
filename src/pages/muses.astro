@@ -7,7 +7,7 @@ const pageTitle = "Muses";
 const allMuses = await getCollection("muses");
 ---
 
-<BaseLayout pageTitle={pageTitle}>
+<BaseLayout title={pageTitle}>
       {
         allMuses.sort(sortByDate).map((post) => (
           <BlogPost

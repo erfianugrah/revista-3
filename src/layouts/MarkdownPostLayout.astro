@@ -4,20 +4,20 @@ import BaseLayout from "./BaseLayout.astro";
 import Prose from "../components/Prose.astro";
 import ProseHeadings from "../components/Prose_headings.astro";
 const { frontmatter } = Astro.props;
-const updatedDate = frontmatter.updatedDate
+const updatedDate = frontmatter?.updatedDate
   .toDateString()
   .split(" ")
   .slice(1)
   .join(" ");
-const publishedDate = frontmatter.pubDate
+const publishedDate = frontmatter?.pubDate
   .toDateString()
   .split(" ")
   .slice(1)
   .join(" ");
-const title = frontmatter.title
-const description = frontmatter.description
-const author = frontmatter.author 
-const image = frontmatter.image.src
+const title = frontmatter?.title
+const description = frontmatter?.description
+const author = frontmatter?.author 
+const image = frontmatter.image?.src
 
 ---
 
