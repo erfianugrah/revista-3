@@ -11,7 +11,7 @@ const allLong_form = await getCollection("long_form");
       {
         allLong_form.sort(sortByDate).map((post) => (
           <BlogPost
-              url={`/short_form/${post.slug}/`}
+              url={`/long_form/${post.slug}/`}
               image={post.data?.image?.src || ''}
               title={post.data?.title || ''}
               description={post.data?.description || ''}
