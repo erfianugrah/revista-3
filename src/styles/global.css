@@ -20,7 +20,7 @@ html.dark {
 body {
   margin: 0 auto;
   width: 100vw;
-  padding: 2rem 2rem 2rem 2rem;
+  padding: 2rem 4rem 2rem 4rem;
   line-height: 1.5;
   min-height: 100vh;
   display: flex;
