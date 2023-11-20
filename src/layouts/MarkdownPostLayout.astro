@@ -4,8 +4,16 @@ import BaseLayout from "./BaseLayout.astro";
 import Prose from "../components/Prose.astro";
 import ProseHeadings from "../components/Prose_headings.astro";
 const { frontmatter } = Astro.props;
-const updatedDate = frontmatter.updatedDate.toDateString().split(' ').slice(1).join(' ');
-const publishedDate = frontmatter.pubDate.toDateString().split(' ').slice(1).join(' ');
+const updatedDate = frontmatter.updatedDate
+  .toDateString()
+  .split(" ")
+  .slice(1)
+  .join(" ");
+const publishedDate = frontmatter.pubDate
+  .toDateString()
+  .split(" ")
+  .slice(1)
+  .join(" ");
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
@@ -21,20 +29,21 @@ const publishedDate = frontmatter.pubDate.toDateString().split(' ').slice(1).joi
           ))
         }
       </div>
+
       <!-- <p transition:animate={fade({ duration: '0.5s' })}><em>{frontmatter.description}</em></p> -->
     </ProseHeadings>
     <slot />
-    <div class="flex">
-      <div class="w-1/2">
+    <div class="flex flex-col sm:flex-row">
+      <div class="lg:w-1/2">
         <p>-- <a href="/about/"> {frontmatter.author}</a></p>
       </div>
-      <div class="w-1/2">
-        <ul class="list-none text-right">
+      <div class="lg:w-1/2">
+        <ul class="list-none text-right sm:align-left">
           <li>
             Published: {publishedDate}
           </li>
           <li>
-            Modified: {updatedDate}
+            Updated: {updatedDate}
           </li>
         </ul>
       </div>
