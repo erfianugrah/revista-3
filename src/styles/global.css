@@ -17,7 +17,7 @@ html.dark {
   color: #fff;
 }
 
-body {
+/* body {
   margin: 0 auto;
   width: 100vw;
   padding: 2rem 2rem 2rem 2rem;
@@ -25,7 +25,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
+} */
 
 * {
   box-sizing: border-box;
@@ -34,11 +34,4 @@ body {
 h1 {
   margin: 1rem 0;
   font-size: 2.5rem;
-}
-
-.greeting {
-  min-height: 250px;
-  display: flex;
-  min-width: 0;
-  overflow-wrap: break-word;
 }
