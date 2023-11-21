@@ -16,7 +16,8 @@ const publishedDate = frontmatter?.pubDate
   .join(" ");
 const title = frontmatter?.title;
 const description = frontmatter?.description;
-const author = frontmatter?.author;
+const author = frontmatter?.author.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+// const author = frontmatter?.author;
 const image = frontmatter.image?.src;
 ---
 
