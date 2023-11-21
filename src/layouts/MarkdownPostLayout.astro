@@ -2,7 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 // import { fade } from "astro:transitions";
 import Prose from "../components/Prose.astro";
-import ProseHeadings from "../components/Prose_headings.astro";
+import "@fontsource-variable/josefin-sans";
 const { frontmatter } = Astro.props;
 const updatedDate = frontmatter?.updatedDate
   .toDateString()
@@ -18,7 +18,6 @@ const title = frontmatter?.title;
 const description = frontmatter?.description;
 const author = frontmatter?.author;
 const image = frontmatter.image?.src;
-const minutesRead = frontmatter.minutesRead;
 ---
 
 <BaseLayout
@@ -29,27 +28,43 @@ const minutesRead = frontmatter.minutesRead;
   pubDate={updatedDate}
   updatedDate={publishedDate}
 >
-  <Prose>
-<div class="hero-image bg-fixed bg-center bg-no-repeat bg-cover flex flex-col justify-center items-center text-white text-center h-[700px]" style={`background-image: url(${image});`}>
-
-      <h1
-        class="prose prose-slate dark:prose-invert uppercase font-josefin text-2xl"
+  {
+    image ? (
+      <div
+        class="hero-image bg-fixed bg-center bg-no-repeat bg-cover flex flex-col justify-center items-center text-white text-center h-[700px] w-full mb-8"
+        style={`background-image: url(${image});`}
       >
-        {title}
-      </h1>
-      <div class="tags flex gap-2 mt-2">
-        {
-          frontmatter.tags.map((tag) => (
-            <p class="tag bg-white bg-opacity-50 px-2 py-1 rounded">
-              <a class="text-blue-500 no-underline" href={`../tags/${tag}`}>
+        <h1 class="prose prose-slate dark:prose-invert uppercase font-josefin text-4xl">
+          {title}
+        </h1>
+        <div class="tags flex gap-2 mt-2">
+          {frontmatter.tags.map((tag) => (
+            <p class="tag bg-white bg-opacity-50 px-2 py-1 rounded font-josefin">
+              <a class="text-blue-800 no-underline font-josefin" href={`../tags/${tag}`}>
                 {tag}
               </a>
             </p>
-          ))
-        }
+          ))}
+        </div>
       </div>
-      <!-- <p transition:animate={fade({ duration: '0.5s' })}><em>{frontmatter.description}</em></p> -->
-    </div>
+    ) : (
+      <Prose>
+        <h1 class="prose prose-slate dark:prose-invert normal-case font-josefin -mb-1">
+          {title}
+        </h1>
+        <div class="tags flex">
+          {frontmatter.tags.map((tag) => (
+            <p class="tag bg-white bg-opacity-50 px-2 py-1 rounded font-josefin">
+              <a class="text-blue-800 no-underline font-josefin" href={`../tags/${tag}`}>
+                {tag}
+              </a>
+            </p>
+          ))}
+        </div>
+      </Prose>
+    )
+  }
+  <Prose>
     <slot />
     <div class="flex flex-col sm:flex-row">
       <div class="lg:w-1/2">
@@ -69,3 +84,4 @@ const minutesRead = frontmatter.minutesRead;
   </Prose>
 </BaseLayout>
 <script src="../scripts/fslightbox.js"></script>
+<!-- <p transition:animate={fade({ duration: '0.5s' })}><em>{frontmatter.description}</em></p> -->
