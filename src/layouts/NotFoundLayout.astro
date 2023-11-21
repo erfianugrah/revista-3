@@ -2,7 +2,7 @@
 import { ViewTransitions } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer_2 from "../components/Footer_2.astro";
-import "../styles/global.css";
+// import "../styles/global.css";
 const { image, description, author, pubDate, updatedDate, title, url } =
   Astro.props;
 ---
@@ -41,3 +41,32 @@ const { image, description, author, pubDate, updatedDate, title, url } =
     </script>
   </body>
 </html>
+<style>
+  html.dark {
+  background-color: rgb(34, 33, 37);
+  color: #fff;
+}
+
+.dark .nav-links a {
+  color: #fff;
+}
+
+/* body {
+  margin: 0 auto;
+  width: 100vw;
+  padding: 2rem 2rem 2rem 2rem;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+} */
+
+* {
+  box-sizing: border-box;
+}
+
+h1 {
+  margin: 1rem 0;
+  font-size: 2.5rem;
+}
+</style>
