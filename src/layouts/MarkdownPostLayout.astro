@@ -14,7 +14,7 @@ const publishedDate = frontmatter?.pubDate
   .split(" ")
   .slice(1)
   .join(" ");
-const title = frontmatter.title
+const title = frontmatter?.title
 const description = frontmatter?.description
 const author = frontmatter?.author
 const image = frontmatter.image?.src
