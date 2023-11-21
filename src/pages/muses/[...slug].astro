@@ -13,7 +13,7 @@ const { entry } = Astro.props;
 const { Content, remarkPluginFrontmatter } = await entry.render();
 ---
 
-<MarkdownPostLayout frontmatter={entry.data}>
+<MarkdownPostLayout frontmatter={entry.data} >
   <p
     class="prose prose-slate dark:prose-invert italic no-underline">
     {remarkPluginFrontmatter.minutesRead}

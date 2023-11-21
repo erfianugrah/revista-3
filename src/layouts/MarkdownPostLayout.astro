@@ -14,27 +14,42 @@ const publishedDate = frontmatter?.pubDate
   .split(" ")
   .slice(1)
   .join(" ");
-const title = frontmatter?.title
-const description = frontmatter?.description
-const author = frontmatter?.author
-const image = frontmatter.image?.src
+const title = frontmatter?.title;
+const description = frontmatter?.description;
+const author = frontmatter?.author;
+const image = frontmatter.image?.src;
+const minutesRead = frontmatter.minutesRead;
 ---
 
-<BaseLayout title={title} image={image} description={description} author={author} pubDate={updatedDate} updatedDate={publishedDate}>
+<BaseLayout
+  title={title}
+  image={image}
+  description={description}
+  author={author}
+  pubDate={updatedDate}
+  updatedDate={publishedDate}
+>
   <Prose>
-    <ProseHeadings>
-      <h1>{title}</h1>
-      <div class="tags">
+<div class="hero-image bg-fixed bg-center bg-no-repeat bg-cover flex flex-col justify-center items-center text-white text-center h-[700px]" style={`background-image: url(${image});`}>
+
+      <h1
+        class="prose prose-slate dark:prose-invert uppercase font-josefin text-2xl"
+      >
+        {title}
+      </h1>
+      <div class="tags flex gap-2 mt-2">
         {
           frontmatter.tags.map((tag) => (
-            <p class="tag">
-              <a href={`../tags/${tag}`}>{tag}</a>
+            <p class="tag bg-white bg-opacity-50 px-2 py-1 rounded">
+              <a class="text-blue-500 no-underline" href={`../tags/${tag}`}>
+                {tag}
+              </a>
             </p>
           ))
         }
       </div>
       <!-- <p transition:animate={fade({ duration: '0.5s' })}><em>{frontmatter.description}</em></p> -->
-    </ProseHeadings>
+    </div>
     <slot />
     <div class="flex flex-col sm:flex-row">
       <div class="lg:w-1/2">
@@ -53,24 +68,4 @@ const image = frontmatter.image?.src
     </div>
   </Prose>
 </BaseLayout>
-<style>
-  a {
-    color: #00539f;
-    text-decoration: none;
-  }
-
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    margin: 0em;
-    border: dotted 1px #a1a1a1;
-    border-radius: 0.5em;
-    padding: 0.5em 1em;
-    font-size: 1.15em;
-    background-color: #f8fcfd;
-  }
-</style>
 <script src="../scripts/fslightbox.js"></script>
