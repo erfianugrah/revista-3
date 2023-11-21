@@ -31,7 +31,7 @@ const image = frontmatter.image?.src;
   {
     image ? (
       <div
-        class="hero-image bg-fixed bg-center bg-no-repeat bg-cover flex flex-col justify-center items-center text-white text-center h-[700px] w-full mb-8"
+        class="hero-image bg-fixed bg-center bg-no-repeat bg-cover flex flex-col justify-center items-center text-white text-center h-[700px] max-w-full w-full mb-8"
         style={`background-image: url(${image});`}
       >
         <h1 class="prose prose-slate dark:prose-invert uppercase font-josefin text-4xl">
