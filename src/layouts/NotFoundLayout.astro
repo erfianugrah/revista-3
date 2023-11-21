@@ -3,7 +3,8 @@ import { ViewTransitions } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer_2 from "../components/Footer_2.astro";
 import "../styles/global.css";
-const { image, description, author, pubDate, updatedDate, title, url } = Astro.props;
+const { image, description, author, pubDate, updatedDate, title, url } =
+  Astro.props;
 ---
 
 <html lang="en">
@@ -20,13 +21,17 @@ const { image, description, author, pubDate, updatedDate, title, url } = Astro.p
     <meta name="article:published_time" content={pubDate} />
     <meta name="article:modified_time" content={updatedDate} />
     <meta name="og:url" content={url} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={url} />
     <meta name="twitter:card" content={image} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
     <ViewTransitions />
   </head>
-  <body class="m-0 auto w-screen p-8 leading-6 min-h-screen flex flex-col lg:pt-8 lg:pr-16 lg:pb-8 lg:pl-16">
+  <body
+    class="m-0 auto w-screen p-8 leading-6 min-h-screen flex flex-col lg:pt-8 lg:pr-16 lg:pb-8 lg:pl-16"
+  >
     <Header />
     <h1 transition:animate="slide">{title}</h1>
     <slot />
