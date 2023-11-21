@@ -4,10 +4,14 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				'sarabun': ["Sarabun","sans-serif"],
+				'sarabun': ["Sarabun", "sans-serif"],
 				'josefin': ['"Josefin Sans Variable"', "sans-serif"],
 				'jost': ['"Jost Variable"', "sans-serif"]
-			}
+			},
+			objectPosition: {
+				'top-33': 'center top 33.33%',
+				'top-50': 'center top 50%',
+			},
 		},
 	},
 	plugins: [
