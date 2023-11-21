@@ -9,6 +9,9 @@ import tailwind from "@astrojs/tailwind";
 // https://astro.build/config
 export default defineConfig({
   site: "https://www.erfianugrah.com",
+  image: {
+    remotePatterns: [{ protocol: "https" }],
+  },
   integrations: [preact(), sitemap(), mdx({
     syntaxHighlight: 'shiki',
     shikiConfig: {
