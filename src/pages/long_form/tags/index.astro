@@ -16,7 +16,7 @@ const pageTitle = "Tag Index";
       {
         tags.map((tag) => (
           <GetRandomImage
-            images={images}
+            images={JSON.stringify(images)}
             altText={imageAlt}
             tag={tag}
             url={`/long_form/tags/${tag}`}
