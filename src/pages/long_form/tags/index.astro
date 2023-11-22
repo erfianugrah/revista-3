@@ -5,7 +5,7 @@ import ProseHeadings from "../../../components/Prose_headings.astro";
 const allLongForm = await getCollection("long_form");
 const tags = [...new Set(allLongForm.map((post) => post.data.tags).flat())];
 const images = allLongForm.map((post) => post.data.image?.src);
-const imageAlt = allLongForm.map((post) => post.data.image?.alt);
+const alt = allLongForm.map((post) => post.data.image?.alt);
 import GetRandomImage from "../../../components/getRandomImage.astro";
 const pageTitle = "Tag Index";
 ---
@@ -17,7 +17,7 @@ const pageTitle = "Tag Index";
         tags.map((tag) => (
           <GetRandomImage
             images={JSON.stringify(images)}
-            altText={imageAlt}
+            alt={JSON.stringify(alt)}
             tag={tag}
             url={`/long_form/tags/${tag}`}
           />
