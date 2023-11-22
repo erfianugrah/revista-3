@@ -1,0 +1,15 @@
+---
+import { getRandomImage } from "/src/scripts/getrandomimage.js";
+const { images, altText, url, tag } = Astro.props;
+const imageUrl = getRandomImage(images);
+---
+
+<div class="relative group border-0">
+  <a href={url}>
+    <img class="object-cover h-full w-full" src={imageUrl} alt={altText} />
+    <p class="absolute inset-0 flex items-center justify-center text-4xl">
+      {tag}
+    </p>
+  </a>
+   <!-- <div class="overlay absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-500 pointer-events-none"></div> -->
+</div>

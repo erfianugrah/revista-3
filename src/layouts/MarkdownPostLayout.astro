@@ -16,8 +16,8 @@ const publishedDate = frontmatter?.pubDate
   .join(" ");
 const title = frontmatter?.title;
 const description = frontmatter?.description;
-const author = frontmatter?.author.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-// const author = frontmatter?.author;
+// const author = frontmatter?.author.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+const author = frontmatter?.author;
 const image = frontmatter.image?.src;
 ---
 
@@ -33,15 +33,16 @@ const image = frontmatter.image?.src;
     image ? (
       <div
         class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-white text-center h-[450px] sm:h-[500px] md:h-[600px] lg:h-[800px] xl:h-[800px] mb-8 lg:-mx-16 -mx-8"
-        style={`background-image: url(${image}); background-position: 40% 30%;`}
-      >
+        style={`background-image: url(${image}); background-position: 40% 30%;`}>
         <h1 class="prose prose-slate dark:prose-invert uppercase font-josefin text-4xl">
           {title}
         </h1>
         <div class="flex gap-2 mt-2">
           {frontmatter.tags.map((tag) => (
             <p class="bg-white bg-opacity-50 px-2 py-1 rounded font-josefin">
-              <a class="text-blue-800 no-underline font-josefin" href={`../tags/${tag}`}>
+              <a
+                class="text-blue-800 no-underline font-josefin"
+                href={`../tags/${tag}`}>
                 {tag}
               </a>
             </p>
@@ -56,7 +57,9 @@ const image = frontmatter.image?.src;
         <div class="flex">
           {frontmatter.tags.map((tag) => (
             <p class="bg-white bg-opacity-50 px-2 py-1 rounded font-josefin">
-              <a class="text-blue-800 no-underline font-josefin" href={`../tags/${tag}`}>
+              <a
+                class="text-blue-800 no-underline font-josefin"
+                href={`../tags/${tag}`}>
                 {tag}
               </a>
             </p>

@@ -4,17 +4,23 @@ import { getCollection } from "astro:content";
 import ProseHeadings from "../../../components/Prose_headings.astro";
 const allLongForm = await getCollection("long_form");
 const tags = [...new Set(allLongForm.map((post) => post.data.tags).flat())];
+const images = allLongForm.map((post) => post.data.image?.src);
+const imageAlt = allLongForm.map((post) => post.data.image?.alt);
+import GetRandomImage from "../../../components/getRandomImage.astro";
 const pageTitle = "Tag Index";
 ---
 
 <BaseLayout title={pageTitle}>
   <ProseHeadings>
-    <div class="tags">
+    <div class="tags w-100 h-full flex items-center justify-center -mt-10 ">
       {
         tags.map((tag) => (
-          <p class="tag">
-            <a href={`/long_form/tags/${tag}`}>{tag}</a>
-          </p>
+          <GetRandomImage
+            images={images}
+            altText={imageAlt}
+            tag={tag}
+            url={`/long_form/tags/${tag}`}
+          />
         ))
       }
     </div>

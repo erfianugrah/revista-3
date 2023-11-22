@@ -1,7 +1,7 @@
 {
-  "name": "astro-blog-2",
+  "name": "Revistav3",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.7.3.2",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -10,9 +10,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/markdoc": "^0.7.1",
-    "@astrojs/mdx": "^1.1.4",
+    "@astrojs/markdoc": "^0.7.2",
+    "@astrojs/mdx": "^1.1.5",
+    "@astrojs/partytown": "^2.0.2",
     "@astrojs/preact": "^3.0.1",
+    "@astrojs/prefetch": "^0.4.1",
     "@astrojs/rss": "^3.0.0",
     "@astrojs/sitemap": "^3.0.3",
     "@astrojs/tailwind": "^5.0.2",

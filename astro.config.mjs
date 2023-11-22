@@ -5,12 +5,17 @@ import preact from "@astrojs/preact";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
 import tailwind from "@astrojs/tailwind";
+import markdoc from "@astrojs/markdoc";
+import prefetch from "@astrojs/prefetch";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://www.erfianugrah.com",
   image: {
-    remotePatterns: [{ protocol: "https" }],
+    remotePatterns: [{
+      protocol: "https",
+      hostname: '**.erfianugrah.com',
+    }]
   },
   integrations: [preact(), sitemap(), mdx({
     syntaxHighlight: 'shiki',
@@ -18,8 +23,8 @@ export default defineConfig({
       theme: 'dracula'
     },
     gfm: false
-  }), tailwind()],
+  }), tailwind(), markdoc(), prefetch()],
   markdown: {
-    remarkPlugins: [remarkModifiedTime, remarkReadingTime],
+    remarkPlugins: [remarkModifiedTime, remarkReadingTime]
   }
 });
