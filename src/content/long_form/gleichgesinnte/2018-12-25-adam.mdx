@@ -13,25 +13,11 @@ I met Adam in an paradoxically opposed situation when compared to this project t
 
 ---
 
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Adam-1.jpg"  data-fslightbox="gallery" >
-            <img src="https://erfianugrah.com/content/images/2021/08/Adam-1.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Adam-2.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Adam-2.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Adam-3-1.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Adam-3-1.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Adam-4.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Adam-4.jpg" />
-        </a>
-    </div>
-</div>
+import MasonryLayout from '../../../components/masonry.jsx';
+
+<MasonryLayout images={[
+  { src: "https://erfianugrah.com/content/images/2021/08/Adam-1.jpg", alt: "Adam 1" },
+  { src: "https://erfianugrah.com/content/images/2021/08/Adam-2.jpg", alt: "Adam 2" },
+  { src: "https://erfianugrah.com/content/images/2021/08/Adam-3-1.jpg", alt: "Adam 3" },
+  { src: "https://erfianugrah.com/content/images/2021/08/Adam-4.jpg", alt: "Adam 4" },
+]} />
