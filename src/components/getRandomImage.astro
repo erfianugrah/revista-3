@@ -4,7 +4,7 @@ const { images, alt, url, tag } = Astro.props;
 
 <div class="relative group border-0" data-images={images} data-alt={alt}>
   <a href={url}>
-    <img id="randomImage" class="object-cover h-full w-full"  />
+    <img id="randomImage" class="object-cover"  />
     <p class="absolute inset-0 flex items-center justify-center text-4xl">
       {tag}
     </p>

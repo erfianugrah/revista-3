@@ -1,30 +1,53 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
-import ProseHeadings from "../../../components/Prose_headings.astro";
+import "@fontsource-variable/josefin-sans";
 const allLongForm = await getCollection("long_form");
 const tags = [...new Set(allLongForm.map((post) => post.data.tags).flat())];
 const images = allLongForm.map((post) => post.data.image?.src);
 const alt = allLongForm.map((post) => post.data.image?.alt);
 import GetRandomImage from "../../../components/getRandomImage.astro";
-const pageTitle = "Tag Index";
+const imagesByTag = allLongForm.reduce((acc, post) => {
+  post.data.tags.forEach((tag) => {
+    if (!acc[tag]) {
+      acc[tag] = [];
+    }
+    acc[tag].push(post.data.image?.src);
+  });
+  return acc;
+}, {});
+const pageTitle = "Long Form Projects";
 ---
 
 <BaseLayout title={pageTitle}>
-  <ProseHeadings>
-    <div class="tags w-100 h-full flex items-center justify-center -mt-10 ">
-      {
-        tags.map((tag) => (
-          <GetRandomImage
-            images={JSON.stringify(images)}
-            alt={JSON.stringify(alt)}
-            tag={tag}
-            url={`/long_form/tags/${tag}`}
-          />
-        ))
-      }
-    </div>
-  </ProseHeadings>
+
+  {
+    tags.length === 1 ? (
+      <div class="tags w-full h-full lg:h-[;;px] flex items-center justify-center font-josefin">
+        <GetRandomImage
+          images={JSON.stringify(imagesByTag[tags[0]])}
+          alt={JSON.stringify(alt)}
+          tag={tags[0]}
+          url={`/long_form/tags/${tags[0]}`}
+        />
+      </div>
+    ) : (
+      <div class="grid grid-cols-4 gap-4 font-josefin">
+        {
+          tags.map((tag) => (
+            <div class="col-span-1">
+              <GetRandomImage
+                images={JSON.stringify(imagesByTag[tag])}
+                alt={JSON.stringify(alt)}
+                tag={tag}
+                url={`/long_form/tags/${tag}`}
+              />
+            </div>
+          ))
+        }
+      </div>
+    )
+  }
 </BaseLayout>
 <style>
   a {

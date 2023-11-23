@@ -1,24 +1,37 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
-import ProseHeadings from "../../../components/Prose_headings.astro";
+import "@fontsource-variable/josefin-sans";
 const allMuses = await getCollection("muses");
 const tags = [...new Set(allMuses.map((post) => post.data.tags).flat())];
-const pageTitle = "Tag Index";
+const images = allMuses.map((post) => post.data.image?.src);
+const alt = allMuses.map((post) => post.data.image?.alt);
+import GetRandomImage from "../../../components/getRandomImage.astro";
+const imagesByTag = allMuses.reduce((acc, post) => {
+  post.data.tags.forEach((tag) => {
+    if (!acc[tag]) {
+      acc[tag] = [];
+    }
+    acc[tag].push(post.data.image?.src);
+  });
+  return acc;
+}, {});
+const pageTitle = "Muses Tag Index";
 ---
 
 <BaseLayout title={pageTitle}>
-  <ProseHeadings>
-    <div class="tags">
+    <div class="tags w-full h-full flex items-center justify-center font-josefin">
       {
         tags.map((tag) => (
-          <p class="tag">
-            <a href={`/muses/tags/${tag}`}>{tag}</a>
-          </p>
+          <GetRandomImage
+            images={JSON.stringify(imagesByTag[tag])}
+            alt={JSON.stringify(alt)}
+            tag={tag}
+            url={`/muses/tags/${tag}`}
+          />
         ))
       }
     </div>
-  </ProseHeadings>
 </BaseLayout>
 <style>
   a {

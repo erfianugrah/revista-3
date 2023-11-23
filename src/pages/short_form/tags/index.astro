@@ -1,24 +1,54 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
-import ProseHeadings from "../../../components/Prose_headings.astro";
+import "@fontsource-variable/josefin-sans";
 const allShortForm = await getCollection("short_form");
 const tags = [...new Set(allShortForm.map((post) => post.data.tags).flat())];
-const pageTitle = "Tag Index";
+const images = allShortForm.map((post) => post.data.image?.src);
+const alt = allShortForm.map((post) => post.data.image?.alt);
+import GetRandomImage from "../../../components/getRandomImage.astro";
+const imagesByTag = allShortForm.reduce((acc, post) => {
+  post.data.tags.forEach((tag) => {
+    if (!acc[tag]) {
+      acc[tag] = [];
+    }
+    acc[tag].push(post.data.image?.src);
+  });
+  return acc;
+}, {});
+const pageTitle = "Short Form Tag Index";
 ---
 
 <BaseLayout title={pageTitle}>
-  <ProseHeadings>
-    <div class="tags">
-      {
-        tags.map((tag) => (
-          <p class="tag">
-            <a href={`/short_form/tags/${tag}`}>{tag}</a>
-          </p>
-        ))
-      }
-    </div>
-  </ProseHeadings>
+
+  {
+    tags.length === 1 ? (
+      <div class="tags w-full h-full flex items-center justify-center font-josefin">
+        <GetRandomImage
+          images={JSON.stringify(imagesByTag[tags[0]])}
+          alt={JSON.stringify(alt)}
+          tag={tags[0]}
+          url={`/short_form/tags/${tags[0]}`}
+        />
+      </div>
+    ) : (
+      <div class="grid grid-cols-4 gap-4 font-josefin">
+        {
+          tags.map((tag) => (
+            <div class="col-span-1">
+              <GetRandomImage
+                images={JSON.stringify(imagesByTag[tag])}
+                alt={JSON.stringify(alt)}
+                tag={tag}
+                url={`/short_form/tags/${tag}`}
+              />
+            </div>
+          ))
+        }
+      </div>
+    )
+  }
+
 </BaseLayout>
 <style>
   a {
