@@ -20,18 +20,33 @@ const pageTitle = "Muses Tag Index";
 ---
 
 <BaseLayout title={pageTitle}>
-    <div class="tags w-full h-full flex items-center justify-center font-josefin">
-      {
-        tags.map((tag) => (
-          <GetRandomImage
-            images={JSON.stringify(imagesByTag[tag])}
-            alt={JSON.stringify(alt)}
-            tag={tag}
-            url={`/muses/tags/${tag}`}
-          />
-        ))
-      }
-    </div>
+  {
+    tags.length === 1 ? (
+      <div class="tags w-full h-full flex items-center justify-center font-josefin">
+        <GetRandomImage
+          images={JSON.stringify(imagesByTag[tags[0]])}
+          alt={JSON.stringify(alt)}
+          tag={tags[0]}
+          url={`/muses/tags/${tags[0]}`}
+        />
+      </div>
+    ) : (
+      <div class="sm:grid sm:grid-cols-4 gap-4 space-y-4 sm:space-y-0 justify-center items-center font-josefin">
+        {
+          tags.map((tag) => (
+            <div class="col-span-1">
+              <GetRandomImage
+                images={JSON.stringify(imagesByTag[tag])}
+                alt={JSON.stringify(alt)}
+                tag={tag}
+                url={`/muses/tags/${tag}`}
+              />
+            </div>
+          ))
+        }
+      </div>
+    )
+  }
 </BaseLayout>
 <style>
   a {
