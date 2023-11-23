@@ -20,10 +20,9 @@ const pageTitle = "Short Form Tag Index";
 ---
 
 <BaseLayout title={pageTitle}>
-
   {
     tags.length === 1 ? (
-      <div class="tags w-full h-full flex items-center justify-center font-josefin">
+      <div class="object-contain w-full h-full relative flex items-center justify-center font-josefin">
         <GetRandomImage
           images={JSON.stringify(imagesByTag[tags[0]])}
           alt={JSON.stringify(alt)}
@@ -50,22 +49,3 @@ const pageTitle = "Short Form Tag Index";
   }
 
 </BaseLayout>
-<style>
-  a {
-    color: #00539f;
-  }
-
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    margin: 0.25em;
-    border: dotted 1px #a1a1a1;
-    border-radius: 0.5em;
-    padding: 0.5em 1em;
-    font-size: 1.15em;
-    background-color: #f8fcfd;
-  }
-</style>
