@@ -23,7 +23,7 @@ const pageTitle = "Long Form Projects";
 
   {
     tags.length === 1 ? (
-      <div class="tags w-full h-full lg:h-[;;px] flex items-center justify-center font-josefin">
+      <div class="tags w-full h-full flex items-center justify-center font-josefin">
         <GetRandomImage
           images={JSON.stringify(imagesByTag[tags[0]])}
           alt={JSON.stringify(alt)}
@@ -32,7 +32,7 @@ const pageTitle = "Long Form Projects";
         />
       </div>
     ) : (
-      <div class="grid grid-cols-4 gap-4 font-josefin">
+      <div class="sm:grid sm:grid-cols-4 gap-4 space-y-4 sm:space-y-0 justify-center items-center font-josefin">
         {
           tags.map((tag) => (
             <div class="col-span-1">
