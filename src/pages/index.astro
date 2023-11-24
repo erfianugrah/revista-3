@@ -1,16 +1,22 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import GetRandomImage from "../components/getRandomImage.astro";
+import GetRandomImageWithLink from "../components/Homepage.astro";
 const { pageTitle } = Astro.props;
 import { getCollection } from "astro:content";
 const collections = ['long_form', 'short_form']; // Add all your collections here
 let allImages = [];
+let allAlts = [];
+let allUrls = [];
 for (let collection of collections) {
   const allContent = await getCollection(collection);
   const images = allContent.map((post) => post.data.image?.src);
+  const alts = allContent.map((post) => post.data.image?.alt);
+  const urls = allContent.map((post) => `/${collection}/${post?.slug}`);
   allImages = [...allImages, ...images];
+  allAlts = [...allAlts, ...alts];
+  allUrls = [...allUrls, ...urls];
 }
 ---
 <BaseLayout title={pageTitle}>
-    {allImages.length > 0 ? <GetRandomImage images={JSON.stringify(allImages)} alt={JSON.stringify(allImages)} /> : <p>No images found</p>}
+    {allImages.length > 0 ? <GetRandomImageWithLink images={JSON.stringify(allImages)} alt={JSON.stringify(allAlts)} urls={JSON.stringify(allUrls)} /> : <p>No images found</p>}
 </BaseLayout>
