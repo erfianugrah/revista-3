@@ -1,50 +1,7 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
-import "@fontsource-variable/josefin-sans";
-const allLongForm = await getCollection("long_form");
-const tags = [...new Set(allLongForm.map((post) => post.data.tags).flat())];
-const images = allLongForm.map((post) => post.data.image?.src);
-const alt = allLongForm.map((post) => post.data.image?.alt);
-import GetRandomImage from "../../../components/getRandomImage.astro";
-const imagesByTag = allLongForm.reduce((acc, post) => {
-  post.data.tags.forEach((tag) => {
-    if (!acc[tag]) {
-      acc[tag] = [];
-    }
-    acc[tag].push(post.data.image?.src);
-  });
-  return acc;
-}, {});
+import TagLayout from "../../../layouts/TagLayout.astro";
 const pageTitle = "Long Form Projects";
+const directory = "long_form";
 ---
 
-<BaseLayout title={pageTitle}>
-  {
-    tags.length === 1 ? (
-      <div class="object-contain w-full h-full relative flex items-center justify-center font-josefin">
-        <GetRandomImage
-          images={JSON.stringify(imagesByTag[tags[0]])}
-          alt={JSON.stringify(alt)}
-          tag={tags[0]}
-          url={`/long_form/tags/${tags[0]}`}
-        />
-      </div>
-    ) : (
-      <div class="sm:grid sm:grid-cols-4 gap-4 space-y-4 sm:space-y-0 justify-center items-center font-josefin">
-        {
-          tags.map((tag) => (
-            <div class="col-span-1">
-              <GetRandomImage
-                images={JSON.stringify(imagesByTag[tag])}
-                alt={JSON.stringify(alt)}
-                tag={tag}
-                url={`/long_form/tags/${tag}`}
-              />
-            </div>
-          ))
-        }
-      </div>
-    )
-  }
-</BaseLayout>
+<TagLayout pageTitle={pageTitle} directory={directory} />

@@ -1,0 +1,47 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import GetRandomImage from "../components/getRandomImage.astro";
+import { getCollection } from "astro:content";
+import "@fontsource-variable/josefin-sans";
+const allContent = await getCollection(Astro.props.directory);
+const tags = [...new Set(allContent.map((post) => post.data.tags).flat())];
+const images = allContent.map((post) => post.data.image?.src);
+const alt = allContent.map((post) => post.data.image?.alt);
+const imagesByTag = allContent.reduce((acc, post) => {
+  post.data.tags.forEach((tag) => {
+    if (!acc[tag]) {
+      acc[tag] = [];
+    }
+    acc[tag].push(post.data.image?.src);
+  });
+  return acc;
+}, {});
+---
+
+<astro>
+  <BaseLayout title={Astro.props.pageTitle}>
+    {tags.length === 1 ? (
+      <div class="object-contain w-full h-full relative flex items-center justify-center font-josefin">
+        <GetRandomImage
+          images={JSON.stringify(imagesByTag[tags[0]])}
+          alt={JSON.stringify(alt)}
+          tag={tags[0]}
+          url={`/${Astro.props.directory}/tags/${tags[0]}`}
+        />
+      </div>
+    ) : (
+      <div class="sm:grid sm:grid-cols-4 gap-4 space-y-4 sm:space-y-0 justify-center items-center font-josefin">
+        {tags.map((tag) => (
+          <div class="col-span-1">
+            <GetRandomImage
+              images={JSON.stringify(imagesByTag[tag])}
+              alt={JSON.stringify(alt)}
+              tag={tag}
+              url={`/${Astro.props.directory}/tags/${tag}`}
+            />
+          </div>
+        ))}
+      </div>
+    )}
+  </BaseLayout>
+</astro>
