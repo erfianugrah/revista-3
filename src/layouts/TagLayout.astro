@@ -1,7 +1,6 @@
 ---
 import GetRandomImage from "../components/getRandomImage.astro";
 import { getCollection } from "astro:content";
-import "@fontsource-variable/josefin-sans";
 const allContent = await getCollection(Astro.props.directory);
 const tags = [...new Set(allContent.map((post) => post.data.tags).flat())];
 const images = allContent.map((post) => post.data.image?.src);
