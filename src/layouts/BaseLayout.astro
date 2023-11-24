@@ -19,7 +19,7 @@ const { image, description, author, pubDate, updatedDate, title } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="og:title" content={ title ? pageTitle : 'Revista' } />
-    <meta name="og:description" content={ description || metaDescription } />
+    <meta name="og:description" content={ description ? metaDescription : '' } />
     <meta property="og:type" content="website" />
     <meta name="og:image" content={ image ? metaImage : '' } />
     <meta name="article:author" content={ author || "Erfi Anugrah" } />
@@ -31,7 +31,7 @@ const { image, description, author, pubDate, updatedDate, title } = Astro.props;
     <meta property="twitter:url" content={Astro.url} />
     <meta name="twitter:card" content={ image ? metaImage : ''  } />
     <meta name="twitter:title" content={ title ? pageTitle : 'Revista' } />
-    <meta name="twitter:description" content={ description || metaDescription} />
+    <meta name="twitter:description" content={ description ? metaDescription : '' } />
     <meta name="twitter:image" content={ image ? metaImage : ''  } />
     <title>{pageTitle}</title>
     <ViewTransitions />
