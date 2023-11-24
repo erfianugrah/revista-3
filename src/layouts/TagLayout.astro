@@ -1,5 +1,4 @@
 ---
-import BaseLayout from "./BaseLayout.astro";
 import GetRandomImage from "../components/getRandomImage.astro";
 import { getCollection } from "astro:content";
 import "@fontsource-variable/josefin-sans";
@@ -17,31 +16,28 @@ const imagesByTag = allContent.reduce((acc, post) => {
   return acc;
 }, {});
 ---
-
 <astro>
-  <BaseLayout title={Astro.props.pageTitle}>
-    {tags.length === 1 ? (
-      <div class="object-contain w-full h-full relative flex items-center justify-center font-josefin">
-        <GetRandomImage
-          images={JSON.stringify(imagesByTag[tags[0]])}
-          alt={JSON.stringify(alt)}
-          tag={tags[0]}
-          url={`/${Astro.props.directory}/tags/${tags[0]}`}
-        />
-      </div>
-    ) : (
-      <div class="sm:grid sm:grid-cols-4 gap-4 space-y-4 sm:space-y-0 justify-center items-center font-josefin">
-        {tags.map((tag) => (
-          <div class="col-span-1">
-            <GetRandomImage
-              images={JSON.stringify(imagesByTag[tag])}
-              alt={JSON.stringify(alt)}
-              tag={tag}
-              url={`/${Astro.props.directory}/tags/${tag}`}
-            />
-          </div>
-        ))}
-      </div>
-    )}
-  </BaseLayout>
+  {tags.length === 1 ? (
+    <div class="object-contain w-full h-full relative flex items-center justify-center font-josefin">
+      <GetRandomImage
+        images={JSON.stringify(imagesByTag[tags[0]])}
+        alt={JSON.stringify(alt)}
+        tag={tags[0]}
+        url={`/${Astro.props.directory}/tags/${tags[0]}`}
+      />
+    </div>
+  ) : (
+    <div class="sm:grid sm:grid-cols-4 gap-4 space-y-4 sm:space-y-0 justify-center items-center font-josefin">
+      {tags.map((tag) => (
+        <div class="col-span-1">
+          <GetRandomImage
+            images={JSON.stringify(imagesByTag[tag])}
+            alt={JSON.stringify(alt)}
+            tag={tag}
+            url={`/${Astro.props.directory}/tags/${tag}`}
+          />
+        </div>
+      ))}
+    </div>
+  )}
 </astro>
