@@ -18,7 +18,7 @@ const { image, description, author, pubDate, updatedDate, title } = Astro.props;
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="og:title" content={title ? pageTitle : 'Revista'} />
+    <meta name="og:title" content={ title ? pageTitle : 'Revista' } />
     <meta name="og:description" content={ description || metaDescription } />
     <meta property="og:type" content="website" />
     <meta name="og:image" content={ image || metaImage } />
@@ -29,10 +29,10 @@ const { image, description, author, pubDate, updatedDate, title } = Astro.props;
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:domain" content={Astro.site} />
     <meta property="twitter:url" content={Astro.url} />
-    <meta name="twitter:card" content={image} />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={image} />
+    <meta name="twitter:card" content={ image || metaImage } />
+    <meta name="twitter:title" content={ title ? pageTitle : 'Revista' } />
+    <meta name="twitter:description" content={ description || metaDescription} />
+    <meta name="twitter:image" content={ image || metaImage } />
     <title>{pageTitle}</title>
     <ViewTransitions />
   </head>
