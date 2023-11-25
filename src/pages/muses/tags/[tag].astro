@@ -32,6 +32,7 @@ const { posts } = Astro.props;
               image={post.data?.image?.src || ''}
               title={post.data?.title || ''}
               description={post.data?.description || ''}
+              pubDate={post.data?.pubDate || ''}
             }
           />
         ))
