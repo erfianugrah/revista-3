@@ -6,25 +6,28 @@ document.addEventListener('astro:page-load', function() {
     let alt = JSON.parse(element.dataset.alt); // Parse the alt texts
     let urls = JSON.parse(element.dataset.urls); // Parse the urls
 
-    // Your current shuffling algorithm
-    for (let i = images.length - 1; i > 0; i--) {
+    // Combine the images, alt texts, and URLs into a single array of objects
+    let items = images.map((image, index) => {
+      return {
+        image: image,
+        alt: alt[index],
+        url: urls[index]
+      };
+    });
+
+    // Shuffle the items array
+    for (let i = items.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      let tempImage = images[i];
-      let tempAlt = alt[i];
-      let tempUrl = urls[i];
-      images[i] = images[j];
-      alt[i] = alt[j];
-      urls[i] = urls[j];
-      images[j] = tempImage;
-      alt[j] = tempAlt;
-      urls[j] = tempUrl;
+      [items[i], items[j]] = [items[j], items[i]];
     }
 
     let imgElement = element.querySelector('img');
-    imgElement.src = images[0]; // Use the first image
-    imgElement.alt = alt[0]; // Use the corresponding alt text
-
     let anchorElement = element.querySelector('a');
-    anchorElement.href = urls[0]; // Use the corresponding url
+
+    // Use the first item
+    let firstItem = items[0];
+    imgElement.src = firstItem.image;
+    imgElement.alt = firstItem.alt;
+    anchorElement.href = firstItem.url;
   });
 });
