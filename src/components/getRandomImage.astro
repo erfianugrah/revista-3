@@ -1,9 +1,9 @@
 ---
 const { images, alt, url, tag } = Astro.props;
 ---
-<div class="relative group border-0 hover:scale-105 transition-transform duration-200" data-images={images} data-alt={alt} >
+<div id="randomimage" class="relative group border-0" data-images={images} data-alt={alt} >
  <a href={url}>
-    <img id="randomImage" class="w-full h-[500px] lg:h-[720px] md:h-[640px] sm:h-[480px] xs:h-[320px] object-cover object-center" style="object-position: 40% 35%;" />
+    <img class="w-full h-[500px] lg:h-[720px] md:h-[640px] sm:h-[480px] xs:h-[320px] object-cover object-center hover:scale-105 transition-transform duration-200" style="object-position: 40% 35%;" />
     <p class="absolute inset-0 flex items-center justify-center text-white text-4xl">
       {tag}
     </p>
