@@ -34,12 +34,12 @@ const image = frontmatter.image?.src;
       <div
         class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-[450px] sm:h-[500px] md:h-[600px] lg:h-[800px] xl:h-[800px] mb-8 lg:-mx-16 -mx-8"
         style={`background-image: url(${image}); background-position: 40% 30%;`}>
-        <h1 class="prose prose-slate uppercase font-josefin text-white text-4xl">
+        <h1 class="prose prose-slate uppercase font-josefin text-white text-6xl">
           {title}
         </h1>
         <div class="flex gap-2 mt-2">
           {frontmatter.tags.map((tag) => (
-            <p class="bg-white bg-opacity-50 px-2 py-1 rounded font-josefin">
+            <p class="bg-white bg-opacity-50 px-2 py-1 rounded font-josefin text-2xl">
               <a
                 class="text-blue-800 no-underline font-josefin"
                 href={`../tags/${tag}`}>
@@ -51,14 +51,14 @@ const image = frontmatter.image?.src;
       </div>
     ) : (
       <Prose>
-        <h1 class="prose prose-slate dark:prose-invert normal-case font-josefin -mb-1">
+        <h1 class="prose prose-slate dark:prose-invert normal-case font-josefin text-6xl -mb-1">
           {title}
         </h1>
         <div class="flex">
           {frontmatter.tags.map((tag) => (
-            <p class="bg-white bg-opacity-50 px-2 py-1 rounded font-josefin">
+            <p class="bg-white bg-opacity-50 px-2 py-1 rounded">
               <a
-                class="text-blue-800 no-underline font-josefin"
+                class="text-blue-800 no-underline font-josefin text-2xl"
                 href={`../tags/${tag}`}>
                 {tag}
               </a>
@@ -72,7 +72,7 @@ const image = frontmatter.image?.src;
     <slot />
     <div class="flex flex-col sm:flex-row">
       <div class="lg:w-1/2">
-        <p>-- <a href="/about/"> {author}</a></p>
+        <p>-- <a href="/about/" class="no-underline"> {author}</a></p>
       </div>
       <div class="lg:w-1/2">
         <ul class="list-none text-right sm:align-left">
