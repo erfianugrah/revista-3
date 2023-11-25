@@ -2,7 +2,6 @@
 import { ViewTransitions } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer_2 from "../components/Footer_2.astro";
-import "@fontsource/sarabun";
 import "@fontsource-variable/jost";
 import "@fontsource-variable/josefin-sans";
 const pageTitle = "Revista";
@@ -37,16 +36,12 @@ const { image, description, author, pubDate, updatedDate, title } = Astro.props;
     <title>{pageTitle}</title>
     <ViewTransitions />
   </head>
-  <body
-    class="flex flex-col flex-wrap lg:pt-8 lg:pr-16 lg:pb-8 lg:pl-16 p-8 max-w-full min-h-screen"
-  >
-    <Header />
-    <!-- <h1 transition:animate="fade">{pageTitle}</h1> -->
+<body class="flex flex-col flex-wrap justify-between lg:pt-8 lg:pr-16 lg:pb-8 lg:pl-16 p-8 max-w-full min-h-screen">
+  <Header />
     <slot />
-    <script src="../scripts/menu.js"></script>
-    <Footer_2 />
-  </body>
-</html>
+  <Footer_2 />
+  <script src="../scripts/menu.js"></script>
+</body>
 <style>
   html.dark {
   background-color: rgb(34, 33, 37);
