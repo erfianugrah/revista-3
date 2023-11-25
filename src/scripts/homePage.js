@@ -1,25 +1,24 @@
 document.addEventListener('astro:page-load', function() {
-  let imageElements = document.querySelectorAll('.relative.group.border-0');
+  const imageElements = document.querySelectorAll('.relative.group.border-0');
 
   imageElements.forEach((element) => {
-    let images = JSON.parse(element.dataset.images);
-    let alt = JSON.parse(element.dataset.alt); // Parse the alt texts
-    let urls = JSON.parse(element.dataset.urls); // Parse the urls
+    const images = JSON.parse(element.dataset.images);
+    const alt = JSON.parse(element.dataset.alt); // Parse the alt texts
+    const urls = JSON.parse(element.dataset.urls); // Parse the urls
 
-    // Create an array of objects
-    let combined = images.map((image, i) => ({image: image, alt: alt[i], url: urls[i]}));
-
-    // Shuffle the array
-    for (let i = combined.length - 1; i > 0; i--) {
+    // Shuffle the arrays
+    for (let i = images.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [combined[i], combined[j]] = [combined[j], combined[i]];
+      [images[i], images[j]] = [images[j], images[i]];
+      [alt[i], alt[j]] = [alt[j], alt[i]];
+      [urls[i], urls[j]] = [urls[j], urls[i]];
     }
 
-    let imgElement = element.querySelector('img');
-    imgElement.src = combined[0].image; // Use the first image
-    imgElement.alt = combined[0].alt; // Use the corresponding alt text
+    const imgElement = element.querySelector('img');
+    imgElement.src = images[0]; // Use the first image
+    imgElement.alt = alt[0]; // Use the corresponding alt text
 
-    let anchorElement = element.querySelector('a');
-    anchorElement.href = combined[0].url; // Use the corresponding url
+    const anchorElement = element.querySelector('a');
+    anchorElement.href = urls[0]; // Use the corresponding url
   });
 });
