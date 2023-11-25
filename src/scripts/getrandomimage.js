@@ -1,11 +1,11 @@
 document.addEventListener('astro:page-load', function() {
-  let imageElements = document.querySelectorAll('.relative.group.border-0');
+  let imageElements = Array.from(document.querySelectorAll('.relative.group.border-0'));
 
   imageElements.forEach((element) => {
     let images = JSON.parse(element.dataset.images);
     let alt = JSON.parse(element.dataset.alt); // Parse the alt texts
 
-    // Shuffle the arrays
+    // Your current shuffling algorithm
     for (let i = images.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       let tempImage = images[i];
