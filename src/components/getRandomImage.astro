@@ -3,8 +3,8 @@ const { images, alt, url, tag } = Astro.props;
 ---
 <div id="randomimage" class="relative group border-0" data-images={images} data-alt={alt} >
  <a href={url}>
-    <img class="w-full h-[500px] lg:h-[720px] md:h-[640px] sm:h-[480px] xs:h-[320px] object-cover object-center hover:scale-105 transition-transform duration-200" style="object-position: 40% 35%;" />
-    <p class="absolute inset-0 flex items-center justify-center text-white text-4xl">
+    <img class="w-full h-[600px] xl:h-[1440px] lg:h-[1080px] object-cover object-center " style="object-position: 40% 35%;" />
+    <p class="absolute inset-0 flex items-center justify-center text-white text-4xl xl:text-6xl hover:scale-110 transition-transform duration-200">
       {tag}
     </p>
   </a>

@@ -1,10 +1,10 @@
 ---
 const { images, alt, urls, tag } = Astro.props;
 ---
-<div id="homepage" class="relative group border-0 lg:-mx-16 -mx-8" data-images={images} data-alt={alt} data-urls={urls} style="z-index: 9999;">
+<div id="homepage" class="relative group border-0 lg:-mx-16 -mx-8" data-images={images} data-alt={alt} data-urls={urls} >
   <a>
-    <img id="randomHomePageImage" class="w-full h-[540px] lg:h-[720px] md:h-[640px] sm:h-[480px] xs:h-[320px] object-cover object-center" style="object-position: 40% 35%;" />
-    <p class="absolute inset-0 flex items-center justify-center text-4xl">
+    <img id="randomHomePageImage" class="w-full h-[600px] xl:h-[1440px] lg:h-[1080px] object-cover object-center" style="object-position: 40% 35%;" />
+    <p class="absolute inset-0 flex items-center justify-center text-4xl xl:text-6xl">
       {tag}
     </p>
   </a>
