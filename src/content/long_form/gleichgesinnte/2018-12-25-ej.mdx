@@ -14,25 +14,11 @@ We met in 2015 on a rainy day in a capsule hostel in Tokyo on my first solo trip
 Seeing each other again, after all that time, and talking about the things we have been through and accomplished, in many ways seems surreal even as I took these photos of him, and as I write this. It goes to show how the smallest of reasons could be the basis of connection, of which, held strong over an extended period of time.
 
 ---
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/EJ-3.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/EJ-3.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/EJ.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/EJ.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/EJ-1.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/EJ-1.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/EJ-2-1.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/EJ-2-1.jpg" />
-        </a>
-    </div>
-</div>
+import MasonryLayout from '../../../components/masonry.jsx';
+
+<MasonryLayout images={[
+    { src: "https://erfianugrah.com/content/images/2021/08/EJ-3.jpg", alt: "EJ 3" },
+    { src: "https://erfianugrah.com/content/images/2021/08/EJ.jpg", alt: "EJ" },
+    { src: "https://erfianugrah.com/content/images/2021/08/EJ-1.jpg", alt: "EJ 1" },
+    { src: "https://erfianugrah.com/content/images/2021/08/EJ-2-1.jpg", alt: "EJ 2" },
+]} />

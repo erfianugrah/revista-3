@@ -14,50 +14,16 @@ We talked about his project which consisted of photographers all over the world,
 His unique perspective as a designer comes through in his photographs. One of the things that I like to think about - there is no useless information, anything and everything can be used in another form, like energy. Cannot be created, can only be converted.
 
 ---
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Peter-1.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Peter-1.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Peter-2.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Peter-2.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Peter-3.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Peter-3.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Peter-5.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Peter-5.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Peter-9.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Peter-9.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Peter-4-2.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Peter-4-2.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Peter-6-1.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Peter-6-1.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Peter-7-1.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Peter-7-1.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Peter-8-1.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Peter-8-1.jpg" />
-        </a>
-    </div>
-</div>
+import MasonryLayout from '../../../components/masonry.jsx';
+
+<MasonryLayout images={[
+    { src: "https://erfianugrah.com/content/images/2021/08/Peter-1.jpg", alt: "Peter 1" },
+    { src: "https://erfianugrah.com/content/images/2021/08/Peter-2.jpg", alt: "Peter 2" },
+    { src: "https://erfianugrah.com/content/images/2021/08/Peter-3.jpg", alt: "Peter 3" },
+    { src: "https://erfianugrah.com/content/images/2021/08/Peter-5.jpg", alt: "Peter 5" },
+    { src: "https://erfianugrah.com/content/images/2021/08/Peter-9.jpg", alt: "Peter 9" },
+    { src: "https://erfianugrah.com/content/images/2021/08/Peter-4-2.jpg", alt: "Peter 4" },
+    { src: "https://erfianugrah.com/content/images/2021/08/Peter-6-2.jpg", alt: "Peter 6" },
+    { src: "https://erfianugrah.com/content/images/2021/08/Peter-7-1.jpg", alt: "Peter 7" },
+    { src: "https://erfianugrah.com/content/images/2021/08/Peter-8-1.jpg", alt: "Peter 8" },
+]} />

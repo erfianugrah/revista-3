@@ -8,7 +8,7 @@ author: "Erfi Anugrah"
 image:
   {
     src: https://erfianugrah.com/content/images/2021/08/angelo-1-2.jpg,
-    alt: angelo-1-2,
+    alt: angelo-2,
   }
 description: We bonded over our preference to be constantly on the move. Seemingly disparate personalities upon conception.
 ---
@@ -16,26 +16,11 @@ description: We bonded over our preference to be constantly on the move. Seeming
 We bonded over our preference to be constantly on the move. Seemingly disparate personalities upon conception. However, once the initial fogginess has cleared up, we came towards a point of relation that both of us marveled at. Not because it was exuberant in nature but because of the realisation that dawned upon us - how diminutive the scale of the world we live in is.
 
 ---
+import MasonryLayout from '../../../components/masonry.jsx';
 
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/angelo-1-2.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/angelo-1-2.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Angelo-2.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Angelo-2.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Angelo-4-1.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Angelo-4-1.jpg" />
-        </a>
-    </div>
-    <div class="col-span-1">
-        <a href ="https://erfianugrah.com/content/images/2021/08/Angelo-1.jpg"  data-fslightbox="gallery">
-            <img src="https://erfianugrah.com/content/images/2021/08/Angelo-1.jpg" />
-        </a>
-    </div>
-</div>
+<MasonryLayout images={[
+    { src: "https://erfianugrah.com/content/images/2021/08/angelo-1-2.jpg", alt: "Angelo 2" },
+    { src: "https://erfianugrah.com/content/images/2021/08/Angelo-2.jpg", alt: "Angelo 2" },
+    { src: "https://erfianugrah.com/content/images/2021/08/Angelo-4-1.jpg", alt: "Angelo 4" },
+    { src: "https://erfianugrah.com/content/images/2021/08/Angelo-1.jpg", alt: "Angelo 1" },
+]} />
