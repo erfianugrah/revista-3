@@ -19,6 +19,14 @@ const description = frontmatter?.description;
 // const author = frontmatter?.author.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 const author = frontmatter?.author;
 const image = frontmatter.image?.src;
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
+
+const lastModified = dayjs()
+  .utc(Astro.props.frontmatter.lastModified)
+  .format("HH:mm:ss DD MMMM YYYY UTC");
 ---
 
 <BaseLayout
@@ -34,7 +42,7 @@ const image = frontmatter.image?.src;
       <div
         class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-[450px] sm:h-[500px] md:h-[600px] lg:h-[800px] xl:h-[800px] mb-8 lg:-mx-16 -mx-8"
         style={`background-image: url(${image}); background-position: 40% 30%;`}>
-        <h1 class="prose prose-slate uppercase font-josefin text-white text-6xl">
+        <h1 class="prose prose-slate uppercase font-josefin text-white text-5xl">
           {title}
         </h1>
         <div class="flex gap-2 mt-2">
@@ -51,7 +59,7 @@ const image = frontmatter.image?.src;
       </div>
     ) : (
       <Prose>
-        <h1 class="prose prose-slate dark:prose-invert normal-case font-josefin text-6xl -mb-1">
+        <h1 class="prose prose-slate dark:prose-invert normal-case font-josefin text-5xl -mb-1">
           {title}
         </h1>
         <div class="flex">
@@ -80,7 +88,7 @@ const image = frontmatter.image?.src;
             Published: {publishedDate}
           </li>
           <li>
-            Updated: {updatedDate}
+            Updated: {lastModified}
           </li>
         </ul>
       </div>
