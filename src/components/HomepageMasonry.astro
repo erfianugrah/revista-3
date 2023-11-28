@@ -1,0 +1,17 @@
+---
+const { images, alt, urls, tag } = Astro.props;
+import MasonryLayout from "./Masonry.jsx";
+---
+
+<div id="masonry" style={{width: '100%', columnCount: 4, columnGap: '1em'}}>
+  <div
+    id="homepage"
+    class="object-cover object-center"
+    style="object-position: 40% 35%;"
+    data-images={images}
+    data-alt={alt}
+    data-urls={urls}
+  >
+  </div>
+</div>
+<script src="../scripts/homePage.js"></script>
