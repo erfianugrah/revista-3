@@ -10,7 +10,7 @@ const metaDescription = "Life in review. A recollection of things experienced, a
 const { image, description, author, pubDate, updatedDate, title } = Astro.props;
 ---
 
-<html lang="en">
+<html class="bg-white dark:bg-slate-800" lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" href="/actualfavicon_o.png" />
@@ -36,21 +36,21 @@ const { image, description, author, pubDate, updatedDate, title } = Astro.props;
     <title>{pageTitle}</title>
     <ViewTransitions />
   </head>
-<body class="flex flex-col flex-wrap justify-between lg:pt-8 lg:pr-16 lg:pb-8 lg:pl-16 p-8 max-w-full min-h-screen">
+<body class="flex flex-col flex-wrap justify-between lg:pt-8 lg:pr-16 lg:pb-8 lg:pl-16 p-8 max-w-full min-h-screen dark:bg-[rgb(34,33,37)] dark:text-white">
   <Header />
     <slot />
   <Footer />
   <script src="../scripts/menu.js"></script>
 </body>
 <style>
-  html.dark {
+  /* html.dark {
   background-color: rgb(34, 33, 37);
   color: #fff;
 }
 
 .dark .nav-links a {
   color: #fff;
-}
+} */
 
 /* body {
   margin: 0 auto;
