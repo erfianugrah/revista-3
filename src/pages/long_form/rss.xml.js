@@ -15,7 +15,7 @@ export async function GET(context) {
             title: post.data.title,
             pubDate: post.data.pubDate,
             description: post.data.description,
-            link: `/long_form/tags/${post.slug}/`,
+            link: `/long_form/${post.slug}/`,
             content: sanitizeHtml(parser.render(post.body)),
             ...post.data,
         })),
