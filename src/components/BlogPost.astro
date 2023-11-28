@@ -22,14 +22,15 @@ const publishedDate = pubDate
   <div id="description " class="w-full sm:w-2/3 flex flex-col justify-start align-self-center space-y-4">
     <h2 class="font-josefin font-bold text-2xl capitalize" >{title}</h2>
     <p class="font-jost normal-case line-clamp-3 text-base">{description}</p>
-    <p class="font-jost text-sm">Published on {publishedDate} </p>   <a
+    <p class="font-jost text-sm">Published on {publishedDate} </p>   
+    <a
       href={url}
-      class="prose prose-slate dark:prose-invert space-x-4 no-underline font-jost normal-case mt-8 max-w-max max-h-max flex flex-row items-center flex-shrink-0 transition duration-500 ease-in-out"
+      class="prose prose-slate dark:prose-invert space-x-4 no-underline font-jost normal-case mt-8 max-w-max max-h-max flex flex-row items-center flex-shrink-0"
     >
-      <p class="text-base">See more</p>
-      <svg
+      <p class="text-base fade-effect">See more</p>
+      <svg 
         xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6 mb-4"
+        class="h-5 w-5 mb-[18px] fade-effect"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -44,3 +45,13 @@ const publishedDate = pubDate
     <slot />
   </div>
 </div>
+<style>
+  .fade-effect {
+  transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+}
+
+.fade-effect:hover {
+  opacity: 0.5;
+}
+</style>
