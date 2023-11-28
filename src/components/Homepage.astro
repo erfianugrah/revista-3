@@ -3,7 +3,7 @@ const { images, alt, urls, tag } = Astro.props;
 ---
 <div id="homepage" class="flex justify-center items-center" data-images={images} data-alt={alt} data-urls={urls} >
   <a>
-    <img id="randomHomePageImage" class="h-[480px] xl:h-[1080px] lg:h-[640px]" loading="lazy" transition:animate="fade" />
+    <img id="randomHomePageImage" class="sm:h-[540px] xl:h-[1080px] lg:h-[720px] object-cover object-center" loading="lazy" transition:animate="fade" />
   </a>
 </div>
 <script src="../scripts/homePage.js" />
