@@ -6,12 +6,12 @@ const pageTitle = "Page Not Found but Ron Burgundy Found You";
 ---
 
 <BaseLayout title="pageTitle">
-  <h1 class="font-josefin text-4xl px-24 max-sm:px-5 max-w-7xl mx-auto w-full">
+ <Prose>
+  <h1 class="font-josefin text-4xl w-full">
     {pageTitle}
   </h1>
-  <Prose>
-    <h3 class="italic">Or did you find Ron Burgundy?</h3>
-    <h3>
+  <h2 class="font-josefin text-2xl w-full italic">Or did you find Ron Burgundy?</h2>
+    <h3 class="text-base">
       <Greeting
         client:load
         messages={[
