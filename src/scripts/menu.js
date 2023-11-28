@@ -1,10 +1,8 @@
-document.addEventListener('astro:page-load', () => {
+document.addEventListener("astro:page-load", () => {
+window.toggleMenu = function() {
+  const navLinks = document.getElementById('nav-links');
   const hamburger = document.querySelector('.hamburger');
-  const navLinks = document.querySelector('.nav-links');
-
-  if (hamburger && navLinks) {
-    hamburger.addEventListener('click', () => {
-      navLinks.classList.toggle('expanded');
-    });
-  }
+  navLinks.classList.toggle('open');
+  hamburger.classList.toggle('open');
+}
 });

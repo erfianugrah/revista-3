@@ -5,45 +5,48 @@ import Footer from "../components/Footer.astro";
 import "@fontsource-variable/jost";
 import "@fontsource-variable/josefin-sans";
 const pageTitle = "Revista";
-const metaImage = "https://erfianugrah.com/content/images/2021/08/img1343-4.jpg";
-const metaDescription = "Life in review. A recollection of things experienced, and things felt.";
+const metaImage =
+  "https://erfianugrah.com/content/images/2021/08/img1343-4.jpg";
+const metaDescription =
+  "Life in review. A recollection of things experienced, and things felt.";
 const { image, description, author, pubDate, updatedDate, title } = Astro.props;
 ---
 
-<html class="bg-white dark:bg-slate-800" lang="en">
+<html class="bg-[rgb(230,230,225)] dark:bg-slate-800" lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" href="/actualfavicon_o.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="og:title" content={ title || pageTitle } />
-    <meta name="og:description" content={ description || metaDescription } />
+    <meta name="og:title" content={title || pageTitle} />
+    <meta name="og:description" content={description || metaDescription} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Revista" />
-    <meta name="og:image" content={ image || metaImage } />
-    <meta name="article:author" content={ author || "Erfi Anugrah" } />
+    <meta name="og:image" content={image || metaImage} />
+    <meta name="article:author" content={author || "Erfi Anugrah"} />
     <meta name="article:published_time" content={pubDate} />
     <meta name="article:modified_time" content={updatedDate} />
     <meta name="og:url" content={Astro.url} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:domain" content={Astro.site} />
     <meta property="twitter:url" content={Astro.url} />
-    <meta name="twitter:card" content={ image || metaImage } />
-    <meta name="twitter:title" content={  title || pageTitle } />
-    <meta name="twitter:description" content={ description || metaDescription } />
-    <meta name="twitter:image" content={ image || metaImage } />
+    <meta name="twitter:card" content={image || metaImage} />
+    <meta name="twitter:title" content={title || pageTitle} />
+    <meta name="twitter:description" content={description || metaDescription} />
+    <meta name="twitter:image" content={image || metaImage} />
     <title>{pageTitle}</title>
     <ViewTransitions />
   </head>
-<body class="flex flex-col flex-wrap justify-between lg:pt-8 lg:pr-16 lg:pb-8 lg:pl-16 p-8 max-w-full min-h-screen dark:bg-[rgb(34,33,37)] dark:text-white">
-  <Header />
+  <body
+    class="flex flex-col flex-wrap justify-between lg:pt-8 lg:pr-16 lg:pb-8 lg:pl-16 p-8 max-w-full min-h-screen dark:bg-[rgb(34,33,37)] dark:text-white"
+  >
+    <Header />
     <slot />
-  <Footer />
-  <script src="../scripts/menu.js"></script>
-</body>
-<style>
-  /* html.dark {
+    <Footer />
+    <script src="../scripts/menu.js"></script>
+    <style>
+      /* html.dark {
   background-color: rgb(34, 33, 37);
   color: #fff;
 }
@@ -52,7 +55,7 @@ const { image, description, author, pubDate, updatedDate, title } = Astro.props;
   color: #fff;
 } */
 
-/* body {
+      /* body {
   margin: 0 auto;
   width: 100vw;
   padding: 2rem 2rem 2rem 2rem;
@@ -62,12 +65,14 @@ const { image, description, author, pubDate, updatedDate, title } = Astro.props;
   flex-direction: column;
 } */
 
-* {
-  box-sizing: border-box;
-}
+      * {
+        box-sizing: border-box;
+      }
 
-h1 {
-  margin: 1rem 0;
-  font-size: 2.5rem;
-}
-</style>
+      h1 {
+        margin: 1rem 0;
+        font-size: 2.5rem;
+      }
+    </style></body
+  >
+</html>

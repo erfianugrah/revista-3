@@ -1,24 +1,70 @@
 ---
+
 ---
-<div class="hamburger">
-  <span class="line"></span>
-  <span class="line"></span>
-  <span class="line"></span>
+
+<div class="hamburger" onclick="toggleMenu()">
+  <div></div>
+  <div></div>
+  <div></div>
 </div>
 <style>
   .hamburger {
-  /* padding-right: 20px; */
-  cursor: pointer;
-  margin-top: 10px;
-  margin-bottom: 10px;
+    position: relative;
+    width: 30px;
+    height: 20px;
+    transform: rotate(0deg);
+    transition: 0.5s ease-in-out;
+    cursor: pointer;
+    z-index: 10001; /* Increase z-index to ensure it appears on top */
+  }
 
-}
+  .hamburger div {
+    display: block;
+    position: absolute;
+    height: 3px;
+    width: 100%;
+    background: #333;
+    border-radius: 9px;
+    opacity: 1;
+    left: 0;
+    transform: rotate(0deg);
+    transition: 0.25s ease-in-out;
+  }
 
-.hamburger .line {
-  display: block;
-  width: 40px;
-  height: 5px;
-  margin-bottom: 10px;
-  background-color: #ff9776;
-}
+  .hamburger div:nth-child(1) {
+    top: 0px;
+  }
+
+  .hamburger div:nth-child(2),
+  .hamburger div:nth-child(3) {
+    top: 9px;
+  }
+
+  .hamburger div:nth-child(4) {
+    top: 18px;
+  }
+
+  .hamburger.open div:nth-child(1) {
+    top: 9px;
+    width: 0%;
+    left: 50%;
+  }
+
+  .hamburger.open div:nth-child(2) {
+    transform: rotate(45deg);
+  }
+
+  .hamburger.open div:nth-child(3) {
+    transform: rotate(-45deg);
+  }
+
+  .hamburger.open div:nth-child(4) {
+    top: 9px;
+    width: 0%;
+    left: 50%;
+  }
+
+  html.dark .hamburger div {
+    background: #fff;
+  }
 </style>
