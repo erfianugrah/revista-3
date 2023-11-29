@@ -27,5 +27,9 @@ export default defineConfig({
   }), tailwind(), markdoc(), prefetch()],
   markdown: {
     remarkPlugins: [remarkModifiedTime, remarkReadingTime, remarkGfm]
+  },
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'viewport'
   }
 });
