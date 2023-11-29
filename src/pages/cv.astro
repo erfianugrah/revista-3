@@ -1,13 +1,14 @@
 ---
 import ProseCv from "../components/Prose_cv.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-const pageTitle = "Erfi's CV";
+const pageTitle = "Resume";
+const description = "Erfi Anugrah's CV"
 import { getEntry } from "astro:content";
 const entry = await getEntry("cv", "resume");
 const { Content } = await entry.render();
 ---
 
-<BaseLayout title={pageTitle} >
+<BaseLayout title={pageTitle} description={description}>
   <ProseCv >
     <Content />
   </ProseCv>
