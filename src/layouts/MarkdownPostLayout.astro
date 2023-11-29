@@ -48,9 +48,9 @@ const lastModified = dayjs()
         </h1>
         <div class="flex gap-2 mt-2">
           {frontmatter.tags.map((tag) => (
-            <p class="bg-white bg-opacity-50 px-2 py-1 rounded font-josefin text-xl">
+            <p class="bg-slate-400 bg-opacity-50 px-2 py-1 rounded font-josefin text-xl">
               <a
-                class="text-blue-800 no-underline font-josefin"
+                class="no-underline font-josefin"
                 href={`../tags/${tag}`}>
                 {tag}
               </a>
@@ -65,9 +65,9 @@ const lastModified = dayjs()
         </h1>
         <div class="flex">
           {frontmatter.tags.map((tag) => (
-            <p class="bg-white bg-opacity-50 px-2 py-1 rounded">
+            <p class="bg-slate-400 bg-opacity-50 px-2 py-1 rounded">
               <a
-                class="text-blue-800 no-underline font-josefin text-xl"
+                class="no-underline font-josefin text-xl"
                 href={`../tags/${tag}`}>
                 {tag}
               </a>
