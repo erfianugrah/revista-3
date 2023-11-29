@@ -2,7 +2,8 @@
 import ProseCv from "../components/Prose_cv.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 const pageTitle = "Resume";
-const description = "Erfi Anugrah's CV"
+const description = "Erfi Anugrah's CV";
+const site_name = "Stoicopa";
 import { getEntry } from "astro:content";
 const entry = await getEntry("cv", "resume");
 const { Content } = await entry.render();
