@@ -9,8 +9,8 @@ const entry = await getEntry("cv", "resume");
 const { Content } = await entry.render();
 ---
 
-<BaseLayout title={pageTitle} description={description}>
-  <ProseCv >
+<BaseLayout title={pageTitle} description={description} site_name={site_name} >
+  <ProseCv>
     <Content />
   </ProseCv>
 </BaseLayout>
