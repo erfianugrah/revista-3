@@ -13,7 +13,7 @@
   <a class="fade-effect" href="/long_form/tags">Long Form</a>
   <a class="fade-effect" href="/zeitweilig">Zeitweilig</a>
   <!-- <a href="/tags/">Tags</a> -->
-   <slot />
+  <slot />
 </div>
 <style>
   /* nav styles */
@@ -26,12 +26,15 @@
     z-index: 10000;
   }
   .nav-links.collapsed {
-    display: none;
-    transition: 0.5s;
+    transform: translateX(100%);
+    transition: 0.1s;
+    right: 0;
+    top: 0;
   }
 
   .nav-links.open {
-    transition: 0.5s;
+    transform: translateX(0);
+    transition: 0.1s;
     border-radius: 10px;
     right: 0;
     top: 0;
