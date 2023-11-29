@@ -66,5 +66,6 @@ const zeitweilig = defineCollection({
   }),
 });
 
+
 // 3. Export a single `collections` object to register your collection(s)
-export const collections = { muses, short_form, long_form, zeitweilig };
+export const collections = { muses, short_form, long_form, zeitweilig, };
