@@ -4,17 +4,28 @@ import Navigation from "./Navigation.astro";
 import ThemeIcon from "./ThemeIcon.astro";
 ---
 
-<header class=" sm:-mt-[25px] -mt-[5px] mb-[25px]">
-  <nav class="flex justify-between items-center w-full">
+<header class="mb-[25px]">
+  <nav class="flex items-center justify-between w-full relative">
     <div>
+      <a href="/">
+        <img
+          class="favicon absolute left-0 -mt-[20px] dark:invert"
+          src="/actualfavicon_o.png"
+          alt="Home"
+          width="40"
+          height="40"
+        />
+      </a>
+    </div>
+    <div>
+      <Navigation class="absolute right-0" />
+    </div>
+    <div class="absolute right-[55px] mt-[4px]">
       <ThemeIcon />
     </div>
-    <div>
-      <Navigation />
-    </div>
-    <div class="sm:hidden">
+    <div class="mt-[5px]">
       <Hamburger />
     </div>
   </nav>
-   <slot />
+  <slot />
 </header>

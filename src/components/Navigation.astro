@@ -5,7 +5,7 @@
 <div
   transition:animate="fade"
   id="nav-links"
-  class="nav-links font-josefin text-[21px] capitalize"
+  class="nav-links collapsed font-josefin text-[21px] capitalize"
 >
   <a class="fade-effect" href="/">Home</a>
   <a class="fade-effect" href="/muses">Muses</a>
@@ -55,7 +55,7 @@
   }
 
   html:not(.dark) .nav-links {
-    background: rgb(245,245,245);
+    background: rgb(245, 245, 245);
   }
   .fade-effect {
     transition: opacity 0.5s ease-in-out;
@@ -64,27 +64,5 @@
 
   .fade-effect:hover {
     opacity: 0.5;
-  }
-  
-  @media screen and (min-width: 636px) {
-    .nav-links {
-      /* margin-left: 5em; */
-      display: flex;
-      position: static;
-      width: auto;
-      background: none;
-      justify-content: flex-start;
-      gap: 20px;
-      margin-top: 18px;
-      margin-bottom: 18px;
-    }
-
-    .nav-links a {
-      display: flex;
-    }
-
-    .hamburger {
-      display: none;
-    }
   }
 </style>
