@@ -5,5 +5,6 @@ const { images, alt, urls, tag } = Astro.props;
   <a>
     <img id="randomHomePageImage" class="sm:h-[540px] xl:h-[1080px] lg:h-[720px] object-cover object-center" loading="lazy" transition:animate="fade" />
   </a>
+   <slot />
 </div>
 <script src="../scripts/homePage.js" />

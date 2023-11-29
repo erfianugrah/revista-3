@@ -8,6 +8,7 @@ const { images, alt, url, tag } = Astro.props;
       {tag}
     </p>
   </a>
+   <slot />
 </div>
 <script src="../scripts/getrandomimage.js" />
 <style>

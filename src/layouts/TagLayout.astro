@@ -24,6 +24,7 @@ const imagesByTag = allContent.reduce((acc, post) => {
         tag={tags[0]}
         url={`/${Astro.props.directory}/tags/${tags[0]}`}
       />
+       <slot />
     </div>
   ) : (
     <div class="sm:grid sm:grid-cols-4 gap-4 space-y-4 sm:space-y-0 justify-center items-center font-josefin" transition:animate="fade">
@@ -37,6 +38,7 @@ const imagesByTag = allContent.reduce((acc, post) => {
           />
         </div>
       ))}
+       <slot />
     </div>
   )}
 </astro>
