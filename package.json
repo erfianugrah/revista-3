@@ -10,7 +10,6 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^7.7.1",
     "@astrojs/markdoc": "^0.7.2",
     "@astrojs/mdx": "^1.1.5",
     "@astrojs/partytown": "^2.0.2",

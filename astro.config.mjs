@@ -34,6 +34,4 @@ export default defineConfig({
     prefetchAll: true,
     defaultStrategy: 'viewport'
   },
-  output: "server",
-  adapter: cloudflare()
 });
