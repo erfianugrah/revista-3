@@ -23,7 +23,6 @@
     "@fontsource-variable/roboto-slab": "^5.0.17",
     "astro": "^3.5.4",
     "dayjs": "^1.11.10",
-    "fslightbox": "^3.4.1",
     "markdown-it": "^13.0.2",
     "mdast-util-to-string": "^4.0.0",
     "preact": "^10.19.1",
