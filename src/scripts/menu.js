@@ -3,13 +3,14 @@ document.addEventListener('astro:page-load', () => {
     const navLinks = document.getElementById('nav-links');
     const hamburger = document.querySelector('.hamburger');
 
-    if (navLinks.classList.contains('open')) {
-      navLinks.classList.remove('open');
-      navLinks.classList.add('collapsed');
-    } else {
-      navLinks.classList.remove('collapsed');
-      navLinks.classList.add('open');
-    }
+    const isNavOpen = navLinks.classList.contains('open');
+    navLinks.classList.remove('open', 'collapsed');
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        navLinks.classList.add(isNavOpen ? 'collapsed' : 'open');
+      });
+    });
 
     hamburger.classList.toggle('open');
   }
