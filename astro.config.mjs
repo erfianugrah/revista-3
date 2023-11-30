@@ -9,13 +9,15 @@ import markdoc from "@astrojs/markdoc";
 import prefetch from "@astrojs/prefetch";
 import remarkGfm from 'remark-gfm';
 
+import cloudflare from "@astrojs/cloudflare";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://www.erfianugrah.com",
   image: {
     remotePatterns: [{
       protocol: "https",
-      hostname: '**.erfianugrah.com',
+      hostname: '**.erfianugrah.com'
     }]
   },
   integrations: [preact(), sitemap(), mdx({
@@ -31,5 +33,7 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'viewport'
-  }
+  },
+  output: "server",
+  adapter: cloudflare()
 });
