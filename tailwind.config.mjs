@@ -4,7 +4,6 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				'sarabun': ["Sarabun", "sans-serif"],
 				'josefin': ['"Josefin Sans Variable"', "sans-serif"],
 				'jost': ['"Jost Variable"', "sans-serif"]
 			},
