@@ -19,18 +19,18 @@ const publishedDate = pubDate
       </div>
     )
   }
-  <div id="description " class="text-slate-700 w-full sm:w-2/3 flex flex-col justify-start align-self-center space-y-4 mb-6 " transition:animate="fade">
-    <h2 class="font-josefin text-slate-700 font-bold text-2xl capitalize " >{title}</h2>
-    <p class="font-jost text-slate-700 normal-case line-clamp-3 text-base">{description}</p>
-    <p class="font-jost text-slate-700 text-sm">Published on {publishedDate} </p>   
+  <div id="description " class=" w-full sm:w-2/3 flex flex-col justify-start align-self-center space-y-4 mb-6 " transition:animate="fade">
+    <h2 class="font-josefin font-bold text-2xl capitalize " >{title}</h2>
+    <p class="font-jost normal-case line-clamp-3 text-base">{description}</p>
+    <p class="font-jost text-sm">Published on {publishedDate} </p>   
     <a
       href={url}
-      class="text-slate-700 space-x-4 no-underline font-jost normal-case mt-8 max-w-max max-h-max flex flex-row items-center flex-shrink-0"
+      class="prose prose-slate dark:prose-invert space-x-4 no-underline font-jost normal-case mt-8 max-w-max max-h-max flex flex-row items-center flex-shrink-0"
     >
       <p class="text-base fade-effect">See more</p>
       <svg 
         xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5 -mb-[3px] fade-effect"
+        class="h-5 w-5 mb-[17px] fade-effect"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
