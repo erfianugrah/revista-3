@@ -44,12 +44,12 @@ const lastModified = dayjs()
         style={`background-image: url(${image}); background-position: 40% 30%;`}
         transition:animate="fade"
       >
-        <h1 class="prose prose-slate uppercase font-josefin text-white text-4xl">
+        <h1 class="prose prose-slate uppercase font-josefin text-[rgb(245,245,245)] text-4xl">
           {title}
         </h1>
         <div class="flex gap-2 mt-2">
           {frontmatter.tags.map((tag) => (
-            <p class="bg-slate-800 text-white bg-opacity-50 px-2 py-1 rounded font-josefin text-xl">
+            <p class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded font-josefin text-xl">
               <a class="no-underline font-josefin" href={`../tags/${tag}`}>
                 {tag}
               </a>
@@ -59,14 +59,14 @@ const lastModified = dayjs()
       </div>
     ) : (
       <Prose>
-        <h1 class="prose prose-slate dark:prose-invert normal-case font-josefin text-4xl -mb-1">
+        <h1 class="normal-case font-josefin text-4xl -mb-1">
           {title}
         </h1>
         <div class="flex">
           {frontmatter.tags.map((tag) => (
-            <p class="bg-slate-400 bg-opacity-50 px-2 py-1 rounded">
+            <p class="bg-slate-600 bg-opacity-50 px-2 py-1 rounded">
               <a
-                class="no-underline font-josefin text-xl"
+                class="no-underline font-josefin text-[rgb(245,245,245)] text-xl"
                 href={`../tags/${tag}`}
               >
                 {tag}
