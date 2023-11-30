@@ -9,7 +9,6 @@ import markdoc from "@astrojs/markdoc";
 import prefetch from "@astrojs/prefetch";
 import remarkGfm from 'remark-gfm';
 
-import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
 export default defineConfig({
