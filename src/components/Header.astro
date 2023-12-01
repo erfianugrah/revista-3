@@ -16,18 +16,19 @@ import ThemeIcon from "./ThemeIcon.astro";
           alt="Home"
           width="30px"
           height="30px"
+          transition:animate="fade"
         />
       </a>
     </div>
-    <div class="absolute right-[55px] -mb-[5px]">
+    <div class="absolute right-[55px] -mb-[5px]" transition:animate="fade">
       <ThemeIcon />
     </div>
-    <div class="-mt-[3px]">
+    <div class="-mt-[3px]" transition:animate="fade">
       <Hamburger />
     </div>
   </nav>
   <slot />
 </header>
-<div class="absolute right-0">
+<div class="absolute right-0" transition:animate="fade">
   <Navigation />
 </div>
