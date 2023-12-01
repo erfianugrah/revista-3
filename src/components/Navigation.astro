@@ -4,7 +4,7 @@
 
 <div
   id="nav-links"
-  class="nav-links collapsed font-josefin text-[21px] capitalize z-20000"
+  class="nav-links collapsed font-josefin text-[21px] capitalize"
 >
   <a class="fade-effect" href="/">Home</a>
   <a class="fade-effect" href="/muses">Muses</a>
@@ -25,6 +25,7 @@
     transition: opacity 0.2s ease-in-out;
     opacity: 0;
     z-index: 10;
+    pointer-events: none;
   }
   .nav-links.collapsed {
     right: 0;
@@ -40,6 +41,7 @@
     top: 45px;
     opacity: 1;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+    pointer-events: auto;
   }
 
   .nav-links a {
