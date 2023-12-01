@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-// import { fade } from "astro:transitions";
 import Prose from "../components/Prose.astro";
 const { frontmatter } = Astro.props;
 const updatedDate = frontmatter?.updatedDate
@@ -94,4 +93,3 @@ const lastModified = dayjs()
   </Prose>
 </BaseLayout>
 <script src="../scripts/fslightbox.js"></script>
-<!-- <p transition:animate={fade({ duration: '0.5s' })}><em>{frontmatter.description}</em></p> -->
