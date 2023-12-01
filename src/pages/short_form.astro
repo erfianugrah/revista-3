@@ -14,6 +14,7 @@ const allShortForm = await getCollection("short_form");
           <BlogPost
               url={`/short_form/${post.slug}/`}
               image={post.data?.image?.src || ''}
+              alt={post.data?.image?.alt || ''}
               title={post.data?.title || ''}
               description={post.data?.description || ''}
               pubDate={post.data?.pubDate || ''}
