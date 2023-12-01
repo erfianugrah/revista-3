@@ -4,7 +4,7 @@ import Navigation from "./Navigation.astro";
 import ThemeIcon from "./ThemeIcon.astro";
 ---
 
-<header class="mb-[30px]" transition:animate="fade">
+<header class="mb-[30px]">
   <nav
     class="flex items-center justify-between w-full h-full relative align-center"
   >
@@ -16,19 +16,18 @@ import ThemeIcon from "./ThemeIcon.astro";
           alt="Home"
           width="30px"
           height="30px"
-          transition:animate="fade"
         />
       </a>
     </div>
-    <div class="absolute right-[55px] -mb-[5px]" transition:animate="fade">
+    <div class="absolute right-[55px] -mb-[5px]">
       <ThemeIcon />
     </div>
-    <div class="-mt-[3px]" transition:animate="fade">
+    <div class="-mt-[3px]">
       <Hamburger />
+    </div>
+    <div class="absolute right-0">
+      <Navigation />
     </div>
   </nav>
   <slot />
 </header>
-<div class="absolute right-0" transition:animate="fade">
-  <Navigation />
-</div>
