@@ -17,7 +17,7 @@ const imagesByTag = allContent.reduce((acc, post) => {
 ---
 <astro>
   {tags.length === 1 ? (
-    <div class="object-contain w-full h-full relative flex items-center justify-center font-josefin" transition:animate="fade">
+    <div class="object-contain w-full h-full relative flex items-center justify-center font-josefin" >
       <GetRandomImage
         images={JSON.stringify(imagesByTag[tags[0]])}
         alt={JSON.stringify(alt)}
@@ -27,7 +27,7 @@ const imagesByTag = allContent.reduce((acc, post) => {
        <slot />
     </div>
   ) : (
-    <div class="sm:grid sm:grid-cols-4 gap-4 space-y-4 sm:space-y-0 justify-center items-center font-josefin" transition:animate="fade">
+    <div class="sm:grid sm:grid-cols-4 gap-4 space-y-4 sm:space-y-0 justify-center items-center font-josefin" >
       {tags.map((tag) => (
         <div class="col-span-1">
           <GetRandomImage
