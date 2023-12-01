@@ -11,23 +11,23 @@ import ThemeIcon from "./ThemeIcon.astro";
     <div>
       <a href="/">
         <img
-          class="favicon absolute left-0 -mt-[20px] dark:invert"
+          class="favicon absolute left-0 dark:invert -mt-[15px]"
           src="/actualfavicon_o.png"
           alt="Home"
-          width="40"
-          height="40"
+          width="30px"
+          height="30px"
         />
       </a>
     </div>
-    <div class="absolute right-[55px] mt-[4px]">
+    <div class="absolute right-[55px] -mb-[5px]">
       <ThemeIcon />
     </div>
-    <div class="mt-[3px]">
+    <div class="-mt-[3px]">
       <Hamburger />
     </div>
   </nav>
   <slot />
 </header>
-<div>
-  <Navigation class="absolute right-0" />
+<div class="absolute right-0">
+  <Navigation />
 </div>

@@ -11,7 +11,7 @@
 <style>
   .hamburger {
     position: relative;
-    width: 30px;
+    width: 20px;
     height: 20px;
     transform: rotate(0deg);
     transition: 0.5s ease-in-out;
@@ -36,33 +36,26 @@
     top: 0px;
   }
 
-  .hamburger div:nth-child(2),
-  .hamburger div:nth-child(3) {
-    top: 9px;
+  .hamburger div:nth-child(2) {
+    top: 10px;
   }
 
-  .hamburger div:nth-child(4) {
-    top: 18px;
+  .hamburger div:nth-child(3) {
+    top: 20px;
   }
 
   .hamburger.open div:nth-child(1) {
-    top: 9px;
-    width: 0%;
-    left: 50%;
+    transform: rotate(45deg);
+    top: 10px;
   }
 
   .hamburger.open div:nth-child(2) {
-    transform: rotate(45deg);
+    width: 0%;
   }
 
   .hamburger.open div:nth-child(3) {
     transform: rotate(-45deg);
-  }
-
-  .hamburger.open div:nth-child(4) {
-    top: 9px;
-    width: 0%;
-    left: 50%;
+    top: 10px;
   }
 
   html.dark .hamburger div {
