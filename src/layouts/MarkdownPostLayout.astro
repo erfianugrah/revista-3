@@ -38,22 +38,22 @@ const lastModified = dayjs()
   pubDate={updatedDate}
   updatedDate={publishedDate}
 >
-  <div style="display: none;">
-    <Image
-      id="backgroundImage"
-      src={image}
-      alt={alt}
-      widths={[360, 720, 1080, 1440, 2160]}
-      sizes={`(max-width: 360px) 360px, (max-width: 720px) 720px, (max-width: 1080px) 1080px, (max-width: 1440px) 1440px, (max-width: 2160px) 2160px`}
-      width={2560}
-      height={1440}
-      decoding="async"
-      format="avif"
-      loading="lazy"
-    />
   </div>
   {
-    image ? (
+    image && alt ? (
+    <div style="display: none;">
+      <Image
+        id="backgroundImage"
+        src={image}
+        alt={alt}
+        widths={[360, 720, 1080, 1440, 2160]}
+        sizes={`(max-width: 360px) 360px, (max-width: 720px) 720px, (max-width: 1080px) 1080px, (max-width: 1440px) 1440px, (max-width: 2160px) 2160px`}
+        width={2560}
+        height={1440}
+        decoding="async"
+        format="avif"
+        loading="lazy"
+      />
       <div
         id="backgroundImageElement"
         class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-[450px] sm:h-[500px] md:h-[600px] lg:h-[800px] xl:h-[1080px] mb-8 lg:-mx-16 -mx-8"
