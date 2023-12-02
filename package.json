@@ -6,12 +6,11 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "preview": "deno run --allow-net --allow-read --allow-env ./dist/server/entry.mjs",
+    "preview": "astro preview",
     "astro": "astro",
     "postbuild": "pagefind --site dist"
   },
   "dependencies": {
-    "@astrojs/deno": "^5.0.1",
     "@astrojs/markdoc": "^0.7.2",
     "@astrojs/mdx": "^1.1.5",
     "@astrojs/partytown": "^2.0.2",

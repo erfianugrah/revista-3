@@ -8,12 +8,9 @@ import tailwind from "@astrojs/tailwind";
 import markdoc from "@astrojs/markdoc";
 import prefetch from "@astrojs/prefetch";
 import remarkGfm from 'remark-gfm';
-import deno from '@astrojs/deno';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server',
-  adapter: deno(),
   site: "https://www.erfianugrah.com",
   image: {
     domains: ["erfianugrah.com"]
