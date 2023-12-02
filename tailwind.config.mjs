@@ -18,6 +18,18 @@ export default {
 				'size-66': '100% 66.67%'
 			}
 		},
+		screens: {
+			'sm': '800px',
+			// => @media (min-width: 800px) { ... }
+			'md': '1200px',
+			// => @media (min-width: 1280px) { ... }
+			'lg': '1900px',
+			// => @media (min-width: 1920px) { ... }
+			'xl': '2500px',
+			// => @media (min-width: 2560px) { ... }
+			'2xl': '3800px',
+			// => @media (min-width: 3840px) { ... }
+		},
 	},
 	plugins: [
 		require('@tailwindcss/typography'),
