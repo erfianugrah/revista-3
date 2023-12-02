@@ -18,6 +18,7 @@ const description = frontmatter?.description;
 // const author = frontmatter?.author.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 const author = frontmatter?.author;
 const image = frontmatter.image?.src;
+const alt = frontmatter.image?.alt;
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
@@ -31,6 +32,7 @@ const lastModified = dayjs()
 <BaseLayout
   title={title}
   image={image}
+  alt={alt}
   description={description}
   author={author}
   pubDate={updatedDate}
