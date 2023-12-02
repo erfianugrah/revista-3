@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import Prose from "../components/Prose.astro";
+import { Image } from "astro:assets";
 const { frontmatter } = Astro.props;
 const updatedDate = frontmatter?.updatedDate
   .toDateString()
@@ -35,11 +36,26 @@ const lastModified = dayjs()
   pubDate={updatedDate}
   updatedDate={publishedDate}
 >
+  <div style="display: none;">
+    <Image
+      id="backgroundImage"
+      src={image}
+      alt="Your alt text here"
+      widths={[360, 720, 1080, 1440, 2160]}
+      sizes={`(max-width: 360px) 360px, (max-width: 720px) 720px, (max-width: 1080px) 1080px, (max-width: 1440px) 1440px, (max-width: 2160px) 2160px`}
+      width={2560}
+      height={1440}
+      decoding="async"
+      format="avif"
+      loading="lazy"
+    />
+  </div>
   {
     image ? (
       <div
+        id="backgroundImageElement"
         class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-[450px] sm:h-[500px] md:h-[600px] lg:h-[800px] xl:h-[1080px] mb-8 lg:-mx-16 -mx-8"
-        style={`background-image: url(${image}); background-position: 30% 50%;`}
+        style={` background-position: 30% 50%;`}
       >
         <h1 class="prose prose-slate uppercase font-josefin text-[rgb(245,245,245)] text-4xl">
           {title}
@@ -56,9 +72,7 @@ const lastModified = dayjs()
       </div>
     ) : (
       <Prose>
-        <h1 class="normal-case font-josefin text-4xl -mb-1">
-          {title}
-        </h1>
+        <h1 class="normal-case font-josefin text-4xl -mb-1">{title}</h1>
         <div class="flex">
           {frontmatter.tags.map((tag) => (
             <p class="bg-slate-600 bg-opacity-50 px-2 py-1 rounded">
@@ -81,7 +95,9 @@ const lastModified = dayjs()
       <div class="w-full flex-col sm:w-1/2 text-center sm:text-left">
         <p>-- <a href="/about/" class="no-underline font-jost"> {author}</a></p>
       </div>
-      <div class="w-full flex-col sm:w-1/2 text-left sm:text-right mt-[10px] font-jost">
+      <div
+        class="w-full flex-col sm:w-1/2 text-left sm:text-right mt-[10px] font-jost"
+      >
         <div>
           Published: {publishedDate}
         </div>
@@ -93,3 +109,4 @@ const lastModified = dayjs()
   </Prose>
 </BaseLayout>
 <script src="../scripts/fslightbox.js"></script>
+<script src="../scripts/markdownheroimage.js"></script>
