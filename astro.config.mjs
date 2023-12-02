@@ -14,10 +14,7 @@ import remarkGfm from 'remark-gfm';
 export default defineConfig({
   site: "https://www.erfianugrah.com",
   image: {
-    remotePatterns: [{
-      protocol: "https",
-      hostname: '**.erfianugrah.com'
-    }]
+      domains: ["erfianugrah.com"]
   },
   integrations: [preact(), sitemap(), mdx({
     syntaxHighlight: 'shiki',
