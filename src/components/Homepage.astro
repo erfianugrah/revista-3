@@ -2,8 +2,8 @@
 import { Image } from "astro:assets";
 let { images, alt, urls, tag } = Astro.props;
 images = JSON.parse(images); // parse the JSON string back into an array
-alt = JSON.parse(alt);
-urls = JSON.parse(urls);
+alt = alt ? JSON.parse(alt) : [];
+urls = urls ? JSON.parse(urls) : [];
 ---
 <div id="homepage" class="flex justify-center items-center" data-images={images} data-alt={alt} data-urls={urls} >
   <a>
