@@ -1,6 +1,9 @@
 document.addEventListener('astro:page-load', () => {
     const imageElement = document.getElementById('backgroundImage');
-    const optimizedImageUrl = imageElement.currentSrc;
     const backgroundImageElement = document.getElementById('backgroundImageElement');
-    backgroundImageElement.style.backgroundImage = `url(${optimizedImageUrl})`;
+    
+    if (imageElement && backgroundImageElement) {
+        const optimizedImageUrl = imageElement.currentSrc;
+        backgroundImageElement.style.backgroundImage = `url(${optimizedImageUrl})`;
+    }
 });
