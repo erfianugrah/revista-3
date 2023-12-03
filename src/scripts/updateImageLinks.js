@@ -1,7 +1,7 @@
 document.addEventListener('astro:page-load', () => {
     // Create a new script element for the fslightbox.js script
     const fslightboxScript = document.createElement('script');
-    fslightboxScript.src = '../scripts/fslightbox.js';
+    fslightboxScript.src = './fslightbox.js';
 
     // Add an event listener for the load event of the fslightbox.js script
     fslightboxScript.addEventListener('load', () => {
