@@ -20,7 +20,7 @@ export default defineConfig({
       theme: 'dracula'
     },
     gfm: false
-  }), tailwind(), markdoc(), prefetch()],
+  }), tailwind(), markdoc()],
   markdown: {
     remarkPlugins: [remarkModifiedTime, remarkReadingTime, remarkGfm]
   },
