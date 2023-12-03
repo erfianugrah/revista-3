@@ -1,7 +1,6 @@
 ---
 const { title, url, image, alt, description, pubDate } = Astro.props;
 import { Image } from "astro:assets";
-import Prose from "./Prose.astro";
 const publishedDate = pubDate
   .toDateString()
   .split(" ")
