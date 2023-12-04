@@ -4,12 +4,7 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				'josefin': ['"Josefin Sans Variable"', "sans-serif"],
-				'jost': ['"Jost Variable"', "sans-serif"],
-				'overpass': ['"Overpass Variable"', "sans-serif"],
 				'overpass-mono': ['"Overpass Mono Variable"', "sans-serif"],
-				'lekton': ["Lekton", "sans-serif"],
-				'dosis': ['"Dosis Variable"', "sans-serif"],
 				'urbanist': ['"Urbanist Variable"', "sans-serif"]
 			},
 			objectPosition: {
