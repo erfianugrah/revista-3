@@ -1,6 +1,6 @@
 ---
 import "../styles/MasonryLayout.css";
-import { Picture } from "astro:assets";
+import { Image } from "astro:assets";
 const { images } = Astro.props;
 ---
 
@@ -9,13 +9,13 @@ const { images } = Astro.props;
     images.map((image, index) => (
       <div key={index} class="image-container">
         <a href="" data-fslightbox="gallery" class="image-link">
-          <Picture
+          <Image
             src={image.src}
             alt={image.alt}
             width={3840}
             height={2160}
             decoding="async"
-            formats={['avif', 'webp']} 
+            format="avif"
             loading="lazy"
             class="image"
           />
