@@ -70,6 +70,15 @@
     opacity: 0.5;
   }
 </style>
+<script>
+    import { navigate } from 'astro:transitions/client';
+
+    // Navigate to the selected option automatically.
+    document.querySelector('select').onchange = (ev) => {
+        let href = ev.target.value;
+        navigate(href);
+    };
+</script>
 <!-- This worked because of how the CSS stacking context works.
 
 The stacking context is a three-dimensional conceptualization of HTML elements along an imaginary z-axis relative to the user, who is facing the viewport or the webpage. Stacking context is controlled by CSS properties such as z-index, position, opacity, transform, and others.
