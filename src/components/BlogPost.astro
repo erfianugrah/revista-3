@@ -8,7 +8,7 @@ const publishedDate = pubDate
   .join(" ");
 ---
 
-<div class="flex flex-col sm:flex-row lg:space-x-14 lg:mb-20 sm:mb-14 gap-8 lg:justify-center lg:mx-24" >
+<div class="flex flex-col sm:flex-row md:space-x-14 md:mb-20 sm:mb-14 gap-8 md:justify-center md:mx-24" >
 {
   image && (
     <div class="flex sm:w-1/3 relative lg:h-[480px] h-[360px]" >
@@ -28,7 +28,7 @@ const publishedDate = pubDate
     </div>
   )
 }
-  <div id="description " class=" sm:w-2/3 flex flex-col justify-start align-self-center space-y-4 mb-6" >
+  <div id="description " class=" sm:w-2/3 flex flex-col justify-start self-center space-y-4 mb-6" >
     <h2 class="font-overpass-mono font-bold text-xl lg:text-2xl xl:text-4xl capitalize " >{title}</h2>
     <p class="font-fira-mono normal-case line-clamp-3 sm:text-base text-sm">{description}</p>
     <p class="font-fira-mono text-sm">Published on {publishedDate} </p>   
