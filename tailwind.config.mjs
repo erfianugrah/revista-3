@@ -5,7 +5,7 @@ export default {
 		extend: {
 			fontFamily: {
 				'overpass-mono': ['"Overpass Mono Variable"', "sans-serif"],
-				'urbanist': ['"Urbanist Variable"', "sans-serif"]
+				'fira-mono': ['"Fira Mono"', "sans-serif"]
 			},
 			objectPosition: {
 				'top-33': 'center top 33.33%',

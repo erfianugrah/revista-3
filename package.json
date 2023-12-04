@@ -20,7 +20,7 @@
     "@astrojs/sitemap": "^3.0.3",
     "@astrojs/tailwind": "^5.0.2",
     "@fontsource-variable/overpass-mono": "^5.0.15",
-    "@fontsource-variable/urbanist": "^5.0.18",
+    "@fontsource/fira-mono": "^5.0.8",
     "astro": "^3.6.4",
     "dayjs": "^1.11.10",
     "markdown-it": "^13.0.2",
