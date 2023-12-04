@@ -35,7 +35,6 @@ document.addEventListener('astro:page-load', function () {
       let img = document.createElement('img');
       img.src = item.image;
       img.alt = item.alt;
-      img.loading = "lazy";
       img.style = { display: 'block', margin: 0, padding: 0 };
 
       anchor.appendChild(img);
