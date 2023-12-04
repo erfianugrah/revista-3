@@ -56,13 +56,13 @@ const lastModified = dayjs()
         class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-[450px] sm:h-[500px] md:h-[600px] lg:h-[800px] xl:h-[1080px] mb-8 lg:-mx-16 -mx-8"
         style={`background-position: 30% 50%;`}
       >
-        <h1 class="prose prose-slate uppercase font-josefin text-[rgb(245,245,245)] text-4xl">
+        <h1 class="prose prose-slate uppercase font-overpass-mono text-[rgb(245,245,245)] text-4xl">
           {title}
         </h1>
         <div class="flex gap-2 mt-2">
           {frontmatter.tags.map((tag) => (
-            <p class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded font-josefin text-xl">
-              <a class="no-underline font-josefin" href={`../tags/${tag}`}>
+            <p class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded font-overpass-mono text-xl">
+              <a class="no-underline font-overpass-mono" href={`../tags/${tag}`}>
                 {tag}
               </a>
             </p>
@@ -71,12 +71,12 @@ const lastModified = dayjs()
       </div>
     ) : (
       <Prose>
-        <h1 class="normal-case font-josefin text-4xl -mb-1">{title}</h1>
+        <h1 class="normal-case font-overpass-mono text-4xl -mb-1">{title}</h1>
         <div class="flex">
           {frontmatter.tags.map((tag) => (
             <p class="bg-slate-600 bg-opacity-50 px-2 py-1 rounded">
               <a
-                class="no-underline font-josefin text-[rgb(245,245,245)] text-xl"
+                class="no-underline font-overpass-mono text-[rgb(245,245,245)] text-xl"
                 href={`../tags/${tag}`}
               >
                 {tag}
@@ -92,10 +92,10 @@ const lastModified = dayjs()
     <slot />
     <div class="flex flex-col sm:flex-row align-center">
       <div class="w-full flex-col sm:w-1/2 text-center sm:text-left">
-        <p>-- <a href="/about/" class="no-underline font-jost"> {author}</a></p>
+        <p>-- <a href="/about/" class="no-underline font-lekton"> {author}</a></p>
       </div>
       <div
-        class="w-full flex-col sm:w-1/2 text-left sm:text-right mt-[10px] font-jost"
+        class="w-full flex-col sm:w-1/2 text-left sm:text-right mt-[10px] font-lekton"
       >
         <div>
           Published: {publishedDate}
