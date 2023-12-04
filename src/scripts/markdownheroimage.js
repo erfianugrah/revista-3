@@ -3,15 +3,15 @@ document.addEventListener('astro:page-load', () => {
     const backgroundImageElement = document.getElementById('backgroundImageElement');
     
     if (imageElement && backgroundImageElement) {
+        const optimizedImageUrl = imageElement.currentSrc;
         const setBgImage = () => {
-            const optimizedImageUrl = imageElement.currentSrc;
             backgroundImageElement.style.backgroundImage = `url(${optimizedImageUrl})`;
         }
 
         if (imageElement.complete) {
             setBgImage();
-        } else {
-            imageElement.onload = setBgImage;
         }
+        
+        imageElement.onload = setBgImage;
     }
 });
