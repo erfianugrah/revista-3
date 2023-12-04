@@ -8,7 +8,9 @@ export default {
 				'jost': ['"Jost Variable"', "sans-serif"],
 				'overpass': ['"Overpass Variable"', "sans-serif"],
 				'overpass-mono': ['"Overpass Mono Variable"', "sans-serif"],
-				'lekton': ["Lekton", "sans-serif"]
+				'lekton': ["Lekton", "sans-serif"],
+				'dosis': ['"Dosis Variable"', "sans-serif"],
+				'urbanist': ['"Urbanist Variable"', "sans-serif"]
 			},
 			objectPosition: {
 				'top-33': 'center top 33.33%',
