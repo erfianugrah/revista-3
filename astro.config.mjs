@@ -12,7 +12,7 @@ import remarkGfm from 'remark-gfm';
 export default defineConfig({
   site: "https://www.erfianugrah.com",
   image: {
-    domains: ["erfianugrah.com"]
+    domains: ["erfianugrah.com", "cdn.erfianugrah.com"]
   },
   integrations: [preact(), sitemap(), mdx({
     syntaxHighlight: 'shiki',
