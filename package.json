@@ -21,7 +21,7 @@
     "@astrojs/tailwind": "^5.0.3",
     "@fontsource-variable/overpass-mono": "^5.0.15",
     "@fontsource/fira-mono": "^5.0.8",
-    "astro": "^4.0.1",
+    "astro": "^4.0.2",
     "dayjs": "^1.11.10",
     "markdown-it": "^13.0.2",
     "mdast-util-to-string": "^4.0.0",
