@@ -7,8 +7,7 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "postbuild": "pagefind --site dist"
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/check": "^0.3.1",
@@ -35,7 +34,6 @@
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
-    "@tailwindcss/typography": "^0.5.10",
-    "pagefind": "^1.0.4"
+    "@tailwindcss/typography": "^0.5.10"
   }
 }
