@@ -24,9 +24,9 @@ export default defineConfig({
     gfm: false
   }), tailwind(), markdoc(),
   sentry({
-    options: {
-      telemetry: false
-    }
+    sourceMapsUploadOptions: {
+      telemetry: false,
+    },
   }),
   spotlightjs()],
   markdown: {
