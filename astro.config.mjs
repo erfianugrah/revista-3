@@ -24,7 +24,10 @@ export default defineConfig({
     gfm: false
   }), tailwind(), markdoc(),
   sentry({
-    telemetry: false
+    options: {
+      telemetry: false
+    }
+
   }),
   spotlightjs()],
   markdown: {
