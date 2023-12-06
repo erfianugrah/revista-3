@@ -22,7 +22,11 @@ export default defineConfig({
       theme: 'dracula'
     },
     gfm: false
-  }), tailwind(), markdoc(), sentry(), spotlightjs()],
+  }), tailwind(), markdoc(),
+  sentry({
+    telemetry: false
+  }),
+  spotlightjs()],
   markdown: {
     remarkPlugins: [remarkModifiedTime, remarkReadingTime, remarkGfm]
   },
