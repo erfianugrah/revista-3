@@ -7,6 +7,8 @@ import mdx from "@astrojs/mdx";
 import tailwind from "@astrojs/tailwind";
 import markdoc from "@astrojs/markdoc";
 import remarkGfm from 'remark-gfm';
+import sentry from "@sentry/astro";
+import spotlightjs from "@spotlightjs/astro";
 
 // https://astro.build/config
 export default defineConfig({
@@ -20,7 +22,7 @@ export default defineConfig({
       theme: 'dracula'
     },
     gfm: false
-  }), tailwind(), markdoc()],
+  }), tailwind(), markdoc(), sentry(), spotlightjs()],
   markdown: {
     remarkPlugins: [remarkModifiedTime, remarkReadingTime, remarkGfm]
   },
