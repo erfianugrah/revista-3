@@ -27,15 +27,13 @@ export default defineConfig({
     options: {
       telemetry: false
     }
-
   }),
   spotlightjs()],
   markdown: {
     remarkPlugins: [remarkModifiedTime, remarkReadingTime, remarkGfm]
   },
   prefetch: {
-    prefetchAll: true,
-    defaultStrategy: 'viewport'
+    prefetchAll: true
   },
   experimental: {
     contentCollectionCache: true,
