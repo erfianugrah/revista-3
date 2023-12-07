@@ -2,7 +2,6 @@
 const today = new Date();
 import { Icon } from "astro-icon";
 const collectionURL = Astro.url.pathname;
-const rssURL = collectionURL + '/rss.xml';
 const collections = ["/short_form", "/long_form", "/muses", "/zeitweillig"];
 const isCollection = collections.includes(collectionURL);
 ---
@@ -32,7 +31,7 @@ const isCollection = collections.includes(collectionURL);
     </a>
     {
       isCollection && (
-        <a href={rssURL} target="_blank">
+        <a href={collectionURL + "/rss.xml"} target="_blank">
           <span class="sr-only">Subscribe to RSS Feed</span>
           <Icon name="mdi:rss" class="h-[16px] w-[16px]" />
         </a>
