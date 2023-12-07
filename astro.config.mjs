@@ -29,5 +29,4 @@ export default defineConfig({
     prefetchAll: true,
     defaultStrategy: 'viewport'
   },
-  trailingSlash: 'never'
 });
