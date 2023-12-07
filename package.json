@@ -23,6 +23,7 @@
     "@sentry/astro": "^7.85.0",
     "@spotlightjs/astro": "^0.0.26",
     "astro": "^4.0.3",
+    "astro-icon": "^0.8.2",
     "dayjs": "^1.11.10",
     "markdown-it": "^13.0.2",
     "mdast-util-to-string": "^4.0.0",
