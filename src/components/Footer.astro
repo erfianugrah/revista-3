@@ -1,9 +1,6 @@
 ---
 const today = new Date();
 import { Icon } from "astro-icon";
-const collectionURL = Astro.url.pathname;
-const collections = ["/short_form", "/long_form", "/muses", "/zeitweillig"];
-const isCollection = collections.includes(collectionURL);
 ---
 
 <footer
@@ -29,14 +26,11 @@ const isCollection = collections.includes(collectionURL);
       <span class="sr-only">Go to Erfi's Instragram Profile</span>
       <Icon name="mdi:instagram" class="h-[16px] w-[16px]" />
     </a>
-    {
-      isCollection && (
-        <a href={collectionURL + "/rss.xml"} target="_blank">
-          <span class="sr-only">Subscribe to RSS Feed</span>
-          <Icon name="mdi:rss" class="h-[16px] w-[16px]" />
-        </a>
-      )
-    }
+    <a id="rss-link" href="" target="_blank" style="visibility: hidden; width: 0; height: 0;">
+      <span class="sr-only">Subscribe to RSS Feed</span>
+      <Icon name="mdi:rss" class="h-[16px] w-[16px]" />
+    </a>
   </div>
   <slot />
 </footer>
+<script src="../scripts/rss.js"></script>
