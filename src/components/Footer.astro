@@ -2,19 +2,18 @@
 const today = new Date();
 ---
 
-<footer class="font-overpass-mono w-full mt-10">
-  <div >
+<footer class="flex justify-between items-center align-center font-overpass-mono w-full h-full mt-10">
+  <div class="text-sm h-full">
     &copy; {today.getFullYear()} Erfi Anugrah. All rights reserved.
   </div>
-
-  <div class="social-links m-2">
+  <div class="social-links">
     <a href="https://mastodon.social/@stoicopa" target="_blank">
       <span class="sr-only">Follow Erfi on Mastodon</span>
       <svg
         viewBox="0 0 16 16"
         aria-hidden="true"
-        width="32"
-        height="32"
+        width="16"
+        height="16"
         astro-icon="social/mastodon"
         ><path
           fill="currentColor"
@@ -27,8 +26,8 @@ const today = new Date();
       <svg
         viewBox="0 0 16 16"
         aria-hidden="true"
-        width="32"
-        height="32"
+        width="16"
+        height="16"
         astro-icon="social/twitter"
         ><path
           fill="currentColor"
@@ -41,8 +40,8 @@ const today = new Date();
       <svg
         viewBox="0 0 16 16"
         aria-hidden="true"
-        width="32"
-        height="32"
+        width="16"
+        height="16"
         astro-icon="social/github"
         ><path
           fill="currentColor"
