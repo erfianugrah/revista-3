@@ -36,6 +36,7 @@ export default defineConfig({
     remarkPlugins: [remarkModifiedTime, remarkReadingTime, remarkGfm]
   },
   prefetch: {
-    prefetchAll: true
+    prefetchAll: true,
+    defaultStrategy: 'viewport'
   },
 });
