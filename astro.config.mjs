@@ -24,10 +24,13 @@ export default defineConfig({
     gfm: false
   }), tailwind(), markdoc(),
   sentry({
-    sourceMapsUploadOptions: {
-      telemetry: false,
-    },
-  }),
+      dsn: "https://c5c4e7a1cccf4e1b483fa4d91145b1d6@o4506353146462208.ingest.sentry.io/4506353147969536",
+      sourceMapsUploadOptions: {
+        project: "javascript-astro",
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        telemetry: false
+      },
+    }),
   spotlightjs()],
   markdown: {
     remarkPlugins: [remarkModifiedTime, remarkReadingTime, remarkGfm]
