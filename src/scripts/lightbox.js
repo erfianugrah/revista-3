@@ -1,5 +1,5 @@
-import "./glightbox.js";
-import "../styles/glightbox.css";
+import "./glightbox.min.js";
+import "../styles/glightbox.min.css";
 
 document.addEventListener('astro:page-load', function () {
     const lightbox = GLightbox({
