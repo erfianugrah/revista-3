@@ -28,18 +28,20 @@ const publishedDate = pubDate
     </div>
   )
 }
-  <div id="description " class=" sm:w-2/3 flex flex-col justify-start space-y-4 mb-6" >
+  <div id="description " class=" sm:w-2/3 flex flex-col justify-start space-y-4 mb-6 md:mt-10" >
+  <ul class="flex-row">
     <h2 class="font-overpass-mono font-bold text-xl lg:text-2xl xl:text-4xl capitalize " >{title}</h2>
-    <p class="font-fira-mono normal-case line-clamp-3 sm:text-base text-sm">{description}</p>
-    <p class="font-fira-mono text-sm">Published on {publishedDate} </p>   
+    <p class="font-fira-mono text-sm">Published on {publishedDate} </p>
+  </ul>
+    <p class="font-fira-mono normal-case line-clamp-3 sm:text-base text-sm">{description}</p> 
     <a
       href={url}
       class="prose prose-slate dark:prose-invert space-x-4 no-underline font-fira-mono normal-case mt-8 max-w-max max-h-max flex flex-row items-center flex-shrink-0"
     >
-      <p class="font-fira-mono text-base fade-effect">See more</p>
+      <p class="font-fira-mono normal-case text-base fade-effect md:mt-10 mt-4">See more</p>
       <svg 
         xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5 mb-[17px] fade-effect"
+        class="h-5 w-5 mb-[17px] fade-effect md:mt-10 mt-4"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
