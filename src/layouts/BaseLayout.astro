@@ -11,6 +11,7 @@ const metaDescription =
   "Life in review. A recollection of things experienced, and things felt.";
 const { image, description, author, pubDate, updatedDate, title, site_name, alt } =
   Astro.props;
+Astro.response.headers.set('Cache-Control', 'public, max-age=31536000, stale-while-revalidate=31536000, stale-if-error=3600')
 ---
 
 <html class="bg-[rgb(245,245,245)] dark:bg-slate-800" lang="en">
