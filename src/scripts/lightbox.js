@@ -7,12 +7,11 @@ document.addEventListener('astro:page-load', function () {
         width: "85vw",
         height: "85vh",
         preload: true,
-        openEffect: 'zoom',
+        openEffect: 'face',
         closeEffect: 'fade',
+        slideEffect: 'fade',
         cssEfects: {
-            // This are some of the animations included, no need to overwrite
-            fade: { in: 'fadeIn', out: 'fadeOut' },
-            zoom: { in: 'zoomIn', out: 'zoomOut' }
+            fade: { in: 'fadeIn', out: 'fadeOut' }
         }
     });
 });
