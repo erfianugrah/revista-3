@@ -7,7 +7,7 @@ document.addEventListener('astro:page-load', function () {
         width: "85vw",
         height: "85vh",
         preload: true,
-        openEffect: 'face',
+        openEffect: 'fade',
         closeEffect: 'fade',
         slideEffect: 'fade',
         cssEfects: {
