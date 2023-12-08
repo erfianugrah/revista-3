@@ -7,8 +7,11 @@ const { images } = Astro.props;
 <div class="masonry">
   {
     images.map((image, index) => (
-      <div key={index} class="image-container">
-        <a href="" data-fslightbox="gallery" class="image-link">
+      <div key={index} class="image-container" id="gallery">
+        <a
+          href=""
+          class="image-link glightbox"
+        >
           <Image
             src={image.src}
             alt={image.alt}
@@ -24,5 +27,5 @@ const { images } = Astro.props;
     ))
   }
 </div>
-<script src="../scripts/fslightbox.js"></script>
+<script src="../scripts/lightbox.js"></script>
 <script src="../scripts/updateImageLinks.js"></script>
