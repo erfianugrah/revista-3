@@ -37,12 +37,15 @@ const optimisedImage = image ? await getImage({
   decoding: "async",
   format: "avif",
 }) : null;
+
+let baseUrl = new URL(Astro.request.url).origin;
+
 ---
 
 <BaseLayout
   title={title}
-  image={image ? optimisedImage.src : ''}
-  alt={alt}
+  image={image ? `${baseUrl}${optimisedImage?.src}` : ''}
+  alt={alt ? optimisedImage?.attributes.alt : ''}
   description={description}
   author={author}
   pubDate={updatedDate}
