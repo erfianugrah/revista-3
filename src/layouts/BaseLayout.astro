@@ -5,7 +5,6 @@ import Footer from "../components/Footer.astro";
 import '@fontsource-variable/overpass-mono';
 import '@fontsource/fira-mono';
 import { getImage } from 'astro:assets';
-let baseUrl = new URL(Astro.request.url).origin;
 const metaImage = await getImage({
   src: "https://cdn.erfianugrah.com/Tenhult_3.JPG",
   alt: "cover_image",
