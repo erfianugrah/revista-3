@@ -29,7 +29,7 @@ const lastModified = dayjs()
   .utc(Astro.props.frontmatter.lastModified)
   .format("MMM DD YYYY");
 
-const optimizedBackground = image ? await getImage({
+const optimisedImage = image ? await getImage({
   src: image,
   alt: alt,
   width: "2560",
@@ -41,7 +41,7 @@ const optimizedBackground = image ? await getImage({
 
 <BaseLayout
   title={title}
-  image={image}
+  image={optimisedImage.src}
   alt={alt}
   description={description}
   author={author}
@@ -53,7 +53,7 @@ const optimizedBackground = image ? await getImage({
       <div
         id="backgroundImageElement"
         class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-screen mb-8 md:-mx-16 -mx-8"
-        style={`background-image: url(${optimizedBackground.src});
+        style={`background-image: url(${optimisedImage.src});
                 background-position: 45% 50%;
                 @media (min-width: 800px) { background-position: 30% 50%; }
               `}
