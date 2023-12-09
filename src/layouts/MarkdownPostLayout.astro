@@ -41,7 +41,7 @@ const optimisedImage = image ? await getImage({
 
 <BaseLayout
   title={title}
-  image={optimisedImage.src}
+  image={image ? optimisedImage.src : ''}
   alt={alt}
   description={description}
   author={author}
