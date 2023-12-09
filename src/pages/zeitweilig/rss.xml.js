@@ -9,7 +9,7 @@ export async function GET(context) {
     return rss({
         stylesheet: '/rss/rss.xsl',
         title: 'Stoicopa',
-        description: 'Life in review. A recollection of things experienced, and things felt.',
+        description: 'Constantly in a state of kenjataimu.',
         site: context.site,
         items: zeitweilig.map((post) => ({
             title: post.data.title,
