@@ -8,7 +8,7 @@ export async function GET(context) {
     const long_form = await getCollection("long_form");
     return rss({
         stylesheet: '/rss/rss.xsl',
-        title: 'Revista',
+        title: 'Stoicopa',
         description: 'Life in review. A recollection of things experienced, and things felt.',
         site: context.site,
         items: long_form.map((post) => ({
