@@ -10,6 +10,7 @@ document.addEventListener('astro:page-load', function () {
         openEffect: 'fade',
         closeEffect: 'fade',
         slideEffect: 'fade',
+        dragAutoSnap: true,
         cssEfects: {
             fade: { in: 'fadeIn', out: 'fadeOut' }
         }
