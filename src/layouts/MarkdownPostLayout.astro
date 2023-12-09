@@ -2,7 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import "../styles/glightbox.css";
 import Prose from "../components/Prose.astro";
-import { Image, getImage } from "astro:assets";
+import { getImage } from "astro:assets";
 const { frontmatter } = Astro.props;
 const updatedDate = frontmatter?.updatedDate
   .toDateString()
@@ -29,7 +29,7 @@ const lastModified = dayjs()
   .utc(Astro.props.frontmatter.lastModified)
   .format("MMM DD YYYY");
 
-const optimisedImage = image ? await getImage({
+const backgroundImage = image ? await getImage({
   src: image,
   alt: alt,
   width: "2560",
@@ -38,14 +38,20 @@ const optimisedImage = image ? await getImage({
   format: "avif",
 }) : null;
 
-let baseUrl = new URL(Astro.request.url).origin;
-
+const metaImage = image ? await getImage({
+  src: image,
+  alt: alt,
+  width: "1280",
+  height: "720",
+  decoding: "async",
+  format: "webp",
+}) : null;
 ---
 
 <BaseLayout
   title={title}
-  image={image ? `${baseUrl}${optimisedImage?.src}` : ''}
-  alt={alt ? optimisedImage?.attributes.alt : ''}
+  image={image ? metaImage?.src : ''}
+  alt={alt ? metaImage?.attributes.alt : ''}
   description={description}
   author={author}
   pubDate={updatedDate}
@@ -56,7 +62,7 @@ let baseUrl = new URL(Astro.request.url).origin;
       <div
         id="backgroundImageElement"
         class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-screen mb-8 md:-mx-16 -mx-8"
-        style={`background-image: url(${optimisedImage.src});
+        style={`background-image: url(${backgroundImage.src});
                 background-position: 45% 50%;
                 @media (min-width: 800px) { background-position: 30% 50%; }
               `}
