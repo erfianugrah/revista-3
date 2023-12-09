@@ -24,7 +24,7 @@ jobs:
           deno-version: v1.x
 
       - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -43,7 +43,7 @@ jobs:
         run: "npm install && npm run build" # 📝 Update the build command(s) if necessary
 
       - name: Cache dist directory
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: dist
           key: ${{ runner.os }}-dist-${{ hashFiles('**/dist/**') }}
