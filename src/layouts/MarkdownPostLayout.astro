@@ -2,7 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import "../styles/glightbox.css";
 import Prose from "../components/Prose.astro";
-import { Image } from "astro:assets";
+import { Image, getImage } from "astro:assets";
 const { frontmatter } = Astro.props;
 const updatedDate = frontmatter?.updatedDate
   .toDateString()
@@ -28,6 +28,8 @@ dayjs.extend(utc);
 const lastModified = dayjs()
   .utc(Astro.props.frontmatter.lastModified)
   .format("MMM DD YYYY");
+
+const optimizedBackground = await getImage({src: image, alt: alt, width: "2560", height: "1440", decoding: "async", format: "avif"})
 ---
 
 <BaseLayout
@@ -41,20 +43,10 @@ const lastModified = dayjs()
 >
   {
     image ? (
-    <div style="visibility: hidden; width: 0; height: 0;">
-      <Image
-        id="backgroundImage"
-        src={image}
-        alt={alt}
-        width={2560}
-        height={1440}
-        decoding="async"
-        format="avif"
-      /></div>
       <div
         id="backgroundImageElement"
         class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-screen mb-8 md:-mx-16 -mx-8"
-        style={`
+        style={`background-image: url(${optimizedBackground.src});
                 background-position: 45% 50%;
                 @media (min-width: 800px) { background-position: 30% 50%; }
               `}
@@ -110,4 +102,3 @@ const lastModified = dayjs()
     </div>
   </Prose>
 </BaseLayout>
-<script src="../scripts/markdownheroimage.js"></script>
