@@ -8,7 +8,7 @@ export async function GET(context) {
     const zeitweilig = await getCollection("zeitweilig");
     return rss({
         stylesheet: '/rss/rss.xsl',
-        title: 'Stoicopa',
+        title: 'stoicopa',
         description: 'Constantly in a state of kenjataimu.',
         site: context.site,
         items: zeitweilig.map((post) => ({

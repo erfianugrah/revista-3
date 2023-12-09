@@ -8,7 +8,7 @@ export async function GET(context) {
     const short_form = await getCollection("short_form");
     return rss({
         stylesheet: '/rss/rss.xsl',
-        title: 'Stoicopa',
+        title: 'stoicopa',
         description: 'Constantly in a state of kenjataimu.',
         site: context.site,
         items: short_form.map((post) => ({

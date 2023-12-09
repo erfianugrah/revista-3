@@ -8,7 +8,7 @@ export async function GET(context) {
     const muses = await getCollection("muses");
     return rss({
         stylesheet: '/rss/rss.xsl',
-        title: 'Stoicopa',
+        title: 'stoicopa',
         description: 'Constantly in a state of kenjataimu.',
         site: context.site,
         items: muses.map((post) => ({

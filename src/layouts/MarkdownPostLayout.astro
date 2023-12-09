@@ -29,6 +29,8 @@ const lastModified = dayjs()
   .utc(Astro.props.frontmatter.lastModified)
   .format("MMM DD YYYY");
 
+let baseUrl = new URL(Astro.request.url).origin;
+
 const backgroundImage = image ? await getImage({
   src: image,
   alt: alt,
@@ -50,7 +52,7 @@ const metaImage = image ? await getImage({
 
 <BaseLayout
   title={title}
-  image={image ? metaImage?.src : ''}
+  image={image ? `${baseUrl}${metaImage?.src}` : ''}
   alt={alt ? metaImage?.attributes.alt : ''}
   description={description}
   author={author}
