@@ -3,20 +3,30 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Homepage from "../components/Homepage.astro";
 const { pageTitle } = Astro.props;
 import { getCollection } from "astro:content";
-const collections = ['long_form', 'short_form', 'muses', 'zeitweilig']; // Add all your collections here
+const collections = ['long_form', 'short_form', 'muses', 'zeitweilig'];
+import { getImage } from 'astro:assets'; // Add all your collections here
 let allImages = [];
 let allAlts = [];
 let allUrls = [];
 for (let collection of collections) {
   const allContent = await getCollection(collection);
-  allContent.forEach((post) => {
+  allContent.forEach(async (post) => {
     if (post.data.image?.src && post.data.image?.alt) {
-      allImages.push(post.data.image.src);
+      const imageAsset = await getImage({
+        src: post.data.image.src,
+        alt: post.data.image.alt,
+        width: "2560",
+        height: "1440",
+        decoding: "async",
+        format: "avif",
+      });
+      allImages.push(imageAsset ? imageAsset.src : null);
       allAlts.push(post.data.image.alt);
       allUrls.push(`/${collection}/${post.slug}`);
     }
   });
 }
+---
 ---
 <BaseLayout title={pageTitle}>
     {allImages.length > 0 ? <Homepage images={JSON.stringify(allImages)} alt={JSON.stringify(allAlts)} urls={JSON.stringify(allUrls)} /> : <p>No images found</p>}

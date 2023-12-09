@@ -1,19 +1,28 @@
 ---
 import GetRandomImage from "../components/getRandomImage.astro";
 import { getCollection } from "astro:content";
+import { getImage } from 'astro:assets';
 const allContent = await getCollection(Astro.props.directory);
 const tags = [...new Set(allContent.map((post) => post.data.tags).flat())];
 const images = allContent.map((post) => post.data.image?.src);
 const alt = allContent.map((post) => post.data.image?.alt);
-const imagesByTag = allContent.reduce((acc, post) => {
-  post.data.tags.forEach((tag) => {
-    if (!acc[tag]) {
-      acc[tag] = [];
+const imagesByTag = {};
+for (const post of allContent) {
+  for (const tag of post.data.tags) {
+    if (!imagesByTag[tag]) {
+      imagesByTag[tag] = [];
     }
-    acc[tag].push(post.data.image?.src);
-  });
-  return acc;
-}, {});
+    const imageAsset = await getImage({
+      src: post.data.image?.src,
+      alt: post.data.image?.alt,
+      width: "2560",
+      height: "1440",
+      decoding: "async",
+      format: "avif",
+    });
+    imagesByTag[tag].push(imageAsset ? imageAsset.src : null);
+  }
+}
 ---
 <astro>
   {tags.length === 1 ? (
