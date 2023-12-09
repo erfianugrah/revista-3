@@ -43,11 +43,11 @@ const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
     </p>
     <a
       href={url}
-      class="dark:prose-invert"
+      class="dark:prose-invert max-w-max max-h-max flex flex-row flex-shrink-0 "
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6 -ml-2 mt-10 bounce"
+        class="h-6 w-6 -ml-2 md:mt-10 mt-4 mb-4 bounce"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -84,6 +84,6 @@ a:hover svg {
   }
 
   .fade-image:hover {
-    opacity: 0.85;
+    opacity: 0.8;
   }
 </style>
