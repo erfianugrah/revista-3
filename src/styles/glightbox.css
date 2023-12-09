@@ -578,13 +578,13 @@ iframe.wait-autoplay {
 /*CSS Animations*/
 
 .gfadeIn {
-  -webkit-animation: gfadeIn 0.5s ease;
-  animation: gfadeIn 0.5s ease;
+  -webkit-animation: gfadeIn 0.25s ease;
+  animation: gfadeIn 0.25s ease;
 }
 
 .gfadeOut {
-  -webkit-animation: gfadeOut 0.5s ease;
-  animation: gfadeOut 0.5s ease;
+  -webkit-animation: gfadeOut 0.25s ease;
+  animation: gfadeOut 0.25s ease;
 }
 
 .gslideOutLeft {

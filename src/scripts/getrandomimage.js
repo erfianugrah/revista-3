@@ -1,4 +1,4 @@
-document.addEventListener('astro:page-load', function() {
+document.addEventListener('astro:before-preparation', function() {
   let imageElements = Array.from(document.querySelectorAll('#randomimage'));
 
   imageElements.forEach((element) => {
