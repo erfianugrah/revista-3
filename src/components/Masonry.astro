@@ -3,7 +3,7 @@ import "../styles/MasonryLayout.css";
 import { getImage } from 'astro:assets';
 const { images } = Astro.props;
 const imageAssets = await Promise.all(images.map(async (image) => {
-  if (image && image.src) {
+  if (image) {
     return await getImage({
       src: image.src,
       alt: image.alt,
@@ -15,6 +15,7 @@ const imageAssets = await Promise.all(images.map(async (image) => {
   }
   return null;
 }));
+console.log(imageAssets)
 ---
 
 <div class="masonry">
@@ -25,8 +26,9 @@ const imageAssets = await Promise.all(images.map(async (image) => {
           <a href={imageAsset.src} class="image-link glightbox">
             <img
               src={imageAsset.src}
-              alt={imageAsset.alt}
-              loading="lazy"
+              alt={imageAsset.attributes.alt}
+              loading={imageAsset.attributes.loading}
+              decoding={imageAsset.attributes.decoding}
               class="image"
             />
           </a>
