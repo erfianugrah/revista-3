@@ -1,4 +1,4 @@
-document.addEventListener('astro:before-preparation', function() {
+document.addEventListener('astro:page-load', function() {
   let imageElements = Array.from(document.querySelectorAll('#homepage'));
 
   imageElements.forEach((element) => {
