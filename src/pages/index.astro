@@ -18,7 +18,8 @@ for (let collection of collections) {
         width: "2560",
         height: "1440",
         decoding: "async",
-        format: "avif"
+        format: "avif",
+        quality: "high"
       });
       allImages.push(imageAsset ? imageAsset.src : null);
       allAlts.push(post.data.image.alt);
