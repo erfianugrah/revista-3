@@ -4,12 +4,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import BlogPost from "../components/BlogPost.astro";
 import { sortByDate } from "../components/sortbydate";
 const pageTitle = "Authors";
-const allLong_form = await getCollection("authors");
+const allAuthors = await getCollection("authors");
 ---
 
 <BaseLayout title={pageTitle}>
       {
-        allLong_form.sort(sortByDate).map((post) => (
+        allAuthors.sort(sortByDate).map((post) => (
           <BlogPost
               url={`/authors/${post.slug}/`}
               image={post.data?.image?.src || ''}
