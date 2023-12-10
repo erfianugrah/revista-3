@@ -31,7 +31,7 @@ const backgroundImage = image ? await getImage({
   height: "1440",
   decoding: "async",
   format: "avif",
-  quality: "high"
+  quality: "med"
 }) : null;
 
 const metaImage = image ? await getImage({
@@ -41,6 +41,7 @@ const metaImage = image ? await getImage({
   height: "720",
   decoding: "async",
   format: "webp",
+  quality: "low"
 }) : null;
 ---
 
