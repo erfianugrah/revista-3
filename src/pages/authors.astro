@@ -11,7 +11,7 @@ const allLong_form = await getCollection("authors");
       {
         allLong_form.sort(sortByDate).map((post) => (
           <BlogPost
-              url={`/long_form/${post.slug}/`}
+              url={`/authors/${post.slug}/`}
               image={post.data?.image?.src || ''}
               alt={post.data?.image?.alt || ''}
               title={post.data?.title || ''}

@@ -17,17 +17,10 @@ const publishedDate = frontmatter?.pubDate
 const title = frontmatter?.title;
 const description = frontmatter?.description;
 // const author = frontmatter?.author.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-const author = frontmatter?.author;
+const authorFullName  = frontmatter?.author;
+const author = authorFullName.split(' ')[0].toLowerCase();
 const image = frontmatter.image?.src;
 const alt = frontmatter.image?.alt;
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-
-dayjs.extend(utc);
-
-const lastModified = dayjs()
-  .utc(Astro.props.frontmatter.lastModified)
-  .format("MMM DD YYYY");
 
 let baseUrl = new URL(Astro.request.url).origin;
 
@@ -110,7 +103,7 @@ const metaImage = image ? await getImage({
     <div class="flex flex-col sm:flex-row align-center">
       <div class="w-full flex-col sm:w-1/2 text-center sm:text-left">
         <p>
-          -- <a href="/about/" class="no-underline font-fira-mono"> {author}</a>
+          -- <a href={`/authors/${author}`} class="no-underline font-fira-mono"> {authorFullName}</a>
         </p>
       </div>
       <div

@@ -1,6 +1,4 @@
 import { defineConfig } from 'astro/config';
-import { remarkModifiedTime } from './src/scripts/remark-modified-time.mjs';
-import { remarkReadingTime } from './src/scripts/remark-reading-time.mjs';
 import preact from "@astrojs/preact";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
@@ -23,7 +21,7 @@ export default defineConfig({
     gfm: false
   }), tailwind(), markdoc(),spotlightjs()],
   markdown: {
-    remarkPlugins: [remarkModifiedTime, remarkReadingTime, remarkGfm]
+    remarkPlugins: [remarkGfm]
   },
   prefetch: {
     prefetchAll: true,
