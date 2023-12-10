@@ -5,13 +5,17 @@ document.addEventListener('astro:page-load', function() {
     let images = JSON.parse(element.dataset.images);
     let alt = JSON.parse(element.dataset.alt); // Parse the alt texts
     let urls = JSON.parse(element.dataset.urls); // Parse the urls
+    let width = element.dataset.width; // Get the width
+    let height = element.dataset.height; // Get the height
 
     // Combine the images, alt texts, and URLs into a single array of objects
     let items = images.map((image, index) => {
       return {
         image: image,
         alt: alt[index],
-        url: urls[index]
+        url: urls[index],
+        width: width,
+        height: height
       };
     });
 
@@ -28,6 +32,8 @@ document.addEventListener('astro:page-load', function() {
     let firstItem = items[0];
     imgElement.src = firstItem.image;
     imgElement.alt = firstItem.alt;
+    imgElement.width = firstItem.width; // Set the width
+    imgElement.height = firstItem.height; // Set the height
     anchorElement.href = firstItem.url;
   });
 });

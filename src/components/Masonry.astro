@@ -16,6 +16,7 @@ const imageAssets = await Promise.all(images.map(async (image) => {
   }
   return null;
 }));
+console.log(imageAssets);
 ---
 
 <div class="masonry">
@@ -29,6 +30,8 @@ const imageAssets = await Promise.all(images.map(async (image) => {
               alt={imageAsset.attributes.alt}
               loading={imageAsset.attributes.loading}
               decoding={imageAsset.attributes.decoding}
+              width={imageAsset.attributes.width}
+              height={imageAsset.attributes.height}
               class="image"
             />
           </a>
