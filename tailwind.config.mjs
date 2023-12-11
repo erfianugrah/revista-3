@@ -16,7 +16,19 @@ export default {
 			},
 			backgroundSize: {
 				'size-66': '100% 66.67%'
-			}
+			},
+			typography: {
+				'no-quotes': {
+					css: {
+						'blockquote p:first-of-type::before': {
+							content: 'none !important',
+						},
+						'blockquote p:last-of-type::after': {
+							content: 'none !important',
+						},
+					},
+				},
+			},
 		},
 		screens: {
 			'sm': '800px',
