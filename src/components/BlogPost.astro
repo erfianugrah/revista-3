@@ -9,7 +9,7 @@ const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
 >
   {
     image && (
-      <div class="flex sm:w-1/3 relative lg:h-[480px] h-[360px] fade-image">
+      <div class="flex sm:w-1/3 relative md:h-[480px] h-[360px] fade-image">
         <a href={url}>
           <Image
             src={image}
@@ -21,7 +21,7 @@ const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
             decoding="async"
             loading="lazy"
             quality="mid"
-            class="h-full object-cover object-center g:object-top-33 sm:object-top-50"
+            class="h-full object-cover object-center md:object-top-33 sm:object-top-50"
           />
         </a>
       </div>

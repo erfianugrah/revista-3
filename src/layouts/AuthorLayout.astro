@@ -1,0 +1,107 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import "../styles/glightbox.css";
+import Prose from "../components/Prose.astro";
+import { getImage, Image } from "astro:assets";
+const { frontmatter } = Astro.props;
+const updatedDate = frontmatter?.updatedDate
+  .toDateString()
+  .split(" ")
+  .slice(1)
+  .join(" ");
+const publishedDate = frontmatter?.pubDate
+  .toDateString()
+  .split(" ")
+  .slice(1)
+  .join(" ");
+const title = frontmatter?.title;
+const description = frontmatter?.description;
+// const author = frontmatter?.author.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+const authorFullName = frontmatter?.author;
+const author = authorFullName.split(" ")[0].toLowerCase();
+const image = frontmatter.image?.src;
+const alt = frontmatter.image?.alt;
+
+let baseUrl = new URL(Astro.request.url).origin;
+
+const metaImage = image
+  ? await getImage({
+      src: image,
+      alt: alt,
+      width: "1280",
+      height: "720",
+      decoding: "async",
+      format: "webp",
+    })
+  : null;
+---
+
+<BaseLayout
+  title={title}
+  image={image ? `${baseUrl}${metaImage?.src}` : ""}
+  alt={alt ? metaImage?.attributes.alt : ""}
+  description={description}
+  author={author}
+  pubDate={updatedDate}
+  updatedDate={publishedDate}
+>
+  <div class="grid grid-cols-[1fr,2fr] gap-4 md:px-56">
+    {
+      image ? (
+        <div>
+          <div class="md:h-[480px] h-[360px]">
+            <Image
+              src={image}
+              alt={alt}
+              width={1280}
+              height={720}
+              decoding="async"
+              format="avif"
+              decoding="async"
+              loading="lazy"
+              quality="mid"
+              class="object-contain h-full"
+            />
+          </div>
+          <div class="gap-4">
+            <h1 class="uppercase font-overpass-mono text-2xl text-center w-full">
+              {title}
+            </h1>
+            <div>
+              {frontmatter.tags.map((tag) => (
+                <p class="font-overpass-mono text-xl text-center w-full">
+                  <a
+                    class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded no-underline font-overpass-mono text-xl"
+                    href={`../tags/${tag}`}
+                  >
+                    {tag}
+                  </a>
+                </p>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <Prose>
+          <h1 class="normal-case font-overpass-mono text-2xl">{title}</h1>
+          <div class="grid">
+            {frontmatter.tags.map((tag) => (
+              <p class="font-overpass-mono text-xl text-center w-full">
+                <a
+                  class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded no-underline font-overpass-mono text-xl"
+                  href={`../tags/${tag}`}
+                >
+                  {tag}
+                </a>
+              </p>
+            ))}
+          </div>
+          <slot />
+        </Prose>
+      )
+    }
+    <Prose>
+      <slot />
+    </Prose>
+  </div>
+</BaseLayout>

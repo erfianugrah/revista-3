@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import MarkdownPostLayout from "../../layouts/MarkdownPostLayout.astro";
+import AuthorLayout from "../../layouts/AuthorLayout.astro";
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection("authors");
@@ -11,13 +11,12 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content, remarkPluginFrontmatter} = await entry.render();
+const { Content } = await entry.render();
 ---
 
-<MarkdownPostLayout frontmatter={entry.data}>
+<AuthorLayout frontmatter={entry.data}>
   <p
     class="prose prose-slate dark:prose-invert italic no-underline">
-    {remarkPluginFrontmatter.minutesRead}
   </p>
   <Content />
-</MarkdownPostLayout>
+</AuthorLayout>
