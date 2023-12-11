@@ -64,12 +64,12 @@ const metaImage = image
             />
           </div>
           <div>
-            <h1 class="uppercase font-overpass-mono text-xl text-center w-full">
+            <h1 class="uppercase font-overpass-mono text-xl text-center w-full m-2">
               {title}
             </h1>
             <div>
               {frontmatter.tags.map((tag) => (
-                <p class="font-overpass-mono text-center w-full">
+                <p class="font-overpass-mono text-center w-full m-2">
                   <a
                     class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded no-underline font-overpass-mono"
                     href={`../tags/${tag}`}
@@ -83,10 +83,10 @@ const metaImage = image
         </div>
       ) : (
         <Prose>
-          <h1 class="normal-case font-overpass-mono text-xl">{title}</h1>
+          <h1 class="normal-case font-overpass-mono text-xl m-2">{title}</h1>
           <div class="grid">
             {frontmatter.tags.map((tag) => (
-              <p class="font-overpass-mono text-center w-full">
+              <p class="font-overpass-mono text-center w-full m-2">
                 <a
                   class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded no-underline font-overpass-mono"
                   href={`../tags/${tag}`}
