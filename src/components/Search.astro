@@ -96,26 +96,26 @@ import Prose from "./Prose.astro";
     background-color: #f5f5f5;
   }
 
-/* Dark mode styles */
-@media (prefers-color-scheme: dark) {
-  .modal {
-    background-color: #333; /* Dark background for the modal */
-  }
+  /* Dark mode styles */
+  @media (prefers-color-scheme: dark) {
+    .modal {
+      background-color: #333; /* Dark background for the modal */
+    }
 
-  .modal-content {
-    background-color: #444; /* Dark background for the modal content */
-    color: #fff; /* Light text color for the modal content */
-  }
+    .modal-content {
+      background-color: #444; /* Dark background for the modal content */
+      color: #fff; /* Light text color for the modal content */
+    }
 
-  .search-results a {
-    color: #fff; /* Light text color for the search results */
-    border-bottom: 1px solid #666; /* Dark border color for the search results */
-  }
+    .search-results a {
+      color: #fff; /* Light text color for the search results */
+      border-bottom: 1px solid #666; /* Dark border color for the search results */
+    }
 
-  .search-results a:hover {
-    background-color: #555; /* Dark background color for the search results on hover */
+    .search-results a:hover {
+      background-color: #555; /* Dark background color for the search results on hover */
+    }
   }
-}
   .search-results h3 {
     margin: 0 0 5px;
     font-size: 16px;
@@ -143,7 +143,6 @@ import Prose from "./Prose.astro";
   .modal-content {
     background-color: #fefefe;
     margin: auto; /* Center the modal */
-    padding: 20px;
     border: 1px solid #888;
     width: 50%; /* Adjust the width of the modal */
     max-height: 80%; /* Adjust the max height of the modal */
@@ -159,11 +158,9 @@ import Prose from "./Prose.astro";
 
   @media (max-width: 600px) {
     .modal-content {
-      width: 100%; /* Make the modal full width */
-      height: auto; /* Adjust the height of the modal */
-      position: fixed; /* Position the modal */
-      left: 0; /* Position the modal from the left */
-      transform: none; /* Remove the translate */
+      width: 350px; /* Make the modal full width */
+      height: 150px; /* Adjust the height of the modal */
+      margin-top: 200px;
     }
   }
 </style>
