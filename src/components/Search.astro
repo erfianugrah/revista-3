@@ -11,54 +11,57 @@ import Prose from "./Prose.astro";
 <div id="modal" class="modal dark:bg-gray-800">
   <div class="modal-content dark:bg-gray-800 dark:text-white">
     <Prose>
-      <div id="results" class="search-results dark:bg-gray-800 dark:text-white"></div>
+      <div id="results" class="search-results">
+      </div>
     </Prose>
   </div>
 </div>
 
 <script is:inline>
-  const modal = document.querySelector("#modal");
-  const searchInput = document.querySelector("#search");
+  document.addEventListener("astro:page-load", () => {
+    const modal = document.querySelector("#modal");
+    const searchInput = document.querySelector("#search");
 
-  searchInput?.addEventListener("input", async (e) => {
-    // only load the pagefind script once
-    if (e.target.dataset.loaded !== "true") {
-      e.target.dataset.loaded = "true";
-      // load the pagefind script
-      window.pagefind = await import("/pagefind/pagefind.js");
-    }
+    searchInput?.addEventListener("input", async (e) => {
+      // only load the pagefind script once
+      if (e.target.dataset.loaded !== "true") {
+        e.target.dataset.loaded = "true";
+        // load the pagefind script
+        window.pagefind = await import("/pagefind/pagefind.js");
+      }
 
-    // search the index using the input value
-    const search = await window.pagefind.search(e.target.value);
+      // search the index using the input value
+      const search = await window.pagefind.search(e.target.value);
 
-    // clear the old results
-    document.querySelector("#results").innerHTML = "";
+      // clear the old results
+      document.querySelector("#results").innerHTML = "";
 
-    // add the new results
-    for (const result of search.results.slice(0, 3)) {
-      // limit to top 3 results
-      const data = await result.data();
-      document.querySelector("#results").innerHTML += `
+      // add the new results
+      for (const result of search.results.slice(0, 3)) {
+        // limit to top 3 results
+        const data = await result.data();
+        document.querySelector("#results").innerHTML += `
         <a href="${data.url}" class="dark:text-white">
           <h3>${data.meta.title}</h3>
           <p>${data.excerpt}</p>
         </a>`;
-    }
+      }
 
-    // Show the modal after the query is made
-    if (search.results.length > 0) {
-      modal.style.display = "block";
-    } else {
-      modal.style.display = "none";
-    }
+      // Show the modal after the query is made
+      if (search.results.length > 0) {
+        modal.style.display = "block";
+      } else {
+        modal.style.display = "none";
+      }
+    });
+
+    // Hide the modal when user clicks outside of it
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    };
   });
-
-  // Hide the modal when user clicks outside of it
-  window.onclick = function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  };
 </script>
 <style>
   .search-input {
