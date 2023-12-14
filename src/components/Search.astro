@@ -1,8 +1,8 @@
 ---
 ---
-<input id="search" type="text" placeholder="Looking for something...?" class="search-input">
+<input id="search" type="text" placeholder="Looking for something...?" class="search-input dark:bg-gray-800 dark:text-white">
 
-<div id="results" class="search-results" />
+<div id="results" class="search-results dark:bg-gray-800 dark:text-white" />
 
 <script is:inline>
   document.querySelector('#search')?.addEventListener('input', async (e) => {
@@ -20,14 +20,13 @@
     document.querySelector('#results').innerHTML = ''
 
     // add the new results
-    for (const result of search.results) {
-      const data = await result.data()
-      document.querySelector('#results').innerHTML += `
-        <a href="${data.url}">
-          <h3>${data.meta.title}</h3>
-          <p>${data.excerpt}</p>
-        </a>`
-    }
+  for (const result of search.results) {
+    const data = await result.data()
+    document.querySelector('#results').innerHTML += `
+      <a href="${data.url}" class="dark:text-white">
+        <h3>${data.meta.title}</h3>
+      </a>`
+  }
   })
 </script>
 <style>
