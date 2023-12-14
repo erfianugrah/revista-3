@@ -8,10 +8,10 @@ import Prose from "./Prose.astro";
   placeholder="Search it"
   class="search-input dark:bg-gray-800 dark:text-white"
 />
-<Prose>
-<div id="modal" class="modal">
-  <div class="modal-content">
-      <div id="results" class="search-results">
+<div id="modal" class="modal dark:bg-gray-800">
+  <div class="modal-content dark:bg-gray-800 dark:text-white">
+    <Prose>
+      <div id="results" class="search-results dark:bg-gray-800 dark:text-white">
       </div>
     </Prose>
   </div>
@@ -96,6 +96,17 @@ import Prose from "./Prose.astro";
     background-color: #f5f5f5;
   }
 
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .search-results a {
+    color: #fff;
+    border-bottom: 1px solid #444;
+  }
+
+  .search-results a:hover {
+    background-color: #333;
+  }
+}
   .search-results h3 {
     margin: 0 0 5px;
     font-size: 16px;
