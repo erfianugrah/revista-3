@@ -1,0 +1,74 @@
+---
+---
+<input id="search" type="text" placeholder="Looking for something...?" class="search-input">
+
+<div id="results" class="search-results" />
+
+<script is:inline>
+  document.querySelector('#search')?.addEventListener('input', async (e) => {
+    // only load the pagefind script once
+    if (e.target.dataset.loaded !== 'true') {
+      e.target.dataset.loaded = 'true'
+      // load the pagefind script
+      window.pagefind = await import("/pagefind/pagefind.js");
+    }
+
+    // search the index using the input value
+    const search = await window.pagefind.search(e.target.value)
+
+    // clear the old results
+    document.querySelector('#results').innerHTML = ''
+
+    // add the new results
+    for (const result of search.results) {
+      const data = await result.data()
+      document.querySelector('#results').innerHTML += `
+        <a href="${data.url}">
+          <h3>${data.meta.title}</h3>
+          <p>${data.excerpt}</p>
+        </a>`
+    }
+  })
+</script>
+<style>
+  .search-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .search-results {
+    margin-top: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  }
+
+  .search-results a {
+    display: block;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+    text-decoration: none;
+  }
+
+  .search-results a:last-child {
+    border-bottom: none;
+  }
+
+  .search-results a:hover {
+    background-color: #f5f5f5;
+  }
+
+  .search-results h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
+  }
+
+  .search-results p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+  }
+</style>

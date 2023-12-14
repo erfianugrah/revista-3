@@ -1,17 +1,17 @@
 ---
-
+import Search from "./Search.astro";
 ---
 
-<div
-  id="nav-links"
-  class="nav-links collapsed font-overpass-mono capitalize"
->
+<div id="nav-links" class="nav-links collapsed font-overpass-mono capitalize">
   <a class="fade-effect" href="/">Home</a>
   <a class="fade-effect" href="/muses">Muses</a>
   <a class="fade-effect" href="/short_form">Short Form</a>
   <a class="fade-effect" href="/long_form/tags">Long Form</a>
   <a class="fade-effect" href="/zeitweilig">Zeitweilig</a>
   <!-- <a href="/tags/">Tags</a> -->
+  <div class="nav-search">
+    <Search />
+  </div>
   <slot />
 </div>
 <style>
@@ -68,6 +68,12 @@
 
   .fade-effect:hover {
     opacity: 0.5;
+  }
+  .nav-search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
   }
 </style>
 <!-- This worked because of how the CSS stacking context works.
