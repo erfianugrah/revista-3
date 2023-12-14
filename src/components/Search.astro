@@ -8,12 +8,9 @@ import Prose from "./Prose.astro";
   placeholder="Search it"
   class="search-input dark:bg-gray-800 dark:text-white"
 />
-<div id="modal" class="modal dark:bg-gray-800">
-  <div class="modal-content dark:bg-gray-800 dark:text-white">
-    <Prose>
-      <div id="results" class="search-results dark:bg-gray-800 dark:text-white">
-      </div>
-    </Prose>
+<div id="modal" class="modal bg-[rgb(245,245,245)] dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]">
+  <div class="modal-content bg-[rgb(245,245,245)] dark:bg-slate-800  text-black dark:text-[rgb(245,245,245)]">
+      <div id="results" class="search-results bg-[rgb(245,245,245)] dark:bg-slate-800  text-black dark:text-[rgb(245,245,245)]"></div>
   </div>
 </div>
 
@@ -73,7 +70,6 @@ import Prose from "./Prose.astro";
 
   .search-results {
     margin-top: 10px;
-    background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     max-height: 300px; /* Set a maximum height */
@@ -103,7 +99,6 @@ import Prose from "./Prose.astro";
     }
 
     .modal-content {
-      background-color: #444; /* Dark background for the modal content */
       color: #fff; /* Light text color for the modal content */
     }
 
@@ -141,7 +136,6 @@ import Prose from "./Prose.astro";
 
   /* Modal Content/Box */
   .modal-content {
-    background-color: #fefefe;
     margin: auto; /* Center the modal */
     border: 1px solid #888;
     width: 50%; /* Adjust the width of the modal */
