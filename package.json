@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "postbuild": "pagefind --site dist"
+    "postbuild":  "pagefind --site dist"
   },
   "dependencies": {
     "@astrojs/check": "^0.3.1",

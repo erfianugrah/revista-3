@@ -69,12 +69,12 @@ import Search from "./Search.astro";
   .fade-effect:hover {
     opacity: 0.5;
   }
-  .nav-search {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-  }
+.nav-search {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  width: 100%; /* make the search box take up the whole width */
+}
 </style>
 <!-- This worked because of how the CSS stacking context works.
 

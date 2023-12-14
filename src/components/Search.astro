@@ -1,33 +1,64 @@
 ---
+import Prose from "./Prose.astro";
 ---
-<input id="search" type="text" placeholder="Looking for something...?" class="search-input dark:bg-gray-800 dark:text-white">
 
-<div id="results" class="search-results dark:bg-gray-800 dark:text-white" />
+<input
+  id="search"
+  type="text"
+  placeholder="Search it"
+  class="search-input dark:bg-gray-800 dark:text-white"
+/>
+<div id="modal" class="modal dark:bg-gray-800">
+  <div class="modal-content dark:bg-gray-800 dark:text-white">
+    <Prose>
+      <div id="results" class="search-results dark:bg-gray-800 dark:text-white"></div>
+    </Prose>
+  </div>
+</div>
 
 <script is:inline>
-  document.querySelector('#search')?.addEventListener('input', async (e) => {
+  const modal = document.querySelector("#modal");
+  const searchInput = document.querySelector("#search");
+
+  searchInput?.addEventListener("input", async (e) => {
     // only load the pagefind script once
-    if (e.target.dataset.loaded !== 'true') {
-      e.target.dataset.loaded = 'true'
+    if (e.target.dataset.loaded !== "true") {
+      e.target.dataset.loaded = "true";
       // load the pagefind script
       window.pagefind = await import("/pagefind/pagefind.js");
     }
 
     // search the index using the input value
-    const search = await window.pagefind.search(e.target.value)
+    const search = await window.pagefind.search(e.target.value);
 
     // clear the old results
-    document.querySelector('#results').innerHTML = ''
+    document.querySelector("#results").innerHTML = "";
 
     // add the new results
-  for (const result of search.results) {
-    const data = await result.data()
-    document.querySelector('#results').innerHTML += `
-      <a href="${data.url}" class="dark:text-white">
-        <h3>${data.meta.title}</h3>
-      </a>`
-  }
-  })
+    for (const result of search.results.slice(0, 3)) {
+      // limit to top 3 results
+      const data = await result.data();
+      document.querySelector("#results").innerHTML += `
+        <a href="${data.url}" class="dark:text-white">
+          <h3>${data.meta.title}</h3>
+          <p>${data.excerpt}</p>
+        </a>`;
+    }
+
+    // Show the modal after the query is made
+    if (search.results.length > 0) {
+      modal.style.display = "block";
+    } else {
+      modal.style.display = "none";
+    }
+  });
+
+  // Hide the modal when user clicks outside of it
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
 </script>
 <style>
   .search-input {
@@ -42,6 +73,8 @@
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    max-height: 300px; /* Set a maximum height */
+    overflow-y: auto; /* Make it scrollable */
   }
 
   .search-results a {
@@ -69,5 +102,45 @@
     margin: 0;
     font-size: 14px;
     color: #666;
+  }
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  }
+
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Center the modal */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Adjust the width of the modal */
+    max-height: 80%; /* Adjust the max height of the modal */
+    overflow: auto; /* Add scroll if needed */
+    position: absolute; /* Position the modal */
+    top: 50%; /* Position the modal vertically at the center */
+    left: 50%; /* Position the modal horizontally at the center */
+    transform: translate(
+      -50%,
+      -50%
+    ); /* Use translate to adjust the position of the modal */
+  }
+
+  @media (max-width: 600px) {
+    .modal-content {
+      width: 100%; /* Make the modal full width */
+      height: auto; /* Adjust the height of the modal */
+      position: fixed; /* Position the modal */
+      left: 0; /* Position the modal from the left */
+      transform: none; /* Remove the translate */
+    }
   }
 </style>
