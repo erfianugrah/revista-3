@@ -98,13 +98,22 @@ import Prose from "./Prose.astro";
 
 /* Dark mode styles */
 @media (prefers-color-scheme: dark) {
+  .modal {
+    background-color: #333; /* Dark background for the modal */
+  }
+
+  .modal-content {
+    background-color: #444; /* Dark background for the modal content */
+    color: #fff; /* Light text color for the modal content */
+  }
+
   .search-results a {
-    color: #fff;
-    border-bottom: 1px solid #444;
+    color: #fff; /* Light text color for the search results */
+    border-bottom: 1px solid #666; /* Dark border color for the search results */
   }
 
   .search-results a:hover {
-    background-color: #333;
+    background-color: #555; /* Dark background color for the search results on hover */
   }
 }
   .search-results h3 {
