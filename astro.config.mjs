@@ -5,6 +5,7 @@ import mdx from "@astrojs/mdx";
 import tailwind from "@astrojs/tailwind";
 import markdoc from "@astrojs/markdoc";
 import remarkGfm from 'remark-gfm';
+import { remarkReadingTime } from './remark-reading-time.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -20,7 +21,7 @@ export default defineConfig({
     gfm: false
   }), tailwind(), markdoc()],
   markdown: {
-    remarkPlugins: [remarkGfm]
+    remarkPlugins: [remarkGfm, remarkReadingTime]
   },
   prefetch: {
     prefetchAll: true,
