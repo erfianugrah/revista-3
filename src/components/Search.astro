@@ -2,11 +2,12 @@
 ---
 
 <input
-  id="search"
+  id="nav-search"
   type="text"
   placeholder="Search it"
   class="search-input dark:bg-slate-800 dark:text-[rgb(245,245,245)]"
 />
+
 <div
   id="modal"
   class="modal bg-[rgb(245,245,245)]  dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]"
@@ -14,6 +15,12 @@
   <div
     class="modal-content bg-[rgb(245,245,245)]  dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]"
   >
+    <input
+      id="search"
+      type="text"
+      placeholder="Search it"
+      class="search-input dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]"
+    />
     <div
       id="results"
       class="search-results bg-[rgb(245,245,245)]  dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]"
@@ -22,13 +29,20 @@
   </div>
 </div>
 
-
 <script is:inline>
   document.addEventListener("astro:page-load", () => {
     const modal = document.querySelector("#modal");
-    const searchInput = document.querySelector("#search");
+    const navSearchInput = document.querySelector("#nav-search");
+    const modalSearchInput = document.querySelector("#search");
 
-    searchInput?.addEventListener("input", async (e) => {
+    navSearchInput?.addEventListener("click", (e) => {
+      // Show the modal when the search field is clicked
+      modal.style.display = "block";
+      // Focus on the search field inside the modal
+      modalSearchInput.focus();
+    });
+
+    modalSearchInput?.addEventListener("input", async (e) => {
       // only load the pagefind script once
       if (e.target.dataset.loaded !== "true") {
         e.target.dataset.loaded = "true";
