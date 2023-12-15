@@ -10,11 +10,10 @@ import Prose from "./Prose.astro";
 />
 <div
   id="modal"
-  class="modal bg-[rgb(245,245,245)]  dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)] prose prose-no-quotes prose-slate dark:prose-invert
-  prose-h1:font-bold prose-h1:text-4xl prose-p:text-justify"
+  class="modal bg-[rgb(245,245,245)]  dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]"
 >
   <div
-    class="modal-content bg-[rgb(245,245,245)]  dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)] "
+    class="modal-content bg-[rgb(245,245,245)]  dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]"
   >
     <div
       id="results"
@@ -49,8 +48,8 @@ import Prose from "./Prose.astro";
         const data = await result.data();
         document.querySelector("#results").innerHTML += `
         <a href="${data.url}" class="result-link dark:text-white">
-          <h3 class="result-title">${data.meta.title}</h3>
-          <p class="result-excerpt">${data.excerpt}</p>
+          <h3 class="result-title text-2xl text-gray-700">${data.meta.title}</h3>
+          <p class="result-excerpt text-base text-gray-500">${data.excerpt}</p>
         </a>`;
       }
 
@@ -154,10 +153,7 @@ import Prose from "./Prose.astro";
     position: absolute; /* Position the modal */
     top: 50%; /* Position the modal vertically at the center */
     left: 50%; /* Position the modal horizontally at the center */
-    transform: translate(
-      -50%,
-      -50%
-    ); /* Use translate to adjust the position of the modal */
+    transform: translate(-50%,-50%); /* Use translate to adjust the position of the modal */
   }
 
   @media (max-width: 600px) {
