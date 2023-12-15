@@ -1,5 +1,4 @@
 ---
-import Prose from "./Prose.astro";
 ---
 
 <input
@@ -8,7 +7,6 @@ import Prose from "./Prose.astro";
   placeholder="Search it"
   class="search-input dark:bg-slate-800 dark:text-[rgb(245,245,245)]"
 />
-
 <div
   id="modal"
   class="modal bg-[rgb(245,245,245)]  dark:bg-slate-800 text-black dark:text-[rgb(245,245,245)]"
@@ -24,15 +22,13 @@ import Prose from "./Prose.astro";
   </div>
 </div>
 
+
 <script is:inline>
   document.addEventListener("astro:page-load", () => {
     const modal = document.querySelector("#modal");
     const searchInput = document.querySelector("#search");
 
-    searchInput?.addEventListener("focus", async (e) => {
-      // Show the modal as soon as the user clicks on the search field
-      modal.style.display = "block";
-
+    searchInput?.addEventListener("input", async (e) => {
       // only load the pagefind script once
       if (e.target.dataset.loaded !== "true") {
         e.target.dataset.loaded = "true";
