@@ -48,7 +48,7 @@ import Prose from "./Prose.astro";
         const data = await result.data();
         document.querySelector("#results").innerHTML += `
         <a href="${data.url}" class="result-link dark:text-white gap-2">
-          <h3 class="result-title text-2xl font-bold">${data.meta.title}</h3>
+          <h3 class="result-title text-2xl font-bold underline">${data.meta.title}</h3>
           <p class="result-excerpt text-base">${data.excerpt}</p>
         </a>`;
       }
