@@ -1,0 +1,13 @@
+---
+import "/pagefind/pagefind-ui.css";
+---
+
+<script is:inline src="/pagefind/pagefind-ui.js"></script>
+<div id="search"></div>
+<script>
+  document.addEventListener("astro:page-load", () => {
+    window.addEventListener("DOMContentLoaded", (event) => {
+      new PagefindUI({ element: "#search", showSubResults: true });
+    });
+  });
+</script>
