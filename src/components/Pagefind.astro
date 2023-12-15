@@ -1,0 +1,28 @@
+---
+
+---
+
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+<script src="/pagefind/pagefind-ui.js" is:inline></script>
+
+<div id="search" class="ml-3 p-4" transition:persist></div>
+<script>
+  window.addEventListener("DOMContentLoaded", (event) => {
+    new PagefindUI({
+      element: "#search",
+      showSubResults: true,
+      resetStyles: false,
+      pageSize: 1,
+      excerptLength: 10,
+    });
+  });
+</script>
+<style is:global>
+  .dark {
+    --pagefind-ui-text: #f5f5f5 !important;
+    --pagefind-ui-primary: #f5f5f5 !important;
+    --pagefind-ui-background: #152028 !important;
+    --pagefind-ui-border: #152028 !important;
+    --pagefind-ui-tag: #152028 !important;
+  }
+</style>

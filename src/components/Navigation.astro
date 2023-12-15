@@ -1,5 +1,6 @@
 ---
 import Search from "./Search.astro";
+import Pagefind from "./Pagefind.astro";
 ---
 
 <div id="nav-links" class="nav-links collapsed font-overpass-mono capitalize">
@@ -9,9 +10,7 @@ import Search from "./Search.astro";
   <a class="fade-effect" href="/long_form/tags">Long Form</a>
   <a class="fade-effect" href="/zeitweilig">Zeitweilig</a>
   <!-- <a href="/tags/">Tags</a> -->
-  <div class="nav-search">
-    <Search />
-  </div>
+  <Pagefind />
   <slot />
 </div>
 <style>
