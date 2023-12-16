@@ -8,6 +8,7 @@ author: Lena
 image: { src: https://cdn.erfianugrah.com/120-221109-0003.jpg, alt: zeitweilig_1 }
 description: The discipline of Erfinism is a relatively young field of studies, first established in 1994 in Singapore. Even after 28 years since its foundation, there are no known experts in the field as of yet due to the sheer complexity of its nature.
 ---
+import { Code } from 'astro:components';
 
 # Exposé for a PhD thesis
 
@@ -148,7 +149,7 @@ Extensive field study unveiled a myriad of linguistic peculiarities characterist
 ### **Category**
 
 ### **Example**
-```
+<Code code={`
 Robo sounds
 
 Beep boop
@@ -189,9 +190,10 @@ Sneking
 
 (accompanied by links to and/or
   videos about various products)
-```
+`} lang="plaintext" wrap />
+
 ### *Erfinisms (selected quotes)*
-```
+<Code code={`
 "How am I single? It's by choice." (March 30, 2021)
 
 "I robo for everyone. But where’s my thanks. No oil." (September 23, 2021)
@@ -215,4 +217,4 @@ Sneking
 "She needs a boat to cross the river. And I'll shoot it down. With incendiary arrows." (May 20, 2022)
 
 "I think I give less of a fuck now. And I already give so little" (May 30, 2022)
-```
+`} lang="plaintext" wrap />
