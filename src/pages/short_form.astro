@@ -3,16 +3,13 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import BlogPost from "../components/BlogPost.astro";
 import { sortByDate } from "../components/sortbydate";
-import "../styles/global.css";
 const pageTitle = "Short Form";
 const allShortForm = await getCollection("short_form");
 ---
 
 <BaseLayout title={pageTitle}>
     {
-      allShortForm
-        .sort(sortByDate)
-        .map((post) => (
+      allShortForm.sort(sortByDate).map((post) => (
           <BlogPost
             url={`/short_form/${post.slug}/`}
             image={post.data?.image?.src || ""}
