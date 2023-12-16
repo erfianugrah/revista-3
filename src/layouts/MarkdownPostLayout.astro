@@ -62,7 +62,7 @@ const metaImage = image ? await getImage({
                 background-position: 45% 50%;
                 @media (min-width: 800px) { background-position: 30% 50%; }
               `}
-        
+        data-pagefind-body
       >
         <h1 class="prose prose-slate uppercase font-overpass-mono text-[rgb(245,245,245)] text-4xl">
           {title}
@@ -81,7 +81,7 @@ const metaImage = image ? await getImage({
         </div>
       </div>
     ) : (
-      <div >
+      <div data-pagefind-body>
             <Prose>
         <h1 class="normal-case font-overpass-mono text-4xl -mb-1">{title}</h1>
         <div class="flex">
@@ -101,7 +101,7 @@ const metaImage = image ? await getImage({
       </div>
     )
   }
-  <div >
+  <div data-pagefind-body>
   <Prose>
     <slot />
     <div class="flex flex-col sm:flex-row align-center">
