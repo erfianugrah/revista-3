@@ -5,24 +5,78 @@
 <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
 <script src="/pagefind/pagefind-ui.js" is:inline></script>
 
-<div id="search" class="ml-3 p-4" transition:persist></div>
+<button id="searchButton" class="text-lg pl-[30px] h-[50px]">Search</button>
+
+<div id="myModal" class="modal">
+  <div
+    class="modal-content bg-[rgb(245,245,245)] dark:bg-[rgb(34,33,37)] dark:text-[rgb(245,245,245)] m-2 w-[350px] md:w-[700px]"
+  >
+    <span id="closeButton" class="close">&times;</span>
+    <div id="search" class="m-8" transition:persist></div>
+  </div>
+</div>
+
 <script>
-  window.addEventListener("DOMContentLoaded", (event) => {
+  document.addEventListener("astro:page-load", () => {
+    const modal = document.getElementById("myModal");
+    const searchButton = document.getElementById("searchButton");
+    const closeButton = document.getElementById("closeButton");
+
+    searchButton.addEventListener("click", () => {
+      modal.style.display = "block";
+    });
+
+    closeButton.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
     new PagefindUI({
       element: "#search",
       showSubResults: true,
       resetStyles: false,
-      pageSize: 1,
-      excerptLength: 10,
     });
   });
 </script>
+
 <style is:global>
-  .dark {
-    --pagefind-ui-text: #f5f5f5 !important;
-    --pagefind-ui-primary: #f5f5f5 !important;
-    --pagefind-ui-background: #152028 !important;
-    --pagefind-ui-border: #152028 !important;
-    --pagefind-ui-tag: #152028 !important;
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
   }
+
+  .modal-content {
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+.dark {
+  --pagefind-ui-text: rgb(245, 245, 245) !important;
+  --pagefind-ui-primary: #eeeeee !important;
+  --pagefind-ui-background: rgb(34, 33, 37) !important;
+  --pagefind-ui-border: rgb(245, 245, 245) !important;
+  --pagefind-ui-tag: rgb(245, 245, 245) !important;
+}
 </style>

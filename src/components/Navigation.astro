@@ -10,7 +10,7 @@ import Pagefind from "./Pagefind.astro";
   <a class="fade-effect" href="/long_form/tags">Long Form</a>
   <a class="fade-effect" href="/zeitweilig">Zeitweilig</a>
   <!-- <a href="/tags/">Tags</a> -->
-  <Pagefind />
+  <Pagefind class="fade-effect" />
   <slot />
 </div>
 <style>
@@ -68,12 +68,12 @@ import Pagefind from "./Pagefind.astro";
   .fade-effect:hover {
     opacity: 0.5;
   }
-.nav-search {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  width: 100%; /* make the search box take up the whole width */
-}
+  .nav-search {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    width: 100%; /* make the search box take up the whole width */
+  }
 </style>
 <!-- This worked because of how the CSS stacking context works.
 
