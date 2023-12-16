@@ -5,7 +5,8 @@ export default {
 		extend: {
 			fontFamily: {
 				'overpass-mono': ['"Overpass Mono Variable"', "sans-serif"],
-				'fira-mono': ['"Fira Mono"', "sans-serif"]
+				'fira-mono': ['"Fira Mono"', "sans-serif"],
+				'inconsolata': ['"Inconsolata Variable"', "sans-serif"]
 			},
 			objectPosition: {
 				'top-33': 'center top 33.33%',
