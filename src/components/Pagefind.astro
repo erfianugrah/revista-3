@@ -18,7 +18,7 @@
 
 <script>
   let pagefindUI;
-  
+
   document.addEventListener("astro:page-load", () => {
     const modal = document.getElementById("myModal");
     const searchButton = document.getElementById("searchButton");
@@ -26,10 +26,18 @@
 
     searchButton.addEventListener("click", () => {
       modal.classList.add("visible");
+      document.querySelector("#search input").focus();
     });
 
     closeButton.addEventListener("click", () => {
       modal.classList.remove("visible");
+    });
+
+    // Close the modal when clicking outside
+    window.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        modal.classList.remove("visible");
+      }
     });
 
     if (pagefindUI) {
@@ -65,6 +73,7 @@
     border: 1px solid #888;
     max-height: 70vh;
     overflow-y: auto;
+    border-radius: 20px;
   }
 
   .close {
