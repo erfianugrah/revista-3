@@ -17,25 +17,31 @@
 </div>
 
 <script>
-document.addEventListener("astro:page-load", () => {
-  const modal = document.getElementById("myModal");
-  const searchButton = document.getElementById("searchButton");
-  const closeButton = document.getElementById("closeButton");
+  let pagefindUI;
+  
+  document.addEventListener("astro:page-load", () => {
+    const modal = document.getElementById("myModal");
+    const searchButton = document.getElementById("searchButton");
+    const closeButton = document.getElementById("closeButton");
 
-  searchButton.addEventListener("click", () => {
-    modal.classList.add("visible");
-  });
+    searchButton.addEventListener("click", () => {
+      modal.classList.add("visible");
+    });
 
-  closeButton.addEventListener("click", () => {
-    modal.classList.remove("visible");
-  });
+    closeButton.addEventListener("click", () => {
+      modal.classList.remove("visible");
+    });
 
-  new PagefindUI({
-    element: "#search",
-    showSubResults: true,
-    resetStyles: false,
+    if (pagefindUI) {
+      pagefindUI.destroy();
+    }
+
+    pagefindUI = new PagefindUI({
+      element: "#search",
+      showSubResults: true,
+      resetStyles: false,
+    });
   });
-});
 </script>
 
 <style is:global>
