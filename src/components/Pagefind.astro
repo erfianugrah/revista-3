@@ -17,25 +17,25 @@
 </div>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
-    const modal = document.getElementById("myModal");
-    const searchButton = document.getElementById("searchButton");
-    const closeButton = document.getElementById("closeButton");
+document.addEventListener("astro:page-load", () => {
+  const modal = document.getElementById("myModal");
+  const searchButton = document.getElementById("searchButton");
+  const closeButton = document.getElementById("closeButton");
 
-    searchButton.addEventListener("click", () => {
-      modal.style.display = "block";
-    });
-
-    closeButton.addEventListener("click", () => {
-      modal.style.display = "none";
-    });
-
-    new PagefindUI({
-      element: "#search",
-      showSubResults: true,
-      resetStyles: false,
-    });
+  searchButton.addEventListener("click", () => {
+    modal.classList.add("visible");
   });
+
+  closeButton.addEventListener("click", () => {
+    modal.classList.remove("visible");
+  });
+
+  new PagefindUI({
+    element: "#search",
+    showSubResults: true,
+    resetStyles: false,
+  });
+});
 </script>
 
 <style is:global>
@@ -50,7 +50,9 @@
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
   }
-
+  .modal.visible {
+    display: block;
+  }
   .modal-content {
     margin: 15% auto;
     padding: 20px;
@@ -72,11 +74,11 @@
     text-decoration: none;
     cursor: pointer;
   }
-.dark {
-  --pagefind-ui-text: rgb(245, 245, 245) !important;
-  --pagefind-ui-primary: #eeeeee !important;
-  --pagefind-ui-background: rgb(34, 33, 37) !important;
-  --pagefind-ui-border: rgb(245, 245, 245) !important;
-  --pagefind-ui-tag: rgb(245, 245, 245) !important;
-}
+  .dark {
+    --pagefind-ui-text: rgb(245, 245, 245) !important;
+    --pagefind-ui-primary: #eeeeee !important;
+    --pagefind-ui-background: rgb(34, 33, 37) !important;
+    --pagefind-ui-border: rgb(245, 245, 245) !important;
+    --pagefind-ui-tag: rgb(245, 245, 245) !important;
+  }
 </style>
