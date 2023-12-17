@@ -82,7 +82,7 @@ const metaImage = image ? await getImage({
       </div>
     ) : (
       <div data-pagefind-body>
-            <Prose>
+        <Prose>
         <h1 class="normal-case font-overpass-mono text-4xl -mb-1">{title}</h1>
         <div class="flex">
           {frontmatter.tags.map((tag) => (
@@ -96,7 +96,6 @@ const metaImage = image ? await getImage({
             </p>
           ))}
         </div>
-        <slot />
       </Prose>
       </div>
     )
