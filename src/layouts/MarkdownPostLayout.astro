@@ -68,6 +68,7 @@ const metaImage = image ? await getImage({
     <div
         id="backgroundImageElement"
         class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-screen mb-8 md:-mx-16 -mx-8"
+        style={`--mobile-background-image: url(${mobileBackgroundImage.src}); --background-image: url(${backgroundImage.src});`}
         data-pagefind-body
     >
         <h1 class="prose prose-slate uppercase font-overpass-mono text-[rgb(245,245,245)] text-4xl">
@@ -131,12 +132,12 @@ const metaImage = image ? await getImage({
 </BaseLayout>
 <style>
   #backgroundImageElement {
-    background-image: url(${mobileBackgroundImage.src});
+    background-image: var(--mobile-background-image);
     background-position: 45% 50%;
   }
   @media (min-width: 800px) {
     #backgroundImageElement {
-      background-image: url(${backgroundImage.src});
+      background-image: var(--background-image);
       background-position: 30% 50%;
     }
   }
