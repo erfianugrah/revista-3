@@ -1,66 +1,42 @@
 ---
 import "../styles/MasonryLayout.css";
-import { getImage } from "astro:assets";
+import { getImage } from 'astro:assets';
 const { images } = Astro.props;
-const imageAssets = await Promise.all(
-  images.map(async (image) => {
-    if (image) {
-      return await getImage({
-        src: image.src,
-        alt: image.alt,
-        width: "2560",
-        height: "1440",
-        decoding: "async",
-        format: "avif",
-        quality: "high",
-      });
-    }
-    return null;
-  })
-);
-
-const mobileImageAssets = await Promise.all(
-  images.map(async (image) => {
-    if (image) {
-      return await getImage({
-        src: image.src,
-        alt: image.alt,
-        width: "1920",
-        height: "1080",
-        decoding: "async",
-        format: "avif",
-        quality: "high",
-      });
-    }
-    return null;
-  })
-);
+const imageAssets = await Promise.all(images.map(async (image) => {
+  if (image) {
+    return await getImage({
+      src: image.src,
+      alt: image.alt,
+      width: "2560",
+      height: "1440",
+      decoding: "async",
+      format: "avif",
+      quality: "high"
+    });
+  }
+  return null;
+}));
 ---
 
 <div class="masonry">
   {
-    imageAssets.map((imageAsset, index) =>
+    imageAssets.map((imageAsset, index) => (
       imageAsset ? (
         <div key={index} class="image-container" id="gallery">
           <a href={imageAsset.src} class="image-link glightbox">
             <img
-              src={mobileImageAssets[index]?.src}
+              src={imageAsset.src}
               alt={imageAsset.attributes.alt}
               loading={imageAsset.attributes.loading}
               decoding={imageAsset.attributes.decoding}
               width={imageAsset.attributes.width}
               height={imageAsset.attributes.height}
               class="image"
-              style={`
-            @media (min-width: 800px) { 
-              src: url(${imageAssets[index]?.src});
-            }
-          `}
             />
           </a>
         </div>
       ) : null
-    )
+    ))
   }
 </div>
 <script src="../scripts/lightbox.js"></script>
