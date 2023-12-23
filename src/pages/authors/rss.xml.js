@@ -22,25 +22,3 @@ export async function GET(context) {
         customData: `<language>en-us</language>`,
     });
 }
-
-    // const short_form = await getCollection("short_form");
-    // const long_form = await getCollection("long_form");
-    // const zeitweilig = await getCollection("zeitweilig");
-        // short_form.map((post) => ({
-        //     title: post.data.title,
-        //     pubDate: post.data.pubDate,
-        //     description: post.data.description,
-        //     link: `/short_form/${post.slug}/`,
-        // })),
-        // long_form.map((post) => ({
-        //     title: post.data.title,
-        //     pubDate: post.data.pubDate,
-        //     description: post.data.description,
-        //     link: `/long_form/${post.slug}/`,
-        // })),
-        // zeitweilig.map((post) => ({
-        //     title: post.data.title,
-        //     pubDate: post.data.pubDate,
-        //     description: post.data.description,
-        //     link: `/zeitweilig/${post.slug}/`,
-        // })),
