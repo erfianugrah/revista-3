@@ -1,5 +1,5 @@
 ---
-const { title, url, image, alt, description, pubDate } = Astro.props;
+const { title, url, image, alt, description, pubDate, positionx, positiony } = Astro.props;
 import { Image } from "astro:assets";
 const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
 ---
@@ -21,7 +21,8 @@ const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
             decoding="async"
             loading="lazy"
             quality="mid"
-            class="h-full object-cover object-center md:object-top-33 sm:object-top-50"
+            class="h-full object-cover object-center post-image"
+            style={`background-position: ${positionx} ${positiony};`}
           />
         </a>
       </div>
@@ -64,6 +65,14 @@ const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
   </div>
 </div>
 <style>
+  .post-image {
+    background-position: var(--position-x, 45%) var(--position-y, 50%);
+  }
+  @media (min-width: 800px) {
+    .post-image {
+      background-position: var(--position-x, 30%) var(--position-y, 50%);
+    }
+  }
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);

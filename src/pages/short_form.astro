@@ -17,6 +17,8 @@ const allShortForm = await getCollection("short_form");
             title={post.data?.title || ""}
             description={post.data?.description || ""}
             pubDate={post.data?.pubDate || ""}
+            positionx={post.data?.image?.positionx || ''}
+            positiony={post.data?.image?.positiony || ''}
           />
         ))
     }
