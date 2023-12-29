@@ -14,13 +14,12 @@ const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
           <Image
             src={image}
             alt={alt}
-            width={640}
-            height={480}
+            width={1280}
+            height={720}
             decoding="async"
             format="avif"
             decoding="async"
             loading="lazy"
-            quality="75"
             class="h-full object-cover object-center post-image"
             style={`background-position: ${positionx} ${positiony};`}
           />
