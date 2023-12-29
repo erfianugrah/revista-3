@@ -39,8 +39,8 @@ const backgroundImage = image ? await getImage({
 const mobileBackgroundImage = image ? await getImage({
   src: image,
   alt: alt,
-  width: "1920",
-  height: "1080",
+  width: "1280",
+  height: "720",
   decoding: "async",
   format: "avif",
   quality: "mid"
@@ -49,8 +49,8 @@ const mobileBackgroundImage = image ? await getImage({
 const metaImage = image ? await getImage({
   src: image,
   alt: alt,
-  width: "1280",
-  height: "720",
+  width: "640",
+  height: "480",
   decoding: "async",
   format: "webp"
 }) : null;
