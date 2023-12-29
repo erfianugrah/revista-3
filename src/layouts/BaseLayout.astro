@@ -46,7 +46,7 @@ const { image, description, author, pubDate, updatedDate, title, site_name, alt 
     <link rel="icon" type="image/avif" href={favicon_avif.src} />
     <link rel="icon" type="image/webp" href={favicon_webp.src} />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={ Astro.generator } />
     <meta name="og:title" content={ title || pageTitle } />
     <meta name="og:description" content={ description || metaDescription } />
@@ -65,7 +65,7 @@ const { image, description, author, pubDate, updatedDate, title, site_name, alt 
     <meta name="twitter:title" content={ title || pageTitle } />
     <meta name="twitter:description" content={ description || metaDescription } />
     <meta name="twitter:image" content={ image || `${baseUrl}${metaImage?.src}` }/>
-    <title>{ pageTitle} </title>
+    <title>{ pageTitle } </title>
     <ViewTransitions />
   </head>
   <body
