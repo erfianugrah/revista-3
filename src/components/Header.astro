@@ -13,14 +13,6 @@ const favicon_avif = await getImage({
   format: "avif"
 });
 
-const favicon_webp = await getImage({
-  src: "https://cdn.erfianugrah.com/ea_favicon.png",
-  alt: "favicon",
-  width: "400",
-  height: "400",
-  decoding: "async",
-  format: "webp"
-});
 ---
 
 <header class="mb-[30px]">
@@ -31,7 +23,7 @@ const favicon_webp = await getImage({
       <a href="/">
         <img
           class="favicon absolute left-0 dark:invert -mt-[15px]"
-          src={ favicon_avif.src || favicon_webp.src }
+          src={ favicon_avif.src }
           alt="Home"
           width="30px"
           height="30px"
