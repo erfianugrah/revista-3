@@ -14,6 +14,25 @@ const metaImage = await getImage({
   decoding: "async",
   format: "webp",
 });
+
+const favicon_avif = await getImage({
+  src: "https://cdn.erfianugrah.com/ea_favicon.png",
+  alt: "favicon",
+  width: "400",
+  height: "400",
+  decoding: "async",
+  format: "avif"
+});
+
+const favicon_webp = await getImage({
+  src: "https://cdn.erfianugrah.com/ea_favicon.png",
+  alt: "favicon",
+  width: "400",
+  height: "400",
+  decoding: "async",
+  format: "webp"
+});
+
 const pageTitle = "stoicopa";
 const metaDescription =
   "My personal hamster wheel.";
@@ -24,7 +43,8 @@ const { image, description, author, pubDate, updatedDate, title, site_name, alt 
 <html class="bg-[rgb(245,245,245)] dark:bg-[rgb(34,33,37)]" lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/avif" href="/actualfavicon.avif" />
+    <link rel="icon" type="image/avif" href={favicon_avif.src} />
+    <link rel="icon" type="image/webp" href={favicon_webp.src} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={ Astro.generator } />
