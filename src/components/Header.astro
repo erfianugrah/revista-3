@@ -2,17 +2,16 @@
 import Hamburger from "./Hamburger.astro";
 import Navigation from "./Navigation.astro";
 import ThemeIcon from "./ThemeIcon.astro";
-import { getImage } from 'astro:assets';
+import { Picture } from "astro:assets";
 
-const favicon_avif = await getImage({
-  src: "https://cdn.erfianugrah.com/ea_favicon.png",
-  alt: "favicon",
-  width: "400",
-  height: "400",
-  decoding: "async",
-  format: "avif"
-});
-
+// const favicon_avif = await getImage({
+//   src: "https://cdn.erfianugrah.com/ea_favicon.png",
+//   alt: "favicon",
+//   width: "400",
+//   height: "400",
+//   decoding: "async",
+//   format: "avif"
+// });
 ---
 
 <header class="mb-[30px]">
@@ -21,12 +20,15 @@ const favicon_avif = await getImage({
   >
     <div>
       <a href="/">
-        <img
+        <Picture
           class="favicon absolute left-0 dark:invert -mt-[15px]"
-          src={ favicon_avif.src }
-          alt="Home"
-          width="30px"
-          height="30px"
+          src="https://cdn.erfianugrah.com/ea_favicon.png"
+          alt="favicon"
+          formats={["avif", "webp"]}
+          width="30"
+          height="30"
+          loading="lazy"
+          decoding="async"
         />
       </a>
     </div>
