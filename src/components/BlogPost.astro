@@ -1,6 +1,6 @@
 ---
 const { title, url, image, alt, description, pubDate, positionx, positiony } = Astro.props;
-import { Image } from "astro:assets";
+import { Picture  } from "astro:assets";
 const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
 ---
 
@@ -11,13 +11,13 @@ const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
     image && (
       <div class="flex sm:w-1/3 md:h-[480px] h-[360px] fade-image">
         <a href={url}>
-          <Image
+          <Picture 
             src={image}
             alt={alt}
             width={1280}
             height={720}
             decoding="async"
-            format="avif"
+            formats={['avif', 'webp']}
             decoding="async"
             loading="lazy"
             class="h-full object-cover object-center post-image"
