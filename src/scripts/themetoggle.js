@@ -13,8 +13,14 @@ localStorage.setItem("theme", theme);
 document.documentElement.classList.add(theme);
 
 document.getElementById("themeToggle").addEventListener("click", () => {
-  // Toggle the theme
-  theme = document.documentElement.classList.toggle("dark") ? "dark" : "light";
+  // Toggle the .dark class
+  document.documentElement.classList.toggle("dark");
+
+  // Check if the .dark class is present
+  const isDark = document.documentElement.classList.contains("dark");
+
+  // Set the theme based on whether the .dark class is present
+  theme = isDark ? "dark" : "light";
 
   // Update the theme in localStorage
   localStorage.setItem("theme", theme);
