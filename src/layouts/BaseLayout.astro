@@ -58,6 +58,13 @@ const { image, description, author, pubDate, updatedDate, title, site_name, alt 
     <meta name="twitter:description" content={ description || metaDescription } />
     <meta name="twitter:image" content={ image || `${baseUrl}${metaImage?.src}` }/>
     <title>{ pageTitle } </title>
+      <script>
+    let theme = localStorage.getItem("theme");
+    if (!theme) {
+      theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    document.documentElement.setAttribute('data-theme', theme);
+  </script>
     <ViewTransitions />
   </head>
   <body
