@@ -25,7 +25,7 @@ document.addEventListener('astro:page-load', () => {
   });
 });
 
-document.addEventListener('astro:before-swap', () => {
+document.addEventListener('astro:after-swap', () => {
   // Get the theme from localStorage
   theme = localStorage.getItem("theme");
 
