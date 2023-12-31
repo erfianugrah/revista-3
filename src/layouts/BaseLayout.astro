@@ -13,6 +13,7 @@ const metaImage = await getImage({
   height: "720",
   decoding: "async",
   format: "webp",
+  loading: "lazy"
 });
 
 const favicon_webp = await getImage({
@@ -21,7 +22,8 @@ const favicon_webp = await getImage({
   width: "400",
   height: "400",
   decoding: "async",
-  format: "webp"
+  format: "webp",
+  loading: "lazy"
 });
 
 const pageTitle = "stoicopa";

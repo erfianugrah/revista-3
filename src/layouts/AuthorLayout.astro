@@ -31,6 +31,7 @@ const metaImage = image
       height: "720",
       decoding: "async",
       format: "webp",
+      loading: "lazy"
     })
   : null;
 ---
@@ -54,7 +55,6 @@ const metaImage = image
               alt={alt}
               width={1280}
               height={720}
-              decoding="async"
               formats={["avif", "webp"]}
               decoding="async"
               loading="lazy"
