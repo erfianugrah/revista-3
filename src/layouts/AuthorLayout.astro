@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import "../styles/glightbox.css";
 import Prose from "../components/Prose.astro";
-import { getImage, Image, Picture } from "astro:assets";
+import { getImage, Image } from "astro:assets";
 const { frontmatter } = Astro.props;
 const updatedDate = frontmatter?.updatedDate
   .toDateString()
@@ -31,7 +32,6 @@ const metaImage = image
       height: "720",
       decoding: "async",
       format: "webp",
-      loading: "lazy"
     })
   : null;
 ---
@@ -50,13 +50,13 @@ const metaImage = image
       image ? (
         <div>
           <div class="md:h-[480px] h-[360px]">
-            <Picture
+            <Image
               src={image}
               alt={alt}
               width={1280}
               height={720}
-              formats={["avif", "webp"]}
               decoding="async"
+              format="avif"
               loading="lazy"
               class="object-contain h-full"
             />
