@@ -2,14 +2,13 @@
 const { images, alt, url, tag, width, height } = Astro.props;
 ---
 <div id="randomimage" class="relative group border-0" data-images={images} data-alt={alt} data-width={width} data-height={height} >
- <a href={url} data-astro-reload>
+ <a href={url} >
     <img class="w-full sm:h-[540px] xl:h-[1080px] lg:h-[720px] object-cover object-center " style="object-position: 40% 35%;" />
     <p class="absolute inset-0 flex items-center justify-center text-[rgb(245,245,245)] text-2xl xl:text-4xl">
       {tag}
     </p>
   </a>
    <slot />
-   <script src="../scripts/getrandomimage.js" />
 </div>
 <style>
 #randomimage p {
@@ -21,3 +20,4 @@ const { images, alt, url, tag, width, height } = Astro.props;
   opacity: 0.5;
 }
 </style>
+<script src="../scripts/getrandomimage.js" />

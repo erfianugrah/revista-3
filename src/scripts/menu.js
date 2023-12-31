@@ -16,4 +16,4 @@ function handlePageLoad() {
 }
 
 document.addEventListener('astro:page-load', handlePageLoad);
-document.addEventListener('astro:after-swap', handlePageLoad);
+// document.addEventListener('astro:after-swap', handlePageLoad);

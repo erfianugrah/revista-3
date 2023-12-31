@@ -26,4 +26,4 @@ function initializeQuote() {
 }
 
 document.addEventListener('astro:page-load', initializeQuote);
-document.addEventListener('astro:after-swap', initializeQuote);
+// document.addEventListener('astro:after-swap', initializeQuote);
