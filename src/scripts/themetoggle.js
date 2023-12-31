@@ -18,7 +18,9 @@ document.addEventListener('astro:before-swap', () => {
 
   // Add the theme as a custom attribute on the html element
   document.documentElement.setAttribute('data-theme', theme);
+});
 
+document.addEventListener('astro:page-load', () => {
   setTimeout(() => {
     // Set up the event listener for the theme toggle button
     const themeToggle = document.getElementById("themeToggle");
