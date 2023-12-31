@@ -1,4 +1,4 @@
-document.addEventListener('astro:page-load', () => {
+function handlePageLoad() {
   window.toggleMenu = function () {
     const navLinks = document.getElementById('nav-links');
     const hamburger = document.querySelector('.hamburger');
@@ -13,4 +13,7 @@ document.addEventListener('astro:page-load', () => {
 
     hamburger.classList.toggle('open');
   }
-});
+}
+
+document.addEventListener('astro:page-load', handlePageLoad);
+document.addEventListener('astro:after-swap', handlePageLoad);
