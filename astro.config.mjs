@@ -12,7 +12,7 @@ export default defineConfig({
   image: {
     domains: ["erfianugrah.com", "cdn.erfianugrah.com"]
   },
-  integrations: [preact(), sitemap(), mdx({
+  integrations: [sitemap(), mdx({
     syntaxHighlight: 'shiki',
     shikiConfig: {
       theme: 'dracula'

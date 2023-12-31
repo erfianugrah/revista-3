@@ -1,6 +1,9 @@
 function handlePageLoad() {
   let imageElements = Array.from(document.querySelectorAll('#randomimage'));
-
+  
+  if (imageElements.length === 0) {
+    return; // Exit the function if no #randomimage elements are found
+  }
   imageElements.forEach((element) => {
     let images = JSON.parse(element.dataset.images);
     let alt = JSON.parse(element.dataset.alt); // Parse the alt texts
