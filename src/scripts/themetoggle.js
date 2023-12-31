@@ -12,23 +12,24 @@ localStorage.setItem("theme", theme);
 // Add the theme as a custom attribute on the html element
 document.documentElement.setAttribute('data-theme', theme);
 
+// Use event delegation to set up the event listener for the theme toggle button
+document.body.addEventListener("click", (event) => {
+  if (event.target.id === "themeToggle") {
+    // Toggle the theme
+    theme = document.documentElement.getAttribute('data-theme') === "dark" ? "light" : "dark";
+
+    // Update the theme in localStorage
+    localStorage.setItem("theme", theme);
+
+    // Update the custom attribute
+    document.documentElement.setAttribute('data-theme', theme);
+  }
+});
+
 document.addEventListener('astro:before-swap', () => {
     // Get the theme from localStorage
     theme = localStorage.getItem("theme");
 
     // Add the theme as a custom attribute on the html element
     document.documentElement.setAttribute('data-theme', theme);
-});
-
-document.addEventListener('astro:page-load', () => {
-    document.getElementById("themeToggle").addEventListener("click", () => {
-        // Toggle the theme
-        theme = document.documentElement.getAttribute('data-theme') === "dark" ? "light" : "dark";
-
-        // Update the theme in localStorage
-        localStorage.setItem("theme", theme);
-
-        // Update the custom attribute
-        document.documentElement.setAttribute('data-theme', theme);
-    });
 });
