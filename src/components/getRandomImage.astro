@@ -9,7 +9,6 @@ const { images, alt, url, tag, width, height } = Astro.props;
     </p>
   </a>
    <slot />
-   <script src="../scripts/getrandomimage.js" />
 </div>
 <style>
 #randomimage p {
@@ -21,3 +20,4 @@ const { images, alt, url, tag, width, height } = Astro.props;
   opacity: 0.5;
 }
 </style>
+<script is:inline src="../scripts/getrandomimage.js" />
