@@ -27,7 +27,7 @@ for (const post of allContent) {
   }
 }
 ---
-<astro>
+<div>
   {tags.length === 1 ? (
     <div class="object-contain w-full h-full relative flex items-center justify-center font-overpass-mono" >
       <GetRandomImage
@@ -35,6 +35,8 @@ for (const post of allContent) {
         alt={JSON.stringify(alt)}
         tag={tags[0]}
         url={`/${Astro.props.directory}/tags/${tags[0]}`}
+        width="1920"
+        height="1080"
       />
        <slot />
     </div>
@@ -47,10 +49,12 @@ for (const post of allContent) {
             alt={JSON.stringify(alt)}
             tag={tag}
             url={`/${Astro.props.directory}/tags/${tag}`}
+            width="1920"
+            height="1080
           />
         </div>
       ))}
        <slot />
     </div>
   )}
-</astro>
+</div>
