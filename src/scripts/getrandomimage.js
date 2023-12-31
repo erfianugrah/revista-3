@@ -1,4 +1,4 @@
-document.addEventListener('astro:page-load', function() {
+function handlePageLoad() {
   let imageElements = Array.from(document.querySelectorAll('#randomimage'));
 
   imageElements.forEach((element) => {
@@ -32,4 +32,7 @@ document.addEventListener('astro:page-load', function() {
     imgElement.width = firstItem.width; // Set the width
     imgElement.height = firstItem.height; // Set the height
   });
-});
+}
+
+document.addEventListener('astro:page-load', handlePageLoad);
+document.addEventListener('astro:after-swap', handlePageLoad);

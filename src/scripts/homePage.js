@@ -1,4 +1,4 @@
-document.addEventListener('astro:page-load', function() {
+function handlePageLoad() {
   let imageElements = Array.from(document.querySelectorAll('#homepage'));
 
   imageElements.forEach((element) => {
@@ -36,4 +36,7 @@ document.addEventListener('astro:page-load', function() {
     imgElement.height = firstItem.height; // Set the height
     anchorElement.href = firstItem.url;
   });
-});
+}
+
+document.addEventListener('astro:page-load', handlePageLoad);
+document.addEventListener('astro:after-swap', handlePageLoad);
