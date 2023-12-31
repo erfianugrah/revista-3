@@ -3,6 +3,10 @@ export default {
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
 	theme: {
 		extend: {
+			colors: {
+				'light': 'rgb(245,245,245)',
+				'dark': 'rgb(34,33,37)'
+			},
 			fontFamily: {
 				'overpass-mono': ['"Overpass Mono Variable"', "sans-serif"],
 				'inconsolata': ['"Inconsolata Variable"', "sans-serif"]

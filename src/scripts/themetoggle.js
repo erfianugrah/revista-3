@@ -9,21 +9,24 @@ if (!theme) {
 // Set the theme in localStorage
 localStorage.setItem("theme", theme);
 
-// Add the theme as a class on the html element
-document.documentElement.classList.add(theme);
+// Add the theme as a custom attribute on the html element
+document.documentElement.setAttribute('data-theme', theme);
 
 document.addEventListener('astro:page-load', () => {
     // Get the theme from localStorage
     theme = localStorage.getItem("theme");
 
-    // Add the theme as a class on the html element
-    document.documentElement.classList.add(theme);
+    // Add the theme as a custom attribute on the html element
+    document.documentElement.setAttribute('data-theme', theme);
 
     document.getElementById("themeToggle").addEventListener("click", () => {
         // Toggle the theme
-        theme = document.documentElement.classList.toggle("dark") ? "dark" : "light";
+        theme = document.documentElement.getAttribute('data-theme') === "dark" ? "light" : "dark";
 
         // Update the theme in localStorage
         localStorage.setItem("theme", theme);
+
+        // Update the custom attribute
+        document.documentElement.setAttribute('data-theme', theme);
     });
 });
