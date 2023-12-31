@@ -58,6 +58,20 @@ const { image, description, author, pubDate, updatedDate, title, site_name, alt 
     <meta name="twitter:description" content={ description || metaDescription } />
     <meta name="twitter:image" content={ image || `${baseUrl}${metaImage?.src}` }/>
     <title>{ pageTitle } </title>
+    <script>// Check if the theme is stored in localStorage
+        let theme = localStorage.getItem("theme");
+
+        // If not, check the user's system preference
+        if (!theme) {
+          theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+
+        // Set the theme in localStorage
+        localStorage.setItem("theme", theme);
+
+        // Add the theme as a class on the html element
+        document.documentElement.classList.add(theme);
+    </script>
     <ViewTransitions />
   </head>
   <body
