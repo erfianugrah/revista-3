@@ -12,7 +12,7 @@ localStorage.setItem("theme", theme);
 // Add the theme as a class on the html element
 document.documentElement.classList.add(theme);
 
-document.getElementById("themeToggle").addEventListener("astro:page-load", () => {
+document.getElementById("themeToggle").addEventListener('astro:page-load', () => {
   // Toggle the .dark class
   document.documentElement.classList.toggle("dark");
 
