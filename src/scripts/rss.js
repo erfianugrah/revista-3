@@ -1,4 +1,4 @@
-document.addEventListener('astro:page-load', function() {
+function handlePageLoad() {
   const collections = ["/short_form/", "/long_form/", "/muses/", "/zeitweillig/"];
   const currentPath = window.location.pathname;
   if (collections.includes(currentPath)) {
@@ -8,4 +8,7 @@ document.addEventListener('astro:page-load', function() {
     rssLink.style.width = "auto";
     rssLink.style.height = "auto";
   }
-});
+}
+
+document.addEventListener('astro:page-load', handlePageLoad);
+document.addEventListener('astro:after-swap', handlePageLoad);
