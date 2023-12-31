@@ -11,7 +11,7 @@ document.addEventListener('astro:page-load', function() {
     let items = images.map((image, index) => {
       return {
         image: image,
-        alt: alt[index]
+        alt: alt[index],
         width: width,
         height: height
       };
