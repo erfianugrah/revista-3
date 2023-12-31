@@ -33,7 +33,7 @@ const { image, description, author, pubDate, updatedDate, title, site_name, alt 
   Astro.props;
 ---
 
-<html class="bg-[rgb(245,245,245)] dark:bg-[rgb(34,33,37)]" lang="en" data-theme="light">
+<html class="bg-[rgb(245,245,245)] dark:bg-[rgb(34,33,37)]" lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/webp" href={favicon_webp.src} />
@@ -58,17 +58,10 @@ const { image, description, author, pubDate, updatedDate, title, site_name, alt 
     <meta name="twitter:description" content={ description || metaDescription } />
     <meta name="twitter:image" content={ image || `${baseUrl}${metaImage?.src}` }/>
     <title>{ pageTitle } </title>
-    <script>
-      let theme = localStorage.getItem("theme");
-      if (!theme) {
-        theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      }
-      document.documentElement.setAttribute('data-theme', theme);
-    </script>
     <ViewTransitions />
   </head>
   <body
-    class="flex flex-col flex-wrap justify-between md:pt-8 md:pr-16 md:pb-8 md:pl-16 p-8 max-w-full min-h-screen dark:bg-[rgb(34,33,37)] dark:text-[rgb(245,245,245)]" data-theme="light"
+    class="flex flex-col flex-wrap justify-between md:pt-8 md:pr-16 md:pb-8 md:pl-16 p-8 max-w-full min-h-screen dark:bg-[rgb(34,33,37)] dark:text-[rgb(245,245,245)]"
   >
     <Header />
     <slot />
