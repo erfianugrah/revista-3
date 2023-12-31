@@ -19,7 +19,10 @@ window.getRandomQuote = function () {
 }
 
 function initializeQuote() {
-    document.getElementById('quote').textContent = window.getRandomQuote();
+    const quoteElement = document.getElementById('quote');
+    if (quoteElement) {
+        quoteElement.textContent = window.getRandomQuote();
+    }
 }
 
 document.addEventListener('astro:page-load', initializeQuote);
