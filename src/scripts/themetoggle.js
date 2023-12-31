@@ -13,20 +13,22 @@ localStorage.setItem("theme", theme);
 document.documentElement.setAttribute('data-theme', theme);
 
 document.addEventListener('astro:page-load', () => {
-  // Set up the event listener for the theme toggle button
-  const themeToggle = document.getElementById("themeToggle");
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      // Toggle the theme
-      theme = document.documentElement.getAttribute('data-theme') === "dark" ? "light" : "dark";
+  setTimeout(() => {
+    // Set up the event listener for the theme toggle button
+    const themeToggle = document.getElementById("themeToggle");
+    if (themeToggle) {
+      themeToggle.addEventListener("click", () => {
+        // Toggle the theme
+        theme = document.documentElement.getAttribute('data-theme') === "dark" ? "light" : "dark";
 
-      // Update the theme in localStorage
-      localStorage.setItem("theme", theme);
+        // Update the theme in localStorage
+        localStorage.setItem("theme", theme);
 
-      // Update the custom attribute
-      document.documentElement.setAttribute('data-theme', theme);
-    });
-  }
+        // Update the custom attribute
+        document.documentElement.setAttribute('data-theme', theme);
+      });
+    }
+  }, 0);
 });
 
 document.addEventListener('astro:before-swap', () => {
