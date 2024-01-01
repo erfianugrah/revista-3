@@ -7,7 +7,7 @@ const pageTitle = "Short Form";
 const allShortForm = await getCollection("short_form");
 ---
 
-<BaseLayout title={pageTitle}>
+<BaseLayout title={pageTitle} is404Page={false}>
     {
       allShortForm.sort(sortByDate).map((post) => (
           <BlogPost

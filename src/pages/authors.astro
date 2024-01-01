@@ -7,7 +7,7 @@ const pageTitle = "Authors";
 const allAuthors = await getCollection("authors");
 ---
 
-<BaseLayout title={pageTitle}>
+<BaseLayout title={pageTitle} is404Page={false}>
       {
         allAuthors.sort(sortByDate).map((post) => (
           <BlogPost

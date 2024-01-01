@@ -24,7 +24,7 @@ const { tag } = Astro.params;
 const { posts } = Astro.props;
 ---
 
-<BaseLayout title={tag}>
+<BaseLayout title={tag} is404Page={false}>
       {
         posts.sort(sortByDate).map((post) => (
           <BlogPost

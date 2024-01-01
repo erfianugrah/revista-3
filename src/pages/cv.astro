@@ -9,7 +9,7 @@ const entry = await getEntry("cv", "resume");
 const { Content } = await entry.render();
 ---
 
-<BaseLayout title={pageTitle} description={description} site_name={site_name} >
+<BaseLayout title={pageTitle} description={description} site_name={site_name} is404Page={false}>
   <ProseCv>
     <Content />
   </ProseCv>

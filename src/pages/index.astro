@@ -27,6 +27,6 @@ for (let collection of collections) {
   });
 }
 ---
-<BaseLayout title={pageTitle}>
+<BaseLayout title={pageTitle} is404Page={false}>
     {allImages.length > 0 ? <Homepage images={JSON.stringify(allImages)} alt={JSON.stringify(allAlts)} urls={JSON.stringify(allUrls)}  width="1920" height="1080" /> : <p>No images found</p>}
 </BaseLayout>
