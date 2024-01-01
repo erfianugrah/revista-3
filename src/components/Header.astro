@@ -2,7 +2,8 @@
 import Hamburger from "./Hamburger.astro";
 import Navigation from "./Navigation.astro";
 import ThemeIcon from "./ThemeIcon.astro";
-import { getImage } from 'astro:assets';
+import { getImage } from "astro:assets";
+const { is404Page = false } = Astro.props; // Get the prop from Astro.props
 
 const favicon_avif = await getImage({
   src: "https://cdn.erfianugrah.com/ea_favicon.png",
@@ -10,32 +11,43 @@ const favicon_avif = await getImage({
   width: "400",
   height: "400",
   decoding: "async",
-  format: "avif"
+  format: "avif",
 });
-
 ---
 
 <header class="mb-[30px]">
   <nav
     class="flex items-center justify-between w-full h-full relative align-center"
   >
-    <div>
-      <a href="/">
-        <img
-          class="favicon absolute left-0 dark:invert -mt-[15px]"
-          src={ favicon_avif.src }
-          alt="Home"
-          width="30px"
-          height="30px"
-        />
-      </a>
-    </div>
-    <div class="absolute right-[55px] -mb-[5px]">
-      <ThemeIcon />
-    </div>
-    <div class="-mt-[3px]">
-      <Hamburger />
-    </div>
+    {
+      !is404Page && (
+        <div>
+          <a href="/">
+            <img
+              class="favicon absolute left-0 dark:invert -mt-[15px]"
+              src={favicon_avif.src}
+              alt="Home"
+              width="30px"
+              height="30px"
+            />
+          </a>
+        </div>
+      )
+    }
+    {
+      !is404Page && (
+        <div class="absolute right-[55px] -mb-[5px]">
+          <ThemeIcon />
+        </div>
+      )
+    }
+    {
+      !is404Page && (
+        <div class="-mt-[3px]">
+          <Hamburger />
+        </div>
+      )
+    }
     <div class="absolute right-0">
       <Navigation />
     </div>
