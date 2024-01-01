@@ -1,10 +1,10 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import NotFound from "../layouts/NotFound.astro";
 import Prose from "../components/Prose.astro";
 const pageTitle = "Page Not Found but Ron Burgundy Found You";
 ---
 
-<BaseLayout title="pageTitle">
+<NotFound title="pageTitle">
   <Prose>
     <h1 class="font-overpass-mono text-4xl">
       {pageTitle}
@@ -17,5 +17,5 @@ const pageTitle = "Page Not Found but Ron Burgundy Found You";
       </button>
     </div>
   </Prose>
-</BaseLayout>
+</NotFound>
 <script src="../scripts/burgundy.js"></script>
