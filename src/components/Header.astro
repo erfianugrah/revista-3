@@ -48,9 +48,13 @@ const favicon_avif = await getImage({
         </div>
       )
     }
-    <div class="absolute right-0">
-      <Navigation />
-    </div>
+    {
+      !is404Page && (
+        <div class="absolute right-0">
+          <Navigation />
+        </div>
+      )
+    }
   </nav>
   <slot />
 </header>
