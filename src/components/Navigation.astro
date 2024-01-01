@@ -74,12 +74,3 @@ import Pagefind from "./Pagefind.astro";
     width: 100%; /* make the search box take up the whole width */
   }
 </style>
-<!-- This worked because of how the CSS stacking context works.
-
-The stacking context is a three-dimensional conceptualization of HTML elements along an imaginary z-axis relative to the user, who is facing the viewport or the webpage. Stacking context is controlled by CSS properties such as z-index, position, opacity, transform, and others.
-
-When you set a z-index on an element, that z-index is only effective within its stacking context. This means it's only compared to other elements within the same stacking context. An element with a larger z-index will be rendered in front of an element with a smaller one.
-
-In your case, the side modal was initially a child of the Header component. This means its z-index was only effective within the Header component. Even if it had a very high z-index, it would still appear behind elements outside the Header component if those elements had a stacking context of their own.
-
-By moving the side modal to the root level of your document, you placed it in the topmost stacking context. This means its z-index is now compared to all other elements in the document, so it can appear on top of all other elements. -->
