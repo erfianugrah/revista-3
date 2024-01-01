@@ -1,7 +1,7 @@
 ---
 const { images, alt, urls, width, height } = Astro.props;
 ---
-<div id="homepage" class="flex justify-center items-center" data-images={images} data-alt={alt} data-urls={urls} data-width={width} data-height={height}>
+<div id="homepage" class="flex justify-center items-center" data-images={images} data-alt={alt} data-urls={urls} data-width={width} data-height={height} transition:persist>
   <a>
     <img id="randomHomePageImage" class="h-[440px] sm:h-[600px] lg:h-[700px] xl:h-[1000px] object-contain w-full object-center" />
   </a>

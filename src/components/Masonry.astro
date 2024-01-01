@@ -18,7 +18,7 @@ const imageAssets = await Promise.all(images.map(async (image) => {
 }));
 ---
 
-<div class="masonry not-prose">
+<div class="masonry not-prose" transition:persist>
   {
     imageAssets.map((imageAsset, index) => (
       imageAsset ? (
