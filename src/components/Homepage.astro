@@ -4,11 +4,22 @@ const { title, images, alt, urls, width, height } = Astro.props;
 ---
 
 <BaseLayout title={title} is404Page={false}>
-<div id="homepage" class="flex justify-center items-center" data-images={images} data-alt={alt} data-urls={urls} data-width={width} data-height={height} >
-  <a>
-    <img id="randomHomePageImage" class="h-[440px] sm:h-[600px] lg:h-[700px] xl:h-[1000px] object-contain w-full object-center" />
-  </a>
-   <slot />
-</div>
+  <div
+    id="homepage"
+    class="flex justify-center items-center"
+    data-images={images}
+    data-alt={alt}
+    data-urls={urls}
+    data-width={width}
+    data-height={height}
+  >
+    <a>
+      <img
+        id="randomHomePageImage"
+        class="h-[440px] sm:h-[600px] lg:h-[700px] xl:h-[1000px] object-contain w-full object-center"
+      />
+    </a>
+    <slot />
+  </div>
 </BaseLayout>
-<script src="../scripts/homePage.js" />
+<script src="../scripts/homePage.js"></script>
