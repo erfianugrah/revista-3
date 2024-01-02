@@ -34,9 +34,7 @@ function handlePageLoad() {
     imgElement.alt = firstItem.alt;
     imgElement.width = firstItem.width; // Set the width
     imgElement.height = firstItem.height; // Set the height
-    imgElement.classList.add('loaded');
     imgElement.classList.remove('hidden'); // Remove the 'hidden' class 
-    imgElement.classList.add('block'); // Add the 'block' class
   });
 }
 
