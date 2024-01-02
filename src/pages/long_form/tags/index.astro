@@ -1,10 +1,7 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
 import TagLayout from "../../../layouts/TagLayout.astro";
 const pageTitle = "Long Form Projects";
 const directory = "long_form";
 ---
 
-<BaseLayout title={pageTitle} is404Page={false}>
-  <TagLayout directory={directory} />
-</BaseLayout>
+<TagLayout directory={directory} title={pageTitle} />

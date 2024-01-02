@@ -1,7 +1,8 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
 import GetRandomImage from "../components/getRandomImage.astro";
 import { getCollection } from "astro:content";
-import { getImage } from 'astro:assets';
+import { getImage } from "astro:assets";
 const allContent = await getCollection(Astro.props.directory);
 const tags = [...new Set(allContent.map((post) => post.data.tags).flat())];
 const images = allContent.map((post) => post.data.image?.src);
@@ -20,41 +21,47 @@ for (const post of allContent) {
         height: "1080",
         decoding: "async",
         format: "avif",
-        quality: "65"
+        quality: "65",
       });
       imagesByTag[tag].push(imageAsset ? imageAsset.src : null);
     }
   }
 }
+const { title } = Astro.props;
 ---
-<div>
-  {tags.length === 1 ? (
-    <div class="object-contain w-full h-full relative flex items-center justify-center font-overpass-mono" >
-      <GetRandomImage
-        images={JSON.stringify(imagesByTag[tags[0]])}
-        alt={JSON.stringify(alt)}
-        tag={tags[0]}
-        url={`/${Astro.props.directory}/tags/${tags[0]}`}
-        width="1920"
-        height="1080"
-      />
-       <slot />
-    </div>
-  ) : (
-    <div class="sm:grid sm:grid-cols-4 gap-4 space-y-4 sm:space-y-0 justify-center items-center font-overpass-mono" >
-      {tags.map((tag) => (
-        <div class="col-span-1">
+
+<BaseLayout title={title} is404Page={false} >
+  <div>
+    {
+      tags.length === 1 ? (
+        <div class="object-contain w-full h-full relative flex items-center justify-center font-overpass-mono">
           <GetRandomImage
-            images={JSON.stringify(imagesByTag[tag])}
+            images={JSON.stringify(imagesByTag[tags[0]])}
             alt={JSON.stringify(alt)}
-            tag={tag}
-            url={`/${Astro.props.directory}/tags/${tag}`}
+            tag={tags[0]}
+            url={`/${Astro.props.directory}/tags/${tags[0]}`}
             width="1920"
             height="1080"
           />
+          <slot />
         </div>
-      ))}
-       <slot />
-    </div>
-  )}
-</div>
+      ) : (
+        <div class="sm:grid sm:grid-cols-4 gap-4 space-y-4 sm:space-y-0 justify-center items-center font-overpass-mono">
+          {tags.map((tag) => (
+            <div class="col-span-1">
+              <GetRandomImage
+                images={JSON.stringify(imagesByTag[tag])}
+                alt={JSON.stringify(alt)}
+                tag={tag}
+                url={`/${Astro.props.directory}/tags/${tag}`}
+                width="1920"
+                height="1080"
+              />
+            </div>
+          ))}
+          <slot />
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>

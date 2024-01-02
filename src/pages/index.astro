@@ -1,5 +1,4 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
 import Homepage from "../components/Homepage.astro";
 const { pageTitle } = Astro.props;
 import { getCollection } from "astro:content";
@@ -28,6 +27,5 @@ for (let collection of collections) {
   });
 }
 ---
-<BaseLayout title={pageTitle} is404Page={false}>
-    {allImages.length > 0 ? <Homepage images={JSON.stringify(allImages)} alt={JSON.stringify(allAlts)} urls={JSON.stringify(allUrls)}  width="1920" height="1080" /> : <p>No images found</p>}
-</BaseLayout>
+
+{allImages.length > 0 ? <Homepage title={pageTitle} images={JSON.stringify(allImages)} alt={JSON.stringify(allAlts)} urls={JSON.stringify(allUrls)}  width="1920" height="1080" /> : <p>No images found</p>}
