@@ -7,11 +7,10 @@ const imageAssets = await Promise.all(images.map(async (image) => {
     return await getImage({
       src: image.src,
       alt: image.alt,
-      width: "2560",
-      height: "1440",
+      width: "3840",
+      height: "2160",
       decoding: "async",
-      format: "avif",
-      quality: "65"
+      format: "avif"
     });
   }
   return null;
