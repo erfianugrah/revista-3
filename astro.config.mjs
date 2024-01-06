@@ -12,6 +12,12 @@ export default defineConfig({
   image: {
     domains: ["erfianugrah.com", "cdn.erfianugrah.com"]
   },
+  service: {
+    entrypoint: 'astro/assets/services/sharp',
+    config: {
+      limitInputPixels: false,
+    },
+  },
   integrations: [sitemap(), mdx({
     syntaxHighlight: 'shiki',
     shikiConfig: {
