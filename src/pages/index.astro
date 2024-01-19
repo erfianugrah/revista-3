@@ -9,22 +9,31 @@ let allAlts = [];
 let allUrls = [];
 for (let collection of collections) {
  const allContent = await getCollection(collection);
- for (let post of allContent) {
-   if (post.data.image?.src && post.data.image?.alt) {
-     const imageAsset = await getImage({
-       src: post.data.image.src,
-       alt: post.data.image.alt,
-       width: "1920",
-       height: "1080",
-       decoding: "async",
-       format: "avif",
-       quality: "65"
-     });
-     allImages.push(imageAsset ? imageAsset.src : null);
-     allAlts.push(post.data.image.alt);
-     allUrls.push(`/${collection}/${post.slug}`);
-   }
- }
+ const postsWithImages = allContent.filter(post => post.data.image?.src && post.data.image?.alt);
+
+ const imagePromises = postsWithImages.map(async post => {
+   const imageAsset = await getImage({
+     src: post.data.image.src,
+     alt: post.data.image.alt,
+     width: "1920",
+     height: "1080",
+     decoding: "async",
+     format: "avif",
+     quality: "65"
+   });
+
+   return {
+     imageSrc: imageAsset ? imageAsset.src : null,
+     alt: post.data.image.alt,
+     url: `/${collection}/${post.slug}`
+   };
+ });
+
+ const results = await Promise.all(imagePromises);
+
+ allImages.push(...results.map(result => result.imageSrc));
+ allAlts.push(...results.map(result => result.alt));
+ allUrls.push(...results.map(result => result.url));
 }
 ---
 
