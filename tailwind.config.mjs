@@ -4,8 +4,8 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				'overpass-mono': ['"Overpass Mono Variable"', "sans-serif"],
-				'inconsolata': ['"Inconsolata Variable"', "sans-serif"]
+				'overpass-mono': ["var(--font-overpass)"],
+				'inconsolata': ["var(--font-inconsolata)"],
 			},
 			objectPosition: {
 				'top-33': 'center top 33.33%',
