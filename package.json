@@ -11,7 +11,7 @@
     "postbuild": "pagefind --site dist"
   },
   "dependencies": {
-    "@astrojs/check": "^0.4.1",
+    "@astrojs/check": "^0.5.3",
     "@astrojs/markdoc": "^0.8.3",
     "@astrojs/mdx": "^2.1.1",
     "@astrojs/rss": "^4.0.5",
