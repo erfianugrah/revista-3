@@ -28,8 +28,9 @@ const metaImage = image
   ? await getImage({
       src: image,
       alt: alt,
-      width: "1280",
-      height: "720",
+      inferSize: true,
+      // width: "1280",
+      // height: "720",
       decoding: "async",
       format: "webp"
     })
@@ -54,8 +55,9 @@ const metaImage = image
             <Image
               src={image}
               alt={alt}
-              width={1280}
-              height={720}
+              inferSize
+              // width={1280}
+              // height={720}
               decoding="async"
               format="avif"
               loading="lazy"

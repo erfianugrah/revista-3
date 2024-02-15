@@ -8,8 +8,9 @@ const { is404Page = false } = Astro.props; // Get the prop from Astro.props
 const favicon_avif = await getImage({
   src: "https://cdn.erfianugrah.com/ea_favicon.png",
   alt: "favicon",
-  width: "400",
-  height: "400",
+  inferSize: true,
+  // width: "400",
+  // height: "400",
   decoding: "async",
   format: "avif"
 });
