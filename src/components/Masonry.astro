@@ -7,9 +7,9 @@ const imageAssets = await Promise.all(images.map(async (image) => {
     return await getImage({
       src: image.src,
       alt: image.alt,
-      inferSize: true,
-      // width: "3840",
-      // height: "2160",
+      // inferSize: true,
+      width: "3840",
+      height: "2160",
       decoding: "async",
       format: "avif"
     });

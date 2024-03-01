@@ -29,9 +29,9 @@ let baseUrl = new URL(Astro.request.url).origin;
 const backgroundImage = image ? await getImage({
   src: image,
   alt: alt,
-  inferSize: true,
-  // width: "3840",
-  // height: "2160",
+  // inferSize: true,
+  width: "3840",
+  height: "2160",
   decoding: "async",
   format: "avif"
 }) : null;
@@ -39,20 +39,20 @@ const backgroundImage = image ? await getImage({
 const mobileBackgroundImage = image ? await getImage({
   src: image,
   alt: alt,
-  inferSize: true,
-  // width: "1920",
-  // height: "1080",
+  // inferSize: true,
+  width: "1920",
+  height: "1080",
   decoding: "async",
-  format: "avif"
-  // quality: "65"
+  format: "avif",
+  quality: "65"
 }) : null;
 
 const metaImage = image ? await getImage({
   src: image,
   alt: alt,
-  inferSize: true,
-  // width: "1280",
-  // height: "720",
+  // inferSize: true,
+  width: "1280",
+  height: "720",
   decoding: "async",
   format: "webp",
   loading: "lazy"
