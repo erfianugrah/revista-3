@@ -3,9 +3,9 @@
 ### Refer to [Astro docs on Content Collections](https://docs.astro.build/en/guides/content-collections/)
 ---
 
-The folders in this directory are where the posts/images, essentially the content, hence the name "Content Collections". In [config.ts](./config.ts) is where we set the schema as to what props can be passed to [Astro props](https://docs.astro.build/en/guides/content-collections/#passing-content-as-props) which then can be used in the layouts or components to render the content.
+The folders in this directory are where the posts/images, essentially the content, hence the name "Content Collections". In [config.ts](content/config.ts) is where we set the schema as to what props can be passed to [Astro props](https://docs.astro.build/en/guides/content-collections/#passing-content-as-props) which then can be used in the layouts or components to render the content.
 
-The schema in [config.ts](./config.ts) will referencing objects in the frontmatter of the post:
+The schema in [config.ts](content/config.ts) will referencing objects in the frontmatter of the post:
 ```
 ---
 title: Sisyphean
