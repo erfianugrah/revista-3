@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to Revista</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-2.4.5.4-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-2.7.2.4-blue.svg?cacheSeconds=2592000" />
 </p>
 
 > Photography Portfolio/Blog
