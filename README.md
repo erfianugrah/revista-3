@@ -28,7 +28,10 @@ Use Cloudflare Pages or Deno or build a Docker image (but change to server mode)
 
 ## How it all works
 
-Each directory has a readme explaining the assets
+[Components readme](src/Components-README.md)
+[Layouts readme](src/Layouts-README.md)
+[Pages readme](src/Pages-README.md)
+[Content readme](src/Content-README.md)
 
 ## Author
 

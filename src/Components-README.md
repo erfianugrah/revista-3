@@ -20,6 +20,6 @@ The [Footer.astro](components/Footer.astro) will reference [astro-icon](../packa
 
 [Homepage.astro](components/Homepage.astro) is used in [index.astro](pages/index.astro) and is referencing [homepage.js](scripts/homePage.js), this functions the same as [getRandomImage.astro](components/getRandomImage.astro) to randomise the pictures shown, but structures are different in terms of the props being passed
 
-[Prose.astro](components/Prose.astro) is a TailwindCSS layout and is being used throughout the site for formmatting. [Prose_cv.astro](components/Prose_cv.astro) is only for the [cv](content/cv) collection. [Prose_headings.astro](components/Prose_headings.astro) as the name mentions, formats headings.
+[Prose.astro](components/Prose.astro) is a [TailwindCSS](../tailwind.config.mjs) layout and is being used throughout the site for formmatting. [Prose_cv.astro](components/Prose_cv.astro) is only for the [cv](content/cv) collection. [Prose_headings.astro](components/Prose_headings.astro) as the name mentions, formats headings.
 
 The other files are remnants during the development process and can be ignored.
