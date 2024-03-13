@@ -34,5 +34,6 @@ export default defineConfig({
   },
   experimental: {
     clientPrerender: true,
+    directRenderScript: true
   },
 });
