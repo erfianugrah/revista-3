@@ -33,7 +33,7 @@ export default defineConfig({
     defaultStrategy: 'viewport'
   },
   experimental: {
-    clientPrerender: true,
-    directRenderScript: true
+    clientPrerender: true
+    // directRenderScript: true
   },
 });
