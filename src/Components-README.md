@@ -6,7 +6,7 @@ For pages such as [short form](https://www.erfianugrah.com/short_form/), [long f
 
 The [Footer.astro](components/Footer.astro) will reference [astro-icon](../package.json) for the social media icons
 
-[getRandomImage.astro](components/getRandomImage.astro) is used in [TagLayout.astro](layouts/TagLayout.astro) to randommise the images chosen from the [Content Collections](content/)
+[getRandomImage.astro](components/getRandomImage.astro) is used in [TagLayout.astro](layouts/TagLayout.astro) to randomise the images chosen from the [Content Collections](content/)
 
 [Pagefind.astro](components/Pagefind.astro) is used in [Navigation.astro](components/Navigation.astro) and is using the [Pagefind](https://pagefind.app/) integration
 
