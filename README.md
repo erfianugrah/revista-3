@@ -44,3 +44,8 @@ Use Cloudflare Pages or Deno or build a Docker image (but change to server mode)
 ## Show your support
 
 Give a ⭐️ if this project helped you!
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
