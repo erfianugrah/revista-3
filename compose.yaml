@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  caddy:
+    image: erfianugrah/revista-4:1.0.3
+    hostname: revista
+    container_name: revista
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 128M
+    environment:
+      - TZ=Asia/Singapore
