@@ -12,10 +12,6 @@
 			time_format wall
 		}
 	}
-	servers {
-		strict_sni_host on
-		protocols h1 h2 h3
-	}
 }
 
 :4321 {
