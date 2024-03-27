@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   caddy:
@@ -9,7 +9,21 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 128M
+    volumes:
+      - ~/log:/var/log
     environment:
       - TZ=Asia/Singapore
+    expose:
+      - 4321
+    networks:
+      servarr:
+        ipv4_address: 172.66.0.2
+
+networks:
+  servarr:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.66.0.0/16

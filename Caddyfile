@@ -1,4 +1,38 @@
-:4321
+{
+	debug
+	grace_period 5s
+	log {
+		level debug
+		output file /var/log/access.log {
+			roll_size 1gb
+			roll_keep 5
+			roll_keep_for 168h
+		}
+		format json {
+			time_format wall
+		}
+	}
+	servers {
+		strict_sni_host on
+		protocols h1 h2 h3
+	}
+}
 
-root * /usr/share/caddy
-file_server
+:4321 {
+	encode zstd gzip
+	root * /usr/share/caddy
+	file_server {
+		precompressed zstd br gzip
+	}
+	log {
+		level debug
+		output file /var/log/revista-access.log {
+			roll_size 1gb
+			roll_keep 5
+			roll_keep_for 168h
+		}
+		format json {
+			time_format wall
+		}
+	}
+}
