@@ -1,4 +1,8 @@
 {
+	servers {
+		metrics
+	}
+
 	debug
 	grace_period 5s
 	log {
@@ -12,6 +16,10 @@
 			time_format wall
 		}
 	}
+}
+
+:2019 {
+	metrics
 }
 
 :4321 {
