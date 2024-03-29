@@ -6,6 +6,6 @@ RUN npm install
 RUN npm run build
 
 # Stage 2: Setup Caddy server
-FROM erfianugrah/caddy-cfdns:v1.3.4-2.7.6-arm64
+FROM caddy:2.7-alpine
 COPY --from=builder /app/dist /usr/share/caddy
 COPY Caddyfile /etc/caddy/Caddyfile
