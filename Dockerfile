@@ -1,6 +1,10 @@
 # Stage 1: Build the Astro project
 FROM node:lts-alpine AS builder
 WORKDIR /app
+
+# Disable Astro telemetry
+ENV ASTRO_TELEMETRY_DISABLED=1
+
 COPY package*.json ./
 RUN npm install
 COPY . .
