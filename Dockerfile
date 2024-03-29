@@ -1,5 +1,5 @@
 # Stage 1: Build the Astro project
-FROM node:lts AS builder
+FROM node:lts-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -8,6 +8,6 @@ RUN npm run build
 
 
 # Stage 2: Setup Caddy server
-FROM caddy:2.7-alpine
+FROM caddy:2.7.6-alpine
 COPY --from=builder /app/dist /usr/share/caddy
 COPY Caddyfile /etc/caddy/Caddyfile
