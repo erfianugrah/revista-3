@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Deno
         uses: denoland/setup-deno@v1
@@ -28,15 +28,15 @@ jobs:
         with:
           node-version: lts/*
 
-      - name: Install step
-        run: "npm install"
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build step
-        run: "npm run build"
+        run: "npm install && npm run build" # 📝 Update the build command(s) if necessary
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
           project: "revista-3"
-          entrypoint: ""
-          root: "dist"
+          entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts" # 📝 Update the entrypoint if necessary
+          root: "dist" # 📝 Update the root if necessary
