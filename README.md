@@ -24,7 +24,7 @@ npm run build && npm run preview
 
 ## External Usage
 
-Use Cloudflare Pages or Deno or [build a Docker image](/README.Docker.md) refer to [this](https://docs.astro.build/en/guides/deploy/)
+Use Cloudflare Pages or Deno or [build a Docker image](/README.Docker.md), refer to [this](https://docs.astro.build/en/guides/deploy/) for more options.
 
 ## How it all works
 
