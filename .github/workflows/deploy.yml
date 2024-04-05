@@ -24,14 +24,19 @@ jobs:
         with:
           deno-version: v1.x
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: lts/*
-
       # Use oven-sh/setup-bun to install Bun
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
+
+      # Cache Bun dependencies
+      - name: Cache Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
 
       - name: Install dependencies and build with Bun
         run: |
