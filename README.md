@@ -12,14 +12,14 @@
 ## Install
 
 ```sh
-npm install
+bun install
 ```
 
 ## Internal Usage
 
 ```sh
-npm run dev
-npm run build && npm run preview
+bun run dev
+bun run build && bun run preview
 ```
 
 ## External Usage
