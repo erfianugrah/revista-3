@@ -1,4 +1,5 @@
 name: Deploy
+
 on:
   push:
     branches: main
@@ -28,11 +29,17 @@ jobs:
         with:
           node-version: lts/*
 
-      - name: Install dependencies
-        run: npm ci
+      # Install Bun
+      - name: Install Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun" >> $GITHUB_PATH
 
-      - name: Build step
-        run: "bun install && bun run build" # 📝 Update the build command(s) if necessary
+      # Update this step to use Bun for installing dependencies and building
+      - name: Install dependencies and build with Bun
+        run: |
+          bun install
+          bun run build
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
