@@ -1,24 +1,23 @@
 function handlePageLoad() {
-  let imageElements = Array.from(document.querySelectorAll('#randomimage'));
-  
+  const imageElements = Array.from(
+    document.querySelectorAll("#randomimage img"),
+  ); // Select only the <img> elements inside #randomimage
+
   if (imageElements.length === 0) {
-    return; // Exit the function if no #randomimage elements are found
+    return; // Exit the function if no <img> elements are found
   }
+
   imageElements.forEach((element) => {
-    let images = JSON.parse(element.dataset.images);
-    let alt = JSON.parse(element.dataset.alt); // Parse the alt texts
-    let width = element.dataset.width; // Get the width
-    let height = element.dataset.height; // Get the height
+    const alt = JSON.parse(element.dataset.alt); // Parse the alt texts
+    const { width, height } = element.dataset; // Get the width and height attributes
 
     // Combine the images and alt texts into a single array of objects
-    let items = images.map((image, index) => {
-      return {
-        image: image,
-        alt: alt[index],
-        width: width,
-        height: height
-      };
-    });
+    const items = JSON.parse(element.dataset.images).map((image, index) => ({
+      image,
+      alt: alt[index],
+      width,
+      height,
+    }));
 
     // Shuffle the items array
     for (let i = items.length - 1; i > 0; i--) {
@@ -26,17 +25,15 @@ function handlePageLoad() {
       [items[i], items[j]] = [items[j], items[i]];
     }
 
-    let imgElement = element.querySelector('img');
-
-    // Use the first item
-    let firstItem = items[0];
-    imgElement.src = firstItem.image;
-    imgElement.alt = firstItem.alt;
-    imgElement.width = firstItem.width; // Set the width
-    imgElement.height = firstItem.height; // Set the height
-    imgElement.classList.remove('hidden'); // Remove the 'hidden' class 
+    // Use the first item and set its properties on the <img> element
+    const firstItem = items[0];
+    element.src = firstItem.image;
+    element.alt = firstItem.alt;
+    element.width = firstItem.width;
+    element.height = firstItem.height;
+    element.classList.remove("hidden"); // Remove the 'hidden' class
   });
 }
 
-document.addEventListener('astro:page-load', handlePageLoad);
+document.addEventListener("astro:page-load", handlePageLoad);
 // document.addEventListener('astro:after-swap', handlePageLoad);
