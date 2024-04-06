@@ -1,22 +1,23 @@
-// document.addEventListener('astro:after-swap', handlePageLoad);
 function handlePageLoad() {
   let imageElements = Array.from(document.querySelectorAll("#homepage"));
 
   imageElements.forEach((element) => {
-    let { images, alt, urls } = JSON.parse(element.dataset);
-    let width = element.dataset.width;
-    let height = element.dataset.height;
+    let images = JSON.parse(element.dataset.images);
+    let alt = JSON.parse(element.dataset.alt); // Parse the alt texts
+    let urls = JSON.parse(element.dataset.urls); // Parse the urls
+    let width = element.dataset.width; // Get the width
+    let height = element.dataset.height; // Get the height
 
-    let items = images.reduce((accumulator, image, index) => {
-      accumulator.push({
-        image,
+    // Combine the images, alt texts, and URLs into a single array of objects
+    let items = images.map((image, index) => {
+      return {
+        image: image,
         alt: alt[index],
         url: urls[index],
-        width,
-        height,
-      });
-      return accumulator;
-    }, []);
+        width: width,
+        height: height,
+      };
+    });
 
     // Shuffle the items array
     for (let i = items.length - 1; i > 0; i--) {
@@ -27,15 +28,16 @@ function handlePageLoad() {
     let imgElement = element.querySelector("img");
     let anchorElement = element.querySelector("a");
 
-    Object.assign(imgElement, {
-      src: items[0].image,
-      alt: items[0].alt,
-      width: items[0].width,
-      height: items[0].height,
-    });
-    anchorElement.href = items[0].url;
-    imgElement.classList.remove("hidden");
+    // Use the first item
+    let firstItem = items[0];
+    imgElement.src = firstItem.image;
+    imgElement.alt = firstItem.alt;
+    imgElement.width = firstItem.width; // Set the width
+    imgElement.height = firstItem.height; // Set the height
+    anchorElement.href = firstItem.url;
+    imgElement.classList.remove("hidden"); // Remove the 'hidden' class
   });
 }
 
 document.addEventListener("astro:page-load", handlePageLoad);
+// document.addEventListener('astro:after-swap', handlePageLoad);
