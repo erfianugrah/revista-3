@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   caddy:
-    image: erfianugrah/revista-4:1.2.0
+    image: erfianugrah/revista-4:1.2.1
     hostname: revista
     container_name: revista
     restart: unless-stopped
