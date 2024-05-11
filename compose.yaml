@@ -19,11 +19,12 @@ services:
       - 4321
     networks:
       servarr:
-        ipv4_address: 172.66.0.2
+        ipv4_address: 172.19.23.2
 
 networks:
   servarr:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.66.0.0/16
+        - subnet: 172.19.23.0/16
+          gateway: 172.19.23.1
