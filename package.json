@@ -11,15 +11,15 @@
     "postbuild": "pagefind --site dist"
   },
   "dependencies": {
-    "@astrojs/check": "^0.6.0",
+    "@astrojs/check": "^0.7.0",
     "@astrojs/markdoc": "^0.11.0",
     "@astrojs/mdx": "^3.0.0",
-    "@astrojs/rss": "^4.0.5",
+    "@astrojs/rss": "^4.0.6",
     "@astrojs/sitemap": "^3.1.4",
     "@astrojs/tailwind": "^5.1.0",
     "@fontsource-variable/inconsolata": "^5.0.16",
     "@fontsource-variable/overpass-mono": "^5.0.15",
-    "astro": "^4.8.2",
+    "astro": "^4.8.5",
     "astro-icon": "^0.8.2",
     "dayjs": "^1.11.10",
     "glightbox": "^3.2.0",
