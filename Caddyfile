@@ -25,9 +25,9 @@
 :4321 {
 	encode zstd gzip
 	root * /usr/share/caddy
-	# file_server {
-	# 	precompressed zstd br gzip
-	# }
+	file_server {
+	#	precompressed zstd br gzip
+	}
 	log {
 		level debug
 		output file /var/log/revista-access.log {
