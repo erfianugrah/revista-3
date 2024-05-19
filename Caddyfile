@@ -25,8 +25,9 @@
 :4321 {
 	encode zstd gzip
 	root * /usr/share/caddy
+		encode zstd gzip
 	file_server {
-	#	precompressed zstd br gzip
+		precompressed zstd br gzip
 	}
 	log {
 		level debug
