@@ -8,4 +8,4 @@ docker buildx ls
 docker buildx build --platform linux/arm64,linux/amd64,linux/arm/v6,linux/arm/v7 -t [repo]/[image-name]:[tag] . --push
 ```
 
-Your application will be available at http://localhost:4321.
+Your application will be available at port `4321` if you're using another reverse proxy to connect to the container, if exposing the container directly then use 80/443 since Caddy will be serving the content.
