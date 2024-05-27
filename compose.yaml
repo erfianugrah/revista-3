@@ -1,5 +1,5 @@
 services:
-  caddy:
+  revista:
     image: erfianugrah/revista-4:1.3.0
     hostname: revista
     container_name: revista
@@ -16,11 +16,11 @@ services:
     expose:
       - 4321
     networks:
-      servarr:
+     revista:
         ipv4_address: 172.19.23.2
 
 networks:
-  servarr:
+  revista:
     driver: bridge
     ipam:
       config:
