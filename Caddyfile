@@ -22,7 +22,7 @@
 	metrics
 }
 
-:4321 {
+:80 {
 	encode zstd gzip
 	root * /usr/share/caddy
 	encode zstd gzip
