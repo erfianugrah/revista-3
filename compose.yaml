@@ -14,7 +14,7 @@ services:
     environment:
       - TZ=Asia/Singapore
     expose:
-      - 4321
+      - 80 
     networks:
      revista:
         ipv4_address: 172.19.23.2
