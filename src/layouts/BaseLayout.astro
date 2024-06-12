@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+// import { ViewTransitions } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import '@fontsource-variable/overpass-mono';
@@ -60,7 +60,11 @@ const { image, description, author, pubDate, updatedDate, title, site_name, alt,
     <meta name="twitter:description" content={ description || metaDescription } />
     <meta name="twitter:image" content={ image || `${baseUrl}${metaImage?.src}` }/>
     <title>{ pageTitle } </title>
-    <ViewTransitions />
+    <style>
+    @view-transition {
+      navigation: auto;
+    }
+    </style>
   </head>
   <body
     class="flex flex-col flex-wrap justify-between md:pt-8 md:pr-16 md:pb-8 md:pl-16 p-8 max-w-full min-h-screen dark:bg-[rgb(34,33,37)] dark:text-[rgb(245,245,245)]"
