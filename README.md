@@ -47,3 +47,6 @@ Give a ⭐️ if this project helped you!
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Content License
+
+The blog content (posts, articles, images, etc.) is not covered by the MIT License. All rights to the content are reserved by the respective authors unless otherwise specified.
