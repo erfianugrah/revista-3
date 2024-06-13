@@ -25,6 +25,7 @@
 :80 {
 	encode zstd gzip
 	root * /usr/share/caddy
+	encode zstd gzip
 	file_server {
 		precompressed zstd br gzip
 	}
