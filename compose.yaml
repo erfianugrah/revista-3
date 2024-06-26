@@ -1,6 +1,6 @@
 services:
   revista:
-    image: erfianugrah/revista-4:1.4.0
+    image: erfianugrah/revista-4:1.4.1
     hostname: revista
     container_name: revista
     restart: unless-stopped
