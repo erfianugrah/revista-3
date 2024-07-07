@@ -8,9 +8,73 @@ import { getEntry } from "astro:content";
 const entry = await getEntry("cv", "resume");
 const { Content } = await entry.render();
 ---
-
 <BaseLayout title={pageTitle} description={description} site_name={site_name} is404Page={false}>
-  <ProseCv>
-    <Content />
-  </ProseCv>
+  <div class="cv-container">
+    <div id="pdf-content">
+      <ProseCv>
+        <Content />
+      </ProseCv>
+    </div>
+    <div class="button-container">
+      <button id="generatePdf" class="pdf-button">Generate PDF</button>
+    </div>
+  </div>
 </BaseLayout>
+
+<style>
+  .cv-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 2rem;
+  }
+  .button-container {
+    margin-top: 2rem;
+  }
+  .pdf-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  .pdf-button:hover {
+    background-color: #0056b3;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const generatePdfButton = document.getElementById('generatePdf');
+    if (generatePdfButton) {
+      generatePdfButton.addEventListener('click', async function() {
+        try {
+          const html2pdf = (await import('html2pdf.js')).default;
+          const element = document.getElementById('pdf-content');
+          const opt = {
+            margin: 10,
+            filename: 'Erfi_Anugrah_Resume.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          };
+
+          // Temporarily hide the button container
+          const buttonContainer = document.querySelector('.button-container');
+          buttonContainer.style.display = 'none';
+
+          await html2pdf().from(element).set(opt).save();
+
+          // Restore the button container
+          buttonContainer.style.display = '';
+        } catch (error) {
+          console.error('Error generating PDF:', error);
+          alert('There was an error generating the PDF. Please try again.');
+        }
+      });
+    }
+  });
+</script>

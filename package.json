@@ -23,6 +23,8 @@
     "astro-icon": "^0.8.2",
     "dayjs": "^1.11.11",
     "glightbox": "^3.3.0",
+    "html2pdf": "^0.0.11",
+    "html2pdf.js": "^0.10.2",
     "markdown-it": "^13.0.2",
     "mdast-util-to-string": "^4.0.0",
     "reading-time": "^1.5.0",
