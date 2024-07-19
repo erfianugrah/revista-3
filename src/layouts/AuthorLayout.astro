@@ -28,7 +28,6 @@ const metaImage = image
   ? await getImage({
       src: image,
       alt: alt,
-      // inferSize: true,
       width: "1280",
       height: "720",
       decoding: "async",
@@ -55,13 +54,13 @@ const metaImage = image
             <Image
               src={image}
               alt={alt}
-              // inferSize
               width={1280}
               height={720}
               decoding="async"
               format="avif"
               loading="lazy"
               class="object-contain h-full"
+              data-pagefind-meta="image[src]"
             />
           </div>
           <div>
