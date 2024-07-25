@@ -1,26 +1,27 @@
 ---
 import "../styles/MasonryLayout.css";
-import { getImage } from 'astro:assets';
+import { getImage } from "astro:assets";
 const { images } = Astro.props;
-const imageAssets = await Promise.all(images.map(async (image) => {
-  if (image) {
-    return await getImage({
-      src: image.src,
-      alt: image.alt,
-      // inferSize: true,
-      width: "3840",
-      height: "2160",
-      decoding: "async",
-      format: "avif"
-    });
-  }
-  return null;
-}));
+const imageAssets = await Promise.all(
+  images.map(async (image) => {
+    if (image) {
+      return await getImage({
+        src: image.src,
+        alt: image.alt,
+        inferSize: true,
+        height: "2160",
+        decoding: "async",
+        format: "avif",
+      });
+    }
+    return null;
+  }),
+);
 ---
 
-<div class="masonry not-prose" >
+<div class="masonry not-prose">
   {
-    imageAssets.map((imageAsset, index) => (
+    imageAssets.map((imageAsset, index) =>
       imageAsset ? (
         <div key={index} class="image-container" id="gallery">
           <a href={imageAsset.src} class="image-link glightbox">
@@ -35,8 +36,9 @@ const imageAssets = await Promise.all(images.map(async (image) => {
             />
           </a>
         </div>
-      ) : null
-    ))
+      ) : null,
+    )
   }
 </div>
 <script src="../scripts/lightbox.js"></script>
+

@@ -17,8 +17,8 @@ const publishedDate = frontmatter?.pubDate
 const title = frontmatter?.title;
 const description = frontmatter?.description;
 // const author = frontmatter?.author.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-const authorFullName  = frontmatter?.author;
-const author = authorFullName.split(' ')[0].toLowerCase();
+const authorFullName = frontmatter?.author;
+const author = authorFullName.split(" ")[0].toLowerCase();
 const image = frontmatter.image?.src;
 const alt = frontmatter.image?.alt;
 const positionx = frontmatter?.image?.positionx;
@@ -26,40 +26,46 @@ const positiony = frontmatter?.image?.positiony;
 
 let baseUrl = new URL(Astro.request.url).origin;
 
-const backgroundImage = image ? await getImage({
-  src: image,
-  alt: alt,
-  width: "3840",
-  height: "2160",
-  decoding: "async",
-  format: "avif"
-}) : null;
+const backgroundImage = image
+  ? await getImage({
+      src: image,
+      alt: alt,
+      inferSize: true,
+      height: "2160",
+      decoding: "async",
+      format: "avif",
+    })
+  : null;
 
-const mobileBackgroundImage = image ? await getImage({
-  src: image,
-  alt: alt,
-  width: "1920",
-  height: "1080",
-  decoding: "async",
-  format: "avif",
-  quality: "65"
-}) : null;
+const mobileBackgroundImage = image
+  ? await getImage({
+      src: image,
+      alt: alt,
+      inferSize: true,
+      height: "1080",
+      decoding: "async",
+      format: "avif",
+      quality: "65",
+    })
+  : null;
 
-const metaImage = image ? await getImage({
-  src: image,
-  alt: alt,
-  width: "1280",
-  height: "720",
-  decoding: "async",
-  format: "webp",
-  loading: "lazy"
-}) : null;
+const metaImage = image
+  ? await getImage({
+      src: image,
+      alt: alt,
+      inferSize: true,
+      height: "720",
+      decoding: "async",
+      format: "webp",
+      loading: "lazy",
+    })
+  : null;
 ---
 
 <BaseLayout
   title={title}
-  image={image ? `${baseUrl}${metaImage?.src}` : ''}
-  alt={alt ? metaImage?.attributes.alt : ''}
+  image={image ? `${baseUrl}${metaImage?.src}` : ""}
+  alt={alt ? metaImage?.attributes.alt : ""}
   description={description}
   author={author}
   pubDate={updatedDate}
@@ -68,12 +74,12 @@ const metaImage = image ? await getImage({
 >
   {
     image ? (
-    <div
+      <div
         id="backgroundImageElement"
         class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-screen mb-8 md:-mx-16 -mx-8"
         style={`--mobile-background-image: url(${mobileBackgroundImage.src}); --background-image: url(${backgroundImage.src}); --position-x: ${positionx}; --position-y: ${positiony};`}
         data-pagefind-body
-    >
+      >
         <h1 class="prose prose-slate uppercase font-overpass-mono text-[rgb(245,245,245)] text-4xl">
           {title}
         </h1>
@@ -93,44 +99,51 @@ const metaImage = image ? await getImage({
     ) : (
       <div data-pagefind-body>
         <Prose>
-        <h1 class="normal-case font-overpass-mono text-4xl -mb-1 mt-4">{title}</h1>
-        <div class="flex">
-          {frontmatter.tags.map((tag) => (
-            <p class="font-overpass-mono text-xl">
-              <a
-                class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded no-underline"
-                href={`../tags/${tag}`}
-              >
-                {tag}
-              </a>
-            </p>
-          ))}
-        </div>
-      </Prose>
+          <h1 class="normal-case font-overpass-mono text-4xl -mb-1 mt-4">
+            {title}
+          </h1>
+          <div class="flex">
+            {frontmatter.tags.map((tag) => (
+              <p class="font-overpass-mono text-xl">
+                <a
+                  class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded no-underline"
+                  href={`../tags/${tag}`}
+                >
+                  {tag}
+                </a>
+              </p>
+            ))}
+          </div>
+        </Prose>
       </div>
     )
   }
   <div data-pagefind-body>
-  <Prose>
-    <slot />
-    <div class="flex flex-col sm:flex-row align-center">
-      <div class="w-full flex-col sm:w-1/2 text-center sm:text-left">
-        <p>
-          -- <a href={`/authors/${author}`} class="no-underline font-inconsolata"> {authorFullName}</a>
-        </p>
-      </div>
-      <div
-        class="w-full flex-col sm:w-1/2 text-left sm:text-right mt-[10px] font-inconsolata"
-      >
-        <div>
-          Published: {publishedDate}
+    <Prose>
+      <slot />
+      <div class="flex flex-col sm:flex-row align-center">
+        <div class="w-full flex-col sm:w-1/2 text-center sm:text-left">
+          <p>
+            -- <a
+              href={`/authors/${author}`}
+              class="no-underline font-inconsolata"
+            >
+              {authorFullName}</a
+            >
+          </p>
         </div>
-        <div>
-          Updated: {updatedDate}
+        <div
+          class="w-full flex-col sm:w-1/2 text-left sm:text-right mt-[10px] font-inconsolata"
+        >
+          <div>
+            Published: {publishedDate}
+          </div>
+          <div>
+            Updated: {updatedDate}
+          </div>
         </div>
       </div>
-    </div>
-  </Prose>
+    </Prose>
   </div>
 </BaseLayout>
 <style>

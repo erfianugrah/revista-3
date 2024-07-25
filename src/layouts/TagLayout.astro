@@ -17,12 +17,11 @@ for (const post of allContent) {
       const imageAsset = await getImage({
         src: post.data.image?.src,
         alt: post.data.image?.alt,
-        // inferSize: true,
-        width: "1920",
+        inferSize: true,
         height: "1080",
         decoding: "async",
         format: "avif",
-        quality: "65"
+        quality: "65",
       });
       imagesByTag[tag].push(imageAsset ? imageAsset.src : null);
     }
@@ -31,7 +30,7 @@ for (const post of allContent) {
 const { title } = Astro.props;
 ---
 
-<BaseLayout title={title} is404Page={false} >
+<BaseLayout title={title} is404Page={false}>
   <div>
     {
       tags.length === 1 ? (
@@ -66,3 +65,4 @@ const { title } = Astro.props;
     }
   </div>
 </BaseLayout>
+

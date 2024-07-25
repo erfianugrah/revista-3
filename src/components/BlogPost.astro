@@ -1,5 +1,6 @@
 ---
-const { title, url, image, alt, description, pubDate, positionx, positiony } = Astro.props;
+const { title, url, image, alt, description, pubDate, positionx, positiony } =
+  Astro.props;
 import { Image } from "astro:assets";
 const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
 ---
@@ -14,7 +15,7 @@ const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
           <Image
             src={image}
             alt={alt}
-            width={1280}
+            inferSize
             height={720}
             decoding="async"
             format="avif"
@@ -44,7 +45,7 @@ const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
     </p>
     <a
       href={url}
-      class="dark:prose-invert max-w-max max-h-max flex flex-row flex-shrink-0 "
+      class="dark:prose-invert max-w-max max-h-max flex flex-row flex-shrink-0"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -72,21 +73,25 @@ const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
       background-position: var(--position-x, 30%) var(--position-y, 50%);
     }
   }
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
+  @keyframes bounce {
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-10px);
+    }
+    60% {
+      transform: translateY(-5px);
+    }
   }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
-}
 
-a:hover svg {
-  animation: bounce 2s infinite;
-}
+  a:hover svg {
+    animation: bounce 2s infinite;
+  }
   .fade-image {
     transition: opacity 0.5s ease-in-out;
     opacity: 1;
