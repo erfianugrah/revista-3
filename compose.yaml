@@ -1,6 +1,10 @@
 services:
   revista:
+<<<<<<< HEAD
     image: erfianugrah/revista-4:1.5.2
+=======
+    image: erfianugrah/revista-4:1.5.4
+>>>>>>> origin/main
     hostname: revista
     container_name: revista
     restart: unless-stopped

@@ -28,11 +28,10 @@ const metaImage = image
   ? await getImage({
       src: image,
       alt: alt,
-      // inferSize: true,
-      width: "1280",
+      inferSize: true,
       height: "720",
       decoding: "async",
-      format: "webp"
+      format: "webp",
     })
   : null;
 ---
@@ -47,7 +46,7 @@ const metaImage = image
   updatedDate={publishedDate}
   is404Page={false}
 >
-  <div class="md:grid md:grid-cols-[1fr,2fr] gap-4 md:px-56" data-pagefind-body >
+  <div class="md:grid md:grid-cols-[1fr,2fr] gap-4 md:px-56" data-pagefind-body>
     {
       image ? (
         <div>
@@ -55,13 +54,13 @@ const metaImage = image
             <Image
               src={image}
               alt={alt}
-              // inferSize
-              width={1280}
+              inferSize
               height={720}
               decoding="async"
               format="avif"
               loading="lazy"
               class="object-contain h-full"
+              data-pagefind-meta="image[src]"
             />
           </div>
           <div>
