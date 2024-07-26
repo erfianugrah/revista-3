@@ -2,7 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import "../styles/glightbox.css";
 import Prose from "../components/Prose.astro";
-import { getImage, Image } from "astro:assets";
+import { getImage } from "astro:assets";
 const { frontmatter } = Astro.props;
 const updatedDate = frontmatter?.updatedDate
   .toDateString()
@@ -26,23 +26,46 @@ const positiony = frontmatter?.image?.positiony;
 
 let baseUrl = new URL(Astro.request.url).origin;
 
-const imageObj = image
+const backgroundImage = image
   ? await getImage({
       src: image,
-      inferSize: true,
-widths: [640, 1024, 1920, 2560, 3840],
-sizes: "(max-width: 640px) 640px, (max-width: 1024px) 1024px, (max-width: 1920px) 1920px, (max-width: 2560px) 2560px, 3840px",
-      decoding: "async",
       alt: alt,
+      width: "3840",
+      height: "2160",
+      decoding: "async",
       format: "avif",
+    })
+  : null;
+
+const mobileBackgroundImage = image
+  ? await getImage({
+      src: image,
+      alt: alt,
+      width: "1920",
+      height: "1080",
+      decoding: "async",
+      format: "avif",
+      quality: "65",
+    })
+  : null;
+
+const metaImage = image
+  ? await getImage({
+      src: image,
+      alt: alt,
+      width: "1280",
+      height: "720",
+      decoding: "async",
+      format: "webp",
+      loading: "lazy",
     })
   : null;
 ---
 
 <BaseLayout
   title={title}
-  image={image ? `${baseUrl}${imageObj?.src}` : ""}
-  alt={alt ? imageObj?.attributes.alt : ""}
+  image={image ? `${baseUrl}${metaImage?.src}` : ""}
+  alt={alt ? metaImage?.attributes.alt : ""}
   description={description}
   author={author}
   pubDate={updatedDate}
@@ -52,39 +75,25 @@ sizes: "(max-width: 640px) 640px, (max-width: 1024px) 1024px, (max-width: 1920px
   {
     image ? (
       <div
-        id="backgroundImageContainer"
-        class="relative h-screen mb-8 md:-mx-16 -mx-8 overflow-hidden"
+        id="backgroundImageElement"
+        class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-screen mb-8 md:-mx-16 -mx-8"
+        style={`--mobile-background-image: url(${mobileBackgroundImage.src}); --background-image: url(${backgroundImage.src}); --position-x: ${positionx}; --position-y: ${positiony};`}
         data-pagefind-body
       >
-        <div class="parallax-container">
-          <Image
-            src={imageObj.src}
-            width={imageObj.attributes.width}
-            height={imageObj.attributes.height}
-            alt={imageObj.attributes.alt || alt}
-            class="parallax-bg"
-            sizes={imageObj.attributes.sizes}
-            data-pagefind-meta="image[src]"
-            data-positionx={positionx}
-            data-positiony={positiony}
-          />
-        </div>
-        <div class="relative flex flex-col justify-center items-center text-center h-full">
-          <h1 class="prose prose-slate uppercase font-overpass-mono text-[rgb(245,245,245)] text-4xl">
-            {title}
-          </h1>
-          <div class="flex gap-2 mt-2">
-            {frontmatter.tags.map((tag) => (
-              <p class="font-overpass-mono text-xl">
-                <a
-                  class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded"
-                  href={`../tags/${tag}`}
-                >
-                  {tag}
-                </a>
-              </p>
-            ))}
-          </div>
+        <h1 class="prose prose-slate uppercase font-overpass-mono text-[rgb(245,245,245)] text-4xl">
+          {title}
+        </h1>
+        <div class="flex gap-2 mt-2">
+          {frontmatter.tags.map((tag) => (
+            <p class="font-overpass-mono text-xl">
+              <a
+                class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded"
+                href={`../tags/${tag}`}
+              >
+                {tag}
+              </a>
+            </p>
+          ))}
         </div>
       </div>
     ) : (
@@ -138,99 +147,14 @@ sizes: "(max-width: 640px) 640px, (max-width: 1024px) 1024px, (max-width: 1920px
   </div>
 </BaseLayout>
 <style>
-  .parallax-wrapper {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
+  #backgroundImageElement {
+    background-image: var(--mobile-background-image);
+    background-position: var(--position-x, 45%) var(--position-y, 50%);
   }
-  .parallax-bg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    will-change: transform;
-    transform: translateY(0);
-    /* Use translate3d for hardware acceleration */
-    transform: translate3d(0, 0, 0);
-  }
-  @media (max-width: 800px) {
-    .parallax-bg {
-      object-position: var(--positionx, 50%) var(--positiony, 50%);
+  @media (min-width: 800px) {
+    #backgroundImageElement {
+      background-image: var(--background-image);
+      background-position: var(--position-x, 30%) var(--position-y, 50%);
     }
   }
 </style>
-
-<script>
-  document.addEventListener("astro:page-load", () => {
-    const container = document.querySelector("#backgroundImageContainer");
-    const bg = document.querySelector(".parallax-bg");
-    let rafId = null;
-
-    function setImagePosition() {
-      if (bg) {
-        bg.style.setProperty("--positionx", bg.dataset.positionx || "50%");
-        bg.style.setProperty("--positiony", bg.dataset.positiony || "50%");
-      }
-    }
-
-    function updateParallax() {
-      if (bg && container) {
-        const rect = container.getBoundingClientRect();
-        const scrollY = window.scrollY;
-        const offset = (scrollY - rect.top) * 0.3;
-
-        bg.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
-      }
-      rafId = null;
-    }
-
-    function requestUpdate() {
-      if (rafId === null) {
-        rafId = requestAnimationFrame(updateParallax);
-      }
-    }
-
-    setImagePosition();
-
-    const throttledResize = throttle(setImagePosition, 100);
-
-    window.addEventListener("resize", throttledResize);
-    window.addEventListener("scroll", requestUpdate);
-
-    // Initial update
-    updateParallax();
-
-    return () => {
-      window.removeEventListener("resize", throttledResize);
-      window.removeEventListener("scroll", requestUpdate);
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-      }
-    };
-  });
-
-  function throttle(func, limit) {
-    let lastFunc;
-    let lastRan;
-    return function () {
-      const context = this;
-      const args = arguments;
-      if (!lastRan) {
-        func.apply(context, args);
-        lastRan = Date.now();
-      } else {
-        clearTimeout(lastFunc);
-        lastFunc = setTimeout(
-          function () {
-            if (Date.now() - lastRan >= limit) {
-              func.apply(context, args);
-              lastRan = Date.now();
-            }
-          },
-          limit - (Date.now() - lastRan),
-        );
-      }
-    };
-  }
-</script>
