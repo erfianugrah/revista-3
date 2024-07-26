@@ -30,9 +30,8 @@ const imageObj = image
   ? await getImage({
       src: image,
       inferSize: true,
-      widths: [1280, 1920, 2560, 3840],
-      heights: [720, 1080, 1440, 2160],
-      sizes: "(max-width: 1280px) 1280px, (max-width: 1920px) 1920px, (max-width: 2560px) 2560px, 3840px",
+widths: [640, 1024, 1920, 2560, 3840],
+sizes: "(max-width: 640px) 640px, (max-width: 1024px) 1024px, (max-width: 1920px) 1920px, (max-width: 2560px) 2560px, 3840px",
       decoding: "async",
       alt: alt,
       format: "avif",
