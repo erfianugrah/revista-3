@@ -38,8 +38,6 @@ const {
   site_name,
   alt,
   is404Page = false,
-  backgroundImage,
-  mobileBackgroundImage,
 } = Astro.props;
 ---
 
@@ -75,26 +73,6 @@ const {
     />
     <title>{pageTitle}</title>
     <ViewTransitions />
-    {
-      mobileBackgroundImage && (
-        <link
-          rel="preload"
-          href={mobileBackgroundImage}
-          as="image"
-          media="(max-width: 799px)"
-        />
-      )
-    }
-    {
-      backgroundImage && (
-        <link
-          rel="preload"
-          href={backgroundImage}
-          as="image"
-          media="(min-width: 800px)"
-        />
-      )
-    }
   </head>
   <body
     class="flex flex-col flex-wrap justify-between md:pt-8 md:pr-16 md:pb-8 md:pl-16 p-8 max-w-full min-h-screen dark:bg-[rgb(34,33,37)] dark:text-[rgb(245,245,245)]"
