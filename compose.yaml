@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   revista:
     image: erfianugrah/revista-4:1.6.4
