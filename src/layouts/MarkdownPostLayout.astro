@@ -77,6 +77,7 @@ const metaImage = image
       <div data-pagefind-body>
         <div
           id="backgroundImageElement"
+          aria-label={`Background image: ${alt}`}
           class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-screen mb-8 md:-mx-16 -mx-8"
           style={`--mobile-background-image: url(${mobileBackgroundImage.src}); --background-image: url(${backgroundImage.src}); --position-x: ${positionx}; --position-y: ${positiony};`}
         >
@@ -148,14 +149,53 @@ const metaImage = image
   </div>
 </BaseLayout>
 <style>
+  html {
+    scroll-behavior: smooth;
+  }
+
   #backgroundImageElement {
+    position: relative;
+    overflow: hidden;
     background-image: var(--mobile-background-image);
     background-position: var(--position-x, 45%) var(--position-y, 50%);
   }
+
+  #backgroundImageElement::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: inherit;
+    background-size: cover;
+    background-position: inherit;
+    transform: translateZ(0);
+    will-change: transform;
+    z-index: -1;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  #backgroundImageElement > * {
+    animation: fadeIn 1s ease-in;
+  }
+
   @media (min-width: 800px) {
     #backgroundImageElement {
       background-image: var(--background-image);
       background-position: var(--position-x, 30%) var(--position-y, 50%);
+    }
+
+    #backgroundImageElement::before {
+      background-image: var(--background-image);
     }
   }
 </style>
