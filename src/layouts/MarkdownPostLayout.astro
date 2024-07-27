@@ -78,7 +78,7 @@ const metaImage = image
         <div
           id="backgroundImageElement"
           aria-label={`Background image: ${alt}`}
-          class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-screen mb-8 md:-mx-16 -mx-8 fade-in"
+          class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-screen mb-8 md:-mx-16 -mx-8"
           style={`--mobile-background-image: url(${mobileBackgroundImage.src}); --background-image: url(${backgroundImage.src}); --position-x: ${positionx}; --position-y: ${positiony};`}
         >
           <h1 class="prose prose-slate uppercase font-overpass-mono text-[rgb(245,245,245)] text-4xl">
@@ -173,11 +173,6 @@ const metaImage = image
     transform: translateZ(0);
     will-change: transform;
     z-index: -1;
-  }
-
-  .fade-in {
-    opacity: 0;
-    animation: fadeIn 1s ease-out forwards;
   }
 
   @keyframes fadeIn {
