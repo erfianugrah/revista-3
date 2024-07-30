@@ -46,35 +46,35 @@ const { Content } = await entry.render();
   }
 </style>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const generatePdfButton = document.getElementById('generatePdf');
-    if (generatePdfButton) {
-      generatePdfButton.addEventListener('click', async function() {
-        try {
-          const html2pdf = (await import('html2pdf.js')).default;
-          const element = document.getElementById('pdf-content');
-          const opt = {
-            margin: 10,
-            filename: 'Erfi_Anugrah_Resume.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-          };
-
-          // Temporarily hide the button container
-          const buttonContainer = document.querySelector('.button-container');
-          buttonContainer.style.display = 'none';
-
-          await html2pdf().from(element).set(opt).save();
-
-          // Restore the button container
-          buttonContainer.style.display = '';
-        } catch (error) {
-          console.error('Error generating PDF:', error);
-          alert('There was an error generating the PDF. Please try again.');
-        }
-      });
-    }
-  });
-</script>
+<!-- <script> -->
+<!--   document.addEventListener('DOMContentLoaded', () => { -->
+<!--     const generatePdfButton = document.getElementById('generatePdf'); -->
+<!--     if (generatePdfButton) { -->
+<!--       generatePdfButton.addEventListener('click', async function() { -->
+<!--         try { -->
+<!--           const html2pdf = (await import('html2pdf.js')).default; -->
+<!--           const element = document.getElementById('pdf-content'); -->
+<!--           const opt = { -->
+<!--             margin: 10, -->
+<!--             filename: 'Erfi_Anugrah_Resume.pdf', -->
+<!--             image: { type: 'jpeg', quality: 0.98 }, -->
+<!--             html2canvas: { scale: 2 }, -->
+<!--             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } -->
+<!--           }; -->
+<!---->
+<!--           // Temporarily hide the button container -->
+<!--           const buttonContainer = document.querySelector('.button-container'); -->
+<!--           buttonContainer.style.display = 'none'; -->
+<!---->
+<!--           await html2pdf().from(element).set(opt).save(); -->
+<!---->
+<!--           // Restore the button container -->
+<!--           buttonContainer.style.display = ''; -->
+<!--         } catch (error) { -->
+<!--           console.error('Error generating PDF:', error); -->
+<!--           alert('There was an error generating the PDF. Please try again.'); -->
+<!--         } -->
+<!--       }); -->
+<!--     } -->
+<!--   }); -->
+<!-- </script> -->
