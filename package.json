@@ -19,7 +19,7 @@
     "@astrojs/tailwind": "^5.1.0",
     "@fontsource-variable/inconsolata": "^5.0.18",
     "@fontsource-variable/overpass-mono": "^5.0.18",
-    "astro": "^4.12.2",
+    "astro": "^4.12.3",
     "astro-icon": "^0.8.2",
     "caniuse-lite": "^1.0.30001644",
     "dayjs": "^1.11.12",
