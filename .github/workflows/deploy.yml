@@ -1,5 +1,4 @@
-name: Deploy
-
+name: Deploy and Build Docker Image
 on:
   push:
     branches: main
@@ -7,13 +6,12 @@ on:
     branches: main
 
 jobs:
-  deploy:
-    name: Deploy
+  deploy-and-build:
+    name: Deploy and Build
     runs-on: ubuntu-latest
-
     permissions:
       id-token: write # Needed for auth with Deno Deploy
-      contents: read # Needed to clone the repository
+      contents: write # Needed to clone the repository and push version updates
 
     steps:
       - name: Clone repository
@@ -24,11 +22,9 @@ jobs:
         with:
           deno-version: v1.x
 
-      # Use oven-sh/setup-bun to install Bun
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
 
-      # Cache Bun dependencies
       - name: Cache Bun dependencies
         uses: actions/cache@v4
         with:
@@ -47,5 +43,54 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: "revista-3"
-          entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts" # 📝 Update the entrypoint if necessary
-          root: "dist" # 📝 Update the root if necessary
+          entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
+          root: "dist"
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --branch main --project-name=revista-4
+
+      - name: Generate version number
+        id: version
+        run: |
+          VERSION=$(cat VERSION)
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          MINOR=$(echo $VERSION | cut -d. -f2)
+          PATCH=$(echo $VERSION | cut -d. -f3)
+          PATCH=$((PATCH+1))
+          NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          echo "VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo $NEW_VERSION > VERSION
+
+      - name: Commit new version
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add VERSION
+          git commit -m "Bump version to ${{ steps.version.outputs.VERSION }}"
+          git push
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          platforms: linux/arm64,linux/amd64,linux/arm/v6,linux/arm/v7
+          push: true
+          tags: |
+            erfianugrah/revista-4:${{ steps.version.outputs.VERSION }}
+            erfianugrah/revista-4:latest
