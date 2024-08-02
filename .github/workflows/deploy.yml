@@ -8,23 +8,12 @@ on:
     types: [published]
 
 jobs:
-  deploy-and-build:
-    name: Deploy and Build
+  build:
+    name: Build
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: write
-      packages: write
-      attestations: write
-
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
-
-      - name: Install Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
@@ -38,10 +27,42 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-bun-
 
-      - name: Install dependencies and build with Bun
-        run: |
-          bun install
-          bun run build
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build with Bun
+        run: bun run build
+
+      - name: Cache build output
+        uses: actions/cache@v4
+        with:
+          path: dist
+          key: ${{ runner.os }}-dist-${{ github.sha }}
+
+  deploy-and-publish:
+    name: Deploy and Publish
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      packages: write
+      attestations: write
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Restore cached build output
+        uses: actions/cache@v4
+        with:
+          path: dist
+          key: ${{ runner.os }}-dist-${{ github.sha }}
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
@@ -55,7 +76,8 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --branch main --project-name=revista-4
+          command: pages deploy dist --project-name=revista-4
+          wranglerVersion: '3.68.0'
 
       - name: Generate version number
         id: version
