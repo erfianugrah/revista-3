@@ -33,6 +33,15 @@ jobs:
       - name: Build with Bun
         run: bun run build
 
+      - name: Cache optimized images
+        uses: actions/cache@v4
+        with:
+          path: |
+            dist/_astro
+          key: ${{ runner.os }}-optimized-images-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-optimized-images-
+
       - name: Cache build output
         uses: actions/cache@v4
         with:
@@ -58,6 +67,15 @@ jobs:
         with:
           path: dist
           key: ${{ runner.os }}-dist-${{ github.sha }}
+
+      - name: Restore cached optimized images
+        uses: actions/cache@v4
+        with:
+          path: |
+            dist/_astro
+          key: ${{ runner.os }}-optimized-images-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-optimized-images-
 
       - name: Install Deno
         uses: denoland/setup-deno@v1
