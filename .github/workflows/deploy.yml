@@ -82,7 +82,13 @@ jobs:
       - name: Generate version number
         id: version
         run: |
+          if [ ! -f VERSION ]; then
+            echo "1.0.0" > VERSION
+          fi
           VERSION=$(cat VERSION)
+          if [ -z "$VERSION" ]; then
+            VERSION="1.0.0"
+          fi
           MAJOR=$(echo $VERSION | cut -d. -f1)
           MINOR=$(echo $VERSION | cut -d. -f2)
           PATCH=$(echo $VERSION | cut -d. -f3)
