@@ -53,10 +53,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
       contents: write
       packages: write
-      attestations: write
 
     steps:
       - name: Clone repository
@@ -153,14 +151,3 @@ jobs:
           tags: |
             erfianugrah/revista-4:${{ steps.get_tag.outputs.NEW_TAG }}
             erfianugrah/revista-4:latest
-
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v1
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        with:
-          subject-name: erfianugrah/revista-4
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
