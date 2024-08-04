@@ -17,7 +17,7 @@ jobs:
     outputs:
       new_tag: ${{ steps.get_tag.outputs.NEW_TAG }}
     steps:
-      - name: Get latest tag
+      - name: Get latest tag and increment
         id: get_tag
         run: |
           LATEST_TAG=$(curl -s "https://hub.docker.com/v2/repositories/${REGISTRY_IMAGE}/tags/?page_size=1&ordering=last_updated" | jq -r '.results[0].name')
@@ -28,19 +28,6 @@ jobs:
             
             # Increment the patch version
             PATCH=$((PATCH+1))
-            
-            # If patch reaches 10, increment minor and reset patch
-            if [ $PATCH -eq 10 ]; then
-              MINOR=$((MINOR+1))
-              PATCH=0
-            fi
-            
-            # If minor reaches 10, increment major and reset minor and patch
-            if [ $MINOR -eq 10 ]; then
-              MAJOR=$((MAJOR+1))
-              MINOR=0
-              PATCH=0
-            fi
             
             NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
           else
@@ -134,14 +121,6 @@ jobs:
   docker-build:
     needs: [prepare, deploy]
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
-          - linux/arm/v6
-          - linux/arm/v7
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -164,36 +143,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       
-      - name: Generate unique tag
-        id: tag
-        run: echo "TAG=${{ needs.prepare.outputs.new_tag }}-${GITHUB_RUN_NUMBER}-${{ matrix.platform }}" >> $GITHUB_OUTPUT
-      
-      - name: Build Docker image
+      - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
-          platforms: ${{ matrix.platform }}
-          push: false
-          tags: ${{ env.REGISTRY_IMAGE }}:${{ steps.tag.outputs.TAG }}
-          outputs: type=docker,dest=/tmp/docker-image.tar
-      
-      - name: Load Docker image
-        run: docker load --input /tmp/docker-image.tar
-      
-      - name: Push Docker image
-        run: docker push ${{ env.REGISTRY_IMAGE }}:${{ steps.tag.outputs.TAG }}
-      
-      - name: Export digest
+          platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
+          push: true
+          tags: |
+            ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
+            ${{ env.REGISTRY_IMAGE }}:latest
+
+      - name: Inspect image
         run: |
-          mkdir -p /tmp/digests
-          digest=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ env.REGISTRY_IMAGE }}:${{ steps.tag.outputs.TAG }} | cut -d'@' -f2)
-          echo $digest > "/tmp/digests/${{ matrix.platform }}"
-      
-      - name: Upload digest
-        uses: actions/upload-artifact@v4
-        with:
-          name: digests
-          path: /tmp/digests/*
-          if-no-files-found: error
-          retention-days: 1
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
