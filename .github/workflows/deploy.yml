@@ -81,41 +81,41 @@ jobs:
           path: dist
           retention-days: 1
 
-  deploy:
-    needs: bun-build
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read  # This is required for actions/checkout
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+deploy:
+  needs: bun-build
+  runs-on: ubuntu-latest
+  permissions:
+    id-token: write
+    contents: read
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      - name: Download built artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist
+    - name: Download built artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: dist
+        path: dist
 
-      - name: Install Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
+    - name: Install Deno
+      uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.x
 
-      - name: Upload to Deno Deploy
-        uses: denoland/deployctl@v1
-        with:
-          project: "revista-3"
-          entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
-          root: "dist"
+    - name: Upload to Deno Deploy
+      uses: denoland/deployctl@v1
+      with:
+        project: "revista-3"
+        entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
+        root: "dist"
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=revista-4
-          wranglerVersion: '3.68.0'
+    - name: Deploy to Cloudflare Pages
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        command: pages deploy dist --project-name=revista-4
+        wranglerVersion: '3.68.0'
 
   docker-build:
     needs: [prepare, deploy]
