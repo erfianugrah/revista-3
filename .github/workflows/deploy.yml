@@ -109,6 +109,9 @@ jobs:
           entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
           root: "dist"
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
