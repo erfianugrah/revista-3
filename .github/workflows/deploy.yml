@@ -116,6 +116,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=revista-4
           wranglerVersion: '3.68.0'
+          useNpm: true
 
   docker-build:
     needs: [prepare, deploy]
