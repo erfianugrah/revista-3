@@ -1,4 +1,4 @@
-name: Deploy and Publish Docker image
+name: Build, Deploy, and Publish Docker image
 
 on:
   push:
@@ -50,17 +50,9 @@ jobs:
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
           echo "New tag: $NEW_TAG"
 
-  build:
+  bun-build:
     needs: prepare
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
-          - linux/arm/v6
-          - linux/arm/v7
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -81,6 +73,67 @@ jobs:
 
       - name: Build with Bun
         run: bun run build
+
+      - name: Upload built artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 1
+
+  deploy:
+    needs: bun-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Upload to Deno Deploy
+        uses: denoland/deployctl@v1
+        with:
+          project: "revista-3"
+          entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
+          root: "dist"
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=revista-4
+          wranglerVersion: '3.68.0'
+
+  docker-build:
+    needs: [prepare, deploy]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
+          - linux/arm/v6
+          - linux/arm/v7
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -118,8 +171,8 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  merge:
-    needs: [prepare, build]
+  docker-merge:
+    needs: [prepare, docker-build]
     runs-on: ubuntu-latest
     steps:
       - name: Download digests
@@ -145,30 +198,3 @@ jobs:
       - name: Inspect image
         run: |
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
-
-  deploy:
-    needs: merge
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
-
-      - name: Upload to Deno Deploy
-        uses: denoland/deployctl@v1
-        with:
-          project: "revista-3"
-          entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
-          root: "dist"
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=revista-4
-          wranglerVersion: '3.68.0'
