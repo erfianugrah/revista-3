@@ -125,7 +125,7 @@ jobs:
             NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
           else
             # Fallback to 1.7.1 if no valid tag is found
-            NEW_TAG="v1.7.1"
+            NEW_TAG="1.7.1"
           fi
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
           echo "New tag: $NEW_TAG"
