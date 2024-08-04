@@ -21,8 +21,7 @@ jobs:
       - name: Cache Bun dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.bun
+          path: ~/.bun/install/cache
           key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
           restore-keys: |
             ${{ runner.os }}-bun-
@@ -30,23 +29,18 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Build with Bun
-        run: bun run build
-
-      - name: Cache optimized images
-        uses: actions/cache@v4
-        with:
-          path: |
-            dist/_astro
-          key: ${{ runner.os }}-optimized-images-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-optimized-images-
-
       - name: Cache build output
         uses: actions/cache@v4
         with:
-          path: dist
-          key: ${{ runner.os }}-dist-${{ github.sha }}
+          path: |
+            dist
+            .astro
+          key: ${{ runner.os }}-build-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+
+      - name: Build with Bun
+        run: bun run build
 
   deploy-and-publish:
     name: Deploy and Publish
@@ -65,17 +59,10 @@ jobs:
       - name: Restore cached build output
         uses: actions/cache@v4
         with:
-          path: dist
-          key: ${{ runner.os }}-dist-${{ github.sha }}
-
-      - name: Restore cached optimized images
-        uses: actions/cache@v4
-        with:
           path: |
-            dist/_astro
-          key: ${{ runner.os }}-optimized-images-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-optimized-images-
+            dist
+            .astro
+          key: ${{ runner.os }}-build-${{ github.sha }}
 
       - name: Install Deno
         uses: denoland/setup-deno@v1
@@ -153,3 +140,5 @@ jobs:
           tags: |
             erfianugrah/revista-4:${{ steps.get_tag.outputs.NEW_TAG }}
             erfianugrah/revista-4:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
