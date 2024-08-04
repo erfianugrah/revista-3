@@ -68,6 +68,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-bun-
 
+      - name: Cache optimized images
+        uses: actions/cache@v4
+        with:
+          path: |
+            dist/_astro
+            .astro/assets
+          key: ${{ runner.os }}-optimized-images-${{ hashFiles('src/assets/**') }}
+          restore-keys: |
+            ${{ runner.os }}-optimized-images-
+
       - name: Install dependencies
         run: bun install
 
@@ -79,7 +89,7 @@ jobs:
         with:
           name: dist
           path: dist
-          retention-days: 1
+          retention-days: 7
 
   deploy:
     needs: bun-build
