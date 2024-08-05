@@ -12,31 +12,33 @@ env:
   REGISTRY_IMAGE: erfianugrah/revista-4
 
 jobs:
-  version:
+  prepare:
     runs-on: ubuntu-latest
     outputs:
-      new_version: ${{ steps.versioning.outputs.new_version }}
+      new_tag: ${{ steps.get_tag.outputs.NEW_TAG }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-
-      - name: Update Version
-        id: versioning
+      - name: Get latest tag and increment
+        id: get_tag
         run: |
-          output=$(bun run version.js)
-          echo "$output"
-          new_version=$(echo "$output" | grep "Version updated to" | awk '{print $4}')
-          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          LATEST_TAG=$(curl -s "https://hub.docker.com/v2/repositories/${REGISTRY_IMAGE}/tags/?page_size=1&ordering=last_updated" | jq -r '.results[0].name')
+          if [[ $LATEST_TAG =~ ^v?([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            MAJOR="${BASH_REMATCH[1]}"
+            MINOR="${BASH_REMATCH[2]}"
+            PATCH="${BASH_REMATCH[3]}"
+            
+            # Increment the patch version
+            PATCH=$((PATCH+1))
+            
+            NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
+          else
+            # Fallback to 1.7.1 if no valid tag is found
+            NEW_TAG="1.7.1"
+          fi
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
+          echo "New tag: $NEW_TAG"
 
   bun-build:
-    needs: version
+    needs: prepare
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -52,17 +54,6 @@ jobs:
           key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
           restore-keys: |
             ${{ runner.os }}-bun-
-
-      - name: Cache Astro build
-        uses: actions/cache@v4
-        with:
-          path: |
-            .astro
-            node_modules/.vite
-            node_modules/.cache
-          key: ${{ runner.os }}-astro-${{ hashFiles('src/**/*.{astro,js,jsx,ts,tsx,md,mdx}') }}-${{ hashFiles('package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-astro-
 
       - name: Cache optimized images
         uses: actions/cache@v4
@@ -128,7 +119,7 @@ jobs:
           packageManager: bun
 
   docker-build:
-    needs: [version, deploy]
+    needs: [prepare, deploy]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -160,9 +151,9 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
           push: true
           tags: |
-            ${{ env.REGISTRY_IMAGE }}:${{ needs.version.outputs.new_version }}
+            ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
             ${{ env.REGISTRY_IMAGE }}:latest
 
       - name: Inspect image
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.version.outputs.new_version }}
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
