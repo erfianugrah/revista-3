@@ -47,23 +47,19 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
 
-      - name: Cache Bun dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-
-
-      - name: Cache optimized images
+      - name: Cache dependencies and build outputs
         uses: actions/cache@v4
         with:
           path: |
-            dist/_astro
-            .astro/assets
-          key: ${{ runner.os }}-optimized-images-${{ hashFiles('src/assets/**') }}
+            ~/.bun/install/cache
+            node_modules
+            .astro
+            dist
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-${{ hashFiles('**/package.json') }}-${{ hashFiles('src/**') }}
           restore-keys: |
-            ${{ runner.os }}-optimized-images-
+            ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-${{ hashFiles('**/package.json') }}-
+            ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-
+            ${{ runner.os }}-bun-
 
       - name: Install dependencies
         run: bun install
