@@ -135,56 +135,91 @@ jobs:
           packageManager: bun
 
   docker-build:
-      needs: [prepare, deploy]
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-        
-        - name: Download built artifacts
-          uses: actions/download-artifact@v4
-          with:
-            name: dist
-            path: dist
-        
-        - name: Set up QEMU
-          uses: docker/setup-qemu-action@v3
-        
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v3
-        
-        - name: Login to Docker Hub
-          uses: docker/login-action@v3
-          with:
-            username: ${{ secrets.DOCKER_USERNAME }}
-            password: ${{ secrets.DOCKER_PASSWORD }}
-        
-        - name: Cache Docker layers
-          uses: actions/cache@v4
-          with:
-            path: /tmp/.buildx-cache
-            key: ${{ runner.os }}-buildx-${{ github.sha }}
-            restore-keys: |
-              ${{ runner.os }}-buildx-
-        
-        - name: Build and push
-          uses: docker/build-push-action@v6
-          with:
-            context: .
-            file: ./Dockerfile
-            platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
-            push: true
-            tags: |
-              ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
-              ${{ env.REGISTRY_IMAGE }}:latest
-            cache-from: type=local,src=/tmp/.buildx-cache
-            cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
-        
-        - name: Move cache
-          run: |
-            rm -rf /tmp/.buildx-cache
-            mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+    needs: [prepare, deploy]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      packages: write
+      attestations: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Download built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      
+      - name: Build and push
+        id: build-and-push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
+          push: true
+          tags: |
+            ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
+            ${{ env.REGISTRY_IMAGE }}:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+          provenance: false  # We'll create our own attestation
+      
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
-        - name: Inspect image
-          run: |
-            docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
+      - name: Generate predicate
+        id: generate-predicate
+        run: |
+          echo '{
+            "builder": {
+              "id": "${{ github.workflow }}#${{ github.job }}"
+            },
+            "buildType": "https://github.com/docker/build-push-action@v6",
+            "invocation": {
+              "configSource": {
+                "uri": "git+https://github.com/${{ github.repository }}.git",
+                "digest": {
+                  "sha1": "${{ github.sha }}"
+                },
+                "entryPoint": "${{ github.workflow }}"
+              }
+            }
+          }' > predicate.json
+
+      - name: Attest Docker image
+        uses: actions/attest@v1
+        with:
+          subject-name: ${{ env.REGISTRY_IMAGE }}
+          subject-digest: ${{ steps.build-and-push.outputs.digest }}
+          predicate-type: 'https://slsa.dev/provenance/v0.2'
+          predicate-path: predicate.json
+          push-to-registry: true
+
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
