@@ -213,6 +213,9 @@ jobs:
 
       - name: Attest Docker image
         uses: actions/attest@v1
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         with:
           subject-name: ${{ env.REGISTRY_IMAGE }}
           subject-digest: ${{ steps.build-and-push.outputs.digest }}
