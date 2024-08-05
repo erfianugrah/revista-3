@@ -21,13 +21,26 @@ jobs:
       id: get_tag
       run: |
         # Fetch all tags and sort them
-        ALL_TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${REGISTRY_IMAGE}/tags/?page_size=100" | jq -r '.results[].name' | sort -V)
-        LATEST_TAG=$(echo "$ALL_TAGS" | tail -n 1)
+        echo "Fetching tags for ${REGISTRY_IMAGE}..."
+        TAGS_JSON=$(curl -s "https://hub.docker.com/v2/repositories/${REGISTRY_IMAGE}/tags/?page_size=100")
+        echo "Fetched tags JSON:"
+        echo "$TAGS_JSON" | jq '.'
         
-        if [[ $LATEST_TAG =~ ^v?([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-          MAJOR="${BASH_REMATCH[1]}"
-          MINOR="${BASH_REMATCH[2]}"
-          PATCH="${BASH_REMATCH[3]}"
+        ALL_TAGS=$(echo "$TAGS_JSON" | jq -r '.results[].name' | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sort -V)
+        echo "Sorted semantic version tags:"
+        echo "$ALL_TAGS"
+        
+        if [ -z "$ALL_TAGS" ]; then
+          echo "No existing semantic version tags found."
+          NEW_TAG="0.0.1"
+        else
+          LATEST_TAG=$(echo "$ALL_TAGS" | tail -n 1)
+          echo "Latest tag: $LATEST_TAG"
+          
+          # Remove 'v' prefix if present
+          LATEST_TAG=${LATEST_TAG#v}
+          
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST_TAG"
           
           # Increment the patch version
           PATCH=$((PATCH+1))
@@ -35,14 +48,12 @@ jobs:
           NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
           
           # Check if the new tag already exists
-          while echo "$ALL_TAGS" | grep -q "^${NEW_TAG}$"; do
+          while echo "$ALL_TAGS" | grep -q "^v?${NEW_TAG}$"; do
             PATCH=$((PATCH+1))
             NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
           done
-        else
-          # If no valid tag is found, start from 0.0.1
-          NEW_TAG="0.0.1"
         fi
+        
         echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
         echo "New tag: $NEW_TAG"
 
