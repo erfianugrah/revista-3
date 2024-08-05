@@ -9,8 +9,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "postbuild": "pagefind --site dist",
-    "verify-conditions": "node verify-conditions.js",
-    "analyze-commits": "node analyze-commits.js"
+    "version": "bun run version.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.1",
@@ -45,8 +44,5 @@
     "@tailwindcss/typography": "^0.5.13",
     "pagefind": "^1.1.0",
     "semantic-release": "^24.0.0"
-  },
-  "engines": {
-    "bun": ">=1.1.21"
-  },
+  }
 }
