@@ -224,9 +224,9 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: 1
         run: |
-          cosign attest --type https://slsa.dev/provenance/v0.2 \
+          echo "${{ github.token }}" | cosign attest --type https://slsa.dev/provenance/v0.2 \
             --predicate predicate.json \
-            --key env://GITHUB_TOKEN \
+            --key k8s://oidc-issuer=https://token.actions.githubusercontent.com,sub=${{ github.workflow }} \
             ${{ env.REGISTRY_IMAGE }}@${{ steps.build-and-push.outputs.digest }}
 
       - name: Verify attestation
