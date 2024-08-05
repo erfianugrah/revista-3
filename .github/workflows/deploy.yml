@@ -29,7 +29,11 @@ jobs:
 
       - name: Update Version
         id: versioning
-        run: bun run version.js
+        run: |
+          output=$(bun run version.js)
+          echo "$output"
+          new_version=$(echo "$output" | grep "Version updated to" | awk '{print $4}')
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
 
   bun-build:
     needs: version
