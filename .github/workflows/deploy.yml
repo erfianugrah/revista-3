@@ -32,8 +32,7 @@ jobs:
         run: bun run version.js
 
   bun-build:
-    needs: release
-    if: needs.release.outputs.new_release_published == 'true'
+    needs: version
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -125,8 +124,7 @@ jobs:
           packageManager: bun
 
   docker-build:
-    needs: [release, deploy]
-    if: needs.release.outputs.new_release_published == 'true'
+    needs: [version, deploy]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -163,4 +161,4 @@ jobs:
 
       - name: Inspect image
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.release.outputs.new_release_version }}
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.version.outputs.new_version }}
