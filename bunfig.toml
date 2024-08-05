@@ -1,0 +1,2 @@
+[install.override]
+semantic-release = "npm:semantic-release@latest"
