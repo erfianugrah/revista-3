@@ -225,9 +225,11 @@ jobs:
           COSIGN_EXPERIMENTAL: 1
         run: |
           WORKFLOW_NAME=$(echo "${{ github.workflow }}" | sed 's/[^a-zA-Z0-9]/_/g')
-          echo "${{ github.token }}" | cosign attest --type https://slsa.dev/provenance/v0.2 \
+          cosign attest --type https://slsa.dev/provenance/v0.2 \
             --predicate predicate.json \
-            --key k8s://oidc-issuer=https://token.actions.githubusercontent.com,sub=${WORKFLOW_NAME} \
+            --fulcio-url https://token.actions.githubusercontent.com \
+            --rekor-url https://rekor.sigstore.dev \
+            --oidc-issuer https://token.actions.githubusercontent.com \
             ${{ env.REGISTRY_IMAGE }}@${{ steps.build-and-push.outputs.digest }}
 
       - name: Verify attestation
