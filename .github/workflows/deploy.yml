@@ -17,25 +17,34 @@ jobs:
     outputs:
       new_tag: ${{ steps.get_tag.outputs.NEW_TAG }}
     steps:
-      - name: Get latest tag and increment
-        id: get_tag
-        run: |
-          LATEST_TAG=$(curl -s "https://hub.docker.com/v2/repositories/${REGISTRY_IMAGE}/tags/?page_size=1&ordering=last_updated" | jq -r '.results[0].name')
-          if [[ $LATEST_TAG =~ ^v?([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-            MAJOR="${BASH_REMATCH[1]}"
-            MINOR="${BASH_REMATCH[2]}"
-            PATCH="${BASH_REMATCH[3]}"
-            
-            # Increment the patch version
+    - name: Get latest tag and increment
+      id: get_tag
+      run: |
+        # Fetch all tags and sort them
+        ALL_TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${REGISTRY_IMAGE}/tags/?page_size=100" | jq -r '.results[].name' | sort -V)
+        LATEST_TAG=$(echo "$ALL_TAGS" | tail -n 1)
+        
+        if [[ $LATEST_TAG =~ ^v?([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+          MAJOR="${BASH_REMATCH[1]}"
+          MINOR="${BASH_REMATCH[2]}"
+          PATCH="${BASH_REMATCH[3]}"
+          
+          # Increment the patch version
+          PATCH=$((PATCH+1))
+          
+          NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
+          
+          # Check if the new tag already exists
+          while echo "$ALL_TAGS" | grep -q "^${NEW_TAG}$"; do
             PATCH=$((PATCH+1))
-            
             NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
-          else
-            # Fallback to 1.7.1 if no valid tag is found
-            NEW_TAG="1.7.1"
-          fi
-          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
-          echo "New tag: $NEW_TAG"
+          done
+        else
+          # If no valid tag is found, start from 0.0.1
+          NEW_TAG="0.0.1"
+        fi
+        echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
+        echo "New tag: $NEW_TAG"
 
   bun-build:
     needs: prepare
