@@ -8,16 +8,17 @@ import { getEntry } from "astro:content";
 const entry = await getEntry("cv", "resume");
 const { Content } = await entry.render();
 ---
-<BaseLayout title={pageTitle} description={description} site_name={site_name} is404Page={false}>
+
+<BaseLayout
+  title={pageTitle}
+  description={description}
+  site_name={site_name}
+  is404Page={false}
+>
   <div class="cv-container">
-    <div id="pdf-content">
-      <ProseCv>
-        <Content />
-      </ProseCv>
-    </div>
-    <div class="button-container">
-      <button id="generatePdf" class="pdf-button">Generate PDF</button>
-    </div>
+    <ProseCv>
+      <Content />
+    </ProseCv>
   </div>
 </BaseLayout>
 
