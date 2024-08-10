@@ -4,6 +4,7 @@ import mdx from '@astrojs/mdx';
 import tailwind from '@astrojs/tailwind';
 import markdoc from '@astrojs/markdoc';
 import remarkGfm from 'remark-gfm';
+import remarkSmartypants from 'remark-smartypants';
 import icon from 'astro-icon';
 import { remarkReadingTime } from './src/scripts/remark-reading-time.mjs';
 
@@ -33,7 +34,7 @@ export default defineConfig({
     markdoc(),
   ],
   markdown: {
-    remarkPlugins: [remarkGfm, remarkReadingTime],
+    remarkPlugins: [remarkGfm, remarkReadingTime, remarkSmartypants],
   },
   prefetch: {
     prefetchAll: true,
@@ -44,4 +45,3 @@ export default defineConfig({
     // directRenderScript: true
   },
 });
-
