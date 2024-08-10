@@ -20,7 +20,7 @@
     "@fontsource-variable/inconsolata": "^5.0.18",
     "@fontsource-variable/overpass-mono": "^5.0.18",
     "@iconify-json/mdi": "^1.1.68",
-    "astro": "^4.13.2",
+    "astro": "^4.13.3",
     "astro-icon": "^1.1.0",
     "caniuse-lite": "^1.0.30001651",
     "dayjs": "^1.11.12",

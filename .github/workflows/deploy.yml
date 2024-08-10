@@ -131,7 +131,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=revista-4
-          wranglerVersion: '3.68.0'
+          wranglerVersion: '3.70.0'
           packageManager: bun
 
   docker-build:
