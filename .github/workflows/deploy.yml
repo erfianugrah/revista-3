@@ -1,5 +1,4 @@
 name: Build, Deploy, and Publish Docker image
-
 on:
   push:
     branches: main
@@ -7,16 +6,31 @@ on:
     branches: main
   release:
     types: [published]
-
 env:
   REGISTRY_IMAGE: erfianugrah/revista-4
-
 jobs:
   prepare:
     runs-on: ubuntu-latest
     outputs:
       new_tag: ${{ steps.get_tag.outputs.NEW_TAG }}
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2  # Fetch the last two commits
+
+    - name: Check commit message for version increment
+      id: check_commit_message
+      run: |
+        COMMIT_MSG=$(git log -1 --pretty=%B)
+        if echo "$COMMIT_MSG" | grep -qE "^\[major\]"; then
+          echo "VERSION_INCREMENT=major" >> $GITHUB_OUTPUT
+        elif echo "$COMMIT_MSG" | grep -qE "^\[minor\]"; then
+          echo "VERSION_INCREMENT=minor" >> $GITHUB_OUTPUT
+        else
+          echo "VERSION_INCREMENT=patch" >> $GITHUB_OUTPUT
+        fi
+
     - name: Get latest tag and increment
       id: get_tag
       run: |
@@ -42,14 +56,37 @@ jobs:
           
           IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST_TAG"
           
-          # Increment the patch version
-          PATCH=$((PATCH+1))
+          # Increment version based on commit message or default to patch
+          case "${{ steps.check_commit_message.outputs.VERSION_INCREMENT }}" in
+            major)
+              MAJOR=$((MAJOR+1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR+1))
+              PATCH=0
+              ;;
+            patch|*)
+              PATCH=$((PATCH+1))
+              ;;
+          esac
           
           NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
           
           # Check if the new tag already exists
           while echo "$ALL_TAGS" | grep -q "^v?${NEW_TAG}$"; do
-            PATCH=$((PATCH+1))
+            case "${{ steps.check_commit_message.outputs.VERSION_INCREMENT }}" in
+              major)
+                MAJOR=$((MAJOR+1))
+                ;;
+              minor)
+                MINOR=$((MINOR+1))
+                ;;
+              patch|*)
+                PATCH=$((PATCH+1))
+                ;;
+            esac
             NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
           done
         fi
@@ -128,11 +165,18 @@ jobs:
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=revista-4
           wranglerVersion: '3.70.0'
           packageManager: bun
+
+      - name: Purge Cloudflare Cache
+        run: |
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"tags":["revista"]}'
 
   docker-build:
       needs: [prepare, deploy]
