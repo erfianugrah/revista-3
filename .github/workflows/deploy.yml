@@ -1,4 +1,5 @@
 name: Build, Deploy, and Publish Docker image
+
 on:
   push:
     branches: main
@@ -176,7 +177,7 @@ jobs:
           curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}" \
             -H "Content-Type: application/json" \
-            --data '{"tags":["revista"]}'
+            --data '{"hosts":["erfianugrah.com"]}'
 
   docker-build:
       needs: [prepare, deploy]
