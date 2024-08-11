@@ -211,7 +211,6 @@ jobs:
       permissions:
         id-token: write
         contents: read
-        attestations: write
         packages: write
       steps:
         - name: Checkout
@@ -235,14 +234,6 @@ jobs:
             username: ${{ secrets.DOCKER_USERNAME }}
             password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
         
-        - name: Cache Docker layers
-          uses: actions/cache@v4
-          with:
-            path: /tmp/.buildx-cache
-            key: ${{ runner.os }}-buildx-${{ github.sha }}
-            restore-keys: |
-              ${{ runner.os }}-buildx-
-        
         - name: Build and push
           uses: docker/build-push-action@v6
           id: build-and-push
@@ -254,35 +245,10 @@ jobs:
             tags: |
               ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
               ${{ env.REGISTRY_IMAGE }}:latest
-            cache-from: type=local,src=/tmp/.buildx-cache
-            cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
-
-        - name: Generate build provenance attestation for Docker image
-          uses: actions/attest-build-provenance@v1
-          with:
-            subject-name: ${{ env.REGISTRY_IMAGE }}
-            subject-digest: ${{ steps.build-and-push.outputs.digest }}
-            push-to-registry: true
-
-        - name: Generate SBOM for Docker image
-          uses: anchore/sbom-action@v0
-          with:
-            image: ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
-            format: spdx-json
-            output-file: docker-sbom.json
-
-        - name: Generate SBOM attestation for Docker image
-          uses: actions/attest-sbom@v1
-          with:
-            subject-name: ${{ env.REGISTRY_IMAGE }}
-            subject-digest: ${{ steps.build-and-push.outputs.digest }}
-            sbom-path: 'docker-sbom.json'
-            push-to-registry: true
-        
-        - name: Move cache
-          run: |
-            rm -rf /tmp/.buildx-cache
-            mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+            cache-from: type=gha
+            cache-to: type=gha,mode=max
+            provenance: mode=max
+            sbom: true
 
         - name: Inspect image
           run: |
