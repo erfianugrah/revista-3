@@ -98,6 +98,10 @@ jobs:
   bun-build:
     needs: prepare
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -125,11 +129,30 @@ jobs:
       - name: Build with Bun
         run: bun run build
 
+      - name: Generate build provenance attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: 'dist'
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          format: spdx-json
+          output-file: sbom.json
+
+      - name: Generate SBOM attestation
+        uses: actions/attest-sbom@v1
+        with:
+          subject-path: 'dist'
+          sbom-path: 'sbom.json'
+
       - name: Upload built artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: dist
+          path: |
+            dist
+            sbom.json
           retention-days: 7
 
   deploy:
@@ -172,16 +195,14 @@ jobs:
           wranglerVersion: '3.70.0'
           packageManager: bun
 
-      - name: Purge Cloudflare Cache
-        run: |
-          curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            --data '{"hosts":["erfianugrah.com"]}'
-
   docker-build:
       needs: [prepare, deploy]
       runs-on: ubuntu-latest
+      permissions:
+        id-token: write
+        contents: read
+        attestations: write
+        packages: write
       steps:
         - name: Checkout
           uses: actions/checkout@v4
@@ -214,6 +235,7 @@ jobs:
         
         - name: Build and push
           uses: docker/build-push-action@v6
+          id: build-and-push
           with:
             context: .
             file: ./Dockerfile
@@ -224,6 +246,28 @@ jobs:
               ${{ env.REGISTRY_IMAGE }}:latest
             cache-from: type=local,src=/tmp/.buildx-cache
             cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+        - name: Generate build provenance attestation for Docker image
+          uses: actions/attest-build-provenance@v1
+          with:
+            subject-name: ${{ env.REGISTRY_IMAGE }}
+            subject-digest: ${{ steps.build-and-push.outputs.digest }}
+            push-to-registry: true
+
+        - name: Generate SBOM for Docker image
+          uses: anchore/sbom-action@v0
+          with:
+            image: ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
+            format: spdx-json
+            output-file: docker-sbom.json
+
+        - name: Generate SBOM attestation for Docker image
+          uses: actions/attest-sbom@v1
+          with:
+            subject-name: ${{ env.REGISTRY_IMAGE }}
+            subject-digest: ${{ steps.build-and-push.outputs.digest }}
+            sbom-path: 'docker-sbom.json'
+            push-to-registry: true
         
         - name: Move cache
           run: |
@@ -233,3 +277,10 @@ jobs:
         - name: Inspect image
           run: |
             docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
+
+        - name: Purge Cloudflare Cache
+          run: |
+            curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+              -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              --data '{"hosts":["erfianugrah.com"]}'
