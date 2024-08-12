@@ -1,16 +1,18 @@
-name: Build, Deploy, and Publish Docker image
+name: CI/CD Pipeline for Revista-4
 
 on:
   push:
-    branches: main
+    branches: [main]
   pull_request:
-    branches: main
+    branches: [main]
   release:
     types: [published]
+
 env:
   REGISTRY_IMAGE: erfianugrah/revista-4
+
 jobs:
-  prepare:
+  version-management:
     runs-on: ubuntu-latest
     outputs:
       new_tag: ${{ steps.get_tag.outputs.NEW_TAG }}
@@ -18,9 +20,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 2  # Fetch the last two commits
+        fetch-depth: 2
 
-    - name: Check commit message for version increment
+    - name: Determine version increment type
       id: check_commit_message
       run: |
         COMMIT_MSG=$(git log -1 --pretty=%B)
@@ -32,7 +34,7 @@ jobs:
           echo "VERSION_INCREMENT=patch" >> $GITHUB_OUTPUT
         fi
 
-    - name: Get latest tag and increment
+    - name: Generate new version tag
       id: get_tag
       run: |
         # Fetch all tags and sort them
@@ -95,21 +97,21 @@ jobs:
         echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
         echo "New tag: $NEW_TAG"
 
-  bun-build:
-    needs: prepare
+  build-and-test:
+    needs: version-management
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
       attestations: write    
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Bun
+      - name: Setup Bun environment
         uses: oven-sh/setup-bun@v1
 
-      - name: Cache dependencies and build outputs
+      - name: Cache dependencies and build artifacts
         uses: actions/cache@v4
         with:
           path: |
@@ -123,21 +125,20 @@ jobs:
             ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-
             ${{ runner.os }}-bun-
 
-
-      - name: Install dependencies
+      - name: Install project dependencies
         run: bun install
 
-      - name: Build with Bun
+      - name: Build project
         run: bun run build
 
-      - name: Upload built artifacts
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist
           retention-days: 7
 
-      - name: Generate build provenance attestation
+      - name: Generate build provenance
         uses: actions/attest-build-provenance@v1
         with:
           subject-path: 'dist'
@@ -163,35 +164,35 @@ jobs:
             sbom.json
           retention-days: 7
 
-  deploy:
-    needs: bun-build
+  deploy-to-platforms:
+    needs: build-and-test
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download built artifacts
+      - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
 
-      - name: Install Deno
+      - name: Setup Deno
         uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
 
-      - name: Upload to Deno Deploy
+      - name: Deploy to Deno
         uses: denoland/deployctl@v1
         with:
           project: "revista-3"
           entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
           root: "dist"
 
-      - name: Setup Bun
+      - name: Setup Bun for Cloudflare deployment
         uses: oven-sh/setup-bun@v1
 
       - name: Deploy to Cloudflare Pages
@@ -203,14 +204,14 @@ jobs:
           wranglerVersion: '3.70.0'
           packageManager: bun
 
-  docker-build:
-      needs: [prepare, deploy]
+  docker-build-and-push:
+      needs: [version-management, deploy-to-platforms]
       runs-on: ubuntu-latest
       steps:
-        - name: Checkout
+        - name: Checkout repository
           uses: actions/checkout@v4
         
-        - name: Download built artifacts
+        - name: Download build artifacts
           uses: actions/download-artifact@v4
           with:
             name: dist
@@ -236,7 +237,7 @@ jobs:
             restore-keys: |
               ${{ runner.os }}-buildx-
         
-        - name: Build and push
+        - name: Build and push Docker image
           uses: docker/build-push-action@v6
           with:
             context: .
@@ -244,16 +245,16 @@ jobs:
             platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
             push: true
             tags: |
-              ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
+              ${{ env.REGISTRY_IMAGE }}:${{ needs.version-management.outputs.new_tag }}
               ${{ env.REGISTRY_IMAGE }}:latest
             cache-from: type=gha
             cache-to: type=gha,mode=max
             provenance: mode=max
             sbom: true
         
-        - name: Inspect image
+        - name: Inspect Docker image
           run: |
-            docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
+            docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.version-management.outputs.new_tag }}
 
         - name: Purge Cloudflare Cache
           run: |
