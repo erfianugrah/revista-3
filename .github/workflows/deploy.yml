@@ -100,10 +100,6 @@ jobs:
   build-revista:
     needs: version-management
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-      attestations: write    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -138,126 +134,104 @@ jobs:
           path: dist
           retention-days: 7
 
-  # deploy-to-platforms:
-  #   needs: build-and-test
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     id-token: write
-  #     contents: read
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
-  #
-  #     - name: Download build artifacts
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: dist
-  #         path: dist
-  #
-  #     - name: Setup Deno
-  #       uses: denoland/setup-deno@v1
-  #       with:
-  #         deno-version: v1.x
-  #
-  #     - name: Deploy to Deno
-  #       uses: denoland/deployctl@v1
-  #       with:
-  #         project: "revista-3"
-  #         entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
-  #         root: "dist"
-  #
-  #     - name: Setup Bun for Cloudflare deployment
-  #       uses: oven-sh/setup-bun@v1
-  #
-  #     - name: Deploy to Cloudflare Pages
-  #       uses: cloudflare/wrangler-action@v3
-  #       with:
-  #         apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
-  #         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-  #         command: pages deploy dist --project-name=revista-4
-  #         wranglerVersion: '3.70.0'
-  #         packageManager: bun
-
   docker-build-and-push:
-      needs: [version-management, build-revista]
-      runs-on: ubuntu-latest
-      outputs:
-        image_digest: ${{ steps.build_and_push.outputs.digest }}
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
-        
-        - name: Download build artifacts
-          uses: actions/download-artifact@v4
-          with:
-            name: dist
-            path: dist
-        
-        - name: Set up QEMU
-          uses: docker/setup-qemu-action@v3
-        
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v3
-        
-        - name: Login to Docker Hub
-          uses: docker/login-action@v3
-          with:
-            username: ${{ secrets.DOCKER_USERNAME }}
-            password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
-        
-        - name: Cache Docker layers
-          uses: actions/cache@v4
-          with:
-            path: /tmp/.buildx-cache
-            key: ${{ runner.os }}-buildx-${{ github.sha }}
-            restore-keys: |
-              ${{ runner.os }}-buildx-
-        
-        - name: Install Cosign
-          uses: sigstore/cosign-installer@v3
+    needs: [version-management, build-revista]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write  # needed for signing the images with GitHub OIDC Token
+    outputs:
+      image_digest: ${{ steps.build_and_push.outputs.digest }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
+      
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.6.0
+        with:
+          cosign-release: 'v2.4.0'
 
-        - name: Build and push Docker image
-          id: build_and_push
-          uses: docker/build-push-action@v6
-          with:
-            context: .
-            file: ./Dockerfile
-            platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
-            push: true
-            tags: |
-              ${{ env.REGISTRY_IMAGE }}:${{ needs.version-management.outputs.new_tag }}
-              ${{ env.REGISTRY_IMAGE }}:latest
-            cache-from: type=gha
-            cache-to: type=gha,mode=max
-            provenance: mode=max
-            sbom: true
+      - name: Build and push Docker image
+        id: build_and_push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
+          push: true
+          tags: |
+            ${{ env.REGISTRY_IMAGE }}:${{ needs.version-management.outputs.new_tag }}
+            ${{ env.REGISTRY_IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: true
+          sbom: true
 
-        - name: Sign the Docker image
-          env:
-            COSIGN_EXPERIMENTAL: 1
-          run: |
-            cosign sign ${{ env.REGISTRY_IMAGE }}@${{ steps.build_and_push.outputs.digest }}
-        
-        - name: Inspect Docker image
-          run: |
-            docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.version-management.outputs.new_tag }}
+      - name: Sign the Docker image
+        env:
+          COSIGN_EXPERIMENTAL: 1
+        run: |
+          cosign sign --yes ${REGISTRY_IMAGE}@${{ steps.build_and_push.outputs.digest }}
+      
+      - name: Inspect Docker image
+        run: |
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.version-management.outputs.new_tag }}
 
   verify-and-deploy:
     needs: docker-build-and-push
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # needed for verifying the images with GitHub OIDC Token
     steps:
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v3
+        uses: sigstore/cosign-installer@v3.6.0
+        with:
+          cosign-release: 'v2.4.0'
 
       - name: Verify image signature
         env:
           COSIGN_EXPERIMENTAL: 1
         run: |
-          cosign verify ${{ env.REGISTRY_IMAGE }}@${{ needs.docker-build-and-push.outputs.image_digest }} \
-            --certificate-identity-regexp="https://github.com/erfianugrah/revista-3/.github/workflows/*" \
+          cosign verify ${REGISTRY_IMAGE}@${{ needs.docker-build-and-push.outputs.image_digest }} \
+            --certificate-identity-regexp="https://github.com/${GITHUB_REPOSITORY}/.*" \
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com
 
+      - name: Download build artifacts
+        if: success()
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
       - name: Setup Deno
+        if: success()
         uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
