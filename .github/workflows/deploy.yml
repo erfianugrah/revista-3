@@ -179,8 +179,10 @@ jobs:
   #         packageManager: bun
 
   docker-build-and-push:
-      needs: [version-management, deploy-to-platforms]
+      needs: [version-management, build-revista]
       runs-on: ubuntu-latest
+      outputs:
+        image_digest: ${{ steps.build_and_push.outputs.digest }}
       steps:
         - name: Checkout repository
           uses: actions/checkout@v4
@@ -211,7 +213,11 @@ jobs:
             restore-keys: |
               ${{ runner.os }}-buildx-
         
+        - name: Install Cosign
+          uses: sigstore/cosign-installer@v3
+
         - name: Build and push Docker image
+          id: build_and_push
           uses: docker/build-push-action@v6
           with:
             context: .
@@ -225,6 +231,12 @@ jobs:
             cache-to: type=gha,mode=max
             provenance: mode=max
             sbom: true
+
+        - name: Sign the Docker image
+          env:
+            COSIGN_EXPERIMENTAL: 1
+          run: |
+            cosign sign ${{ env.REGISTRY_IMAGE }}@${{ steps.build_and_push.outputs.digest }}
         
         - name: Inspect Docker image
           run: |
@@ -279,4 +291,3 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}" \
             -H "Content-Type: application/json" \
             --data '{"hosts":["erfianugrah.com"]}'
-
