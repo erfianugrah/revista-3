@@ -165,13 +165,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
       
-      - name: Cache Docker layers
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+      # - name: Cache Docker layers
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: /tmp/.buildx-cache
+      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-buildx-
       
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.6.0
