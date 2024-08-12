@@ -97,7 +97,7 @@ jobs:
         echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
         echo "New tag: $NEW_TAG"
 
-  build-and-test:
+  build-revista:
     needs: version-management
     runs-on: ubuntu-latest
     permissions:
@@ -138,71 +138,45 @@ jobs:
           path: dist
           retention-days: 7
 
-      - name: Generate build provenance
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-path: 'dist'
-
-      - name: Generate SBOM
-        uses: anchore/sbom-action@v0
-        with:
-          format: spdx-json
-          output-file: sbom.json
-
-      - name: Generate SBOM attestation
-        uses: actions/attest-sbom@v1
-        with:
-          subject-path: 'dist'
-          sbom-path: 'sbom.json'
-
-      - name: Upload attestations
-        uses: actions/upload-artifact@v4
-        with:
-          name: attestations
-          path: |
-            *.intoto.jsonl
-            sbom.json
-          retention-days: 7
-
-  deploy-to-platforms:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist
-
-      - name: Setup Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
-
-      - name: Deploy to Deno
-        uses: denoland/deployctl@v1
-        with:
-          project: "revista-3"
-          entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
-          root: "dist"
-
-      - name: Setup Bun for Cloudflare deployment
-        uses: oven-sh/setup-bun@v1
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=revista-4
-          wranglerVersion: '3.70.0'
-          packageManager: bun
+  # deploy-to-platforms:
+  #   needs: build-and-test
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Download build artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: dist
+  #         path: dist
+  #
+  #     - name: Setup Deno
+  #       uses: denoland/setup-deno@v1
+  #       with:
+  #         deno-version: v1.x
+  #
+  #     - name: Deploy to Deno
+  #       uses: denoland/deployctl@v1
+  #       with:
+  #         project: "revista-3"
+  #         entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
+  #         root: "dist"
+  #
+  #     - name: Setup Bun for Cloudflare deployment
+  #       uses: oven-sh/setup-bun@v1
+  #
+  #     - name: Deploy to Cloudflare Pages
+  #       uses: cloudflare/wrangler-action@v3
+  #       with:
+  #         apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
+  #         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+  #         command: pages deploy dist --project-name=revista-4
+  #         wranglerVersion: '3.70.0'
+  #         packageManager: bun
 
   docker-build-and-push:
       needs: [version-management, deploy-to-platforms]
@@ -256,9 +230,53 @@ jobs:
           run: |
             docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.version-management.outputs.new_tag }}
 
-        - name: Purge Cloudflare Cache
-          run: |
-            curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
-              -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}" \
-              -H "Content-Type: application/json" \
-              --data '{"hosts":["erfianugrah.com"]}'
+  verify-and-deploy:
+    needs: docker-build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Verify image signature
+        env:
+          COSIGN_EXPERIMENTAL: 1
+        run: |
+          cosign verify ${{ env.REGISTRY_IMAGE }}@${{ needs.docker-build-and-push.outputs.image_digest }} \
+            --certificate-identity-regexp="https://github.com/erfianugrah/revista-3/.github/workflows/*" \
+            --certificate-oidc-issuer=https://token.actions.githubusercontent.com
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Deploy to Deno
+        if: success()
+        uses: denoland/deployctl@v1
+        with:
+          project: "revista-3"
+          entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
+          root: "dist"
+
+      - name: Setup Bun for Cloudflare deployment
+        if: success()
+        uses: oven-sh/setup-bun@v1
+
+      - name: Deploy to Cloudflare Pages
+        if: success()
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=revista-4
+          wranglerVersion: '3.70.0'
+          packageManager: bun
+
+      - name: Purge Cloudflare Cache
+        if: success()
+        run: |
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"hosts":["erfianugrah.com"]}'
+
