@@ -195,8 +195,6 @@ jobs:
           wranglerVersion: '3.70.0'
           packageManager: bun
 
-
-
   docker-build:
       needs: [prepare, deploy]
       runs-on: ubuntu-latest
@@ -245,11 +243,6 @@ jobs:
             provenance: mode=max
             sbom: true
         
-        - name: Move cache
-          run: |
-            rm -rf /tmp/.buildx-cache
-            mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
         - name: Inspect image
           run: |
             docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare.outputs.new_tag }}
