@@ -123,11 +123,19 @@ jobs:
             ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-
             ${{ runner.os }}-bun-
 
+
       - name: Install dependencies
         run: bun install
 
       - name: Build with Bun
         run: bun run build
+
+      - name: Upload built artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
 
       - name: Generate build provenance attestation
         uses: actions/attest-build-provenance@v1
@@ -146,12 +154,12 @@ jobs:
           subject-path: 'dist'
           sbom-path: 'sbom.json'
 
-      - name: Upload built artifacts
+      - name: Upload attestations
         uses: actions/upload-artifact@v4
         with:
-          name: dist
+          name: attestations
           path: |
-            dist
+            *.intoto.jsonl
             sbom.json
           retention-days: 7
 
