@@ -80,7 +80,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # Fetch all history for all branches and tags
+          fetch-depth: 2
 
       - name: Download built artifacts
         uses: actions/download-artifact@v4
@@ -108,15 +108,10 @@ jobs:
           wranglerVersion: '3.70.0'
           packageManager: bun
 
-  docker-build-and-push:
-    needs: build-revista
+  prepare-docker:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
     outputs:
-      image_digest: ${{ steps.build_and_push.outputs.digest }}
+      new_tag: ${{ steps.get_tag.outputs.NEW_TAG }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -134,6 +129,7 @@ jobs:
           else
             echo "VERSION_INCREMENT=patch" >> $GITHUB_OUTPUT
           fi
+
       - name: Generate new version tag
         id: get_tag
         run: |
@@ -196,65 +192,101 @@ jobs:
           
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
           echo "New tag: $NEW_TAG"
+
+  build-and-push-docker:
+    needs: prepare-docker
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [linux/amd64, linux/arm64, linux/arm/v6, linux/arm/v7]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
-      
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
-      
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.6.0
-        with:
-          cosign-release: 'v2.4.0'
 
-      - name: Build and push Docker image
-        id: build_and_push
+      - name: Build and push Docker image for ${{ matrix.platform }}
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
+          platforms: ${{ matrix.platform }}
           push: true
           tags: |
-            ${{ env.REGISTRY_IMAGE }}:${{ steps.get_tag.outputs.NEW_TAG }}
-            ${{ env.REGISTRY_IMAGE }}:latest
+            ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare-docker.outputs.new_tag }}-${{ matrix.platform }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           provenance: true
           sbom: true
 
+  merge-docker-manifests:
+    needs: [prepare-docker, build-and-push-docker]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
+
+      - name: Create and push multi-arch manifest
+        run: |
+          docker buildx imagetools create -t ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare-docker.outputs.new_tag }} \
+            -t ${{ env.REGISTRY_IMAGE }}:latest \
+            ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare-docker.outputs.new_tag }}-linux/amd64 \
+            ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare-docker.outputs.new_tag }}-linux/arm64 \
+            ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare-docker.outputs.new_tag }}-linux/arm/v6 \
+            ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare-docker.outputs.new_tag }}-linux/arm/v7
+
+  sign-docker-image:
+    needs: [prepare-docker, merge-docker-manifests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.6.0
+        with:
+          cosign-release: 'v2.4.0'
+
       - name: Sign the Docker image
         env:
           COSIGN_EXPERIMENTAL: 1
         run: |
-          cosign sign --yes ${REGISTRY_IMAGE}@${{ steps.build_and_push.outputs.digest }}
-      
+          cosign sign --yes ${REGISTRY_IMAGE}:${{ needs.prepare-docker.outputs.new_tag }}
+
       - name: Verify Docker image signature
         env:
           COSIGN_EXPERIMENTAL: 1
         run: |
-          cosign verify ${REGISTRY_IMAGE}@${{ steps.build_and_push.outputs.digest }} \
+          cosign verify ${REGISTRY_IMAGE}:${{ needs.prepare-docker.outputs.new_tag }} \
             --certificate-identity-regexp="https://github.com/${GITHUB_REPOSITORY}/.*" \
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com
-      
+
+  inspect-docker-image:
+    needs: [prepare-docker, merge-docker-manifests]
+    runs-on: ubuntu-latest
+    steps:
       - name: Inspect Docker image
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.get_tag.outputs.NEW_TAG }}
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare-docker.outputs.new_tag }}
 
   purge-cloudflare-cache:
-    needs: [deploy-to-deno, deploy-to-cloudflare, docker-build-and-push]
+    needs: [deploy-to-deno, deploy-to-cloudflare, inspect-docker-image]
     runs-on: ubuntu-latest
     steps:
       - name: Purge Cloudflare Cache
