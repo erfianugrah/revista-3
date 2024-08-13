@@ -73,7 +73,7 @@ jobs:
           entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
           root: "dist"
 
-  deploy-cloudflare:
+  deploy-to-cloudflare:
     needs: bun-build
     runs-on: ubuntu-latest
     steps:
