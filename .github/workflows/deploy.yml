@@ -108,7 +108,7 @@ jobs:
           wranglerVersion: '3.70.0'
           packageManager: bun
 
-  docker-build-and-push:
+  docker-prepare:
     needs: build-revista
     runs-on: ubuntu-latest
     permissions:
@@ -199,7 +199,7 @@ jobs:
           echo "New tag: $NEW_TAG"
 
   build-and-push:
-    needs: prepare
+    needs: docker-prepare
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -254,7 +254,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
 
   merge-and-sign:
-    needs: [prepare, build-and-push]
+    needs: [docker-prepare, build-and-push]
     runs-on: ubuntu-latest
     steps:
       - name: Login to Docker Hub
@@ -301,7 +301,7 @@ jobs:
           rm -f ${HOME}/.docker/config.json
 
   purge-cloudflare-cache:
-    needs: [deploy-to-deno, deploy-to-cloudflare, docker-build-and-push]
+    needs: [deploy-to-deno, deploy-to-cloudflare, merge-and-sign]
     runs-on: ubuntu-latest
     steps:
       - name: Purge Cloudflare Cache
