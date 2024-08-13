@@ -108,7 +108,7 @@ jobs:
           wranglerVersion: '3.70.0'
           packageManager: bun
 
-  docker-prepare:
+  docker-build-and-push:
     needs: build-revista
     runs-on: ubuntu-latest
     permissions:
@@ -134,7 +134,6 @@ jobs:
           else
             echo "VERSION_INCREMENT=patch" >> $GITHUB_OUTPUT
           fi
-
       - name: Generate new version tag
         id: get_tag
         run: |
@@ -197,18 +196,6 @@ jobs:
           
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
           echo "New tag: $NEW_TAG"
-
-  build-and-push:
-    needs: docker-prepare
-    runs-on: ubuntu-latest
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     platform: [linux/amd64, linux/arm64, linux/arm/v6, linux/arm/v7]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -241,32 +228,12 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
           push: true
           tags: |
-            ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.get_tag.outputs.NEW_TAG }}
+            ${{ env.REGISTRY_IMAGE }}:${{ steps.get_tag.outputs.NEW_TAG }}
             ${{ env.REGISTRY_IMAGE }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
           provenance: true
           sbom: true
-
-      # - name: Scan image for vulnerabilities
-      #   uses: aquasecurity/trivy-action@master
-      #   with:
-      #     image-ref: ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.outputs.new_tag }}-${{ matrix.platform }}
-      #     format: 'table'
-      #     exit-code: '1'
-      #     ignore-unfixed: true
-      #     vuln-type: 'os,library'
-      #     severity: 'CRITICAL,HIGH'
-
-  docker-sign:
-    needs: [docker-prepare, build-and-push]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
 
       - name: Sign the Docker image
         env:
@@ -284,12 +251,7 @@ jobs:
       
       - name: Inspect Docker image
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.get_tag.outputs.NEW_TAG }}
-
-      - name: Clean up
-        if: always()
-        run: |
-          rm -f ${HOME}/.docker/config.json
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.get_tag.outputs.NEW_TAG }}
 
   purge-cloudflare-cache:
     needs: [deploy-to-deno, deploy-to-cloudflare, docker-sign]
