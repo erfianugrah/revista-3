@@ -241,7 +241,7 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
           push: true
           tags: |
-            ${{ env.REGISTRY_IMAGE }}:${{ steps.get_tag.outputs.NEW_TAG }}
+            ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.outputs.new_tag }}
             ${{ env.REGISTRY_IMAGE }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -258,7 +258,7 @@ jobs:
       #     vuln-type: 'os,library'
       #     severity: 'CRITICAL,HIGH'
 
-  merge-and-sign:
+  docker-sign:
     needs: [docker-prepare, build-and-push]
     runs-on: ubuntu-latest
     steps:
@@ -292,7 +292,7 @@ jobs:
           rm -f ${HOME}/.docker/config.json
 
   purge-cloudflare-cache:
-    needs: [deploy-to-deno, deploy-to-cloudflare, merge-and-sign]
+    needs: [deploy-to-deno, deploy-to-cloudflare, docker-sign]
     runs-on: ubuntu-latest
     steps:
       - name: Purge Cloudflare Cache
