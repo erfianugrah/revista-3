@@ -241,7 +241,7 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
           push: true
           tags: |
-            ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.outputs.new_tag }}
+            ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.outputs.NEW_TAG }}
             ${{ env.REGISTRY_IMAGE }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
