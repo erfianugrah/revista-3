@@ -43,4 +43,13 @@ export default defineConfig({
     clientPrerender: true,
     // directRenderScript: true
   },
+  build: {
+    measuring: {
+      entryBuilding: true,
+      pageGeneration: true,
+      bundling: true,
+      rendering: true,
+      assetProcessing: true,
+    },
+  },
 });
