@@ -104,12 +104,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: |
-            pages deploy dist --project-name=revista-4 \
-            --commit-hash="${{ steps.git-info.outputs.COMMIT_HASH }}" \
-            --commit-message="${{ steps.git-info.outputs.COMMIT_MESSAGE }}" \
-            --branch="${{ steps.git-info.outputs.BRANCH_NAME }}" \
-            --commit-dirty=${{ steps.git-info.outputs.COMMIT_DIRTY }}
+          command: pages deploy dist --project-name=revista-4 --commit-hash "${{ steps.git-info.outputs.COMMIT_HASH }}" --commit-message "${{ steps.git-info.outputs.COMMIT_MESSAGE }}" --branch "${{ steps.git-info.outputs.BRANCH_NAME }}" --commit-dirty ${{ steps.git-info.outputs.COMMIT_DIRTY }}
           wranglerVersion: '3.70.0'
           packageManager: bun
 
