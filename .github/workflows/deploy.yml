@@ -74,7 +74,7 @@ jobs:
           root: "dist"
 
   deploy-to-cloudflare:
-    needs: bun-build
+    needs: build-revista
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
