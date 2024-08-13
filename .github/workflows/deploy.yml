@@ -255,6 +255,12 @@ jobs:
         with:
           cosign-release: 'v2.4.0'
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
+
       - name: Sign the Docker image
         env:
           COSIGN_EXPERIMENTAL: 1
