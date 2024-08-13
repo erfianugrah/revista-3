@@ -254,7 +254,7 @@ jobs:
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.get_tag.outputs.NEW_TAG }}
 
   purge-cloudflare-cache:
-    needs: [deploy-to-deno, deploy-to-cloudflare, docker-sign]
+    needs: [deploy-to-deno, deploy-to-cloudflare, docker-build-and-push]
     runs-on: ubuntu-latest
     steps:
       - name: Purge Cloudflare Cache
