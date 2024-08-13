@@ -221,7 +221,7 @@ jobs:
         with:
           cosign-release: 'v2.4.0'
 
-      - name: Build and push Docker images
+      - name: Build and push Docker image
         id: build_and_push
         uses: docker/build-push-action@v6
         with:
@@ -236,33 +236,18 @@ jobs:
           cache-to: type=gha,mode=max
           provenance: true
           sbom: true
-          outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
-
-      - name: Export digests
-        run: |
-          mkdir -p /tmp/digests
-          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.get_tag.outputs.NEW_TAG }} \
-            | grep -e amd64 -e arm -e 386 | awk '{print $2}' > /tmp/digests/digests.txt
-
-      - name: Merge and push manifest
-        id: merge
-        run: |
-          docker buildx imagetools create -t ${{ env.REGISTRY_IMAGE }}:${{ steps.get_tag.outputs.NEW_TAG }} \
-            -t ${{ env.REGISTRY_IMAGE }}:latest \
-            $(cat /tmp/digests/digests.txt | sed -e 's/^/-e /' | tr '\n' ' ')
-          echo "digest=$(docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.get_tag.outputs.NEW_TAG }} | grep Digest | awk '{print $2}')" >> $GITHUB_OUTPUT
 
       - name: Sign the Docker image
         env:
           COSIGN_EXPERIMENTAL: 1
         run: |
-          cosign sign --yes ${REGISTRY_IMAGE}@${{ steps.merge.outputs.digest }}
+          cosign sign --yes ${REGISTRY_IMAGE}@${{ steps.build_and_push.outputs.digest }}
       
       - name: Verify Docker image signature
         env:
           COSIGN_EXPERIMENTAL: 1
         run: |
-          cosign verify ${REGISTRY_IMAGE}@${{ steps.merge.outputs.digest }} \
+          cosign verify ${REGISTRY_IMAGE}@${{ steps.build_and_push.outputs.digest }} \
             --certificate-identity-regexp="https://github.com/${GITHUB_REPOSITORY}/.*" \
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com
       
