@@ -51,6 +51,9 @@ jobs:
   deploy-to-deno:
     needs: build-revista
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
