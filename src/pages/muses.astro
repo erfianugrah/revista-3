@@ -8,18 +8,20 @@ const allMuses = await getCollection("muses");
 ---
 
 <BaseLayout title={pageTitle} is404Page={false}>
-      {
-        allMuses.sort(sortByDate).map((post) => (
-          <BlogPost
-              url={`/muses/${post.slug}/`}
-              image={post.data?.image?.src || ''}
-              alt={post.data?.image?.alt || ''}
-              title={post.data?.title || ''}
-              description={post.data?.description || ''}
-              pubDate={post.data?.pubDate || ''}
-              positionx={post.data?.image?.positionx || ''}
-              positiony={post.data?.image?.positiony || ''}
-          />        
-        ))
-      }
+  {
+    allMuses
+      .sort(sortByDate)
+      .map((post) => (
+        <BlogPost
+          url={`/muses/${post.slug}/`}
+          image={post.data?.image?.src || ""}
+          alt={post.data?.image?.alt || ""}
+          title={post.data?.title || ""}
+          description={post.data?.description || ""}
+          pubDate={post.data?.pubDate || ""}
+          positionx={post.data?.image?.positionx || ""}
+          positiony={post.data?.image?.positiony || ""}
+        />
+      ))
+  }
 </BaseLayout>

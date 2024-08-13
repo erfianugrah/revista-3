@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 
   return uniqueTags.map((tag) => {
     const filteredPosts = allMuses.filter((post) =>
-      post.data.tags.includes(tag)
+      post.data.tags.includes(tag),
     );
     return {
       params: { tag },
@@ -28,6 +28,10 @@ const { posts } = Astro.props;
 <BaseLayout pageTitle={tag}>
   <p>Posts tagged with {tag}</p>
   <ul>
-      { posts.map((post) => <BlogPost url={`/muses/${post.slug}/`} title={post.data.title} />) }
+    {
+      posts.map((post) => (
+        <BlogPost url={`/muses/${post.slug}/`} title={post.data.title} />
+      ))
+    }
   </ul>
 </BaseLayout>
