@@ -73,25 +73,43 @@ jobs:
           entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
           root: "dist"
 
-  deploy-to-cloudflare:
-    needs: build-revista
+  deploy-cloudflare:
+    needs: bun-build
     runs-on: ubuntu-latest
     steps:
-      - name: Download build artifacts
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Fetch all history for all branches and tags
+
+      - name: Download built artifacts
         uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
 
-      - name: Setup Bun for Cloudflare deployment
+      - name: Setup Bun
         uses: oven-sh/setup-bun@v1
+
+      - name: Get git information
+        id: git-info
+        run: |
+          echo "COMMIT_HASH=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+          echo "BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_OUTPUT
+          echo "COMMIT_DIRTY=$(if [[ -n $(git status -s) ]]; then echo true; else echo false; fi)" >> $GITHUB_OUTPUT
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=revista-4
+          command: |
+            pages deploy dist --project-name=revista-4 \
+            --commit-hash="${{ steps.git-info.outputs.COMMIT_HASH }}" \
+            --commit-message="${{ steps.git-info.outputs.COMMIT_MESSAGE }}" \
+            --branch="${{ steps.git-info.outputs.BRANCH_NAME }}" \
+            --commit-dirty=${{ steps.git-info.outputs.COMMIT_DIRTY }}
           wranglerVersion: '3.70.0'
           packageManager: bun
 
