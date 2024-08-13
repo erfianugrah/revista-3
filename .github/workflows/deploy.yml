@@ -12,93 +12,7 @@ env:
   REGISTRY_IMAGE: erfianugrah/revista-4
 
 jobs:
-  version-management:
-    runs-on: ubuntu-latest
-    outputs:
-      new_tag: ${{ steps.get_tag.outputs.NEW_TAG }}
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 2
-
-    - name: Determine version increment type
-      id: check_commit_message
-      run: |
-        COMMIT_MSG=$(git log -1 --pretty=%B)
-        if echo "$COMMIT_MSG" | grep -qE "^\[major\]"; then
-          echo "VERSION_INCREMENT=major" >> $GITHUB_OUTPUT
-        elif echo "$COMMIT_MSG" | grep -qE "^\[minor\]"; then
-          echo "VERSION_INCREMENT=minor" >> $GITHUB_OUTPUT
-        else
-          echo "VERSION_INCREMENT=patch" >> $GITHUB_OUTPUT
-        fi
-
-    - name: Generate new version tag
-      id: get_tag
-      run: |
-        # Fetch all tags and sort them
-        echo "Fetching tags for ${REGISTRY_IMAGE}..."
-        TAGS_JSON=$(curl -s "https://hub.docker.com/v2/repositories/${REGISTRY_IMAGE}/tags/?page_size=100")
-        echo "Fetched tags JSON:"
-        echo "$TAGS_JSON" | jq '.'
-        
-        ALL_TAGS=$(echo "$TAGS_JSON" | jq -r '.results[].name' | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sort -V)
-        echo "Sorted semantic version tags:"
-        echo "$ALL_TAGS"
-        
-        if [ -z "$ALL_TAGS" ]; then
-          echo "No existing semantic version tags found."
-          NEW_TAG="0.0.1"
-        else
-          LATEST_TAG=$(echo "$ALL_TAGS" | tail -n 1)
-          echo "Latest tag: $LATEST_TAG"
-          
-          # Remove 'v' prefix if present
-          LATEST_TAG=${LATEST_TAG#v}
-          
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST_TAG"
-          
-          # Increment version based on commit message or default to patch
-          case "${{ steps.check_commit_message.outputs.VERSION_INCREMENT }}" in
-            major)
-              MAJOR=$((MAJOR+1))
-              MINOR=0
-              PATCH=0
-              ;;
-            minor)
-              MINOR=$((MINOR+1))
-              PATCH=0
-              ;;
-            patch|*)
-              PATCH=$((PATCH+1))
-              ;;
-          esac
-          
-          NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
-          
-          # Check if the new tag already exists
-          while echo "$ALL_TAGS" | grep -q "^v?${NEW_TAG}$"; do
-            case "${{ steps.check_commit_message.outputs.VERSION_INCREMENT }}" in
-              major)
-                MAJOR=$((MAJOR+1))
-                ;;
-              minor)
-                MINOR=$((MINOR+1))
-                ;;
-              patch|*)
-                PATCH=$((PATCH+1))
-                ;;
-            esac
-            NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
-          done
-        fi
-        
-        echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
-        echo "New tag: $NEW_TAG"
-
   build-revista:
-    needs: version-management
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -134,19 +48,140 @@ jobs:
           path: dist
           retention-days: 7
 
+  deploy-to-deno:
+    needs: build-revista
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Deploy to Deno
+        uses: denoland/deployctl@v1
+        with:
+          project: "revista-3"
+          entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
+          root: "dist"
+
+  deploy-to-cloudflare:
+    needs: build-revista
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Setup Bun for Cloudflare deployment
+        uses: oven-sh/setup-bun@v1
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=revista-4
+          wranglerVersion: '3.70.0'
+          packageManager: bun
+
   docker-build-and-push:
-    needs: [version-management, build-revista]
+    needs: build-revista
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-      id-token: write  # needed for signing the images with GitHub OIDC Token
+      id-token: write
     outputs:
       image_digest: ${{ steps.build_and_push.outputs.digest }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+        with:
+          fetch-depth: 2
+
+      - name: Determine version increment type
+        id: check_commit_message
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          if echo "$COMMIT_MSG" | grep -qE "^\[major\]"; then
+            echo "VERSION_INCREMENT=major" >> $GITHUB_OUTPUT
+          elif echo "$COMMIT_MSG" | grep -qE "^\[minor\]"; then
+            echo "VERSION_INCREMENT=minor" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION_INCREMENT=patch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate new version tag
+        id: get_tag
+        run: |
+          # Fetch all tags and sort them
+          echo "Fetching tags for ${REGISTRY_IMAGE}..."
+          TAGS_JSON=$(curl -s "https://hub.docker.com/v2/repositories/${REGISTRY_IMAGE}/tags/?page_size=100")
+          echo "Fetched tags JSON:"
+          echo "$TAGS_JSON" | jq '.'
+          
+          ALL_TAGS=$(echo "$TAGS_JSON" | jq -r '.results[].name' | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sort -V)
+          echo "Sorted semantic version tags:"
+          echo "$ALL_TAGS"
+          
+          if [ -z "$ALL_TAGS" ]; then
+            echo "No existing semantic version tags found."
+            NEW_TAG="0.0.1"
+          else
+            LATEST_TAG=$(echo "$ALL_TAGS" | tail -n 1)
+            echo "Latest tag: $LATEST_TAG"
+            
+            # Remove 'v' prefix if present
+            LATEST_TAG=${LATEST_TAG#v}
+            
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST_TAG"
+            
+            # Increment version based on commit message or default to patch
+            case "${{ steps.check_commit_message.outputs.VERSION_INCREMENT }}" in
+              major)
+                MAJOR=$((MAJOR+1))
+                MINOR=0
+                PATCH=0
+                ;;
+              minor)
+                MINOR=$((MINOR+1))
+                PATCH=0
+                ;;
+              patch|*)
+                PATCH=$((PATCH+1))
+                ;;
+            esac
+            
+            NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
+            
+            # Check if the new tag already exists
+            while echo "$ALL_TAGS" | grep -q "^v?${NEW_TAG}$"; do
+              case "${{ steps.check_commit_message.outputs.VERSION_INCREMENT }}" in
+                major)
+                  MAJOR=$((MAJOR+1))
+                  ;;
+                minor)
+                  MINOR=$((MINOR+1))
+                  ;;
+                patch|*)
+                  PATCH=$((PATCH+1))
+                  ;;
+              esac
+              NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
+            done
+          fi
+          
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
+          echo "New tag: $NEW_TAG"
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -165,14 +200,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
       
-      # - name: Cache Docker layers
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: /tmp/.buildx-cache
-      #     key: ${{ runner.os }}-buildx-${{ github.sha }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-buildx-
-      
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.6.0
         with:
@@ -187,7 +214,7 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
           push: true
           tags: |
-            ${{ env.REGISTRY_IMAGE }}:${{ needs.version-management.outputs.new_tag }}
+            ${{ env.REGISTRY_IMAGE }}:${{ steps.get_tag.outputs.NEW_TAG }}
             ${{ env.REGISTRY_IMAGE }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -200,66 +227,23 @@ jobs:
         run: |
           cosign sign --yes ${REGISTRY_IMAGE}@${{ steps.build_and_push.outputs.digest }}
       
-      - name: Inspect Docker image
-        run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.version-management.outputs.new_tag }}
-
-  verify-and-deploy:
-    needs: docker-build-and-push
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write  # needed for verifying the images with GitHub OIDC Token
-    steps:
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.6.0
-        with:
-          cosign-release: 'v2.4.0'
-
-      - name: Verify image signature
+      - name: Verify Docker image signature
         env:
           COSIGN_EXPERIMENTAL: 1
         run: |
-          cosign verify ${REGISTRY_IMAGE}@${{ needs.docker-build-and-push.outputs.image_digest }} \
+          cosign verify ${REGISTRY_IMAGE}@${{ steps.build_and_push.outputs.digest }} \
             --certificate-identity-regexp="https://github.com/${GITHUB_REPOSITORY}/.*" \
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com
+      
+      - name: Inspect Docker image
+        run: |
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.get_tag.outputs.NEW_TAG }}
 
-      - name: Download build artifacts
-        if: success()
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist
-
-      - name: Setup Deno
-        if: success()
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
-
-      - name: Deploy to Deno
-        if: success()
-        uses: denoland/deployctl@v1
-        with:
-          project: "revista-3"
-          entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
-          root: "dist"
-
-      - name: Setup Bun for Cloudflare deployment
-        if: success()
-        uses: oven-sh/setup-bun@v1
-
-      - name: Deploy to Cloudflare Pages
-        if: success()
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=revista-4
-          wranglerVersion: '3.70.0'
-          packageManager: bun
-
+  purge-cloudflare-cache:
+    needs: [deploy-to-deno, deploy-to-cloudflare, docker-build-and-push]
+    runs-on: ubuntu-latest
+    steps:
       - name: Purge Cloudflare Cache
-        if: success()
         run: |
           curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}" \
