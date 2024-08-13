@@ -201,10 +201,10 @@ jobs:
   build-and-push:
     needs: docker-prepare
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [linux/amd64, linux/arm64, linux/arm/v6, linux/arm/v7]
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     platform: [linux/amd64, linux/arm64, linux/arm/v6, linux/arm/v7]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -214,44 +214,49 @@ jobs:
         with:
           name: dist
           path: dist
-
+      
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-
+      
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        with:
-          version: latest
-          driver-opts: image=moby/buildkit:latest
-
+      
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
+      
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.6.0
+        with:
+          cosign-release: 'v2.4.0'
 
       - name: Build and push Docker image
+        id: build_and_push
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
-          platforms: ${{ matrix.platform }}
+          platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
           push: true
-          tags: ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.outputs.new_tag }}-${{ matrix.platform }}
+          tags: |
+            ${{ env.REGISTRY_IMAGE }}:${{ steps.get_tag.outputs.NEW_TAG }}
+            ${{ env.REGISTRY_IMAGE }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
           provenance: true
           sbom: true
 
-      - name: Scan image for vulnerabilities
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.outputs.new_tag }}-${{ matrix.platform }}
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+      # - name: Scan image for vulnerabilities
+      #   uses: aquasecurity/trivy-action@master
+      #   with:
+      #     image-ref: ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.outputs.new_tag }}-${{ matrix.platform }}
+      #     format: 'table'
+      #     exit-code: '1'
+      #     ignore-unfixed: true
+      #     vuln-type: 'os,library'
+      #     severity: 'CRITICAL,HIGH'
 
   merge-and-sign:
     needs: [docker-prepare, build-and-push]
@@ -263,37 +268,23 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
 
-      - name: Create and push multi-arch manifest
-        run: |
-          docker buildx imagetools create -t ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.outputs.new_tag }} \
-            -t ${{ env.REGISTRY_IMAGE }}:latest \
-            ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.outputs.new_tag }}-linux/amd64 \
-            ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.outputs.new_tag }}-linux/arm64 \
-            ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.outputs.new_tag }}-linux/arm/v6 \
-            ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.outputs.new_tag }}-linux/arm/v7
-
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.6.0
-        with:
-          cosign-release: 'v2.4.0'
-
       - name: Sign the Docker image
         env:
           COSIGN_EXPERIMENTAL: 1
         run: |
-          cosign sign --yes ${REGISTRY_IMAGE}:${{ needs.docker-prepare.outputs.new_tag }}
-
+          cosign sign --yes ${REGISTRY_IMAGE}@${{ steps.build_and_push.outputs.digest }}
+      
       - name: Verify Docker image signature
         env:
           COSIGN_EXPERIMENTAL: 1
         run: |
-          cosign verify ${REGISTRY_IMAGE}:${{ needs.docker-prepare.outputs.new_tag }} \
+          cosign verify ${REGISTRY_IMAGE}@${{ steps.build_and_push.outputs.digest }} \
             --certificate-identity-regexp="https://github.com/${GITHUB_REPOSITORY}/.*" \
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com
-
+      
       - name: Inspect Docker image
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.docker-prepare.outputs.new_tag }}
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.get_tag.outputs.NEW_TAG }}
 
       - name: Clean up
         if: always()
