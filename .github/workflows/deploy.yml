@@ -200,8 +200,16 @@ jobs:
             ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare-docker.outputs.new_tag }}-linux/arm/v6 \
             ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare-docker.outputs.new_tag }}-linux/arm/v7
 
-  sign-docker-image:
+  inspect-docker-image:
     needs: [prepare-docker, merge-docker-manifests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect Docker image
+        run: |
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare-docker.outputs.new_tag }}
+
+  sign-docker-image:
+    needs: [prepare-docker, merge-docker-manifests, inspect-docker-image]
     runs-on: ubuntu-latest
     steps:
       - name: Install Cosign
@@ -223,16 +231,8 @@ jobs:
             --certificate-identity-regexp="https://github.com/${GITHUB_REPOSITORY}/.*" \
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com
 
-  inspect-docker-image:
-    needs: [prepare-docker, merge-docker-manifests]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Inspect Docker image
-        run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare-docker.outputs.new_tag }}
-
   purge-cloudflare-cache:
-    needs: [deploy-to-deno, deploy-to-cloudflare, inspect-docker-image]
+    needs: [deploy-to-deno, deploy-to-cloudflare, sign-docker-image]
     runs-on: ubuntu-latest
     steps:
       - name: Purge Cloudflare Cache
