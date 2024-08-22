@@ -1,7 +1,7 @@
 {
   "name": "Revistav4",
   "type": "module",
-  "version": "4.2.2",
+  "version": "4.2.3",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -20,7 +20,7 @@
     "@fontsource-variable/inconsolata": "^5.0.19",
     "@fontsource-variable/overpass-mono": "^5.0.19",
     "@iconify-json/mdi": "^1.1.68",
-    "astro": "^4.14.3",
+    "astro": "^4.14.4",
     "astro-icon": "^1.1.1",
     "caniuse-lite": "^1.0.30001651",
     "dayjs": "^1.11.13",
