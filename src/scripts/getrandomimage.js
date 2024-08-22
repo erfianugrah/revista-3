@@ -1,42 +1,44 @@
 function handlePageLoad() {
-  let imageElements = Array.from(document.querySelectorAll("#randomimage"));
+  const imageElements = Array.from(document.querySelectorAll('#randomimage'));
 
   if (imageElements.length === 0) {
     return; // Exit the function if no #randomimage elements are found
   }
+
   imageElements.forEach((element) => {
-    let images = JSON.parse(element.dataset.images);
-    let alt = JSON.parse(element.dataset.alt); // Parse the alt texts
-    let width = element.dataset.width; // Get the width
-    let height = element.dataset.height; // Get the height
+    try {
+      const images = JSON.parse(element.dataset.images);
+      const alt = JSON.parse(element.dataset.alt);
+      const { width, height } = element.dataset;
 
-    // Combine the images and alt texts into a single array of objects
-    let items = images.map((image, index) => {
-      return {
-        image: image,
+      const items = images.map((image, index) => ({
+        image,
         alt: alt[index],
-        width: width,
-        height: height,
-      };
-    });
+        width,
+        height,
+      }));
 
-    // Shuffle the items array
-    for (let i = items.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [items[i], items[j]] = [items[j], items[i]];
+      // Shuffle the items array (Fisher-Yates algorithm)
+      for (let i = items.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [items[i], items[j]] = [items[j], items[i]];
+      }
+
+      const imgElement = element.querySelector('img');
+
+      if (imgElement) {
+        const firstItem = items[0];
+        imgElement.src = firstItem.image;
+        imgElement.alt = firstItem.alt;
+        imgElement.width = firstItem.width;
+        imgElement.height = firstItem.height;
+        imgElement.classList.remove('hidden');
+      }
+    } catch (error) {
+      console.error('Error processing random image data:', error);
     }
-
-    let imgElement = element.querySelector("img");
-
-    // Use the first item
-    let firstItem = items[0];
-    imgElement.src = firstItem.image;
-    imgElement.alt = firstItem.alt;
-    imgElement.width = firstItem.width; // Set the width
-    imgElement.height = firstItem.height; // Set the height
-    imgElement.classList.remove("hidden"); // Remove the 'hidden' class
   });
 }
 
-document.addEventListener("astro:page-load", handlePageLoad);
+document.addEventListener('astro:page-load', handlePageLoad);
 // document.addEventListener('astro:after-swap', handlePageLoad);

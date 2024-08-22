@@ -1,43 +1,47 @@
 function handlePageLoad() {
-  let imageElements = Array.from(document.querySelectorAll("#homepage"));
+  const imageElements = Array.from(document.querySelectorAll('#homepage'));
 
   imageElements.forEach((element) => {
-    let images = JSON.parse(element.dataset.images);
-    let alt = JSON.parse(element.dataset.alt); // Parse the alt texts
-    let urls = JSON.parse(element.dataset.urls); // Parse the urls
-    let width = element.dataset.width; // Get the width
-    let height = element.dataset.height; // Get the height
+    try {
+      const images = JSON.parse(element.dataset.images);
+      const alt = JSON.parse(element.dataset.alt);
+      const urls = JSON.parse(element.dataset.urls);
+      const width = element.dataset.width;
+      const height = element.dataset.height;
 
-    // Combine the images, alt texts, and URLs into a single array of objects
-    let items = images.map((image, index) => {
-      return {
-        image: image,
+      const items = images.map((image, index) => ({
+        image,
         alt: alt[index],
         url: urls[index],
-        width: width,
-        height: height,
-      };
-    });
+        width,
+        height,
+      }));
 
-    // Shuffle the items array
-    for (let i = items.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [items[i], items[j]] = [items[j], items[i]];
+      // Shuffle the items array (Fisher-Yates algorithm)
+      for (let i = items.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [items[i], items[j]] = [items[j], items[i]];
+      }
+
+      const imgElement = element.querySelector('img');
+      const anchorElement = element.querySelector('a');
+
+      if (imgElement && anchorElement) {
+        const firstItem = items[0];
+        imgElement.src = firstItem.image;
+        imgElement.alt = firstItem.alt;
+        imgElement.width = firstItem.width;
+        imgElement.height = firstItem.height;
+        anchorElement.href = firstItem.url;
+        imgElement.classList.remove('hidden');
+
+        // Add ARIA label for better accessibility
+        anchorElement.setAttribute('aria-label', `View ${firstItem.alt}`);
+      }
+    } catch (error) {
+      console.error('Error processing homepage data:', error);
     }
-
-    let imgElement = element.querySelector("img");
-    let anchorElement = element.querySelector("a");
-
-    // Use the first item
-    let firstItem = items[0];
-    imgElement.src = firstItem.image;
-    imgElement.alt = firstItem.alt;
-    imgElement.width = firstItem.width; // Set the width
-    imgElement.height = firstItem.height; // Set the height
-    anchorElement.href = firstItem.url;
-    imgElement.classList.remove("hidden"); // Remove the 'hidden' class
   });
 }
 
-document.addEventListener("astro:page-load", handlePageLoad);
-// document.addEventListener('astro:after-swap', handlePageLoad);
+document.addEventListener('astro:page-load', handlePageLoad);
