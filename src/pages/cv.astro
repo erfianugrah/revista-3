@@ -1,7 +1,7 @@
 ---
 import ProseCv from "../components/Prose_cv.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-const pageTitle = "Resume";
+const pageTitle = "CV";
 const description = "Erfi Anugrah's CV";
 const site_name = "stoicopa";
 import { getEntry } from "astro:content";
@@ -15,34 +15,23 @@ const { Content } = await entry.render();
   site_name={site_name}
   is404Page={false}
 >
-  <div class="cv-container">
+  <div
+    class="max-w-4xl mx-auto bg-white dark:bg-slate-800 shadow-lg rounded-lg overflow-hidden"
+  >
+    <div
+      class="bg-slate-100 dark:bg-slate-700 px-8 py-6 border-b border-slate-200 dark:border-slate-600"
+    >
+      <h1
+        class="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2 font-inconsolata uppercase tracking-wide"
+      >
+        ERFI ANUGRAH
+      </h1>
+      <p class="text-lg text-slate-600 dark:text-slate-300 font-inconsolata">
+        {entry.data.description}
+      </p>
+    </div>
     <ProseCv>
       <Content />
     </ProseCv>
   </div>
 </BaseLayout>
-
-<style>
-  .cv-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 2rem;
-  }
-  .button-container {
-    margin-top: 2rem;
-  }
-  .pdf-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-  }
-  .pdf-button:hover {
-    background-color: #0056b3;
-  }
-</style>
