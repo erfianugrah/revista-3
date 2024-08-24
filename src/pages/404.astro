@@ -1,10 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Prose from "../components/Prose.astro";
-const pageTitle = "Page Not Found but Ron Burgundy Found You";
+const pageTitle = "404: Page Not Found";
+const subTitle = "But Ron Burgundy Found You";
+const question = "Or did you find Ron Burgundy?";
 ---
 
-<BaseLayout title={pageTitle} is404Page={false}>
+<BaseLayout title={pageTitle} is404Page={true}>
   <Prose>
     <div class="space-y-8 py-8">
       <header class="text-center space-y-4">
@@ -13,29 +15,38 @@ const pageTitle = "Page Not Found but Ron Burgundy Found You";
         >
           {pageTitle}
         </h1>
-        <h2
-          class="font-overpass-mono text-2xl italic text-gray-700 dark:text-gray-300"
-        >
-          Or did you find Ron Burgundy?
-        </h2>
+        <div class="space-y-2">
+          <h2
+            class="font-overpass-mono text-2xl text-gray-700 dark:text-gray-300"
+          >
+            {subTitle}
+          </h2>
+          <p
+            class="font-overpass-mono text-sm italic text-gray-500 dark:text-gray-400"
+          >
+            {question}
+          </p>
+        </div>
       </header>
 
       <div
         class="bg-gray-100 dark:bg-[rgb(40,39,43)] rounded-lg p-6 shadow-[inset_0_4px_6px_-1px_rgba(0,0,0,0.1),inset_0_2px_4px_-1px_rgba(0,0,0,0.06)] dark:shadow-[inset_0_4px_6px_-1px_rgba(0,0,0,0.3),inset_0_2px_4px_-1px_rgba(0,0,0,0.18)]"
       >
-        <h3
-          id="quote"
-          class="min-h-[200px] text-xl text-gray-800 dark:text-[rgb(230,230,230)] italic overflow-auto flex items-center justify-center text-center"
-        >
-        </h3>
+        <div class="h-[200px] flex items-center justify-center">
+          <p
+            id="quote"
+            class="text-gray-800 dark:text-[rgb(230,230,230)] italic text-center w-full"
+          >
+          </p>
+        </div>
       </div>
 
       <div
         class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4"
       >
         <button
+          id="getQuoteBtn"
           class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
-          onclick="document.getElementById('quote').textContent = getRandomQuote()"
         >
           Get Ron's Wisdom
         </button>
@@ -50,4 +61,5 @@ const pageTitle = "Page Not Found but Ron Burgundy Found You";
     </div>
   </Prose>
 </BaseLayout>
+
 <script src="../scripts/burgundy.js"></script>

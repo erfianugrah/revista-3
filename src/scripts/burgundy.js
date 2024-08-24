@@ -1,4 +1,4 @@
-// Define quotes array outside of the function to avoid recreating it every time
+// Define quotes array
 const quotes = [
   `You know how to cut to the core of me Baxter. You're so wise. You're like a miniature Buddha, covered with hair.`,
   `Well, I could be wrong, but I believe, uh, diversity is an old, old wooden ship that was used during the Civil War era.`,
@@ -16,16 +16,55 @@ const quotes = [
   `You stay classy, San Diego.`,
 ];
 
-// Use an arrow function and simplify the random quote selection
-window.getRandomQuote = () => quotes[Math.floor(Math.random() * quotes.length)];
+let shuffledQuotes = [];
+let currentIndex = 0;
 
-// Combine initializeQuote and event listener into a single function
-const initializeQuote = () => {
-  const quoteElement = document.getElementById('quote');
-  if (quoteElement) {
-    quoteElement.textContent = window.getRandomQuote();
+// Fisher-Yates shuffle function
+function shuffleArray(array) {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
-};
+  return shuffled;
+}
 
-// Use only the 'astro:page-load' event listener
+// Function to get next quote
+function getNextQuote() {
+  if (currentIndex === 0 || currentIndex === shuffledQuotes.length) {
+    shuffledQuotes = shuffleArray(quotes);
+    currentIndex = 0;
+  }
+  return shuffledQuotes[currentIndex++];
+}
+
+// Function to fit text to container
+function fitTextToContainer(quoteElement, containerElement) {
+  let fontSize = 24;
+  quoteElement.style.fontSize = `${fontSize}px`;
+
+  while (quoteElement.scrollHeight > containerElement.clientHeight && fontSize > 12) {
+    fontSize--;
+    quoteElement.style.fontSize = `${fontSize}px`;
+  }
+}
+
+// Function to set and fit quote
+function setAndFitQuote() {
+  const quoteElement = document.getElementById('quote');
+  const containerElement = quoteElement.parentElement;
+  quoteElement.textContent = getNextQuote();
+  fitTextToContainer(quoteElement, containerElement);
+}
+
+// Initialize quote and set up event listeners
+function initializeQuote() {
+  setAndFitQuote();
+  const quoteBtn = document.getElementById('getQuoteBtn');
+  if (quoteBtn) {
+    quoteBtn.addEventListener('click', setAndFitQuote);
+  }
+}
+
+// Use the 'astro:page-load' event listener
 document.addEventListener('astro:page-load', initializeQuote);
