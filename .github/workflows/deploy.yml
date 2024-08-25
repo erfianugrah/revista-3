@@ -38,8 +38,22 @@ jobs:
       - name: Install project dependencies
         run: bun install
 
-      - name: Build project
-        run: bun run build
+      - name: Build project with retry
+        env:
+          MAX_ATTEMPTS: 3
+          RETRY_INTERVAL: 30
+        run: |
+          attempt=1
+          until bun run build || [ $attempt -eq $MAX_ATTEMPTS ]; do
+            echo "Build attempt $attempt failed. Retrying in $RETRY_INTERVAL seconds..."
+            sleep $RETRY_INTERVAL
+            attempt=$((attempt + 1))
+          done
+          
+          if [ $attempt -eq $MAX_ATTEMPTS ] && ! bun run build; then
+            echo "Build failed after $MAX_ATTEMPTS attempts."
+            exit 1
+          fi
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
