@@ -9,11 +9,9 @@ COPY ./dist .
 # Copy the Caddyfile
 COPY Caddyfile /etc/caddy/Caddyfile
 
-# Ensure correct permissions
-RUN chown -R caddy:caddy /usr/share/caddy
-
-# Use the non-root caddy user
-USER caddy
+# Ensure correct permissions (using root, which is the default user in this image)
+RUN chown -R root:root /usr/share/caddy && \
+	chmod -R 755 /usr/share/caddy
 
 # Expose port 80
 EXPOSE 80
