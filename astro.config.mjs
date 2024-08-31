@@ -6,7 +6,7 @@ import markdoc from '@astrojs/markdoc';
 import remarkGfm from 'remark-gfm';
 import icon from 'astro-icon';
 import { remarkReadingTime } from './src/scripts/remark-reading-time.mjs';
-
+import undiciRetry from './src/scripts/undici-retry.js';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://www.erfianugrah.com',
@@ -31,6 +31,7 @@ export default defineConfig({
     }),
     tailwind(),
     markdoc(),
+    undiciRetry(),
   ],
   markdown: {
     remarkPlugins: [remarkGfm, remarkReadingTime],
