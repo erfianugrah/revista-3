@@ -1,7 +1,7 @@
 {
   "name": "Revistav4",
   "type": "module",
-  "version": "4.3.2",
+  "version": "4.3.3",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -36,7 +36,7 @@
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.15",
-    "pagefind": "^1.1.0",
+    "pagefind": "^1.1.1",
     "prettier": "^3.3.3",
     "prettier-plugin-astro": "^0.14.1"
   }
