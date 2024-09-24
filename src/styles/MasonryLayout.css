@@ -1,80 +1,27 @@
 .masonry {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-auto-rows: 10px;
-  grid-gap: 10px;
-  padding: 10px;
+  column-count: 1;
+  column-gap: 1em;
+}
+
+@media(min-width: 600px) {
+  .masonry {
+    column-count: 4;
+  }
 }
 
 .image-container {
-  grid-row-end: span 20;
   break-inside: avoid;
-  position: relative;
-  overflow: hidden;
+  margin-bottom: 0.5rem;
 }
 
 .image-link {
-  display: block;
-  height: 100%;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
 }
 
 .image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.image-container:hover .image {
-  transform: scale(1.05);
-}
-
-/* Randomize image sizes */
-.image-container:nth-child(5n+1) {
-  grid-row-end: span 25;
-}
-
-/* Taller */
-.image-container:nth-child(5n+2) {
-  grid-row-end: span 30;
-}
-
-/* Even taller */
-.image-container:nth-child(5n+3) {
-  grid-row-end: span 20;
-}
-
-/* Normal */
-.image-container:nth-child(5n+4) {
-  grid-row-end: span 15;
-}
-
-/* Shorter */
-.image-container:nth-child(5n+5) {
-  grid-column-end: span 2;
-  grid-row-end: span 25;
-}
-
-/* Wide */
-
-/* Responsive adjustments */
-@media (max-width: 800px) {
-  .masonry {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  }
-
-  .image-container:nth-child(5n+5) {
-    grid-column-end: span 1;
-    grid-row-end: span 20;
-  }
-}
-
-@media (max-width: 500px) {
-  .masonry {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  }
-
-  .image-container {
-    grid-row-end: span 15;
-  }
+  display: block;
+  margin: 0;
+  padding: 0;
 }
