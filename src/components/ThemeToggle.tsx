@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
@@ -7,15 +5,16 @@ export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
-    const isDarkMode = document.documentElement.classList.contains('dark')
-    setIsDark(isDarkMode)
+    const theme = localStorage.getItem('theme') || 'light'
+    setIsDark(theme === 'dark')
+    document.documentElement.classList.toggle('dark', theme === 'dark')
   }, [])
 
   const toggleTheme = () => {
-    const newIsDark = !isDark
-    setIsDark(newIsDark)
-    document.documentElement.classList.toggle('dark')
-    localStorage.setItem('theme', newIsDark ? 'light' : 'dark')
+    const newTheme = isDark ? 'light' : 'dark'
+    setIsDark(!isDark)
+    document.documentElement.classList.toggle('dark', !isDark)
+    localStorage.setItem('theme', newTheme)
   }
 
   return (

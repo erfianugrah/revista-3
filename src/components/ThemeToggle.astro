@@ -58,21 +58,22 @@ import ThemeToggle from "./ThemeToggle";
       document.documentElement.classList.add("dark");
     }
     document.documentElement.classList.add("theme-transition");
-    window.localStorage.setItem("theme", theme);
+    localStorage.setItem("theme", theme);
   }
 
   function getThemePreference(): "light" | "dark" {
-    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-      return localStorage.getItem("theme") as "light" | "dark";
-    }
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return "dark";
-    }
-    return "light";
+    return (
+      (localStorage.getItem("theme") as "light" | "dark") ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light")
+    );
   }
 
   // Apply theme on initial load
-  applyTheme(getThemePreference());
+  document.addEventListener("DOMContentLoaded", () => {
+    applyTheme(getThemePreference());
+  });
 
   // Listen for astro:page-load event to apply theme after navigation
   document.addEventListener("astro:page-load", () => {
@@ -88,4 +89,17 @@ import ThemeToggle from "./ThemeToggle";
   window.addEventListener("load", () => {
     document.documentElement.classList.remove("theme-transition");
   });
+
+  // Observe theme changes and update localStorage
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.attributeName === "class") {
+        const isDark = document.documentElement.classList.contains("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+      }
+    });
+  });
+
+  observer.observe(document.documentElement, { attributes: true });
 </script>
+
