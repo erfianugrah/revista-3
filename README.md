@@ -1,5 +1,5 @@
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-4.4.5-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-4.4.6-blue.svg?cacheSeconds=2592000" />
 </p>
 
 ## Overview
@@ -120,25 +120,25 @@ Routing in this Astro project is handled through a combination of file-based rou
 
 ```mermaid
 graph TD
-    A[/] --> B[/404]
-    A --> C[/authors]
-    A --> D[/cv]
-    A --> E[/long_form]
-    A --> F[/short_form]
-    A --> G[/muses]
-    A --> H[/zeitweilig]
-    E --> I[/long_form/post-slug]
-    E --> J[/long_form/tags]
-    J --> K[/long_form/tags/tag-name]
-    F --> L[/short_form/post-slug]
-    F --> M[/short_form/tags]
-    M --> N[/short_form/tags/tag-name]
-    G --> O[/muses/post-slug]
-    G --> P[/muses/tags]
-    P --> Q[/muses/tags/tag-name]
-    H --> R[/zeitweilig/post-slug]
-    H --> S[/zeitweilig/tags]
-    S --> T[/zeitweilig/tags/tag-name]
+    A[Root] --> B[404]
+    A --> C[authors]
+    A --> D[cv]
+    A --> E[long_form]
+    A --> F[short_form]
+    A --> G[muses]
+    A --> H[zeitweilig]
+    E --> I[long_form post]
+    E --> J[long_form tags]
+    J --> K[long_form tag]
+    F --> L[short_form post]
+    F --> M[short_form tags]
+    M --> N[short_form tag]
+    G --> O[muses post]
+    G --> P[muses tags]
+    P --> Q[muses tag]
+    H --> R[zeitweilig post]
+    H --> S[zeitweilig tags]
+    S --> T[zeitweilig tag]
 ```
 
 ### Route Explanation:
