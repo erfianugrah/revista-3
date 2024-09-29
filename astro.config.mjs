@@ -7,6 +7,7 @@ import remarkGfm from 'remark-gfm';
 import icon from 'astro-icon';
 import { remarkReadingTime } from './src/scripts/remark-reading-time.mjs';
 import undiciRetry from './src/scripts/undici-retry.js';
+import react from '@astrojs/react';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://www.erfianugrah.com',
@@ -19,20 +20,13 @@ export default defineConfig({
       },
     },
   },
-  integrations: [
-    icon(),
-    sitemap(),
-    mdx({
-      syntaxHighlight: 'shiki',
-      shikiConfig: {
-        theme: 'dracula',
-      },
-      gfm: false,
-    }),
-    tailwind(),
-    markdoc(),
-    undiciRetry(),
-  ],
+  integrations: [icon(), sitemap(), mdx({
+    syntaxHighlight: 'shiki',
+    shikiConfig: {
+      theme: 'dracula',
+    },
+    gfm: false,
+  }), tailwind(), markdoc(), undiciRetry(), react()],
   markdown: {
     remarkPlugins: [remarkGfm, remarkReadingTime],
   },

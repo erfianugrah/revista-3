@@ -1,0 +1,59 @@
+---
+import ThemeToggle from "./ThemeToggle.tsx";
+---
+
+<ThemeToggle client:load />
+
+<style is:global>
+  #themeToggle {
+    border: 0;
+    background: none;
+  }
+
+  #themeToggle svg {
+    color: black;
+    transition: color 0.3s ease;
+  }
+
+  :global(.dark) #themeToggle svg {
+    color: white;
+  }
+
+  .theme-transition {
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  html {
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  body {
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+</style>
+
+<script>
+  const theme = (() => {
+    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+      return localStorage.getItem("theme");
+    }
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      return "dark";
+    }
+    return "light";
+  })();
+
+  if (theme === "light") {
+    document.documentElement.classList.remove("dark");
+  } else {
+    document.documentElement.classList.add("dark");
+  }
+
+  window.localStorage.setItem("theme", theme);
+</script>

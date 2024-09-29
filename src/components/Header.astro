@@ -1,7 +1,7 @@
 ---
-import Hamburger from "./Hamburger.astro";
+import Hamburger from "./Hamburger.tsx";
 import Navigation from "./Navigation.astro";
-import ThemeIcon from "./ThemeIcon.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 import { getImage } from "astro:assets";
 const { is404Page = false } = Astro.props; // Get the prop from Astro.props
 
@@ -12,11 +12,11 @@ const favicon_avif = await getImage({
   width: "400",
   height: "400",
   decoding: "async",
-  format: "avif"
+  format: "avif",
 });
 ---
 
-<header class="mb-[30px]">
+<header class="mb-[30px] mt-[9px]">
   <nav
     class="flex items-center justify-between w-full h-full relative align-center"
   >
@@ -37,15 +37,15 @@ const favicon_avif = await getImage({
     }
     {
       !is404Page && (
-        <div class="absolute right-[55px] -mb-[5px]">
-          <ThemeIcon />
+        <div class="absolute right-[55px]">
+          <ThemeToggle />
         </div>
       )
     }
     {
       !is404Page && (
-        <div class="-mt-[3px]">
-          <Hamburger />
+        <div class="mt-[-35.5px]">
+          <Hamburger client:load />
         </div>
       )
     }
