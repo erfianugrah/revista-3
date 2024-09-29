@@ -1,5 +1,3 @@
-# Revista: An Astro-based Photography Portfolio
-
 ## Overview
 
 Revista is a photography portfolio and blog built using the Astro framework. It showcases various collections of photographs and written content, organized into different categories such as long-form, short-form, muses, and zeitweilig.
@@ -89,7 +87,7 @@ graph TD
     A --> H[muses directory]
     A --> I[zeitweilig directory]
     F --> J[index.astro]
-    F --> K[[...slug].astro]
+    F --> K[...slug.astro]
     F --> L[tags directory]
     L --> M[index.astro]
     L --> N[[tag].astro]
