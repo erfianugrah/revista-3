@@ -37,18 +37,11 @@ export default function ThemeToggle() {
           cy="12"
           r="5"
           fill="currentColor"
-          animate={{
-            r: isDark ? 5 : 9,
-          }}
-          transition={{ duration: 0.3 }}
+          animate={{ r: isDark ? 5 : 9 }}
         />
         <motion.g
           stroke="currentColor"
-          animate={{
-            opacity: isDark ? 1 : 0,
-            scale: isDark ? 1 : 0.3,
-          }}
-          transition={{ duration: 0.3 }}
+          animate={{ opacity: isDark ? 1 : 0, scale: isDark ? 1 : 0.3 }}
         >
           <line x1="12" y1="1" x2="12" y2="3" />
           <line x1="12" y1="21" x2="12" y2="23" />
