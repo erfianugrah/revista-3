@@ -16,12 +16,8 @@ export default function Hamburger() {
     }
 
     document.addEventListener('astro:page-load', handlePageLoad)
-    // Uncomment the following line if you want to handle after-swap events as well
-    // document.addEventListener('astro:after-swap', handlePageLoad)
-
     return () => {
       document.removeEventListener('astro:page-load', handlePageLoad)
-      // document.removeEventListener('astro:after-swap', handlePageLoad)
     }
   }, [isOpen])
 
@@ -42,23 +38,23 @@ export default function Hamburger() {
   return (
     <button
       onClick={toggleMenu}
-      className={`w-[30px] h-[30px] bg-transparent border-0 p-0 cursor-pointer relative hamburger ${isOpen ? 'open' : ''}`}
+      className="w-[30px] h-[30px] bg-transparent border-0 p-0 cursor-pointer relative hamburger flex items-center justify-center"
       aria-label={isOpen ? "Close menu" : "Open menu"}
     >
       <motion.div
-        className="absolute w-[30px] h-[30px]"
+        className="relative w-[24px] h-[18px]"
         animate={isOpen ? "open" : "closed"}
       >
         <motion.span
-          className="absolute h-[2px] w-[24px] bg-current left-[3px]"
+          className="absolute h-[2px] w-full bg-current left-0"
           variants={{
-            closed: { rotate: 0, translateY: 0, top: '7px' },
-            open: { rotate: 45, translateY: 9, top: '7px' },
+            closed: { rotate: 0, translateY: 0, top: '0px' },
+            open: { rotate: 45, translateY: 8, top: '0px' },
           }}
           transition={{ duration: 0.3 }}
         />
         <motion.span
-          className="absolute h-[2px] w-[24px] bg-current left-[3px] top-[14px]"
+          className="absolute h-[2px] w-full bg-current left-0 top-[8px]"
           variants={{
             closed: { opacity: 1 },
             open: { opacity: 0 },
@@ -66,10 +62,10 @@ export default function Hamburger() {
           transition={{ duration: 0.3 }}
         />
         <motion.span
-          className="absolute h-[2px] w-[24px] bg-current left-[3px]"
+          className="absolute h-[2px] w-full bg-current left-0"
           variants={{
-            closed: { rotate: 0, translateY: 0, top: '21px' },
-            open: { rotate: -45, translateY: -5, top: '21px' },
+            closed: { rotate: 0, translateY: 0, top: '16px' },
+            open: { rotate: -45, translateY: -8, top: '16px' },
           }}
           transition={{ duration: 0.3 }}
         />

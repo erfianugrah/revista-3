@@ -3,59 +3,56 @@ import Hamburger from "./Hamburger.tsx";
 import Navigation from "./Navigation.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import { getImage } from "astro:assets";
-const { is404Page = false } = Astro.props; // Get the prop from Astro.props
+const { is404Page = false } = Astro.props;
 
 const favicon_avif = await getImage({
   src: "https://cdn.erfianugrah.com/ea_favicon.png",
   alt: "favicon",
-  // inferSize: true,
-  width: "400",
-  height: "400",
+  width: "640",
+  height: "480",
   decoding: "async",
   format: "avif",
 });
 ---
 
 <header class="mb-[30px] mt-[9px]">
-  <nav
-    class="flex items-center justify-between w-full h-full relative align-center"
-  >
+  <nav class="flex items-center justify-between w-full h-[30px]">
     {
       !is404Page && (
-        <div>
-          <a href="/">
+        <div class="flex items-center h-[30px]">
+          <a href="/" class="block">
             <img
-              class="favicon absolute left-0 dark:invert -mt-[15px]"
+              class="favicon dark:invert w-[30px] h-[30px]"
               src={favicon_avif.src}
               alt="Home"
-              width="30px"
-              height="30px"
+              width="30"
+              height="30"
             />
           </a>
         </div>
       )
     }
-    {
-      !is404Page && (
-        <div class="absolute right-[55px]">
-          <ThemeToggle />
-        </div>
-      )
-    }
-    {
-      !is404Page && (
-        <div class="mt-[-27px]">
-          <Hamburger client:load />
-        </div>
-      )
-    }
-    {
-      !is404Page && (
-        <div class="absolute right-0">
-          <Navigation />
-        </div>
-      )
-    }
+    <div class="flex items-center h-[30px] gap-2">
+      {
+        !is404Page && (
+          <>
+            <div class="flex items-center justify-center h-[30px] w-[30px]">
+              <ThemeToggle />
+            </div>
+            <div class="flex items-center justify-center h-[30px] w-[30px]">
+              <Hamburger client:load />
+            </div>
+          </>
+        )
+      }
+    </div>
   </nav>
+  {
+    !is404Page && (
+      <div class="absolute right-0 mt-2">
+        <Navigation />
+      </div>
+    )
+  }
   <slot />
 </header>
