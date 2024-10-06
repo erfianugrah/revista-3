@@ -12,7 +12,7 @@ interface HeroImageProps {
   alt: string
 }
 
-export default function HeroImage ({
+export default function HeroImage({
   title,
   tags,
   backgroundImage,
@@ -21,28 +21,22 @@ export default function HeroImage ({
   positionY = '50%',
   alt,
 }: HeroImageProps) {
-  const [offset, setOffset] = useState(0)
+  const [scrollY, setScrollY] = useState(0)
   const heroRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const hero = heroRef.current
-    if (!hero) return
-
     const handleScroll = () => {
-      const scrollPosition = window.pageYOffset
-      const heroHeight = hero.offsetHeight
-      const heroTop = hero.offsetTop
-      const heroBottom = heroTop + heroHeight
-
-      if (scrollPosition >= heroTop && scrollPosition <= heroBottom) {
-        const newOffset = (scrollPosition - heroTop) * 0.5
-        setOffset(newOffset)
-      }
+      setScrollY(window.scrollY)
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const parallaxStyle = {
+    transform: `translate3d(0, ${scrollY * 0.3}px, 0)`,
+    willChange: 'transform',
+  }
 
   return (
     <div
@@ -53,22 +47,26 @@ export default function HeroImage ({
       <div
         className="absolute inset-0 bg-cover bg-no-repeat"
         style={{
+          ...parallaxStyle,
           backgroundImage: `url(${mobileBackgroundImage})`,
           backgroundPosition: `${positionX} ${positionY}`,
-          transform: `translateY(${offset}px)`,
+          top: '-20%',
+          height: '120%',
         }}
         aria-hidden="true"
       />
       <div
         className="absolute inset-0 bg-cover bg-no-repeat hidden md:block"
         style={{
+          ...parallaxStyle,
           backgroundImage: `url(${backgroundImage})`,
           backgroundPosition: `${positionX} ${positionY}`,
-          transform: `translateY(${offset}px)`,
+          top: '-20%',
+          height: '120%',
         }}
         aria-hidden="true"
       />
-      <div className="relative z-10">
+      <div className="relative">
         <h1 className="prose prose-slate uppercase font-overpass-mono text-[rgb(245,245,245)] text-4xl fade-in-up delay-150">
           {title}
         </h1>
