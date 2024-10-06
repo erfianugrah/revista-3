@@ -275,11 +275,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
 
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
       - name: Get image digest
         id: get_digest
         run: |
-          DIGEST=$(docker buildx imagetools inspect ${REGISTRY_IMAGE}:${{ needs.prepare-docker.outputs.new_tag }} --format '{{index .Manifest "digest"}}')
+          DIGEST=$(docker buildx imagetools inspect ${REGISTRY_IMAGE}:${{ needs.prepare-docker.outputs.new_tag }} --format '{{json .}}' | jq -r 'if .manifest then .manifest.digest elif .Descriptor then .Descriptor.digest else .digest end')
           echo "IMAGE_DIGEST=${DIGEST}" >> $GITHUB_OUTPUT
+          echo "Image digest: ${DIGEST}"
 
       - name: Sign the Docker image
         env:
