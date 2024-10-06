@@ -1,17 +1,22 @@
 ---
+import { Image } from "astro:assets";
+
 const { title, url, image, alt, description, pubDate, positionx, positiony } =
   Astro.props;
-import { Image } from "astro:assets";
-const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
+const publishedDate = new Date(pubDate).toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
 ---
 
-<div
+<article
   class="flex flex-col sm:flex-row md:space-x-14 md:mb-20 sm:mb-14 gap-8 sm:justify-center md:mx-24"
 >
   {
     image && (
-      <div class="flex sm:w-1/3 md:h-[480px] h-[360px] fade-image">
-        <a href={url}>
+      <div class="flex sm:w-1/3 md:h-[480px] h-[360px] fade-image rounded-lg overflow-hidden">
+        <a href={url} aria-label={`View full post: ${title}`}>
           <Image
             src={image}
             alt={alt}
@@ -20,36 +25,39 @@ const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
             decoding="async"
             format="avif"
             loading="lazy"
-            quality="65"
+            quality={65}
             class="h-full object-cover object-center post-image"
-            style={`background-position: ${positionx} ${positiony};`}
+            style={`--position-x: ${positionx}; --position-y: ${positiony};`}
           />
         </a>
       </div>
     )
   }
-  <div
-    id="description "
-    class="sm:w-2/3 flex flex-col justify-start space-y-4 mb-6 md:mt-10"
-  >
-    <ul class="flex-row">
+  <div class="sm:w-2/3 flex flex-col justify-start space-y-4 mb-6 md:mt-10">
+    <header>
       <h2
         class="font-overpass-mono font-bold text-xl lg:text-2xl xl:text-4xl capitalize"
       >
-        {title}
+        <a href={url} class="title-link">{title}</a>
       </h2>
-      <p class="font-inconsolata text-sm">Published on {publishedDate}</p>
-    </ul>
+      <time
+        datetime={pubDate.toISOString()}
+        class="font-inconsolata text-sm text-gray-600 dark:text-gray-400"
+      >
+        Published on {publishedDate}
+      </time>
+    </header>
     <p class="font-inconsolata normal-case line-clamp-3 sm:text-base text-sm">
       {description}
     </p>
     <a
       href={url}
-      class="dark:prose-invert max-w-max max-h-max flex flex-row flex-shrink-0"
+      class="dark:prose-invert max-w-max max-h-max flex flex-row flex-shrink-0 group"
+      aria-label={`Read more about ${title}`}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6 md:mt-10 mt-4 mb-4 bounce"
+        class="h-6 w-6 md:mt-10 mt-4 mb-4 bounce group-hover:animate-bounce"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -63,7 +71,8 @@ const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
     </a>
     <slot />
   </div>
-</div>
+</article>
+
 <style>
   .post-image {
     background-position: var(--position-x, 45%) var(--position-y, 50%);
@@ -79,25 +88,32 @@ const publishedDate = pubDate.toDateString().split(" ").slice(1).join(" ");
     50%,
     80%,
     100% {
-      transform: translateY(0);
+      transform: translateX(0);
     }
     40% {
-      transform: translateY(-10px);
+      transform: translateX(10px);
     }
     60% {
-      transform: translateY(-5px);
+      transform: translateX(5px);
     }
   }
 
-  a:hover svg {
+  .group:hover .bounce {
     animation: bounce 2s infinite;
   }
   .fade-image {
     transition: opacity 0.5s ease-in-out;
-    opacity: 1;
   }
 
   .fade-image:hover {
     opacity: 0.8;
+  }
+
+  .title-link {
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .title-link:hover {
+    opacity: 0.7;
   }
 </style>
