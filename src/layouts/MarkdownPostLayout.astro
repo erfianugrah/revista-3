@@ -3,6 +3,8 @@ import BaseLayout from "./BaseLayout.astro";
 import "../styles/glightbox.css";
 import Prose from "../components/Prose.astro";
 import { getImage } from "astro:assets";
+import HeroImage from "../components/HeroImage.tsx";
+
 const { frontmatter } = Astro.props;
 const updatedDate = frontmatter?.updatedDate
   .toDateString()
@@ -16,7 +18,6 @@ const publishedDate = frontmatter?.pubDate
   .join(" ");
 const title = frontmatter?.title;
 const description = frontmatter?.description;
-// const author = frontmatter?.author.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 const authorFullName = frontmatter?.author;
 const author = authorFullName.split(" ")[0].toLowerCase();
 const image = frontmatter.image?.src;
@@ -74,28 +75,16 @@ const metaImage = image
 >
   {
     image ? (
-      <div
-        id="backgroundImageElement"
-        class="bg-fixed bg-center-33 bg-cover bg-no-repeat flex flex-col justify-center items-center text-center h-screen mb-8 md:-mx-16 -mx-8"
-        style={`--mobile-background-image: url(${mobileBackgroundImage.src}); --background-image: url(${backgroundImage.src}); --position-x: ${positionx}; --position-y: ${positiony};`}
-        data-pagefind-body
-      >
-        <h1 class="prose prose-slate uppercase font-overpass-mono text-[rgb(245,245,245)] text-4xl fade-in-up delay-150">
-          {title}
-        </h1>
-        <div class="flex gap-2 mt-2 fade-in-up delay-300">
-          {frontmatter.tags.map((tag) => (
-            <p class="font-overpass-mono text-xl">
-              <a
-                class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded"
-                href={`../tags/${tag}`}
-              >
-                {tag}
-              </a>
-            </p>
-          ))}
-        </div>
-      </div>
+      <HeroImage
+        client:load
+        title={title}
+        tags={frontmatter.tags}
+        backgroundImage={backgroundImage.src}
+        mobileBackgroundImage={mobileBackgroundImage.src}
+        positionX={positionx}
+        positionY={positiony}
+        alt={alt}
+      />
     ) : (
       <div data-pagefind-body>
         <Prose>
@@ -128,8 +117,8 @@ const metaImage = image
               href={`/authors/${author}`}
               class="no-underline font-inconsolata"
             >
-              {authorFullName}</a
-            >
+              {authorFullName}
+            </a>
           </p>
         </div>
         <div
@@ -146,6 +135,7 @@ const metaImage = image
     </Prose>
   </div>
 </BaseLayout>
+
 <style>
   @keyframes fadeIn {
     from {
@@ -183,19 +173,5 @@ const metaImage = image
 
   .delay-600 {
     animation-delay: 600ms;
-  }
-
-  #backgroundImageElement {
-    background-image: var(--mobile-background-image);
-    background-position: var(--position-x, 45%) var(--position-y, 50%);
-    opacity: 0;
-    animation: fadeIn 1s ease-out forwards;
-  }
-
-  @media (min-width: 800px) {
-    #backgroundImageElement {
-      background-image: var(--background-image);
-      background-position: var(--position-x, 30%) var(--position-y, 50%);
-    }
   }
 </style>
