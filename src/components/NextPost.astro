@@ -1,0 +1,101 @@
+---
+import { getCollection } from "astro:content";
+import { Image, getImage } from "astro:assets";
+import Prose from "./Prose.astro";
+
+export interface Props {
+  currentSlug: string;
+  collection: string;
+}
+
+const { currentSlug, collection } = Astro.props;
+const allPosts = await getCollection(collection);
+
+const favicon_webp = await getImage({
+  src: "https://cdn.erfianugrah.com/ea_favicon.png",
+  alt: "favicon",
+  inferSize: true,
+  height: 400,
+  decoding: "async",
+  format: "webp",
+  loading: "lazy",
+});
+---
+
+<Prose>
+  <div class="flex justify-center mb-6 mt-20">
+    <svg
+      class="w-14 h-4 text-gray-700 dark:text-gray-300"
+      viewBox="0 0 60 20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="10" cy="10" r="6" fill="currentColor"></circle>
+      <circle cx="30" cy="10" r="6" fill="currentColor"></circle>
+      <circle cx="50" cy="10" r="6" fill="currentColor"></circle>
+    </svg>
+  </div>
+  <div class="mt-4">
+    <div id="randomPosts" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Posts will be inserted here by JavaScript */}
+    </div>
+  </div>
+</Prose>
+
+<script
+  define:vars={{
+    allPosts,
+    currentSlug,
+    collection,
+    faviconSrc: favicon_webp.src,
+  }}
+>
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  function displayRandomPosts() {
+    const otherPosts = allPosts.filter((post) => post.slug !== currentSlug);
+    const randomPosts = shuffleArray(otherPosts).slice(0, 3);
+    const container = document.getElementById("randomPosts");
+    container.innerHTML = randomPosts
+      .map(
+        (post) => `
+      <a href="/${collection}/${post.slug}/" class="no-underline block">
+        <div class="rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl bg-gray-100 dark:bg-[rgb(44,43,47)] h-full flex flex-col group">
+          <div class="p-4 flex-grow flex flex-col relative">
+            <div class="absolute inset-0 bg-gray-200 dark:bg-[rgb(54,53,57)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="h-48 mb-4 overflow-hidden rounded relative z-10 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+              ${
+                post.data.image
+                  ? `<img
+                    src="${post.data.image.src}"
+                    alt="${post.data.image.alt || ""}"
+                    class="object-cover w-full h-full transition-all duration-300 group-hover:opacity-90"
+                  />`
+                  : `<img
+                    src="${faviconSrc}"
+                    alt="Site favicon"
+                    class="w-24 h-24 transition-all duration-300 group-hover:opacity-90"
+                  />`
+              }
+            </div>
+            <h3 class="text-lg font-semibold mb-2 font-overpass-mono text-gray-900 dark:text-[rgb(245,245,245)] relative z-10">${post.data.title}</h3>
+            <p class="text-sm line-clamp-2 font-inconsolata flex-grow text-gray-700 dark:text-[rgb(230,230,230)] relative z-10">${post.data.description}</p>
+          </div>
+        </div>
+      </a>
+    `,
+      )
+      .join("");
+  }
+
+  // Run on initial load
+  displayRandomPosts();
+
+  // Re-run on page transitions
+  document.addEventListener("astro:page-load", displayRandomPosts);
+</script>

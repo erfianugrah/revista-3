@@ -4,8 +4,9 @@ import "../styles/glightbox.css";
 import Prose from "../components/Prose.astro";
 import { getImage } from "astro:assets";
 import HeroImage from "../components/HeroImage.tsx";
+import NextPost from "../components/NextPost.astro";
 
-const { frontmatter } = Astro.props;
+const { frontmatter, currentSlug, collection } = Astro.props;
 const updatedDate = frontmatter?.updatedDate
   .toDateString()
   .split(" ")
@@ -24,7 +25,6 @@ const image = frontmatter.image?.src;
 const alt = frontmatter.image?.alt;
 const positionx = frontmatter?.image?.positionx;
 const positiony = frontmatter?.image?.positiony;
-
 let baseUrl = new URL(Astro.request.url).origin;
 
 const backgroundImage = image
@@ -134,6 +134,7 @@ const metaImage = image
       </div>
     </Prose>
   </div>
+  <NextPost currentSlug={currentSlug} collection={collection} />
 </BaseLayout>
 
 <style>
