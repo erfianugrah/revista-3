@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import { Image, getImage } from "astro:assets";
+import { getImage } from "astro:assets";
 import Prose from "./Prose.astro";
 
 export interface Props {
@@ -11,52 +11,39 @@ export interface Props {
 const { currentSlug, collection } = Astro.props;
 const allPosts = await getCollection(collection);
 
-// Filter out the current post
 const otherPosts = allPosts.filter((post) => post.slug !== currentSlug);
-
-// Only render the component if there's at least one other post
 const shouldRender = otherPosts.length > 0;
 
-// Prepare the data for all posts
+async function optimizeImage(src, alt) {
+  return await getImage({
+    src,
+    alt,
+    width: 640,
+    height: 360,
+    format: "avif",
+    loading: "lazy",
+    decoding: "async"
+  });
+}
+
 const postsData = await Promise.all(otherPosts.map(async (post) => {
-  let imageData = {};
-  if (post.data.image) {
-    const optimizedImage = await getImage({
-      src: post.data.image.src,
-      width: 640,
-      height: 360,
-      format: "avif",
-      loading: "lazy",
-      decoding: "async"
-    });
-    imageData = {
-      src: optimizedImage.src,
-      width: optimizedImage.attributes.width,
-      height: optimizedImage.attributes.height,
-      format: optimizedImage.attributes.format,
-      loading: optimizedImage.attributes.loading,
-      decoding: optimizedImage.attributes.decoding,
-    };
-  }
+  const imageData = post.data.image 
+    ? await optimizeImage(post.data.image.src, post.data.image.alt || post.data.title)
+    : null;
   return {
     slug: post.slug,
     title: post.data.title,
     description: post.data.description,
-    image: imageData,
+    image: imageData ? {
+      src: imageData.src,
+      width: imageData.attributes.width,
+      height: imageData.attributes.height,
+    } : null,
     alt: post.data.image?.alt || post.data.title,
   };
 }));
 
-const favicon = await getImage({
-  src: "https://cdn.erfianugrah.com/ea_favicon.png",
-  alt: "favicon",
-  width: 640,
-  height: 360,
-  format: "avif",
-  loading: "lazy",
-  decoding: "async"
-});
-
+const favicon = await optimizeImage("https://cdn.erfianugrah.com/ea_favicon.png", "favicon");
 ---
 
 {shouldRender && (
@@ -78,7 +65,11 @@ const favicon = await getImage({
         class="grid grid-cols-1 md:grid-cols-3 gap-4"
         data-posts={JSON.stringify(postsData)}
         data-collection={collection}
-        data-favicon={JSON.stringify(favicon)}
+        data-favicon={JSON.stringify({
+          src: favicon.src,
+          width: favicon.attributes.width,
+          height: favicon.attributes.height,
+        })}
       >
         <!-- Posts will be dynamically inserted here -->
       </div>
@@ -100,31 +91,27 @@ const favicon = await getImage({
     a.href = `/${collection}/${post.slug}/`;
     a.className = 'no-underline block';
 
+    const imageSrc = post.image ? post.image.src : favicon.src;
+    const imageWidth = post.image ? post.image.width : favicon.width;
+    const imageHeight = post.image ? post.image.height : favicon.height;
+    const imageClass = post.image 
+      ? "object-cover w-full h-full transition-all duration-300 group-hover:opacity-90"
+      : "w-24 h-24 transition-all duration-300 group-hover:opacity-90";
+
     a.innerHTML = `
       <div class="rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl bg-gray-100 dark:bg-[rgb(44,43,47)] h-full flex flex-col group">
         <div class="p-4 flex-grow flex flex-col relative">
           <div class="absolute inset-0 bg-gray-200 dark:bg-[rgb(54,53,57)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div class="h-48 mb-4 overflow-hidden rounded relative z-10 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
-            ${post.image 
-              ? `<img
-                  src="${post.image.src}"
-                  alt="${post.alt}"
-                  width="${post.image.width}"
-                  height="${post.image.height}"
-                  class="object-cover w-full h-full transition-all duration-300 group-hover:opacity-90"
-                  loading="lazy"
-                  decoding="async"
-                />`
-              : `<img
-                  src="${favicon.src}"
-                  alt="Site favicon"
-                  width="${favicon.width}"
-                  height="${favicon.height}"
-                  class="w-24 h-24 transition-all duration-300 group-hover:opacity-90"
-                  loading="lazy"
-                  decoding="async"
-                />`
-            }
+            <img
+              src="${imageSrc}"
+              alt="${post.alt}"
+              width="${imageWidth}"
+              height="${imageHeight}"
+              class="${imageClass}"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
           <h3 class="text-lg font-semibold mb-2 font-overpass-mono text-gray-900 dark:text-[rgb(245,245,245)] relative z-10">${post.title}</h3>
           <p class="text-sm line-clamp-2 font-inconsolata flex-grow text-gray-700 dark:text-[rgb(230,230,230)] relative z-10">${post.description}</p>
@@ -143,16 +130,16 @@ const favicon = await getImage({
     const collection = container.dataset.collection;
     const favicon = JSON.parse(container.dataset.favicon || '{}');
 
-    // Shuffle and select 3 random posts
     const shuffledPosts = shuffleArray([...posts]).slice(0, 3);
 
-    container.innerHTML = '';
+    const fragment = document.createDocumentFragment();
     shuffledPosts.forEach(post => {
-      const postElement = createPostElement(post, collection, favicon);
-      container.appendChild(postElement);
+      fragment.appendChild(createPostElement(post, collection, favicon));
     });
+
+    container.innerHTML = '';
+    container.appendChild(fragment);
   }
 
-  // Run on initial load and after each navigation
   document.addEventListener('astro:page-load', updateRandomPosts);
 </script>
