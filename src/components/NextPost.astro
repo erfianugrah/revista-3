@@ -19,17 +19,23 @@ const shouldRender = otherPosts.length > 0;
 
 // Prepare the data for all posts
 const postsData = await Promise.all(otherPosts.map(async (post) => {
-  let imageData = null;
+  let imageData = {};
   if (post.data.image) {
     const optimizedImage = await getImage({
       src: post.data.image.src,
       width: 640,
       height: 360,
+      format: "avif",
+      loading: "lazy",
+      decoding: "async"
     });
     imageData = {
       src: optimizedImage.src,
       width: optimizedImage.attributes.width,
       height: optimizedImage.attributes.height,
+      format: optimizedImage.attributes.format,
+      loading: optimizedImage.attributes.loading,
+      decoding: optimizedImage.attributes.decoding,
     };
   }
   return {
@@ -46,6 +52,9 @@ const favicon = await getImage({
   alt: "favicon",
   width: 640,
   height: 360,
+  format: "avif",
+  loading: "lazy",
+  decoding: "async"
 });
 
 ---
