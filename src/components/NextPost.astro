@@ -59,10 +59,11 @@ const favicon = await optimizeImage("https://cdn.erfianugrah.com/ea_favicon.png"
         <circle cx="50" cy="10" r="6" fill="currentColor" />
       </svg>
     </div>
-    <div class="mt-4">
+    <div class="mt-4 overflow-x-auto md:overflow-x-visible -mx-8 px-8 md:mx-0 md:px-0">
       <div 
         id="randomPosts" 
-        class="grid grid-cols-1 md:grid-cols-3 gap-4"
+        class="flex md:grid md:grid-cols-3 gap-4 pb-4 md:pb-0"
+        style="min-width: min-content;"
         data-posts={JSON.stringify(postsData)}
         data-collection={collection}
         data-favicon={JSON.stringify({
@@ -89,20 +90,20 @@ const favicon = await optimizeImage("https://cdn.erfianugrah.com/ea_favicon.png"
   function createPostElement(post, collection, favicon) {
     const a = document.createElement('a');
     a.href = `/${collection}/${post.slug}/`;
-    a.className = 'no-underline block';
+    a.className = 'no-underline block flex-shrink-0 w-56 md:w-full';
 
     const imageSrc = post.image ? post.image.src : favicon.src;
     const imageWidth = post.image ? post.image.width : favicon.width;
     const imageHeight = post.image ? post.image.height : favicon.height;
     const imageClass = post.image 
-      ? "object-cover w-full h-full transition-all duration-300 group-hover:opacity-90"
-      : "w-24 h-24 transition-all duration-300 group-hover:opacity-90";
+      ? "w-full h-full object-cover transition-all duration-300 group-hover:opacity-90"
+      : "w-16 h-16 md:w-24 md:h-24 transition-all duration-300 group-hover:opacity-90";
 
     a.innerHTML = `
       <div class="rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl bg-gray-100 dark:bg-[rgb(44,43,47)] h-full flex flex-col group">
-        <div class="p-4 flex-grow flex flex-col relative">
+        <div class="p-2 md:p-4 flex-grow flex flex-col relative">
           <div class="absolute inset-0 bg-gray-200 dark:bg-[rgb(54,53,57)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <div class="h-48 mb-4 overflow-hidden rounded relative z-10 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+          <div class="aspect-video mb-2 md:mb-4 overflow-hidden rounded relative z-10 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
             <img
               src="${imageSrc}"
               alt="${post.alt}"
@@ -113,8 +114,8 @@ const favicon = await optimizeImage("https://cdn.erfianugrah.com/ea_favicon.png"
               decoding="async"
             />
           </div>
-          <h3 class="text-lg font-semibold mb-2 font-overpass-mono text-gray-900 dark:text-[rgb(245,245,245)] relative z-10">${post.title}</h3>
-          <p class="text-sm line-clamp-2 font-inconsolata flex-grow text-gray-700 dark:text-[rgb(230,230,230)] relative z-10">${post.description}</p>
+          <h3 class="text-sm md:text-lg font-semibold mb-1 md:mb-2 font-overpass-mono text-gray-900 dark:text-[rgb(245,245,245)] relative z-10 line-clamp-2">${post.title}</h3>
+          <p class="text-xs md:text-sm line-clamp-2 font-inconsolata flex-grow text-gray-700 dark:text-[rgb(230,230,230)] relative z-10">${post.description}</p>
         </div>
       </div>
     `;
