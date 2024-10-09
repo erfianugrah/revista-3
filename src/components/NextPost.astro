@@ -108,7 +108,15 @@ const favicon = await optimizeImage(
 }
 
 <script>
-  function handlePageLoad() {
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  function updatePosts() {
     const container = document.getElementById("randomPosts");
     if (!container) return;
 
@@ -116,16 +124,9 @@ const favicon = await optimizeImage(
     const collection = container.dataset.collection;
     const favicon = JSON.parse(container.dataset.favicon || "{}");
 
-    // Shuffle the posts array
-    for (let i = posts.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [posts[i], posts[j]] = [posts[j], posts[i]];
-    }
+    const shuffledPosts = shuffleArray([...posts]);
+    const selectedPosts = shuffledPosts.slice(0, 3);
 
-    // Select the first 3 posts
-    const selectedPosts = posts.slice(0, 3);
-
-    // Update the pre-rendered elements with the selected posts' content
     const postElements = container.querySelectorAll(".post-item");
     selectedPosts.forEach((post, index) => {
       const element = postElements[index];
@@ -155,5 +156,5 @@ const favicon = await optimizeImage(
     });
   }
 
-  document.addEventListener("astro:page-load", handlePageLoad);
+  document.addEventListener("astro:page-load", updatePosts);
 </script>
