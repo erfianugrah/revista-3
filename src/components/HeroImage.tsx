@@ -91,7 +91,7 @@ export default function HeroImage({
           aria-hidden="true"
         />
       </div>
-      <div className="relative z-10">
+      <div className="relative">
         <h1 className="prose prose-slate uppercase font-overpass-mono text-[rgb(245,245,245)] text-4xl fade-in-up delay-150">
           {title}
         </h1>
