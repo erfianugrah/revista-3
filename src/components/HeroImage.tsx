@@ -1,6 +1,5 @@
 'use client'
-
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 interface HeroImageProps {
   title: string
@@ -21,22 +20,42 @@ export default function HeroImage({
   positionY = '50%',
   alt,
 }: HeroImageProps) {
-  const [scrollY, setScrollY] = useState(0)
   const heroRef = useRef<HTMLDivElement>(null)
+  const parallaxRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY)
+    const heroElement = heroRef.current
+    const parallaxElement = parallaxRef.current
+    if (!heroElement || !parallaxElement) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            parallaxElement.style.willChange = 'transform'
+            window.addEventListener('scroll', updateParallax)
+          } else {
+            parallaxElement.style.willChange = 'auto'
+            window.removeEventListener('scroll', updateParallax)
+          }
+        })
+      },
+      { threshold: 0 }
+    )
+
+    observer.observe(heroElement)
+
+    function updateParallax() {
+      const scrollPosition = window.pageYOffset
+      const parallaxFactor = 0.3
+      parallaxElement.style.transform = `translate3d(0, ${scrollPosition * parallaxFactor}px, 0)`
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', updateParallax)
+    }
   }, [])
-
-  const parallaxStyle = {
-    transform: `translate3d(0, ${scrollY * 0.3}px, 0)`,
-    willChange: 'transform',
-  }
 
   return (
     <div
@@ -45,28 +64,34 @@ export default function HeroImage({
       data-pagefind-body
     >
       <div
-        className="absolute inset-0 bg-cover bg-no-repeat"
+        ref={parallaxRef}
+        className="absolute inset-0"
         style={{
-          ...parallaxStyle,
-          backgroundImage: `url(${mobileBackgroundImage})`,
-          backgroundPosition: `${positionX} ${positionY}`,
-          top: '-20%',
-          height: '120%',
+          willChange: 'transform',
         }}
-        aria-hidden="true"
-      />
-      <div
-        className="absolute inset-0 bg-cover bg-no-repeat hidden md:block"
-        style={{
-          ...parallaxStyle,
-          backgroundImage: `url(${backgroundImage})`,
-          backgroundPosition: `${positionX} ${positionY}`,
-          top: '-20%',
-          height: '120%',
-        }}
-        aria-hidden="true"
-      />
-      <div className="relative">
+      >
+        <div
+          className="absolute inset-0 bg-cover bg-no-repeat md:hidden"
+          style={{
+            backgroundImage: `url(${mobileBackgroundImage})`,
+            backgroundPosition: `${positionX} ${positionY}`,
+            top: '-20%',
+            height: '120%',
+          }}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0 bg-cover bg-no-repeat hidden md:block"
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundPosition: `${positionX} ${positionY}`,
+            top: '-20%',
+            height: '120%',
+          }}
+          aria-hidden="true"
+        />
+      </div>
+      <div className="relative z-10">
         <h1 className="prose prose-slate uppercase font-overpass-mono text-[rgb(245,245,245)] text-4xl fade-in-up delay-150">
           {title}
         </h1>
