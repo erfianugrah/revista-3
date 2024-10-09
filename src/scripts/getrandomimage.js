@@ -7,18 +7,17 @@ function handlePageLoad() {
 
   imageElements.forEach((element) => {
     try {
-      const images = JSON.parse(element.dataset.images);
-      const alt = JSON.parse(element.dataset.alt);
+      const imageData = JSON.parse(element.dataset.images);
       const width = JSON.parse(element.dataset.width);
       const height = JSON.parse(element.dataset.height);
 
-      const items = images.large.map((image, index) => ({
+      const items = imageData.large.map((_, index) => ({
         image: {
-          large: images.large[index],
-          medium: images.medium[index],
-          small: images.small[index],
+          large: imageData.large[index],
+          medium: imageData.medium[index],
+          small: imageData.small[index],
         },
-        alt: alt[index],
+        alt: imageData.alt[index],
         width,
         height,
       }));

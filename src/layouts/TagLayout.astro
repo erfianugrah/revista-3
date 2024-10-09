@@ -3,15 +3,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import GetRandomImage from "../components/getRandomImage.astro";
 import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
-const allContent = await getCollection(Astro.props.directory);
+
+const { directory, title } = Astro.props;
+const allContent = await getCollection(directory);
 const tags = [...new Set(allContent.map((post) => post.data.tags).flat())];
-const images = allContent.map((post) => post.data.image?.src);
-const alt = allContent.map((post) => post.data.image?.alt);
+
 const imagesByTag = {};
 for (const post of allContent) {
   for (const tag of post.data.tags) {
     if (!imagesByTag[tag]) {
-      imagesByTag[tag] = { large: [], medium: [], small: [] };
+      imagesByTag[tag] = { large: [], medium: [], small: [], alt: [] };
     }
     if (post.data.image?.src) {
       const [largeImage, mediumImage, smallImage] = await Promise.all([
@@ -46,10 +47,23 @@ for (const post of allContent) {
       imagesByTag[tag].large.push(largeImage ? largeImage.src : null);
       imagesByTag[tag].medium.push(mediumImage ? mediumImage.src : null);
       imagesByTag[tag].small.push(smallImage ? smallImage.src : null);
+      imagesByTag[tag].alt.push(post.data.image.alt);
     }
   }
 }
-const { title } = Astro.props;
+
+const imageSizes = {
+  width: {
+    large: 1920,
+    medium: 1280,
+    small: 854,
+  },
+  height: {
+    large: 1080,
+    medium: 720,
+    small: 480,
+  },
+};
 ---
 
 <BaseLayout title={title} is404Page={false}>
@@ -59,19 +73,10 @@ const { title } = Astro.props;
         <div class="object-contain w-full h-full relative flex items-center justify-center font-overpass-mono">
           <GetRandomImage
             images={JSON.stringify(imagesByTag[tags[0]])}
-            alt={JSON.stringify(alt)}
             tag={tags[0]}
-            url={`/${Astro.props.directory}/tags/${tags[0]}`}
-            width={{
-              large: 1920,
-              medium: 1280,
-              small: 854,
-            }}
-            height={{
-              large: 1080,
-              medium: 720,
-              small: 480,
-            }}
+            url={`/${directory}/tags/${tags[0]}`}
+            width={imageSizes.width}
+            height={imageSizes.height}
           />
           <slot />
         </div>
@@ -81,19 +86,10 @@ const { title } = Astro.props;
             <div class="col-span-1">
               <GetRandomImage
                 images={JSON.stringify(imagesByTag[tag])}
-                alt={JSON.stringify(alt)}
                 tag={tag}
-                url={`/${Astro.props.directory}/tags/${tag}`}
-                width={{
-                  large: 1920,
-                  medium: 1280,
-                  small: 854,
-                }}
-                height={{
-                  large: 1080,
-                  medium: 720,
-                  small: 480,
-                }}
+                url={`/${directory}/tags/${tag}`}
+                width={imageSizes.width}
+                height={imageSizes.height}
               />
             </div>
           ))}

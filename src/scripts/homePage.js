@@ -9,7 +9,7 @@ function handlePageLoad() {
       const width = JSON.parse(element.dataset.width);
       const height = JSON.parse(element.dataset.height);
 
-      const items = images.large.map((image, index) => ({
+      const items = images.large.map((_, index) => ({
         image: {
           large: images.large[index],
           medium: images.medium[index],

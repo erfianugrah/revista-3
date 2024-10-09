@@ -1,12 +1,11 @@
 ---
-const { images, alt, url, tag, width, height } = Astro.props;
+const { images, tag, url, width, height } = Astro.props;
 ---
 
 <div
   id="randomimage"
   class="relative group border-0"
   data-images={images}
-  data-alt={alt}
   data-width={JSON.stringify(width)}
   data-height={JSON.stringify(height)}
 >
