@@ -11,19 +11,41 @@ const imagesByTag = {};
 for (const post of allContent) {
   for (const tag of post.data.tags) {
     if (!imagesByTag[tag]) {
-      imagesByTag[tag] = [];
+      imagesByTag[tag] = { large: [], medium: [], small: [] };
     }
     if (post.data.image?.src) {
-      const imageAsset = await getImage({
-        src: post.data.image?.src,
-        alt: post.data.image?.alt,
-        inferSize: true,
-        height: "1080",
-        decoding: "async",
-        format: "avif",
-        quality: "65",
-      });
-      imagesByTag[tag].push(imageAsset ? imageAsset.src : null);
+      const [largeImage, mediumImage, smallImage] = await Promise.all([
+        getImage({
+          src: post.data.image.src,
+          alt: post.data.image.alt,
+          width: 1920,
+          height: 1080,
+          decoding: "async",
+          format: "avif",
+          quality: 65,
+        }),
+        getImage({
+          src: post.data.image.src,
+          alt: post.data.image.alt,
+          width: 1280,
+          height: 720,
+          decoding: "async",
+          format: "avif",
+          quality: 65,
+        }),
+        getImage({
+          src: post.data.image.src,
+          alt: post.data.image.alt,
+          width: 854,
+          height: 480,
+          decoding: "async",
+          format: "avif",
+          quality: 65,
+        }),
+      ]);
+      imagesByTag[tag].large.push(largeImage ? largeImage.src : null);
+      imagesByTag[tag].medium.push(mediumImage ? mediumImage.src : null);
+      imagesByTag[tag].small.push(smallImage ? smallImage.src : null);
     }
   }
 }
@@ -40,8 +62,16 @@ const { title } = Astro.props;
             alt={JSON.stringify(alt)}
             tag={tags[0]}
             url={`/${Astro.props.directory}/tags/${tags[0]}`}
-            width="1920"
-            height="1080"
+            width={{
+              large: 1920,
+              medium: 1280,
+              small: 854,
+            }}
+            height={{
+              large: 1080,
+              medium: 720,
+              small: 480,
+            }}
           />
           <slot />
         </div>
@@ -54,8 +84,16 @@ const { title } = Astro.props;
                 alt={JSON.stringify(alt)}
                 tag={tag}
                 url={`/${Astro.props.directory}/tags/${tag}`}
-                width="1920"
-                height="1080"
+                width={{
+                  large: 1920,
+                  medium: 1280,
+                  small: 854,
+                }}
+                height={{
+                  large: 1080,
+                  medium: 720,
+                  small: 480,
+                }}
               />
             </div>
           ))}

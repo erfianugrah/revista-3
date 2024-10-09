@@ -21,126 +21,139 @@ async function optimizeImage(src, alt) {
     width: 640,
     height: 360,
     format: "avif",
-    loading: "lazy",
-    decoding: "async"
+    quality: 65,
+    decoding: "async",
   });
 }
 
-const postsData = await Promise.all(otherPosts.map(async (post) => {
-  const imageData = post.data.image 
-    ? await optimizeImage(post.data.image.src, post.data.image.alt || post.data.title)
-    : null;
-  return {
-    slug: post.slug,
-    title: post.data.title,
-    description: post.data.description,
-    image: imageData ? {
-      src: imageData.src,
-      width: imageData.attributes.width,
-      height: imageData.attributes.height,
-    } : null,
-    alt: post.data.image?.alt || post.data.title,
-  };
-}));
+const postsData = await Promise.all(
+  otherPosts.map(async (post) => {
+    const imageData = post.data.image
+      ? await optimizeImage(
+          post.data.image.src,
+          post.data.image.alt || post.data.title,
+        )
+      : null;
+    return {
+      slug: post.slug,
+      title: post.data.title,
+      description: post.data.description,
+      image: imageData ? imageData.src : null,
+      alt: post.data.image?.alt || post.data.title,
+    };
+  }),
+);
 
-const favicon = await optimizeImage("https://cdn.erfianugrah.com/ea_favicon.png", "favicon");
+const favicon = await optimizeImage(
+  "https://cdn.erfianugrah.com/ea_favicon.png",
+  "favicon",
+);
 ---
 
-{shouldRender && (
-  <Prose>
-    <div class="flex justify-center mb-6 mt-20">
-      <svg
-        class="w-14 h-4 text-gray-700 dark:text-gray-300"
-        viewBox="0 0 60 20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle cx="10" cy="10" r="6" fill="currentColor" />
-        <circle cx="30" cy="10" r="6" fill="currentColor" />
-        <circle cx="50" cy="10" r="6" fill="currentColor" />
-      </svg>
-    </div>
-    <div class="mt-4 overflow-x-auto md:overflow-x-visible -mx-8 px-8 md:mx-0 md:px-0">
-      <div 
-        id="randomPosts" 
-        class="flex md:grid md:grid-cols-3 gap-4 pb-4 md:pb-0"
-        style="min-width: min-content;"
-        data-posts={JSON.stringify(postsData)}
-        data-collection={collection}
-        data-favicon={JSON.stringify({
-          src: favicon.src,
-          width: favicon.attributes.width,
-          height: favicon.attributes.height,
-        })}
-      >
-        <!-- Posts will be dynamically inserted here -->
+{
+  shouldRender && (
+    <Prose>
+      <div class="flex justify-center mb-6 mt-20">
+        <svg
+          class="w-14 h-4 text-gray-700 dark:text-gray-300"
+          viewBox="0 0 60 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="10" cy="10" r="6" fill="currentColor" />
+          <circle cx="30" cy="10" r="6" fill="currentColor" />
+          <circle cx="50" cy="10" r="6" fill="currentColor" />
+        </svg>
       </div>
-    </div>
-  </Prose>
-)}
-
-<script>
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
-
-  function createPostElement(post, collection, favicon) {
-    const a = document.createElement('a');
-    a.href = `/${collection}/${post.slug}/`;
-    a.className = 'no-underline block flex-shrink-0 w-56 md:w-full';
-
-    const imageSrc = post.image ? post.image.src : favicon.src;
-    const imageWidth = post.image ? post.image.width : favicon.width;
-    const imageHeight = post.image ? post.image.height : favicon.height;
-    const imageClass = post.image 
-      ? "w-full h-full object-cover transition-all duration-300 group-hover:opacity-90"
-      : "w-16 h-16 md:w-24 md:h-24 transition-all duration-300 group-hover:opacity-90";
-
-    a.innerHTML = `
-      <div class="rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl bg-gray-100 dark:bg-[rgb(44,43,47)] h-full flex flex-col group">
-        <div class="p-2 md:p-4 flex-grow flex flex-col relative">
-          <div class="absolute inset-0 bg-gray-200 dark:bg-[rgb(54,53,57)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <div class="aspect-video mb-2 md:mb-4 overflow-hidden rounded relative z-10 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
-            <img
-              src="${imageSrc}"
-              alt="${post.alt}"
-              width="${imageWidth}"
-              height="${imageHeight}"
-              class="${imageClass}"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-          <h3 class="text-sm md:text-lg font-semibold mb-1 md:mb-2 font-overpass-mono text-gray-900 dark:text-[rgb(245,245,245)] relative z-10 line-clamp-2">${post.title}</h3>
-          <p class="text-xs md:text-sm line-clamp-2 font-inconsolata flex-grow text-gray-700 dark:text-[rgb(230,230,230)] relative z-10">${post.description}</p>
+      <div class="mt-4 overflow-x-auto md:overflow-x-visible -mx-8 px-8 md:mx-0 md:px-0">
+        <div
+          id="randomPosts"
+          class="flex md:grid md:grid-cols-3 gap-4 pb-4 md:pb-0"
+          style="min-width: min-content;"
+          data-posts={JSON.stringify(postsData)}
+          data-collection={collection}
+          data-favicon={JSON.stringify({
+            src: favicon.src,
+            width: favicon.attributes.width,
+            height: favicon.attributes.height,
+          })}
+        >
+          {[...Array(3)].map((_, index) => (
+            <a
+              href="#"
+              class="no-underline block flex-shrink-0 w-56 md:w-full post-item"
+              style="display: none;"
+            >
+              <div class="rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl bg-gray-100 dark:bg-[rgb(44,43,47)] h-full flex flex-col group">
+                <div class="p-2 md:p-4 flex-grow flex flex-col relative">
+                  <div class="absolute inset-0 bg-gray-200 dark:bg-[rgb(54,53,57)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div class="aspect-video mb-2 md:mb-4 overflow-hidden rounded relative z-10 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+                    <img
+                      src=""
+                      alt=""
+                      class="w-full h-full object-cover transition-all duration-300 group-hover:opacity-90"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <h3 class="text-sm md:text-lg font-semibold mb-1 md:mb-2 font-overpass-mono text-gray-900 dark:text-[rgb(245,245,245)] relative z-10 line-clamp-2" />
+                  <p class="text-xs md:text-sm line-clamp-2 font-inconsolata flex-grow text-gray-700 dark:text-[rgb(230,230,230)] relative z-10" />
+                </div>
+              </div>
+            </a>
+          ))}
         </div>
       </div>
-    `;
+    </Prose>
+  )
+}
 
-    return a;
-  }
-
-  function updateRandomPosts() {
-    const container = document.getElementById('randomPosts');
+<script>
+  function handlePageLoad() {
+    const container = document.getElementById("randomPosts");
     if (!container) return;
 
-    const posts = JSON.parse(container.dataset.posts || '[]');
+    const posts = JSON.parse(container.dataset.posts || "[]");
     const collection = container.dataset.collection;
-    const favicon = JSON.parse(container.dataset.favicon || '{}');
+    const favicon = JSON.parse(container.dataset.favicon || "{}");
 
-    const shuffledPosts = shuffleArray([...posts]).slice(0, 3);
+    // Shuffle the posts array
+    for (let i = posts.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [posts[i], posts[j]] = [posts[j], posts[i]];
+    }
 
-    const fragment = document.createDocumentFragment();
-    shuffledPosts.forEach(post => {
-      fragment.appendChild(createPostElement(post, collection, favicon));
+    // Select the first 3 posts
+    const selectedPosts = posts.slice(0, 3);
+
+    // Update the pre-rendered elements with the selected posts' content
+    const postElements = container.querySelectorAll(".post-item");
+    selectedPosts.forEach((post, index) => {
+      const element = postElements[index];
+      if (element) {
+        element.href = `/${collection}/${post.slug}/`;
+        element.style.display = "block";
+
+        const img = element.querySelector("img");
+        if (img) {
+          img.src = post.image || favicon.src;
+          img.alt = post.alt;
+          img.className = post.image
+            ? "w-full h-full object-cover transition-all duration-300 group-hover:opacity-90"
+            : "w-16 h-16 md:w-24 md:h-24 transition-all duration-300 group-hover:opacity-90";
+        }
+
+        const title = element.querySelector("h3");
+        if (title) {
+          title.textContent = post.title;
+        }
+
+        const description = element.querySelector("p");
+        if (description) {
+          description.textContent = post.description;
+        }
+      }
     });
-
-    container.innerHTML = '';
-    container.appendChild(fragment);
   }
 
-  document.addEventListener('astro:page-load', updateRandomPosts);
+  document.addEventListener("astro:page-load", handlePageLoad);
 </script>

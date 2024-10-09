@@ -1,5 +1,5 @@
 function handlePageLoad() {
-  const imageElements = Array.from(document.querySelectorAll('#randomimage'));
+  const imageElements = Array.from(document.querySelectorAll("#randomimage"));
 
   if (imageElements.length === 0) {
     return; // Exit the function if no #randomimage elements are found
@@ -9,10 +9,15 @@ function handlePageLoad() {
     try {
       const images = JSON.parse(element.dataset.images);
       const alt = JSON.parse(element.dataset.alt);
-      const { width, height } = element.dataset;
+      const width = JSON.parse(element.dataset.width);
+      const height = JSON.parse(element.dataset.height);
 
-      const items = images.map((image, index) => ({
-        image,
+      const items = images.large.map((image, index) => ({
+        image: {
+          large: images.large[index],
+          medium: images.medium[index],
+          small: images.small[index],
+        },
         alt: alt[index],
         width,
         height,
@@ -24,21 +29,28 @@ function handlePageLoad() {
         [items[i], items[j]] = [items[j], items[i]];
       }
 
-      const imgElement = element.querySelector('img');
+      const imgElement = element.querySelector("img");
+      const sourceLarge = element.querySelector("source[data-srcset-large]");
+      const sourceMedium = element.querySelector("source[data-srcset-medium]");
 
-      if (imgElement) {
+      if (imgElement && sourceLarge && sourceMedium) {
         const firstItem = items[0];
-        imgElement.src = firstItem.image;
+
+        sourceLarge.srcset = firstItem.image.large;
+        sourceMedium.srcset = firstItem.image.medium;
+        imgElement.src = firstItem.image.small;
+        imgElement.srcset = firstItem.image.small;
+
         imgElement.alt = firstItem.alt;
-        imgElement.width = firstItem.width;
-        imgElement.height = firstItem.height;
-        imgElement.classList.remove('hidden');
+        imgElement.width = firstItem.width.small;
+        imgElement.height = firstItem.height.small;
+        imgElement.classList.remove("hidden");
       }
     } catch (error) {
-      console.error('Error processing random image data:', error);
+      console.error("Error processing random image data:", error);
     }
   });
 }
 
-document.addEventListener('astro:page-load', handlePageLoad);
+document.addEventListener("astro:page-load", handlePageLoad);
 // document.addEventListener('astro:after-swap', handlePageLoad);

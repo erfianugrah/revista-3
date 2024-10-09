@@ -1,23 +1,43 @@
 ---
 const { images, alt, url, tag, width, height } = Astro.props;
 ---
-<div id="randomimage" class="relative group border-0" data-images={images} data-alt={alt} data-width={width} data-height={height} >
- <a href={url} >
-    <img class="hidden w-full sm:h-[540px] xl:h-[1080px] lg:h-[720px] object-cover object-center " style="object-position: 40% 35%;" />
-    <p class="absolute inset-0 flex items-center justify-center text-[rgb(245,245,245)] text-2xl xl:text-4xl">
+
+<div
+  id="randomimage"
+  class="relative group border-0"
+  data-images={images}
+  data-alt={alt}
+  data-width={JSON.stringify(width)}
+  data-height={JSON.stringify(height)}
+>
+  <a href={url}>
+    <picture>
+      <source media="(min-width: 1280px)" srcset="" data-srcset-large />
+      <source media="(min-width: 768px)" srcset="" data-srcset-medium />
+      <img
+        class="hidden w-full sm:h-[540px] xl:h-[1080px] lg:h-[720px] object-cover object-center"
+        style="object-position: 40% 35%;"
+        src=""
+        alt=""
+        data-srcset-small
+      />
+    </picture>
+    <p
+      class="absolute inset-0 flex items-center justify-center text-[rgb(245,245,245)] text-2xl xl:text-4xl"
+    >
       {tag}
     </p>
   </a>
-   <slot />
+  <slot />
 </div>
 <style>
-#randomimage p {
-  transition: opacity 0.3s ease-in-out;
-  opacity: 1;
-}
+  #randomimage p {
+    transition: opacity 0.3s ease-in-out;
+    opacity: 1;
+  }
 
-#randomimage p:hover {
-  opacity: 0.5;
-}
+  #randomimage p:hover {
+    opacity: 0.5;
+  }
 </style>
-<script src="../scripts/getrandomimage.js" />
+<script src="../scripts/getrandomimage.js"></script>
