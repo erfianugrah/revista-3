@@ -53,6 +53,7 @@ export default defineConfig({
     // directRenderScript: true
   },
   build: {
+    concurrency: 4,
     measuring: {
       entryBuilding: true,
       pageGeneration: true,
@@ -62,4 +63,3 @@ export default defineConfig({
     },
   },
 });
-
