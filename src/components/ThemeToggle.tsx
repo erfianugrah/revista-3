@@ -7,14 +7,25 @@ export default function ThemeToggle() {
   useEffect(() => {
     const theme = localStorage.getItem('theme') || 'light'
     setIsDark(theme === 'dark')
-    document.documentElement.classList.toggle('dark', theme === 'dark')
+    applyTheme(theme as 'light' | 'dark')
   }, [])
+
+  const applyTheme = (theme: 'light' | 'dark') => {
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('theme', theme)
+
+    // Force re-render of syntax highlighting
+    document.querySelectorAll('astro-code').forEach(block => {
+      const html = block.innerHTML
+      block.innerHTML = html
+    })
+  }
 
   const toggleTheme = () => {
     const newTheme = isDark ? 'light' : 'dark'
     setIsDark(!isDark)
-    document.documentElement.classList.toggle('dark', !isDark)
-    localStorage.setItem('theme', newTheme)
+    applyTheme(newTheme)
   }
 
   return (
