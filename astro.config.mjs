@@ -26,11 +26,12 @@ export default defineConfig({
     mdx({
       syntaxHighlight: "shiki",
       shikiConfig: {
-        theme: "tokyo-night",
-        // themes: {
-        //   light: "github-light",
-        //   dark: "tokyo-night",
-        // },
+        theme: "rose-pine-dawn",
+        defaultColor: false,
+        themes: {
+          light: "rose-pine-dawn",
+          dark: "tokyo-night",
+        },
         langs: [],
         wrap: true,
       },
@@ -42,6 +43,18 @@ export default defineConfig({
     react(),
   ],
   markdown: {
+    syntaxHighlight: "shiki",
+    shikiConfig: {
+      theme: "rose-pine-dawn",
+      defaultColor: false,
+      themes: {
+        light: "rose-pine-dawn",
+        dark: "tokyo-night",
+      },
+      langs: [],
+      wrap: true,
+    },
+    gfm: false,
     remarkPlugins: [remarkGfm, remarkReadingTime],
   },
   prefetch: {
