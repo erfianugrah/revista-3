@@ -1,7 +1,7 @@
 {
   "name": "Revistav4",
   "type": "module",
-  "version": "4.8.1",
+  "version": "4.8.2",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -20,6 +20,7 @@
     "@astrojs/tailwind": "^5.1.2",
     "@fontsource-variable/inconsolata": "^5.1.0",
     "@fontsource-variable/overpass-mono": "^5.1.0",
+    "@fontsource/alegreya-sans": "^5.1.1",
     "@iconify-json/mdi": "^1.2.1",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",

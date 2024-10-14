@@ -35,19 +35,17 @@ const publishedDate = new Date(pubDate).toLocaleDateString("en-US", {
   }
   <div class="sm:w-2/3 flex flex-col justify-start space-y-4 mb-6 md:mt-10">
     <header>
-      <h2
-        class="font-overpass-mono font-bold text-xl lg:text-2xl xl:text-4xl capitalize"
-      >
+      <h2 class="font-overpass-mono font-bold text-2xl xl:text-4xl uppercase">
         <a href={url} class="title-link">{title}</a>
       </h2>
       <time
         datetime={pubDate.toISOString()}
-        class="font-inconsolata text-sm text-gray-600 dark:text-gray-400"
+        class="font-inconsolata text-md text-gray-600 dark:text-gray-400"
       >
         Published on {publishedDate}
       </time>
     </header>
-    <p class="font-inconsolata normal-case line-clamp-3 sm:text-base text-sm">
+    <p class="font-alegreya normal-case line-clamp-3 text-base lg:text-lg">
       {description}
     </p>
     <a
