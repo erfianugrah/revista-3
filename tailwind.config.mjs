@@ -6,7 +6,6 @@ export default {
       fontFamily: {
         "overpass-mono": ['"Overpass Mono Variable"', "sans-serif"],
         "inconsolata": ['"Inconsolata Variable"', "sans-serif"],
-        "alegreya": ['"Alegreya Sans"', "sans-serif"],
       },
       objectPosition: {
         "top-33": "center top 33.33%",
