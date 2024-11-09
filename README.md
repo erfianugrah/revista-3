@@ -1,5 +1,5 @@
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-4.8.9-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-4.8.10-blue.svg?cacheSeconds=2592000" />
 </p>
 
 ## Overview
@@ -388,10 +388,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Contact
 
 For any queries regarding this project, please open an issue on the GitHub repository.
-
-## Changelog
-
-A detailed changelog is maintained in the [CHANGELOG.md](CHANGELOG.md) file. Please refer to this file for a comprehensive list of changes between versions.
 
 ## Future Roadmap
 

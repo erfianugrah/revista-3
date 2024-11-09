@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   revista:
-    image: erfianugrah/revista-4:1.16.6
+    image: erfianugrah/revista-4:1.16.7
     hostname: revista
     container_name: revista
     restart: unless-stopped
