@@ -1,7 +1,7 @@
 {
   "name": "Revistav4",
   "type": "module",
-  "version": "4.8.12",
+  "version": "4.8.13",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -23,11 +23,11 @@
     "@iconify-json/mdi": "^1.2.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "astro": "^4.16.14",
+    "astro": "^4.16.16",
     "astro-icon": "^1.1.4",
     "caniuse-lite": "^1.0.30001684",
     "dayjs": "^1.11.13",
-    "framer-motion": "^11.11.17",
+    "framer-motion": "^11.12.0",
     "glightbox": "^3.3.0",
     "markdown-it": "^14.1.0",
     "mdast-util-to-string": "^4.0.0",
@@ -37,13 +37,13 @@
     "sanitize-html": "^2.13.1",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.7.2",
-    "undici": "^6.21.0"
+    "undici": "^7.0.0"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.15",
     "pagefind": "^1.2.0",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.1",
     "prettier-plugin-astro": "^0.14.1"
   }
 }
