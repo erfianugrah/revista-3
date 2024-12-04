@@ -63,7 +63,7 @@ export default defineConfig({
   },
   experimental: {
     clientPrerender: true,
-    responsiveImages: true,
+    // responsiveImages: true,
     // directRenderScript: true
   },
   build: {
@@ -75,5 +75,8 @@ export default defineConfig({
       rendering: true,
       assetProcessing: true,
     },
+  },
+  security: {
+    checkOrigin: false,
   },
 });
