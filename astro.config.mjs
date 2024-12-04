@@ -63,6 +63,7 @@ export default defineConfig({
   },
   experimental: {
     clientPrerender: true,
+    responsiveImages: true,
     // directRenderScript: true
   },
   build: {

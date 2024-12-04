@@ -9,10 +9,11 @@ const imageAssets = await Promise.all(
         src: image.src,
         alt: image.alt,
         inferSize: true,
-        width: "3840",
+        width: 3840,
+        layout: "responsive",
         decoding: "async",
         format: "avif",
-        loading: "lazy"
+        loading: "lazy",
       });
     }
     return null;
@@ -42,4 +43,3 @@ const imageAssets = await Promise.all(
   }
 </div>
 <script src="../scripts/lightbox.js"></script>
-

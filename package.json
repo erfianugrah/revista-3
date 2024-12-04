@@ -23,6 +23,7 @@
     "@iconify-json/mdi": "^1.2.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "@types/sanitize-html": "^2.13.0",
     "astro": "^5.0.2",
     "astro-icon": "^1.1.4",
     "caniuse-lite": "^1.0.30001686",
