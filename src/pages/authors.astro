@@ -13,7 +13,7 @@ const allAuthors = await getCollection("authors");
       .sort(sortByDate)
       .map((post) => (
         <BlogPost
-          url={`/authors/${post.slug}/`}
+          url={`/authors/${post.id}/`}
           image={post.data?.image?.src || ""}
           alt={post.data?.image?.alt || ""}
           title={post.data?.title || ""}

@@ -4,9 +4,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 const pageTitle = "CV";
 const description = "Erfi Anugrah's CV";
 const site_name = "stoicopa";
-import { getEntry } from "astro:content";
+import { getEntry, render } from "astro:content";
 const entry = await getEntry("cv", "resume");
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 ---
 
 <BaseLayout

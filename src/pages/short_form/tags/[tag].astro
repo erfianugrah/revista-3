@@ -30,7 +30,7 @@ const { posts } = Astro.props;
       .sort(sortByDate)
       .map((post) => (
         <BlogPost
-          url={`/short_form/${post.slug}/`}
+          url={`/short_form/${post.id}/`}
           image={post.data?.image?.src || ""}
           alt={post.data?.image?.alt || ""}
           title={post.data?.title || ""}
