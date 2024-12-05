@@ -9,7 +9,7 @@ The schema in [config.ts](content/config.ts) will referencing objects in the fro
 ```
 ---
 title: Sisyphean
-slug: sisyphean
+id: sisyphean
 pubDate: 2020-12-23T08:10:57.000Z
 updatedDate: 2022-03-17T10:37:55.000Z
 tags: [ 'muses' ]

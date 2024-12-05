@@ -1,5 +1,5 @@
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-4.9.4-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-4.9.5-blue.svg?cacheSeconds=2592000" />
 </p>
 
 ## Overview
@@ -152,12 +152,12 @@ graph TD
 2. **Collection Routes**:
    For each collection (long_form, short_form, muses, zeitweilig):
    - `/{collection}`: Index page for the collection (`src/pages/{collection}/index.astro`)
-   - `/{collection}/post-slug`: Individual post pages (`src/pages/{collection}/[...slug].astro`)
+   - `/{collection}/post-id`: Individual post pages (`src/pages/{collection}/[...id].astro`)
    - `/{collection}/tags`: Tag index for the collection (`src/pages/{collection}/tags/index.astro`)
    - `/{collection}/tags/tag-name`: Pages for specific tags (`src/pages/{collection}/tags/[tag].astro`)
 
 3. **Dynamic Route Generation**:
-   - Post pages (e.g., `/long_form/post-slug`) are generated dynamically based on the content in the respective collection using `getStaticPaths()` in `[...slug].astro`.
+   - Post pages (e.g., `/long_form/post-id`) are generated dynamically based on the content in the respective collection using `getStaticPaths()` in `[...id].astro`.
    - Tag pages (e.g., `/long_form/tags/tag-name`) are generated for each unique tag used in the collection, also using `getStaticPaths()` in `[tag].astro`.
 
 4. **RSS Feeds**:

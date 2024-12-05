@@ -9,8 +9,10 @@ let baseUrl = new URL(Astro.request.url).origin;
 const metaImage = await getImage({
   src: "https://cdn.erfianugrah.com/Tenhult_3.JPG",
   alt: "cover_image",
-  inferSize: true,
+  layout: "responsive",
+  // inferSize: true,
   height: 720,
+  width: 1280,
   decoding: "async",
   format: "webp",
   loading: "lazy",
@@ -19,8 +21,10 @@ const metaImage = await getImage({
 const favicon_webp = await getImage({
   src: "https://cdn.erfianugrah.com/ea_favicon.png",
   alt: "favicon",
-  inferSize: true,
+  layout: "responsive",
+  // inferSize: true,
   height: 400,
+  width: 400,
   decoding: "async",
   format: "webp",
   loading: "lazy",

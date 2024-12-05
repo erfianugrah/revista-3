@@ -6,7 +6,7 @@ import { getImage } from "astro:assets";
 import HeroImage from "../components/HeroImage.tsx";
 import NextPost from "../components/NextPost.astro";
 
-const { frontmatter, currentSlug, collection } = Astro.props;
+const { frontmatter, currentId, collection } = Astro.props;
 const updatedDate = frontmatter?.updatedDate
   .toDateString()
   .split(" ")
@@ -31,7 +31,7 @@ const backgroundImage = image
   ? await getImage({
       src: image,
       alt: alt,
-      // layout: "responsive",
+      layout: "responsive",
       width: 3840,
       height: 2160,
       decoding: "async",
@@ -43,7 +43,7 @@ const mobileBackgroundImage = image
   ? await getImage({
       src: image,
       alt: alt,
-      // layout: "responsive",
+      layout: "responsive",
       width: 1920,
       height: 1080,
       decoding: "async",
@@ -56,7 +56,7 @@ const metaImage = image
   ? await getImage({
       src: image,
       alt: alt,
-      // layout: "responsive",
+      layout: "responsive",
       width: 1280,
       height: 720,
       decoding: "async",
@@ -137,7 +137,7 @@ const metaImage = image
       </div>
     </Prose>
   </div>
-  <NextPost currentSlug={currentSlug} collection={collection} />
+  <NextPost currentId={currentId} collection={collection} />
 </BaseLayout>
 
 <style>

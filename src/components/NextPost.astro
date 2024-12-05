@@ -4,20 +4,21 @@ import { getImage } from "astro:assets";
 import Prose from "./Prose.astro";
 
 export interface Props {
-  currentSlug: string;
+  currentId: string;
   collection: string;
 }
 
-const { currentSlug, collection } = Astro.props;
+const { currentId, collection } = Astro.props;
 const allPosts = await getCollection(collection);
 
-const otherPosts = allPosts.filter((post) => post.slug !== currentSlug);
+const otherPosts = allPosts.filter((post) => post.id !== currentId);
 const shouldRender = otherPosts.length > 0;
 
 async function optimizeImage(src, alt) {
   return await getImage({
     src,
     alt,
+    layout: "responsive",
     width: 640,
     height: 360,
     format: "avif",
@@ -35,7 +36,7 @@ const postsData = await Promise.all(
         )
       : null;
     return {
-      slug: post.slug,
+      id: post.id,
       title: post.data.title,
       description: post.data.description,
       image: imageData ? imageData.src : null,
@@ -131,7 +132,7 @@ const favicon = await optimizeImage(
     selectedPosts.forEach((post, index) => {
       const element = postElements[index];
       if (element) {
-        element.href = `/${collection}/${post.slug}/`;
+        element.href = `/${collection}/${post.id}/`;
         element.style.display = "block";
 
         const img = element.querySelector("img");
