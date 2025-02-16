@@ -2,6 +2,7 @@
 import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import ScrollToTop from "../components/scroll-to-top";
 import "@fontsource-variable/overpass-mono";
 import "@fontsource-variable/inconsolata";
 import { getImage } from "astro:assets";
@@ -83,6 +84,7 @@ const {
   >
     <Header is404Page={is404Page} />
     <slot />
+    <ScrollToTop client:load />
     <Footer />
   </body>
 </html>
