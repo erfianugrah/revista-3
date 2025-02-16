@@ -1,4 +1,4 @@
-FROM caddy:2.8.4-alpine
+FROM caddy:2.9.1-alpine
 
 # Set the working directory
 WORKDIR /usr/share/caddy
