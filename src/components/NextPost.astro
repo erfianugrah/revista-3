@@ -81,13 +81,13 @@ const favicon = await optimizeImage(
           {[...Array(3)].map((_, index) => (
             <a
               href="#"
-              class="no-underline block flex-shrink-0 w-56 md:w-full post-item"
+              class="no-underline block shrink-0 w-56 md:w-full post-item"
               style="display: none;"
             >
               <div class="rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl bg-gray-100 dark:bg-[rgb(44,43,47)] h-full flex flex-col group">
-                <div class="p-2 md:p-4 flex-grow flex flex-col relative">
+                <div class="p-2 md:p-4 grow flex flex-col relative">
                   <div class="absolute inset-0 bg-gray-200 dark:bg-[rgb(54,53,57)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div class="aspect-video mb-2 md:mb-4 overflow-hidden rounded relative z-10 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+                  <div class="aspect-video mb-2 md:mb-4 overflow-hidden rounded-sm relative z-10 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
                     <img
                       src=""
                       alt=""
@@ -97,7 +97,7 @@ const favicon = await optimizeImage(
                     />
                   </div>
                   <h3 class="text-sm md:text-lg font-semibold mb-1 md:mb-2 font-overpass-mono text-gray-900 dark:text-[rgb(245,245,245)] relative z-10 line-clamp-2" />
-                  <p class="text-xs md:text-sm line-clamp-2 font-inconsolata flex-grow text-gray-700 dark:text-[rgb(230,230,230)] relative z-10" />
+                  <p class="text-xs md:text-sm line-clamp-2 font-inconsolata grow text-gray-700 dark:text-[rgb(230,230,230)] relative z-10" />
                 </div>
               </div>
             </a>

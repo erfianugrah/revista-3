@@ -99,7 +99,7 @@ export default function HeroImage({
           {tags.map((tag) => (
             <p key={tag} className="font-overpass-mono text-xl">
               <a
-                className="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded no-underline"
+                className="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded-sm no-underline"
                 href={`../tags/${tag}`}
               >
                 {tag}

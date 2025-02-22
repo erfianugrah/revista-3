@@ -5,21 +5,7 @@ import ThemeToggle from "./ThemeToggle";
 <ThemeToggle client:load />
 
 <style is:global>
-  :root {
-    --color-text: #000000;
-    --color-background: #ffffff;
-  }
-
-  :root.dark {
-    --color-text: #ffffff;
-    --color-background: #000000;
-  }
-
-  body {
-    color: var(--color-text);
-    background-color: var(--color-background);
-  }
-
+  /* Keep only the parts needed for the theme toggle functionality */
   .theme-transition {
     transition:
       color 0.3s ease,
@@ -37,7 +23,7 @@ import ThemeToggle from "./ThemeToggle";
   #themeToggle {
     border: 0;
     background: none;
-    color: var(--color-text);
+    color: currentColor; /* Changed from var(--color-text) */
     width: 28px;
     height: 28px;
     padding: 0;
@@ -102,4 +88,3 @@ import ThemeToggle from "./ThemeToggle";
 
   observer.observe(document.documentElement, { attributes: true });
 </script>
-

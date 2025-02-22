@@ -32,7 +32,7 @@ export default function ScrollToTop() {
     <>
       {isVisible && (
         <Button
-          className="fixed bottom-4 right-4 p-2 rounded-full bg-primary text-primary-foreground shadow-lg transition-opacity hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
+          className="fixed bottom-4 right-4 p-2 rounded-full bg-primary text-primary-foreground shadow-lg transition-opacity hover:opacity-80 focus:outline-hidden focus:ring-2 focus:ring-primary focus:ring-opacity-50"
           onClick={scrollToTop}
           aria-label="Scroll to top"
         >

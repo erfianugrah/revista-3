@@ -1,16 +1,17 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
-import tailwind from "@astrojs/tailwind";
 import markdoc from "@astrojs/markdoc";
 import remarkGfm from "remark-gfm";
 import icon from "astro-icon";
 import { remarkReadingTime } from "./src/scripts/remark-reading-time.mjs";
 import undiciRetry from "./src/scripts/undici-retry.js";
 import react from "@astrojs/react";
+import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   site: "https://www.erfianugrah.com",
+
   image: {
     domains: ["erfianugrah.com", "cdn.erfianugrah.com"],
     service: {
@@ -20,6 +21,7 @@ export default defineConfig({
       },
     },
   },
+
   integrations: [
     icon(),
     sitemap(),
@@ -37,11 +39,11 @@ export default defineConfig({
       },
       gfm: false,
     }),
-    tailwind(),
     markdoc(),
     undiciRetry(),
     react(),
   ],
+
   markdown: {
     syntaxHighlight: "shiki",
     shikiConfig: {
@@ -57,15 +59,18 @@ export default defineConfig({
     gfm: false,
     remarkPlugins: [remarkGfm, remarkReadingTime],
   },
+
   prefetch: {
     prefetchAll: true,
     defaultStrategy: "viewport",
   },
+
   experimental: {
     clientPrerender: true,
     // responsiveImages: true,
     // directRenderScript: true
   },
+
   build: {
     concurrency: 4,
     measuring: {
@@ -76,7 +81,13 @@ export default defineConfig({
       assetProcessing: true,
     },
   },
+
   security: {
     checkOrigin: false,
   },
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
+

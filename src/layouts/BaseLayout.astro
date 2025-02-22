@@ -6,6 +6,7 @@ import ScrollToTop from "../components/scroll-to-top";
 import "@fontsource-variable/overpass-mono";
 import "@fontsource-variable/inconsolata";
 import { getImage } from "astro:assets";
+import "../styles/global.css";
 let baseUrl = new URL(Astro.request.url).origin;
 const metaImage = await getImage({
   src: "https://cdn.erfianugrah.com/Tenhult_3.JPG",

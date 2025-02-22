@@ -14,10 +14,10 @@
     prose-p:my-2 prose-p:leading-relaxed
     prose-ul:my-2 prose-ul:list-disc prose-ul:pl-6
     prose-li:my-1
-    prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
+    prose-a:text-blue-600 prose-a:no-underline prose-a:hover:underline
     prose-table:my-4 prose-table:w-full prose-table:border-collapse
-    prose-th:border prose-th:border-slate-300 prose-th:dark:border-slate-600 prose-th:px-4 prose-th:py-2 prose-th:bg-slate-100 prose-th:dark:bg-slate-700 prose-th:font-semibold
-    prose-td:border prose-td:border-slate-300 prose-td:dark:border-slate-600 prose-td:px-4 prose-td:py-2
+    prose-th:border prose-th:border-slate-300 dark:prose-th:border-slate-600 prose-th:px-4 prose-th:py-2 prose-th:bg-slate-100 dark:prose-th:bg-slate-700 prose-th:font-semibold
+    prose-td:border prose-td:border-slate-300 dark:prose-td:border-slate-600 prose-td:px-4 prose-td:py-2
     sm:px-12 sm:py-16
     lg:max-w-4xl font-inconsolata"
 >
@@ -25,24 +25,55 @@
 </div>
 
 <style>
-  /* Custom styles for resume elements */
+  /* Custom styles for resume elements - updated for Tailwind v4 */
   :global(.prose .company-name) {
-    @apply text-2xl font-bold text-blue-900 dark:text-blue-300;
+    font-size: var(--text-6); /* text-2xl in v4 */
+    font-weight: 700; /* font-bold */
+    color: var(--color-blue-900);
+  }
+
+  :global(.dark .prose .company-name) {
+    color: var(--color-blue-300);
   }
 
   :global(.prose .job-title) {
-    @apply text-xl font-semibold text-blue-700 dark:text-blue-400;
+    font-size: var(--text-5); /* text-xl in v4 */
+    font-weight: 600; /* font-semibold */
+    color: var(--color-blue-700);
+  }
+
+  :global(.dark .prose .job-title) {
+    color: var(--color-blue-400);
   }
 
   :global(.prose .date-range) {
-    @apply text-base font-medium text-slate-600 dark:text-slate-400 italic;
+    font-size: var(--text-4); /* text-base in v4 */
+    font-weight: 500; /* font-medium */
+    color: var(--color-slate-600);
+    font-style: italic;
+  }
+
+  :global(.dark .prose .date-range) {
+    color: var(--color-slate-400);
   }
 
   :global(.prose .school-name) {
-    @apply text-xl font-bold text-blue-800 dark:text-blue-400;
+    font-size: var(--text-5); /* text-xl in v4 */
+    font-weight: 700; /* font-bold */
+    color: var(--color-blue-800);
+  }
+
+  :global(.dark .prose .school-name) {
+    color: var(--color-blue-400);
   }
 
   :global(.prose .degree) {
-    @apply text-lg font-semibold text-blue-700 dark:text-blue-300;
+    font-size: var(--text-4-5); /* text-lg in v4 */
+    font-weight: 600; /* font-semibold */
+    color: var(--color-blue-700);
+  }
+
+  :global(.dark .prose .degree) {
+    color: var(--color-blue-300);
   }
 </style>
