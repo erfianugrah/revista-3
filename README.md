@@ -1,5 +1,5 @@
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-5.1.4-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-5.1.5-blue.svg?cacheSeconds=2592000" />
 </p>
 
 ## Overview
