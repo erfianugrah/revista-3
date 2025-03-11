@@ -2,6 +2,8 @@
 
 ### Refer to [Astro docs on Components](https://docs.astro.build/en/basics/astro-components/)
 ---
+
+This project uses Astro v5.4.3 with enhanced component features and Tailwind CSS v4 for styling. Components leverage the latest Astro features for improved performance and type safety.
 For pages such as [short form](https://www.erfianugrah.com/short_form/), [long form](https://www.erfianugrah.com/long_form/), any [tag](https://www.erfianugrah.com/long_form/tags/gleichgesinnte/) pages the file that's being used to structure the layout is [BlogPost.astro](layouts/BlogPost.astro)
 
 The [Footer.astro](components/Footer.astro) will reference [astro-icon](../package.json) for the social media icons

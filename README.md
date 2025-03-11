@@ -1,10 +1,21 @@
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-5.1.5-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-5.1.6-blue.svg?cacheSeconds=2592000" />
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.4.3-FF5D01.svg?logo=astro&logoColor=white" />
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.0.8-38B2AC.svg?logo=tailwind-css&logoColor=white" />
+  <img alt="React" src="https://img.shields.io/badge/React-19.0.0-61DAFB.svg?logo=react&logoColor=white" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.7.2-3178C6.svg?logo=typescript&logoColor=white" />
+  <img alt="MDX" src="https://img.shields.io/badge/MDX-4.1.1-1B1F24.svg?logo=mdx&logoColor=white" />
+  <img alt="Bun" src="https://img.shields.io/badge/Bun-Latest-F9F1E1.svg?logo=bun&logoColor=black" />
+  <br/>
+  <img alt="GitHub CI/CD" src="https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF.svg?logo=github-actions&logoColor=white" />
+  <img alt="Docker" src="https://img.shields.io/badge/Docker-Enabled-2496ED.svg?logo=docker&logoColor=white" />
+  <img alt="Cloudflare" src="https://img.shields.io/badge/Cloudflare-Deployed-F38020.svg?logo=cloudflare&logoColor=white" />
+  <img alt="Deno Deploy" src="https://img.shields.io/badge/Deno-Deployed-000000.svg?logo=deno&logoColor=white" />
 </p>
 
 ## Overview
 
-Revista is a sophisticated photography portfolio and blog built using the Astro framework. It showcases various collections of photographs and written content, organized into different categories such as long-form, short-form, muses, and zeitweilig. The project emphasizes performance, aesthetic presentation, and efficient content management.
+Revista is a sophisticated photography portfolio and blog built using the Astro v5.4.3 framework. It showcases various collections of photographs and written content, organized into different categories such as long-form, short-form, muses, zeitweilig, and cv. The project emphasizes performance, aesthetic presentation, and efficient content management through Astro's latest content collection API.
 
 ## Project Structure
 
@@ -55,9 +66,10 @@ graph TD
     - `index.astro`: The home page
     - `404.astro`: Custom 404 error page
     - `cv.astro`: CV page
-  - `content/`: Markdown content for blog posts and collections
+  - `content/`: Markdown content for blog posts and collections (configured in `src/content.config.ts`)
+  - `content.config.ts`: Configuration file for content collections using Astro's glob loader pattern
   - `styles/`: CSS files for styling
-    - `global.css`: Global styles and Tailwind imports
+    - `global.css`: Global styles and Tailwind v4 imports
     - `MasonryLayout.css`: Styles for the masonry layout used in galleries
   - `scripts/`: JavaScript files for client-side functionality
     - `menu.js`: Handles mobile menu functionality
@@ -70,7 +82,7 @@ graph TD
 
 ## Key Features
 
-1. **Multiple Content Collections**: The site is organized into different content types (long_form, short_form, muses, zeitweilig, authors), each managed as an Astro content collection. This allows for type-safe content management and easy querying.
+1. **Multiple Content Collections**: The site is organized into different content types (long_form, short_form, muses, zeitweilig, authors, cv), each managed as an Astro content collection using the glob loader pattern introduced in Astro v5.4. This allows for type-safe content management, explicit file selection, and easy querying.
 
 2. **Responsive Design**: Utilizes Tailwind CSS for a mobile-first, responsive layout. The design adapts seamlessly from mobile devices to large desktop screens.
 
@@ -112,7 +124,7 @@ graph TD
     G --> O[resume.md]
 ```
 
-Each Markdown file contains frontmatter with metadata such as title, publication date, tags, and image information. The content collections are defined in `src/content/config.ts`, which specifies the schema for each collection using Zod for runtime type checking.
+Each Markdown file contains frontmatter with metadata such as title, publication date, tags, and image information. The content collections are defined in `src/content.config.ts`, which specifies the schema for each collection using Zod for runtime type checking and uses Astro's glob loader pattern to determine which files to include in each collection.
 
 ## Routing
 
@@ -205,9 +217,11 @@ The project implements several performance optimization techniques:
 
 3. **Preloading and Prefetching**: Utilizes Astro's `prefetch` feature to improve navigation performance between pages.
 
-4. **Efficient Bundling**: Astro's built-in bundling and tree-shaking ensure only necessary code is sent to the client.
+4. **Efficient Bundling**: Astro v5.4.3's enhanced built-in bundling and tree-shaking ensure only necessary code is sent to the client.
 
 5. **Caching Strategy**: Implements caching headers and Cloudflare's CDN for improved content delivery speed.
+
+6. **Advanced Tailwind Optimizations**: Leverages Tailwind CSS v4's improved performance and smaller bundle sizes for faster page loads.
 
 ## Search Functionality
 
@@ -239,13 +253,16 @@ While the primary language is English, the project structure supports potential 
 
 2. **TypeScript**: 
    - The project includes TypeScript configurations (`tsconfig.json`).
-   - Enables type-safe development practices.
+   - Latest TypeScript v5.7.2 for enhanced type-safety and development experience.
+   - Astro's built-in TypeScript support with `@astrojs/check` v0.9.4.
 
 3. **Prettier**: 
-   - Used for code formatting, ensuring consistent code style across the project.
+   - Used for code formatting with Prettier v3.4.2, ensuring consistent code style across the project.
+   - Includes the Astro Prettier plugin (prettier-plugin-astro v0.14.1).
 
-4. **ESLint**: 
-   - While not explicitly configured, the project structure suggests its potential use for code linting.
+4. **Tailwind CSS v4**: 
+   - Latest Tailwind CSS v4.0.8 with enhanced performance and smaller bundle sizes.
+   - Configured with the typography plugin for rich text styling.
 
 ## CI/CD Workflow
 
@@ -327,6 +344,12 @@ To get started with this project:
    ```
    bun install
    ```
+   
+   This will install all required dependencies including:
+   - Astro v5.4.3
+   - Tailwind CSS v4
+   - React v19
+   - MDX and other utilities
 
 3. Run the development server:
    ```
@@ -337,6 +360,8 @@ To get started with this project:
    ```
    bun run build
    ```
+   
+   This will also run the Pagefind indexing via the postbuild script.
 
 5. Preview the production build:
    ```

@@ -1,8 +1,12 @@
 # Astro Layouts
 
-### Refer to [Astro docs on Layouts ](https://docs.astro.build/en/basics/layouts/)
+### Refer to [Astro docs on Layouts](https://docs.astro.build/en/basics/layouts/)
 ---
 
-There are technically also components but they are re-usable, and you can see it in other components or even other layouts. Case in point [BaseLayout.astro](layouts/BaseLayout.astro) is used in the other layouts, and other layouts might be using components to render particular UI elements, so nothing is being re-rendered over again. 
+This project uses Astro v5.4.3's enhanced layout capabilities with Tailwind CSS v4 for styling.
 
-You'll see `<slot />` a lot and this is how the content is injected from content collections.
+Layouts are reusable UI structures that can contain components or other layouts. For example, [BaseLayout.astro](layouts/BaseLayout.astro) is used as the foundation for other layouts, and these layouts may incorporate components to render specific UI elements, creating a modular architecture that prevents redundant rendering.
+
+You'll see `<slot />` frequently throughout these files - this is Astro's mechanism for content injection, allowing content from [content collections](/src/content.config.ts) to be inserted into the layout.
+
+The content collections are defined using Astro's new glob loader pattern which provides enhanced type safety and explicit file selection.
