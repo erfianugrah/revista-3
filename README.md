@@ -1,10 +1,10 @@
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-5.2.0-blue.svg?cacheSeconds=2592000" />
-  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.4.3-FF5D01.svg?logo=astro&logoColor=white" />
+  <img alt="Version" src="https://img.shields.io/badge/version-5.2.1-blue.svg?cacheSeconds=2592000" />
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.5.3-FF5D01.svg?logo=astro&logoColor=white" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.0.8-38B2AC.svg?logo=tailwind-css&logoColor=white" />
   <img alt="React" src="https://img.shields.io/badge/React-19.0.0-61DAFB.svg?logo=react&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.7.2-3178C6.svg?logo=typescript&logoColor=white" />
-  <img alt="MDX" src="https://img.shields.io/badge/MDX-4.1.1-1B1F24.svg?logo=mdx&logoColor=white" />
+  <img alt="MDX" src="https://img.shields.io/badge/MDX-4.2.1-1B1F24.svg?logo=mdx&logoColor=white" />
   <img alt="Bun" src="https://img.shields.io/badge/Bun-Latest-F9F1E1.svg?logo=bun&logoColor=black" />
   <br/>
   <img alt="GitHub CI/CD" src="https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF.svg?logo=github-actions&logoColor=white" />
@@ -15,7 +15,7 @@
 
 ## Overview
 
-Revista is a sophisticated photography portfolio and blog built using the Astro v5.4.3 framework. It showcases various collections of photographs and written content, organized into different categories such as long-form, short-form, muses, zeitweilig, and cv. The project emphasizes performance, aesthetic presentation, and efficient content management through Astro's latest content collection API.
+Revista is a sophisticated photography portfolio and blog built using the Astro v5.5.3 framework. It showcases various collections of photographs and written content, organized into different categories such as long-form, short-form, muses, zeitweilig, and cv. The project emphasizes performance, aesthetic presentation, and efficient content management through Astro's latest content collection API.
 
 ## Project Structure
 
@@ -82,7 +82,7 @@ graph TD
 
 ## Key Features
 
-1. **Multiple Content Collections**: The site is organized into different content types (long_form, short_form, muses, zeitweilig, authors, cv), each managed as an Astro content collection using the glob loader pattern introduced in Astro v5.4. This allows for type-safe content management, explicit file selection, and easy querying.
+1. **Multiple Content Collections**: The site is organized into different content types (long_form, short_form, muses, zeitweilig, authors, cv), each managed as an Astro content collection using the glob loader pattern introduced in Astro v5.5. This allows for type-safe content management, explicit file selection, and easy querying.
 
 2. **Responsive Design**: Utilizes Tailwind CSS for a mobile-first, responsive layout. The design adapts seamlessly from mobile devices to large desktop screens.
 
@@ -217,7 +217,7 @@ The project implements several performance optimization techniques:
 
 3. **Preloading and Prefetching**: Utilizes Astro's `prefetch` feature to improve navigation performance between pages.
 
-4. **Efficient Bundling**: Astro v5.4.3's enhanced built-in bundling and tree-shaking ensure only necessary code is sent to the client.
+4. **Efficient Bundling**: Astro v5.5.3's enhanced built-in bundling and tree-shaking ensure only necessary code is sent to the client.
 
 5. **Caching Strategy**: Implements caching headers and Cloudflare's CDN for improved content delivery speed.
 
@@ -346,10 +346,10 @@ To get started with this project:
    ```
    
    This will install all required dependencies including:
-   - Astro v5.4.3
-   - Tailwind CSS v4
-   - React v19
-   - MDX and other utilities
+   - Astro v5.5.3
+   - Tailwind CSS v4.0.8
+   - React v19.0.0
+   - MDX v4.2.1 and other utilities
 
 3. Run the development server:
    ```
