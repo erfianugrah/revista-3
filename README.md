@@ -19,22 +19,32 @@ Revista is a photography portfolio and blog built on Astro v5.5.3. I created it 
 
 ## Project Structure
 
+<details>
+<summary>Project Structure Diagram (click to expand)</summary>
+
+### Top-Level Structure
+
 ```mermaid
 graph TD
     classDef root fill:#f9f7f3,stroke:#333,stroke-width:2px
     classDef mainDir fill:#f2e9de,stroke:#333,stroke-width:1px
-    classDef contentDir fill:#e9d8c4,stroke:#333,stroke-width:1px
-    classDef compFile fill:#e0f0e3,stroke:#333,stroke-width:1px
-    classDef layoutFile fill:#e3e0f0,stroke:#333,stroke-width:1px
-    classDef pageFile fill:#f0e0e3,stroke:#333,stroke-width:1px
-    classDef styleFile fill:#f0e3e0,stroke:#333,stroke-width:1px
-    classDef scriptFile fill:#e0e3f0,stroke:#333,stroke-width:1px
     
     A["/revista" Root] --> B["📁 src"]
     A --> C["📁 public<br>(static assets)"]
     A --> D["⚙️ Configuration Files<br>(astro.config, tailwind.config)"]
     
-    B --> E["📁 components<br>(UI building blocks)"]
+    class A root
+    class B,C,D mainDir
+```
+
+### Source Directory Structure
+
+```mermaid
+graph TD
+    classDef mainDir fill:#f2e9de,stroke:#333,stroke-width:1px
+    classDef contentDir fill:#e9d8c4,stroke:#333,stroke-width:1px
+    
+    B["📁 src"] --> E["📁 components<br>(UI building blocks)"]
     B --> F["📁 layouts<br>(page templates)"]
     B --> G["📁 pages<br>(routes)"]
     B --> H["📁 content<br>(markdown collections)"]
@@ -48,33 +58,45 @@ graph TD
     H --> O["📝 authors<br>(contributor info)"]
     H --> P["📝 cv<br>(resume data)"]
     
-    E --> E1["🧩 BlogPost.astro"]
+    class B,E,F,G,H,I,J mainDir
+    class K,L,M,N,O,P contentDir
+```
+
+### Component Files
+
+```mermaid
+graph TD
+    classDef compFile fill:#e0f0e3,stroke:#333,stroke-width:1px
+    classDef layoutFile fill:#e3e0f0,stroke:#333,stroke-width:1px
+    classDef pageFile fill:#f0e0e3,stroke:#333,stroke-width:1px
+    classDef styleFile fill:#f0e3e0,stroke:#333,stroke-width:1px
+    classDef scriptFile fill:#e0e3f0,stroke:#333,stroke-width:1px
+    
+    E["📁 components"] --> E1["🧩 BlogPost.astro"]
     E --> E2["🧩 Footer.astro"]
     E --> E3["🧩 Header.astro"]
     E --> E4["🧩 Navigation.astro"]
     
-    F --> F1["📄 BaseLayout.astro"]
+    F["📁 layouts"] --> F1["📄 BaseLayout.astro"]
     F --> F2["📄 MarkdownPostLayout.astro"]
     
-    G --> G1["🌐 index.astro<br>(homepage)"]
+    G["📁 pages"] --> G1["🌐 index.astro<br>(homepage)"]
     G --> G2["🌐 404.astro<br>(error page)"]
     G --> G3["🌐 cv.astro<br>(resume)"]
     
-    I --> I1["🎨 global.css<br>(site-wide styles)"]
+    I["📁 styles"] --> I1["🎨 global.css<br>(site-wide styles)"]
     I --> I2["🎨 MasonryLayout.css<br>(photo grid styling)"]
     
-    J --> J1["⚡ menu.js<br>(mobile navigation)"]
+    J["📁 scripts"] --> J1["⚡ menu.js<br>(mobile navigation)"]
     J --> J2["⚡ themetoggle.js<br>(dark/light mode)"]
     
-    class A root
-    class B,C,D,E,F,G,H,I,J mainDir
-    class K,L,M,N,O,P contentDir
     class E1,E2,E3,E4 compFile
     class F1,F2 layoutFile
     class G1,G2,G3 pageFile
     class I1,I2 styleFile
     class J1,J2 scriptFile
 ```
+</details>
 
 ### Key Directories and Files
 
@@ -131,11 +153,15 @@ graph TD
 
 All content lives in Markdown files located in the `src/content/` directory. Each content type has its own subdirectory:
 
+<details>
+<summary>Content Management Diagram (click to expand)</summary>
+
+### Content Directory Structure
+
 ```mermaid
 graph TD
     classDef rootDir fill:#f5f5f5,stroke:#333,stroke-width:2px
     classDef contentType fill:#e8f4f8,stroke:#333,stroke-width:1px
-    classDef mdFile fill:#f8f4e8,stroke:#333,stroke-width:1px
     
     A["📁 content/"] --> B["📁 long_form/<br><i>in-depth articles</i>"]
     A --> C["📁 short_form/<br><i>brief posts</i>"]
@@ -144,24 +170,46 @@ graph TD
     A --> F["📁 authors/<br><i>contributor profiles</i>"]
     A --> G["📁 cv/<br><i>professional info</i>"]
     
-    B --> H["📄 iceland-trip.mdx<br><i>frontmatter + markdown</i>"]
-    B --> I["📄 camera-review.mdx<br><i>frontmatter + markdown</i>"]
-    
-    C --> J["📄 new-lens.mdx<br><i>frontmatter + markdown</i>"]
-    C --> K["📄 photo-tip.mdx<br><i>frontmatter + markdown</i>"]
-    
-    D --> L["📄 urban-geometry.mdx<br><i>photo gallery post</i>"]
-    
-    E --> M["📄 thoughts-on-bw.mdx<br><i>creative exploration</i>"]
-    
-    F --> N["📄 about-me.mdx<br><i>author bio</i>"]
-    
-    G --> O["📄 resume.mdx<br><i>professional experience</i>"]
-    
     class A rootDir
     class B,C,D,E,F,G contentType
-    class H,I,J,K,L,M,N,O mdFile
 ```
+
+### Content Files by Type
+
+```mermaid
+graph TD
+    classDef contentType fill:#e8f4f8,stroke:#333,stroke-width:1px
+    classDef mdFile fill:#f8f4e8,stroke:#333,stroke-width:1px
+    
+    B["📁 long_form/"] --> H["📄 iceland-trip.mdx<br><i>frontmatter + markdown</i>"]
+    B --> I["📄 camera-review.mdx<br><i>frontmatter + markdown</i>"]
+    
+    C["📁 short_form/"] --> J["📄 new-lens.mdx<br><i>frontmatter + markdown</i>"]
+    C --> K["📄 photo-tip.mdx<br><i>frontmatter + markdown</i>"]
+    
+    class B,C contentType
+    class H,I,J,K mdFile
+```
+
+### Specialized Content Types
+
+```mermaid
+graph TD
+    classDef contentType fill:#e8f4f8,stroke:#333,stroke-width:1px
+    classDef mdFile fill:#f8f4e8,stroke:#333,stroke-width:1px
+    
+    D["📁 muses/"] --> L["📄 urban-geometry.mdx<br><i>photo gallery post</i>"]
+    
+    E["📁 zeitweilig/"] --> M["📄 thoughts-on-bw.mdx<br><i>creative exploration</i>"]
+    
+    F["📁 authors/"] --> N["📄 about-me.mdx<br><i>author bio</i>"]
+    
+    G["📁 cv/"] --> O["📄 resume.mdx<br><i>professional experience</i>"]
+    
+    class D,E,F,G contentType
+    class L,M,N,O mdFile
+```
+</details>
 
 Each content collection is defined with a specific schema in `content.config.ts` using Zod for validation. Here's a simplified example of the frontmatter structure:
 
@@ -210,12 +258,15 @@ Each Markdown file includes frontmatter with metadata like title, publication da
 
 Revista uses a mix of file-based routing and dynamic route generation:
 
+<details>
+<summary>Routing Diagram (click to expand)</summary>
+
+### Main Routes
+
 ```mermaid
 graph TD
     classDef rootRoute fill:#f8f8f8,stroke:#333,stroke-width:2px
     classDef staticRoute fill:#f0f8ff,stroke:#333,stroke-width:1px
-    classDef dynamicRoute fill:#fff0f5,stroke:#333,stroke-width:1px
-    classDef tagRoute fill:#f5fff0,stroke:#333,stroke-width:1px
     
     A["🏠 www.erfianugrah.com<br>(Root)"] --> B["❌ /404<br>(Custom error page)"]
     A --> C["👤 /authors<br>(Contributor profiles)"]
@@ -231,32 +282,57 @@ graph TD
     G -.-> G0["📡 /muses/rss.xml"]
     H -.-> H0["📡 /zeitweilig/rss.xml"]
     
+    class A rootRoute
+    class B,C,D,E,F,G,H staticRoute
+    class E0,F0,G0,H0 staticRoute
+```
+
+### Long-form and Short-form Routes
+
+```mermaid
+graph TD
+    classDef staticRoute fill:#f0f8ff,stroke:#333,stroke-width:1px
+    classDef dynamicRoute fill:#fff0f5,stroke:#333,stroke-width:1px
+    classDef tagRoute fill:#f5fff0,stroke:#333,stroke-width:1px
+    
     %% Long-form routes
-    E --> I["📄 /long_form/[post-slug]<br>(Individual article pages)"]
+    E["📚 /long_form"] --> I["📄 /long_form/[post-slug]<br>(Individual article pages)"]
     E --> J["🏷️ /long_form/tags<br>(Tags index)"]
     J --> K["🔖 /long_form/tags/[tag]<br>(Articles with specific tag)"]
     
     %% Short-form routes
-    F --> L["📄 /short_form/[post-slug]<br>(Individual post pages)"]
+    F["📝 /short_form"] --> L["📄 /short_form/[post-slug]<br>(Individual post pages)"]
     F --> M["🏷️ /short_form/tags<br>(Tags index)"]
     M --> N["🔖 /short_form/tags/[tag]<br>(Posts with specific tag)"]
     
+    class E,F staticRoute
+    class I,L dynamicRoute
+    class J,K,M,N tagRoute
+```
+
+### Muses and Zeitweilig Routes
+
+```mermaid
+graph TD
+    classDef staticRoute fill:#f0f8ff,stroke:#333,stroke-width:1px
+    classDef dynamicRoute fill:#fff0f5,stroke:#333,stroke-width:1px
+    classDef tagRoute fill:#f5fff0,stroke:#333,stroke-width:1px
+    
     %% Muses routes
-    G --> O["🖼️ /muses/[post-slug]<br>(Individual gallery pages)"]
+    G["🖼️ /muses"] --> O["🖼️ /muses/[post-slug]<br>(Individual gallery pages)"]
     G --> P["🏷️ /muses/tags<br>(Tags index)"]
     P --> Q["🔖 /muses/tags/[tag]<br>(Galleries with specific tag)"]
     
     %% Zeitweilig routes
-    H --> R["📄 /zeitweilig/[post-slug]<br>(Individual content pages)"]
+    H["⏳ /zeitweilig"] --> R["📄 /zeitweilig/[post-slug]<br>(Individual content pages)"]
     H --> S["🏷️ /zeitweilig/tags<br>(Tags index)"]
     S --> T["🔖 /zeitweilig/tags/[tag]<br>(Content with specific tag)"]
     
-    class A rootRoute
-    class B,C,D,E,F,G,H staticRoute
-    class I,L,O,R dynamicRoute
-    class J,K,M,N,P,Q,S,T tagRoute
-    class E0,F0,G0,H0 staticRoute
+    class G,H staticRoute
+    class O,R dynamicRoute
+    class P,Q,S,T tagRoute
 ```
+</details>
 
 The routing system combines static and dynamic routes:
 
