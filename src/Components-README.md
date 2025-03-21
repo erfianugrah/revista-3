@@ -3,25 +3,54 @@
 ### Refer to [Astro docs on Components](https://docs.astro.build/en/basics/astro-components/)
 ---
 
-This project uses Astro v5.4.3 with enhanced component features and Tailwind CSS v4 for styling. Components leverage the latest Astro features for improved performance and type safety.
-For pages such as [short form](https://www.erfianugrah.com/short_form/), [long form](https://www.erfianugrah.com/long_form/), any [tag](https://www.erfianugrah.com/long_form/tags/gleichgesinnte/) pages the file that's being used to structure the layout is [BlogPost.astro](layouts/BlogPost.astro)
+## Overview
 
-The [Footer.astro](components/Footer.astro) will reference [astro-icon](../package.json) for the social media icons
+This project uses Astro v5.5.3 with enhanced component features and Tailwind CSS v4.0.8 for styling. Components leverage the latest Astro features for improved performance and type safety.
 
-[getRandomImage.astro](components/getRandomImage.astro) is used in [TagLayout.astro](layouts/TagLayout.astro) to randomise the images chosen from the [Content Collections](content/)
+## Key Components
 
-[Pagefind.astro](components/Pagefind.astro) is used in [Navigation.astro](components/Navigation.astro) and is using the [Pagefind](https://pagefind.app/) integration
+### Page & Layout Components
 
-[ThemeIcon.astro](components/ThemeIcon.astro) is referencing [themetoggle.js](scripts/themetoggle.js) for light/dark mode switch.
+- **[BlogPost.astro](layouts/BlogPost.astro)**: Core layout component for all content pages including [short form](https://www.erfianugrah.com/short_form/), [long form](https://www.erfianugrah.com/long_form/), and [tag pages](https://www.erfianugrah.com/long_form/tags/gleichgesinnte/).
 
-[Hamburger.astro](components/Hamburger.astro), [ThemeIcon.astro](components/ThemeIcon.astro), [Navigation.astro](components/Navigation.astro) and  [Pagefind.astro](components/Pagefind.astro) are used in [Header.astro](components/Header.astro)
+- **[Homepage.astro](components/Homepage.astro)**: Used in [index.astro](pages/index.astro) to create the landing page. References [homepage.js](scripts/homePage.js) for randomizing featured images.
 
-[Masonry.astro](components/Masonry.astro) is used in [MarkdownPostLayout.astro](layouts/MarkdownPostLayout.astro) for the rendering of the images that's referenced in the [Content Collections](content/) for specific posts. [Masonry.astro](components/Masonry.astro) is referencing [masonry.css](styles/MasonryLayout.css) and [glightbox.js](scripts/lightbox.js)
+### Header Components
 
-[sortbydate.jsx](components/sortbydate.jsx) is used in [Pages](pages/) to order the posts that are being rendered by [BlogPost.astro](layouts/BlogPost.astro).
+- **[Header.astro](components/Header.astro)**: Main header component that incorporates:
+  - **[Hamburger.astro](components/Hamburger.astro)**: Mobile menu toggle
+  - **[ThemeIcon.astro](components/ThemeIcon.astro)**: Light/dark mode switcher using [themetoggle.js](scripts/themetoggle.js)
+  - **[Navigation.astro](components/Navigation.astro)**: Site navigation menu
+  - **[Pagefind.astro](components/Pagefind.astro)**: Search functionality using [Pagefind](https://pagefind.app/) integration
 
-[Homepage.astro](components/Homepage.astro) is used in [index.astro](pages/index.astro) and is referencing [homepage.js](scripts/homePage.js), this functions the same as [getRandomImage.astro](components/getRandomImage.astro) to randomise the pictures shown, but structures are different in terms of the props being passed
+- **[Footer.astro](components/Footer.astro)**: Site footer with social media icons from [astro-icon](../package.json)
 
-[Prose.astro](components/Prose.astro) is a [TailwindCSS](../tailwind.config.mjs) layout and is being used throughout the site for formmatting. [Prose_cv.astro](components/Prose_cv.astro) is only for the [cv](content/cv) collection. [Prose_headings.astro](components/Prose_headings.astro) as the name mentions, formats headings.
+### Content Presentation Components
 
-The other files are remnants during the development process and can be ignored.
+- **[Masonry.astro](components/Masonry.astro)**: Photo gallery layout used in [MarkdownPostLayout.astro](layouts/MarkdownPostLayout.astro) to display images from [Content Collections](content/). Uses [masonry.css](styles/MasonryLayout.css) and [glightbox.js](scripts/lightbox.js) for the gallery lightbox functionality.
+
+- **[getRandomImage.astro](components/getRandomImage.astro)**: Used in [TagLayout.astro](layouts/TagLayout.astro) to randomize featured images from content collections.
+
+### Typography Components
+
+- **[Prose.astro](components/Prose.astro)**: [TailwindCSS](../tailwind.config.mjs) typographic layout used throughout the site for consistent text formatting.
+- **[Prose_cv.astro](components/Prose_cv.astro)**: Specialized version for the [CV](content/cv) collection.
+- **[Prose_headings.astro](components/Prose_headings.astro)**: Specialized component for formatting headings.
+
+### Utility Components
+
+- **[sortbydate.jsx](components/sortbydate.jsx)**: Used in [Pages](pages/) to chronologically order posts rendered by [BlogPost.astro](layouts/BlogPost.astro).
+
+## Component Relationships
+
+Components are organized in a hierarchical structure, with layout components (like BaseLayout and MarkdownPostLayout) wrapping content components. The `<slot />` element is used extensively to inject content from Markdown files in the content collections.
+
+## Notes
+
+- All components follow Astro's `.astro` file format with a mix of frontmatter, HTML templates, and component script sections
+- Components leverage Astro's optimized rendering for minimal client-side JavaScript
+- All styling uses Tailwind CSS v4.0.8 utilities for consistency and performance
+
+## Deprecated Components
+
+Some files in the components directory are remnants from the development process and can be ignored.
