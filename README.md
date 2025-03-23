@@ -1,6 +1,6 @@
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-5.2.1-blue.svg?cacheSeconds=2592000" />
-  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.5.3-FF5D01.svg?logo=astro&logoColor=white" />
+  <img alt="Version" src="https://img.shields.io/badge/version-5.2.2-blue.svg?cacheSeconds=2592000" />
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.5.4-FF5D01.svg?logo=astro&logoColor=white" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.0.8-38B2AC.svg?logo=tailwind-css&logoColor=white" />
   <img alt="React" src="https://img.shields.io/badge/React-19.0.0-61DAFB.svg?logo=react&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.7.2-3178C6.svg?logo=typescript&logoColor=white" />
@@ -15,7 +15,7 @@
 
 ## Overview
 
-Revista is a photography portfolio and blog built on Astro v5.5.3. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
+Revista is a photography portfolio and blog built on Astro v5.5.4. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
 
 ## Project Structure
 
@@ -129,7 +129,7 @@ graph TD
 
 ## Key Features
 
-1. **Multiple Content Collections**: The site organizes content into different types (long_form, short_form, muses, zeitweilig, authors, cv), each managed as an Astro content collection using the glob loader pattern introduced in Astro v5.5.3. This gives me type-safe content management, explicit file selection, and simplified querying.
+1. **Multiple Content Collections**: The site organizes content into different types (long_form, short_form, muses, zeitweilig, authors, cv), each managed as an Astro content collection using the glob loader pattern introduced in Astro v5.5.4. This gives me type-safe content management, explicit file selection, and simplified querying.
 
 2. **Responsive Design**: The site uses Tailwind CSS for a mobile-first approach. I've customized the breakpoints to match my specific needs at 800px, 1200px, 1900px, 2500px, and 3800px, which ensures the site looks good on everything from phones to ultra-wide monitors.
 
@@ -404,7 +404,7 @@ I've optimized the site in several ways:
 
 3. **Preloading and Prefetching**: Astro's `prefetch` feature loads linked pages before the user clicks, making navigation feel instant.
 
-4. **Efficient Bundling**: Astro v5.5.3 includes improved bundling and tree-shaking to minimize client-side code, with enhanced hydration strategies and faster component rendering.
+4. **Efficient Bundling**: Astro v5.5.4 includes improved bundling and tree-shaking to minimize client-side code, with enhanced hydration strategies and faster component rendering.
 
 5. **Cloudflare CDN**: The site uses Cloudflare's CDN with custom cache headers to serve content from edge locations worldwide.
 
@@ -575,7 +575,7 @@ To start working with this project:
    ```
    
    This installs:
-   - Astro v5.5.3
+   - Astro v5.5.4
    - Tailwind CSS v4.0.8
    - React v19.0.0
    - MDX v4.2.1 and other dependencies
