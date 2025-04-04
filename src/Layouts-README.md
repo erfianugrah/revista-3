@@ -5,7 +5,7 @@
 
 ## Overview
 
-This project uses Astro v5.5.3's enhanced layout capabilities with Tailwind CSS v4.0.8 for styling. Layouts provide reusable UI structures that define the visual framework for different page types throughout the site.
+This project uses Astro v5.6.0's enhanced layout capabilities with Tailwind CSS v4.0.8 for styling. Layouts provide reusable UI structures that define the visual framework for different page types throughout the site.
 
 ## Layout Architecture
 

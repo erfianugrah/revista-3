@@ -5,7 +5,7 @@
 
 ## Overview
 
-This project uses Astro v5.5.3 with enhanced component features and Tailwind CSS v4.0.8 for styling. Components leverage the latest Astro features for improved performance and type safety.
+This project uses Astro v5.6.0 with enhanced component features and Tailwind CSS v4.0.8 for styling. Components leverage the latest Astro features for improved performance and type safety.
 
 ## Key Components
 

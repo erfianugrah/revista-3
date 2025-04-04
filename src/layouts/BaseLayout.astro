@@ -93,8 +93,6 @@ const formattedUpdatedDate = updatedDate
 <html
   class="bg-[rgb(244,242,238)] dark:bg-[rgb(34,33,37)]"
   lang="en"
-  itemscope
-  itemtype="https://schema.org/WebPage"
 >
   <head>
     <meta charset="utf-8" />
@@ -171,13 +169,9 @@ const formattedUpdatedDate = updatedDate
   </head>
   <body
     class="flex flex-col flex-wrap justify-between md:pt-8 md:pr-16 md:pb-8 md:pl-16 p-8 max-w-full min-h-screen dark:bg-[rgb(34,33,37)] dark:text-[rgb(245,245,245)]"
-    itemscope
-    itemtype="https://schema.org/WebPage"
   >
     <Header is404Page={is404Page} />
-    <main itemprop="mainContentOfPage">
-      <slot />
-    </main>
+    <slot />
     <ScrollToTop client:load />
     <Footer />
   </body>
