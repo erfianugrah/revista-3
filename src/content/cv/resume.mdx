@@ -6,6 +6,16 @@ updatedDate: 2024-10-06T07:04:55.000Z
 tags: ['cv']
 author: "Erfi Anugrah"
 slug: resume
+fullName: "ERFI ANUGRAH"
+sections:
+  - id: "experience"
+    label: "Experience"
+  - id: "skills"
+    label: "Skills"
+  - id: "languages"
+    label: "Languages"
+  - id: "education"
+    label: "Education"
 contacts:
   - type: email
     value: erfi@erfianugrah.com
@@ -19,97 +29,185 @@ contacts:
     value: github.com/erfianugrah
     url: https://github.com/erfianugrah
     icon: github
+skills:
+  - name: "HTML/CSS"
+    level: "expert"
+    category: "frontend"
+  - name: "Astro Web Framework"
+    level: "expert"
+    category: "frontend"
+  - name: "React"
+    level: "expert"
+    category: "frontend"
+  - name: "Python scripting"
+    level: "advanced"
+    category: "backend"
+  - name: "Rust (basic)"
+    level: "beginner"
+    category: "backend"
+  - name: "Grafana/Prometheus"
+    level: "intermediate"
+    category: "devops"
+  - name: "Gitops/devops"
+    level: "advanced"
+    category: "devops"
+  - name: "Sysadmin"
+    level: "advanced"
+    category: "devops"
+  - name: "Networking"
+    level: "expert"
+    category: "networking"
+  - name: "Kubernetes"
+    level: "advanced"
+    category: "devops"
+languages:
+  - language: "English"
+    proficiency: "Native speaker"
+    level: "expert"
+  - language: "Malay"
+    proficiency: "Professional"
+    level: "advanced"
+  - language: "German"
+    proficiency: "Elementary"
+    level: "beginner"
+  - language: "Swedish"
+    proficiency: "Elementary"
+    level: "beginner"
+  - language: "Dutch"
+    proficiency: "Elementary"
+    level: "beginner"
+education:
+  - institution: "Nanyang Technological University, Nanyang Business School, Singapore"
+    degree: "Bachelor of Business (Marketing) (Honours with Merit)"
+    dateRange: "Aug 2015 – July 2019"
+  - institution: "Pioneer Junior College"
+    degree: "GCE 'A' Levels"
+    dateRange: "Jan 2011 – Dec 2012"
+companies:
+  - name: "Cloudflare"
+    positions:
+      - title: "Senior Customer Solutions Engineer"
+        dateRange: "Oct 2024 – Present"
+        responsibilities:
+          - "Designing and implementing enterprise-grade solutions for complex customer requirements"
+          - "Leading strategic technical discussions to address evolving customer use cases"
+          - "Orchestrating seamless customer onboarding and migration processes"
+          - "Contributing to technical documentation and knowledge base development"
+          - "Mentoring junior engineers and sharing technical expertise across the team"
+      - title: "Customer Solutions Engineer"
+        dateRange: "Jan 2021 – Oct 2024"
+        responsibilities:
+          - "Elevate product adoption and address new use cases during customers' journey with Cloudflare"
+          - "Handle customer escalations, complex onboardings, and migrations"
+          - "Manage general technical projects"
+        achievements:
+          - "CSE of the Quarter (EMEA) Q2 2024"
+          - "CSE of the Quarter (APJC) Q3 2022"
+          - "Cloudflare Capabilities Award Q4 2021"
+          - "Most Customer Focused Award Q4 2021"
+      - title: "Solutions Engineer"
+        dateRange: "July 2019 – Dec 2020"
+        responsibilities:
+          - "Conducted POCs, demos, and technical discussions for prospects, from startups to enterprises, primarily within ASEAN"
+          - "Led webinars, presentations, and demos at tradeshows and developer-oriented events"
+          - "Accelerated technology adoption and aided customers in eliminating technical debt"
+          - "Assisted customers during attacks"
+        achievements:
+          - "Won the MVP award in Q1 2020"
+      - title: "Marketing Intern"
+        dateRange: "July 2018 – Dec 2018"
+        responsibilities:
+          - "Led APAC marketing campaigns, collaborating with demand gen, product, events, advertising & sales teams in HQ"
+          - "Launched integrated ABM campaigns (content syndication, ads, webinars & email drips)"
+          - "Developed a performance product webinar from the ground up"
+          - "Created integrated marketing campaigns for APAC field and partner events"
+          - "Executed weekly social media blog/product copy"
+          - "Formulated sales enablement fact sheet"
+          - "Authored a blog post"
+  - name: "Advanced Materials Technologies"
+    positions:
+      - title: "Marketing Intern"
+        dateRange: "May 2017 – July 2017"
+        responsibilities:
+          - "Conducted market research, profiling current and prospective business partners"
+          - "Created marketing assets including photos, logos, and videos"
+          - "Catalogued metal/ceramic injection and 3D printed parts for internal database"
+          - "Managed Salesforce reports and data entry for lead processing"
+  - name: "Singapore Police Force"
+    positions:
+      - title: "KINS, First Team-in-Charge, Acting Guard Commander"
+        dateRange: "May 2013 – March 2015"
+        responsibilities:
+          - "Excelled in team management and security deployment"
+          - "Performed administration duties and assumed Guard Commander role when needed"
+          - "Assisted in managing training camp operations, ensuring incident-free operations"
 ---
-## Work Experience
 
-## <span class="company-name">Cloudflare</span>
+import CVSection from '../../components/CVSection.astro';
+import CVCompany from '../../components/CVCompany.astro';
+import CVTimeline from '../../components/CVTimeline.astro';
+import SkillBar from '../../components/SkillBar.astro';
+import EducationTimeline from '../../components/EducationTimeline.astro';
+import CVColorLegend from '../../components/CVColorLegend.astro';
 
-### <span class="job-title">Senior Customer Solutions Engineer</span>
-#### <span class="date-range">Oct 2024 – Present</span>
-- Designing and implementing enterprise-grade solutions for complex customer requirements
-- Leading strategic technical discussions to address evolving customer use cases
-- Orchestrating seamless customer onboarding and migration processes
-- Contributing to technical documentation and knowledge base development
-- Mentoring junior engineers and sharing technical expertise across the team
+<CVColorLegend className="mb-4" />
 
-### <span class="job-title">Customer Solutions Engineer</span>
-#### <span class="date-range">Jan 2021 – Oct 2024</span>
+<CVSection id="experience" title="Work Experience">
+  {frontmatter.companies.map(company => (
+    <CVCompany name={company.name}>
+      {company.positions.map(position => (
+        <CVTimeline title={position.title} dateRange={position.dateRange}>
+          <ul>
+            {position.responsibilities.map(responsibility => (
+              <li>{responsibility}</li>
+            ))}
+            {position.achievements && (
+              <li><strong>Awards and Recognition</strong>:
+                <ul>
+                  {position.achievements.map(achievement => (
+                    <li>{achievement}</li>
+                  ))}
+                </ul>
+              </li>
+            )}
+          </ul>
+        </CVTimeline>
+      ))}
+    </CVCompany>
+  ))}
+</CVSection>
 
-- Elevate product adoption and address new use cases during customers' journey with Cloudflare
-- Handle customer escalations, complex onboardings, and migrations
-- Manage general technical projects
-- **Awards and Recognition**:
-  - CSE of the Quarter (EMEA) Q2 2024 
-  - CSE of the Quarter (APJC) Q3 2022
-  - Cloudflare Capabilities Award Q4 2021
-  - Most Customer Focused Award Q4 2021
+<CVSection id="skills" title="Skills">
+  <div class="skills-grid">
+    {frontmatter.skills.map(skill => (
+      <SkillBar 
+        name={skill.name} 
+        level={skill.level} 
+        category={skill.category} 
+      />
+    ))}
+  </div>
+</CVSection>
 
-### <span class="job-title">Solutions Engineer</span>
-#### <span class="date-range">July 2019 – Dec 2020</span>
+<CVSection id="languages" title="Languages">
+  <table class="w-full">
+    <thead>
+      <tr>
+        <th>Language</th>
+        <th>Proficiency</th>
+      </tr>
+    </thead>
+    <tbody>
+      {frontmatter.languages.map(lang => (
+        <tr>
+          <td>{lang.language}</td>
+          <td>{lang.proficiency}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</CVSection>
 
-- Conducted POCs, demos, and technical discussions for prospects, from startups to enterprises, primarily within ASEAN
-- Led webinars, presentations, and demos at tradeshows and developer-oriented events
-- Accelerated technology adoption and aided customers in eliminating technical debt
-- Assisted customers during attacks
-- **Achievement**: Won the MVP award in Q1 2020
-
-### <span class="job-title">Marketing Intern</span>
-#### <span class="date-range">July 2018 – Dec 2018</span>
-
-- Led APAC marketing campaigns, collaborating with demand gen, product, events, advertising & sales teams in HQ
-- Launched integrated ABM campaigns (content syndication, ads, webinars & email drips)
-- Developed a performance product webinar from the ground up
-- Created integrated marketing campaigns for APAC field and partner events
-- Executed weekly social media blog/product copy
-- Formulated sales enablement fact sheet
-- Authored a blog post
-
-## <span class="company-name">Advanced Materials Technologies</span>
-
-### <span class="job-title">Marketing Intern</span>
-#### <span class="date-range">May 2017 – July 2017</span>
-
-- Conducted market research, profiling current and prospective business partners
-- Created marketing assets including photos, logos, and videos
-- Catalogued metal/ceramic injection and 3D printed parts for internal database
-- Managed Salesforce reports and data entry for lead processing
-
-## <span class="company-name">Singapore Police Force</span>
-
-### <span class="job-title">KINS, First Team-in-Charge, Acting Guard Commander</span>
-#### <span class="date-range">May 2013 – March 2015</span>
-
-- Excelled in team management and security deployment
-- Performed administration duties and assumed Guard Commander role when needed
-- Assisted in managing training camp operations, ensuring incident-free operations
-
-## Skills
-
-- HTML/CSS
-- Astro Web Framework
-- React
-- Python scripting
-- Rust (basic)
-- Grafana/Prometheus
-- Gitops/devops
-- Sysadmin
-- Networking
-- Kubernetes
-
-## Languages
-
-| Language | Proficiency    |
-|----------|----------------|
-| English  | Native speaker |
-| Malay    | Professional   |
-| German   | Elementary     |
-| Swedish  | Elementary     |
-| Dutch    | Elementary     |
-
-## Education
-
-### <span class="school-name">Nanyang Technological University, Nanyang Business School, Singapore</span>
-<span class="degree">Bachelor of Business (Marketing) (Honours with Merit)</span> | <span class="date-range">Aug 2015 – July 2019</span>
-
-### <span class="school-name">Pioneer Junior College</span>
-<span class="degree">GCE 'A' Levels</span> | <span class="date-range">Jan 2011 – Dec 2012</span>
+<CVSection id="education" title="Education">
+  <EducationTimeline education={frontmatter.education} />
+</CVSection>

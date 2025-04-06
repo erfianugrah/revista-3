@@ -2,20 +2,48 @@
 import ProseCv from "../components/Prose_cv.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Icon } from "astro-icon/components";
-const pageTitle = "CV";
-const description = "Erfi Anugrah's CV";
+import "../styles/cv-print.css";
+
+const pageTitle = "Erfi Anugrah - CV | Customer Solutions Engineer";
+const description = "Professional CV for Erfi Anugrah - Customer Solutions Engineer at Cloudflare with expertise in solution design, technical onboarding, and customer success.";
 const site_name = "stoicopa";
 import { getEntry, render } from "astro:content";
 const entry = await getEntry("cv", "resume");
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 
-// Define sections for the CV navigation
-const sections = [
+// Get sections from the frontmatter
+const sections = entry.data.sections || [
   { id: "experience", label: "Experience" },
   { id: "skills", label: "Skills" },
   { id: "languages", label: "Languages" },
   { id: "education", label: "Education" }
 ];
+
+// Person schema for structured data
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Erfi Anugrah",
+  "jobTitle": entry.data.description || "Customer Solutions Engineer",
+  "url": new URL(Astro.url.pathname, Astro.site).href,
+  "sameAs": entry.data.contacts?.map(contact => contact.url) || [],
+  "workLocation": {
+    "@type": "Place",
+    "name": "Cloudflare"
+  },
+  "knowsAbout": ["Web Development", "Cloud Computing", "Network Security"]
+};
+
+// Helper function for shorter contact labels on mobile
+const getShortLabel = (contact) => {
+  switch(contact.icon) {
+    case 'mail': return 'Email';
+    case 'linkedin': return 'LinkedIn';
+    case 'github': return 'GitHub';
+    case 'website': return 'Web';
+    default: return contact.value;
+  }
+};
 ---
 
 <BaseLayout
@@ -24,56 +52,65 @@ const sections = [
   site_name={site_name}
   is404Page={false}
 >
+  <!-- Structured data for SEO -->
+  <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
   <div class="max-w-4xl mx-auto bg-white dark:bg-slate-800 shadow-lg rounded-lg overflow-hidden print:shadow-none print:border print:border-slate-200">
-    <!-- Header section -->
-    <div class="bg-slate-100 dark:bg-slate-700 px-8 py-6 border-b border-slate-200 dark:border-slate-600 print:bg-white print:border-slate-200">
-      <div class="flex flex-col md:flex-row md:justify-between md:items-start">
-        <div>
-          <h1 class="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2 font-inconsolata uppercase tracking-wide">
-            ERFI ANUGRAH
+    <!-- Header section with responsive design -->
+    <div class="bg-slate-100 dark:bg-slate-700 px-4 sm:px-8 py-6 border-b border-slate-200 dark:border-slate-600 print:bg-white print:border-slate-200">
+      <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+        <div class="space-y-2">
+          <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 font-inconsolata uppercase tracking-wide">
+            {entry.data.fullName}
           </h1>
-          <p class="text-lg text-slate-600 dark:text-slate-300 font-inconsolata">
+          <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 font-inconsolata">
             {entry.data.description}
           </p>
           
-          <!-- Social links in header -->
-          <div class="mt-4 flex flex-wrap gap-x-4 gap-y-2 font-inconsolata print:mt-3">
+          <!-- Social links with better mobile spacing -->
+          <div class="mt-3 flex flex-wrap gap-x-4 gap-y-2 font-inconsolata text-sm">
             {entry.data.contacts && entry.data.contacts.map((contact) => (
               <a 
                 href={contact.url} 
-                class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium flex items-center text-sm"
+                class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium flex items-center"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span class="inline-block w-4 h-4 mr-1.5">
-                  {contact.icon === 'mail' && <Icon name="mdi:email" class="w-4 h-4" />}
-                  {contact.icon === 'website' && <Icon name="mdi:web" class="w-4 h-4" />}
-                  {contact.icon === 'linkedin' && <Icon name="mdi:linkedin" class="w-4 h-4" />}
-                  {contact.icon === 'github' && <Icon name="mdi:github" class="w-4 h-4" />}
-                </span>
-                {contact.value}
+                <Icon name={`mdi:${contact.icon === 'mail' ? 'email' : contact.icon}`} class="w-4 h-4 mr-1.5" />
+                <span class="hidden sm:inline">{contact.value}</span>
+                <span class="sm:hidden">{getShortLabel(contact)}</span>
               </a>
             ))}
           </div>
         </div>
-        <div class="mt-4 md:mt-0">
-          <button id="print-cv" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition print:hidden flex items-center">
-            <Icon name="mdi:printer" class="h-5 w-5 mr-2" />
-            Save as PDF
-          </button>
+        <div class="mt-2 md:mt-0 self-start">
+          <div class="relative group">
+            <button id="print-cv" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition print:hidden flex items-center text-sm sm:text-base">
+              <Icon name="mdi:printer" class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
+              Save as PDF
+            </button>
+            <div class="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-slate-700 shadow-md rounded p-3 text-xs text-slate-700 dark:text-slate-200 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              This will open your browser's print dialog. Select "Save as PDF" option in the print dialog to save your CV as a PDF file.
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- CV navigation -->
-    <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-8 py-3 sticky top-0 z-10 print:hidden">
+    <!-- Mobile-optimized navigation -->
+    <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-4 sm:px-8 py-3 sticky top-0 z-10 print:hidden">
       <nav class="cv-nav">
-        <ul class="flex flex-wrap gap-x-6 gap-y-2 font-inconsolata">
+        <button class="md:hidden w-full text-left flex items-center justify-between py-1 font-inconsolata" id="mobile-nav-toggle">
+          <span class="font-medium text-slate-700 dark:text-slate-300">Navigate Sections</span>
+          <Icon name="mdi:chevron-down" class="w-5 h-5 transition-transform text-slate-500" id="nav-toggle-icon" />
+        </button>
+        <ul class="hidden md:flex md:flex-wrap gap-x-6 gap-y-2 font-inconsolata transition-all max-h-0 md:max-h-none overflow-hidden" id="section-links" role="list" aria-label="CV Sections Navigation">
           {sections.map(section => (
             <li>
               <a 
                 href={`#${section.id}`} 
-                class="text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 font-medium text-sm transition"
+                class="text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 font-medium text-sm transition section-link focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:rounded-sm"
+                aria-current={Astro.url.hash === `#${section.id}` ? "true" : "false"}
               >
                 {section.label}
               </a>
@@ -93,91 +130,120 @@ const sections = [
 </BaseLayout>
 
 <script>
-  // Print functionality
-  document.getElementById('print-cv')?.addEventListener('click', () => {
-    window.print();
-  });
-
-  // There's just one print button now
-
-  // Add IDs to section headings for navigation
   document.addEventListener('DOMContentLoaded', () => {
-    // Add section IDs for navigation
-    const headings = document.querySelectorAll('#cv-content h2');
-    headings.forEach(heading => {
-      const text = heading.textContent?.trim().toLowerCase() || '';
-      if (text.includes('work experience')) {
-        heading.id = 'experience';
-      } else if (text.includes('skills')) {
-        heading.id = 'skills';
-      } else if (text.includes('languages')) {
-        heading.id = 'languages';
-      } else if (text.includes('education')) {
-        heading.id = 'education';
-      }
-    });
+    // Cache DOM elements for better performance
+    const elements = {
+      navToggle: document.getElementById('mobile-nav-toggle'),
+      navLinks: document.getElementById('section-links'),
+      navIcon: document.getElementById('nav-toggle-icon'),
+      sectionLinks: document.querySelectorAll('.section-link'),
+      sections: document.querySelectorAll('h2[id]'),
+      printButton: document.getElementById('print-cv')
+    };
 
-    // Enhance skills section with visual indicators
-    const skillsSection = document.querySelector('#skills');
-    if (skillsSection) {
-      const skillsList = skillsSection.nextElementSibling;
-      if (skillsList && skillsList.tagName === 'UL') {
-        skillsList.classList.add('skills-grid');
+    // Mobile navigation toggle
+    if (elements.navToggle && elements.navLinks && elements.navIcon) {
+      elements.navToggle.addEventListener('click', () => {
+        const expanded = elements.navToggle.getAttribute('aria-expanded') === 'true';
+        elements.navToggle.setAttribute('aria-expanded', (!expanded).toString());
         
-        // Add skill level indicators
-        const skillItems = skillsList.querySelectorAll('li');
-        skillItems.forEach(item => {
-          // Create skill bar wrapper
-          const skillText = item.textContent || '';
-          const skillWrapper = document.createElement('div');
-          skillWrapper.className = 'skill-wrapper';
-          
-          // Create skill name
-          const skillName = document.createElement('span');
-          skillName.className = 'skill-name';
-          skillName.textContent = skillText;
-          
-          // Clear original item and append new structure
-          item.textContent = '';
-          skillWrapper.appendChild(skillName);
-          item.appendChild(skillWrapper);
-        });
-      }
+        if (expanded) {
+          elements.navLinks.classList.remove('expanded');
+          elements.navLinks.classList.add('hidden');
+          elements.navLinks.style.maxHeight = '0';
+          elements.navIcon.classList.remove('rotate-180');
+        } else {
+          elements.navLinks.classList.add('expanded');
+          elements.navLinks.classList.remove('hidden');
+          elements.navLinks.style.maxHeight = elements.navLinks.scrollHeight + 'px';
+          elements.navIcon.classList.add('rotate-180');
+        }
+      });
+      
+      // Close menu on Escape key
+      elements.navLinks.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && window.innerWidth < 768) {
+          elements.navToggle.setAttribute('aria-expanded', 'false');
+          elements.navLinks.classList.add('hidden');
+          elements.navIcon.classList.remove('rotate-180');
+          elements.navToggle.focus();
+        }
+      });
     }
 
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('.cv-nav a').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+    // No need to add IDs to section headings anymore since we're using CVSection components
+    // No need for skill visualization enhancements since we're using the SkillBar component
+
+    // Enhanced print button with visual feedback
+    if (elements.printButton) {
+      elements.printButton.addEventListener('click', () => {
+        const originalText = elements.printButton.innerHTML;
+        
+        elements.printButton.innerHTML = `<svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Preparing PDF...`;
+        
+        setTimeout(() => {
+          elements.printButton.innerHTML = originalText;
+          window.print();
+        }, 500);
+      });
+    }
+
+    // Section navigation with highlighting
+    document.querySelectorAll('.section-link').forEach(link => {
+      link.addEventListener('click', (e) => {
         e.preventDefault();
-        const href = this.getAttribute('href');
-        if (href) {
-          const targetElement = document.querySelector(href);
+        const targetId = link.getAttribute('href')?.substring(1);
+        if (targetId) {
+          const targetElement = document.getElementById(targetId);
           if (targetElement) {
-            // Highlight the section temporarily
+            // Add highlight effect
             targetElement.classList.add('highlight-section');
-            setTimeout(() => {
-              targetElement.classList.remove('highlight-section');
-            }, 2000);
+            setTimeout(() => targetElement.classList.remove('highlight-section'), 2000);
             
-            // Scroll to the section
-            targetElement.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
+            // Calculate offset based on sticky header
+            const headerHeight = document.querySelector('.cv-nav')?.offsetHeight || 0;
+            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+            
+            // Smooth scroll
+            window.scrollTo({
+              top: targetPosition,
+              behavior: 'smooth'
             });
             
-            // Update active state in navigation
-            document.querySelectorAll('.cv-nav a').forEach(a => a.classList.remove('active'));
-            this.classList.add('active');
+            // Update active state
+            document.querySelectorAll('.section-link').forEach(lnk => {
+              lnk.classList.remove('active');
+              lnk.classList.remove('text-blue-600', 'dark:text-blue-400', 'font-semibold');
+              lnk.classList.add('text-slate-600', 'dark:text-slate-300');
+              lnk.setAttribute('aria-current', 'false');
+            });
+            
+            link.classList.add('active');
+            link.classList.add('text-blue-600', 'dark:text-blue-400', 'font-semibold');
+            link.classList.remove('text-slate-600', 'dark:text-slate-300');
+            link.setAttribute('aria-current', 'true');
+            
+            // Close mobile nav if needed
+            if (window.innerWidth < 768 && elements.navLinks.classList.contains('expanded')) {
+              elements.navToggle.setAttribute('aria-expanded', 'false');
+              elements.navLinks.classList.remove('expanded');
+              elements.navLinks.classList.add('hidden');
+              elements.navLinks.style.maxHeight = '0';
+              elements.navIcon.classList.remove('rotate-180');
+            }
+            
+            // Update URL hash without scrolling
+            history.replaceState(null, null, `#${targetId}`);
           }
         }
       });
     });
     
-    // Highlight active section on scroll
+    // Active section tracking with Intersection Observer
     const observerOptions = {
       root: null,
-      rootMargin: '0px',
-      threshold: 0.1
+      rootMargin: '-80px 0px -40% 0px',
+      threshold: 0
     };
     
     const observer = new IntersectionObserver((entries) => {
@@ -185,11 +251,21 @@ const sections = [
         if (entry.isIntersecting) {
           const id = entry.target.getAttribute('id');
           if (id) {
-            document.querySelectorAll('.cv-nav a').forEach(a => {
-              a.classList.remove('active');
-              if (a.getAttribute('href') === `#${id}`) {
-                a.classList.add('active');
-              }
+            // Update URL hash without scrolling
+            history.replaceState(null, null, `#${id}`);
+            
+            // Update active nav link
+            document.querySelectorAll('.section-link').forEach(link => {
+              const href = link.getAttribute('href');
+              const isActive = href === `#${id}`;
+              
+              link.classList.toggle('active', isActive);
+              link.classList.toggle('text-blue-600', isActive);
+              link.classList.toggle('dark:text-blue-400', isActive);
+              link.classList.toggle('font-semibold', isActive);
+              link.classList.toggle('text-slate-600', !isActive);
+              link.classList.toggle('dark:text-slate-300', !isActive);
+              link.setAttribute('aria-current', isActive ? 'true' : 'false');
             });
           }
         }
@@ -197,55 +273,32 @@ const sections = [
     }, observerOptions);
     
     // Observe all section headings
-    document.querySelectorAll('#experience, #skills, #languages, #education').forEach(section => {
-      observer.observe(section);
-    });
+    elements.sections.forEach(section => observer.observe(section));
+    
+    // Initial check for hash in URL
+    if (location.hash) {
+      const id = location.hash.substring(1);
+      const link = document.querySelector(`.section-link[href="#${id}"]`);
+      if (link) {
+        link.classList.add('active');
+        link.classList.add('text-blue-600', 'dark:text-blue-400', 'font-semibold');
+        link.classList.remove('text-slate-600', 'dark:text-slate-300');
+        link.setAttribute('aria-current', 'true');
+      }
+    }
   });
 </script>
 
 <style>
-  @media print {
-    @font-face {
-      font-family: 'Inconsolata';
-      src: local('Inconsolata');
-      font-display: swap;
-    }
-    
-    body {
-      font-size: 12pt;
-      color: #000;
-      background-color: #fff;
-      font-family: 'Inconsolata', monospace !important;
-    }
-    
-    /* Full page width for printing */
-    #cv-content, 
-    #cv-content > :global(*),
-    .contact-info {
-      max-width: 100% !important;
-      font-family: 'Inconsolata', monospace !important;
-    }
-    
-    /* Ensure proper page margins */
-    @page {
-      margin: 1cm;
-      size: A4;
-    }
-    
-    /* Hide site elements during print */
-    :global(header), :global(footer), :global(nav), :global(button) {
-      display: none !important;
-    }
-    
-    /* Add visible space for better section separation in print */
-    #cv-content > :global(section),
-    #cv-content > :global(div) {
-      margin-bottom: 2rem;
-    }
-    
-    /* Ensure all text uses the correct font */
-    :global(h1), :global(h2), :global(h3), :global(h4), :global(p), :global(li), :global(a), :global(span), :global(div) {
-      font-family: 'Inconsolata', monospace !important;
+  /* Mobile navigation dropdown */
+  @media (max-width: 768px) {
+    #section-links.expanded {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      max-height: 200px;
+      transition: max-height 0.3s ease-in-out;
     }
   }
 
@@ -254,81 +307,18 @@ const sections = [
     color: var(--color-blue-600);
     font-weight: 600;
   }
+  
   :global(.dark) .cv-nav a.active {
     color: var(--color-blue-400);
   }
 
-  /* Add highlight effect on scroll */
-  @keyframes highlight {
+  /* Section highlight animation */
+  @keyframes highlight-pulse {
     0% { background-color: rgba(59, 130, 246, 0.1); }
     100% { background-color: transparent; }
   }
 
   .highlight-section {
-    animation: highlight 2s ease-out;
-  }
-
-  /* Skills section styling */
-  .skills-grid {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1rem !important;
-    padding-left: 0 !important;
-    list-style-type: none !important;
-  }
-
-  .skills-grid li {
-    background-color: var(--color-slate-50);
-    border: 1px solid var(--color-slate-200);
-    border-radius: 0.5rem;
-    padding: 0.75rem !important;
-    transition: all 0.2s ease-in-out;
-  }
-
-  .skills-grid li:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border-color: var(--color-blue-300);
-  }
-
-  :global(.dark) .skills-grid li {
-    background-color: var(--color-slate-700);
-    border-color: var(--color-slate-600);
-  }
-
-  :global(.dark) .skills-grid li:hover {
-    border-color: var(--color-blue-500);
-  }
-
-  .skill-wrapper {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .skill-name {
-    font-weight: 600;
-    color: var(--color-slate-700);
-  }
-
-  :global(.dark) .skill-name {
-    color: var(--color-slate-300);
-  }
-
-  @media print {
-    .skills-grid {
-      display: grid !important;
-      grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .skills-grid li {
-      border: 1px solid #ddd !important;
-      background-color: #fff !important;
-      page-break-inside: avoid;
-    }
-    
-    .skill-name {
-      color: #000 !important;
-    }
+    animation: highlight-pulse 2s ease-out;
   }
 </style>

@@ -1,0 +1,91 @@
+/* src/styles/cv-print.css */
+@media print {
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+  
+  body {
+    font-size: 12pt;
+    color: #000;
+    background-color: #fff;
+    font-family: 'Inconsolata', monospace !important;
+  }
+  
+  /* Header sections */
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  
+  /* Major section headings */
+  h2#skills, h2#languages, h2#education {
+    page-break-before: always;
+    break-before: page;
+  }
+  
+  /* Hide UI elements */
+  header, footer, nav, button, .cv-nav {
+    display: none !important;
+  }
+  
+  /* Contact information */
+  .contact-item a, .contact-item svg {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+  
+  /* Company sections */
+  .company-section, .job-section, .education-section {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    page-break-inside: avoid;
+  }
+  
+  /* Text colors */
+  .company-name, .school-name, .job-title, .degree, .date-range {
+    color: #000 !important;
+  }
+  
+  /* Lists */
+  ul, li {
+    page-break-inside: auto;
+    break-inside: auto;
+    orphans: 3;
+    widows: 3;
+  }
+  
+  /* Hide visual elements */
+  .job-section::before, .job-section::after,
+  .job-content::before, .education-section::before,
+  .education-section::after, .company-section::before,
+  .education-timeline::before, .date-range::before,
+  .education-section::after {
+    display: none !important;
+  }
+
+  /* Skills visualization */
+  .skills-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .skills-grid li {
+    border: 1px solid #ddd !important;
+    background-color: #fff !important;
+    page-break-inside: avoid;
+  }
+  
+  .skill-item {
+    border: 1px solid #ddd !important;
+    background-color: #fff !important;
+  }
+  
+  .skill-item .h-2 {
+    background-color: #eee !important;
+  }
+  
+  .skill-item .h-2 div {
+    background-color: #333 !important;
+  }
+}

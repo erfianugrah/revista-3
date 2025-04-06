@@ -1,0 +1,259 @@
+---
+interface Props {
+  education: {
+    institution: string;
+    degree: string;
+    dateRange: string;
+  }[];
+}
+
+const { education } = Astro.props;
+
+// Duration analysis for both scaling and color coding
+const analyzeDuration = (dateRange: string) => {
+  // Extract years from date range if possible
+  // Match patterns like "Aug 2015 – July 2019" or "Jan 2011 – Dec 2012"
+  const monthYearPattern = /(\w+)\s+(\d{4})\s*[–-]\s*(\w+)\s+(\d{4})/i;
+  const matches = dateRange.match(monthYearPattern);
+  
+  if (matches) {
+    const startYear = parseInt(matches[2]);
+    const endYear = parseInt(matches[4]);
+    
+    // Approximate months (simplified)
+    const getMonthIndex = (month: string) => {
+      const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+      return months.findIndex(m => month.toLowerCase().startsWith(m.toLowerCase()));
+    };
+    
+    const startMonth = getMonthIndex(matches[1]);
+    const endMonth = getMonthIndex(matches[3]);
+    
+    // Calculate duration in years (including partial years)
+    const durationYears = (endYear - startYear) + (endMonth - startMonth) / 12;
+    
+    // Determine color category based on duration
+    let colorCategory;
+    if (durationYears < 1) {
+      colorCategory = 'short'; // Less than 1 year
+    } else if (durationYears < 3) {
+      colorCategory = 'medium'; // 1-3 years
+    } else if (durationYears < 5) {
+      colorCategory = 'long'; // 3-5 years
+    } else {
+      colorCategory = 'very-long'; // 5+ years
+    }
+    
+    return { colorCategory, durationYears };
+  }
+  
+  return { colorCategory: 'medium', durationYears: 1 }; // Default values
+};
+
+// Process each education item for duration
+const educationWithDuration = education.map(edu => ({
+  ...edu,
+  ...analyzeDuration(edu.dateRange)
+}));
+---
+
+<div class="education-timeline">
+  {educationWithDuration.map(edu => (
+    <div class={`education-section mb-4 duration-${edu.colorCategory}`}>
+      <h3 class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-1">
+        <span class="school-name">{edu.institution}</span>
+      </h3>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+        <span class="degree">{edu.degree}</span>
+        <span class="hidden sm:inline">|</span>
+        <span class="date-range" title={`Duration: ~${edu.durationYears.toFixed(1)} years`}>{edu.dateRange}</span>
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .education-timeline {
+    position: relative;
+    padding-left: 30px;
+  }
+  
+  .education-timeline::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background-color: var(--color-slate-200);
+    z-index: 1;
+  }
+  
+  :global(.dark) .education-timeline::before {
+    background-color: var(--color-slate-700);
+  }
+  
+  .education-section {
+    position: relative;
+  }
+  
+  .education-section::before {
+    content: "";
+    position: absolute;
+    left: -30px;
+    top: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--color-blue-500);
+    z-index: 2;
+    border: 3px solid var(--color-white);
+    box-shadow: 0 0 0 2px var(--color-blue-200);
+  }
+  
+  :global(.dark) .education-section::before {
+    background-color: var(--color-blue-400);
+    border-color: var(--color-slate-800);
+    box-shadow: 0 0 0 2px var(--color-blue-800);
+  }
+  
+  /* Color coding for durations */
+  .duration-short::before {
+    background-color: var(--color-amber-400) !important;
+    box-shadow: 0 0 0 2px var(--color-amber-200) !important;
+  }
+  
+  .duration-medium::before {
+    background-color: var(--color-blue-500) !important;
+    box-shadow: 0 0 0 2px var(--color-blue-200) !important;
+  }
+  
+  .duration-long::before {
+    background-color: var(--color-green-500) !important;
+    box-shadow: 0 0 0 2px var(--color-green-200) !important;
+  }
+  
+  .duration-very-long::before {
+    background-color: var(--color-purple-500) !important;
+    box-shadow: 0 0 0 2px var(--color-purple-200) !important;
+  }
+  
+  /* Dark mode colors */
+  :global(.dark) .duration-short::before {
+    background-color: var(--color-amber-500) !important;
+    border-color: var(--color-slate-800);
+    box-shadow: 0 0 0 2px var(--color-amber-800) !important;
+  }
+  
+  :global(.dark) .duration-medium::before {
+    background-color: var(--color-blue-400) !important;
+    border-color: var(--color-slate-800);
+    box-shadow: 0 0 0 2px var(--color-blue-800) !important;
+  }
+  
+  :global(.dark) .duration-long::before {
+    background-color: var(--color-green-400) !important;
+    border-color: var(--color-slate-800);
+    box-shadow: 0 0 0 2px var(--color-green-800) !important;
+  }
+  
+  :global(.dark) .duration-very-long::before {
+    background-color: var(--color-purple-400) !important;
+    border-color: var(--color-slate-800);
+    box-shadow: 0 0 0 2px var(--color-purple-800) !important;
+  }
+  
+  /* Date indicators on education timeline */
+  .education-section .date-range {
+    position: relative;
+  }
+  
+  .education-section .date-range::before {
+    content: "";
+    position: absolute;
+    left: -40px;
+    top: 50%;
+    width: 8px;
+    height: 2px;
+    background-color: var(--color-blue-300);
+    display: none; /* Hide on mobile */
+  }
+  
+  @media (min-width: 640px) {
+    .education-section .date-range::before {
+      display: block; /* Show on larger screens */
+    }
+  }
+  
+  :global(.dark) .education-section .date-range::before {
+    background-color: var(--color-blue-600);
+  }
+  
+  /* Add timeline connectors between education sections */
+  .education-section::after {
+    content: "";
+    position: absolute;
+    left: -24px;
+    top: 20px;
+    bottom: -12px;
+    width: 2px;
+    background-color: var(--color-blue-200);
+    z-index: 1;
+  }
+  
+  :global(.dark) .education-section::after {
+    background-color: var(--color-blue-700);
+  }
+  
+  /* Connect dots to timeline with matching colors */
+  .duration-short::after {
+    background-color: var(--color-amber-200) !important;
+  }
+  
+  .duration-medium::after {
+    background-color: var(--color-blue-200) !important;
+  }
+  
+  .duration-long::after {
+    background-color: var(--color-green-200) !important;
+  }
+  
+  .duration-very-long::after {
+    background-color: var(--color-purple-200) !important;
+  }
+  
+  :global(.dark) .duration-short::after {
+    background-color: var(--color-amber-800) !important;
+  }
+  
+  :global(.dark) .duration-medium::after {
+    background-color: var(--color-blue-700) !important;
+  }
+  
+  :global(.dark) .duration-long::after {
+    background-color: var(--color-green-800) !important;
+  }
+  
+  :global(.dark) .duration-very-long::after {
+    background-color: var(--color-purple-800) !important;
+  }
+  
+  /* Remove connector from last education item */
+  .education-section:last-child::after {
+    display: none;
+  }
+  
+  /* Print-friendly styles */
+  @media print {
+    .education-timeline {
+      padding-left: 0;
+    }
+    
+    .education-section::before,
+    .education-section::after,
+    .education-timeline::before,
+    .education-section .date-range::before {
+      display: none !important;
+    }
+  }
+</style>

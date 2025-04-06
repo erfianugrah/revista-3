@@ -117,16 +117,94 @@
     color: var(--color-blue-300);
   }
 
-  /* Basic styling with better spacing */
-  :global(.job-section) {
-    position: relative;
-    margin-bottom: 1.5rem;
-  }
-  
+  /* Timeline visualization styling */
   :global(.company-section) {
     position: relative;
-    margin-top: 2.5rem;
-    margin-bottom: 1.5rem;
+    padding-left: 30px;
+    margin-bottom: 2.5rem;
+  }
+  
+  :global(.company-section::before) {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    bottom: -10px;
+    width: 2px;
+    background-color: var(--color-slate-200);
+    z-index: 1;
+  }
+  
+  :global(.dark .company-section::before) {
+    background-color: var(--color-slate-700);
+  }
+  
+  :global(.job-section) {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 2rem;
+    /* Add min-height for better spacing */
+    min-height: 4rem;
+  }
+  
+  :global(.job-section::before) {
+    content: "";
+    position: absolute;
+    left: -24px;
+    top: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--color-blue-500);
+    z-index: 2;
+    border: 3px solid var(--color-white);
+    box-shadow: 0 0 0 2px var(--color-blue-200);
+  }
+  
+  :global(.dark .job-section::before) {
+    background-color: var(--color-blue-400);
+    border-color: var(--color-slate-800);
+    box-shadow: 0 0 0 2px var(--color-blue-800);
+  }
+  
+  /* Add timeline connectors between job positions */
+  :global(.job-section::after) {
+    content: "";
+    position: absolute;
+    left: -18px;
+    top: 20px;
+    bottom: -12px;
+    width: 2px;
+    background-color: var(--color-blue-200);
+    z-index: 1;
+  }
+  
+  :global(.dark .job-section::after) {
+    background-color: var(--color-blue-700);
+  }
+  
+  /* Remove connector from last job in company */
+  :global(.job-section:last-child::after) {
+    display: none;
+  }
+  
+  /* Add date indicator on timeline */
+  :global(.job-section .date-range) {
+    position: relative;
+  }
+  
+  :global(.job-section .date-range::before) {
+    content: "";
+    position: absolute;
+    left: -40px;
+    top: 50%;
+    width: 8px;
+    height: 2px;
+    background-color: var(--color-blue-300);
+  }
+  
+  :global(.dark .job-section .date-range::before) {
+    background-color: var(--color-blue-600);
   }
   
   :global(.education-section) {
@@ -291,6 +369,22 @@
     :global(.prose ul:has(li:first-child:contains("HTML")), 
             .prose ul:has(li:first-child:contains("English"))) {
       grid-template-columns: 1fr;
+    }
+  }
+
+  /* Skills visualization */
+  :global(.skills-grid) {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem !important;
+    padding-left: 0 !important;
+    list-style-type: none !important;
+    margin-top: 1.5rem;
+  }
+
+  @media print {
+    :global(.skills-grid) {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 </style>

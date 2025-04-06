@@ -102,6 +102,13 @@ const cv = defineCollection({
   loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/cv" }),
   schema: z.object({
     title: z.string(),
+    fullName: z.string().optional(),
+    sections: z.array(
+      z.object({
+        id: z.string(),
+        label: z.string(),
+      })
+    ).optional(),
     tags: z.array(z.string()),
     author: z.string(),
     description: z.string(),
@@ -119,6 +126,40 @@ const cv = defineCollection({
         value: z.string(),
         url: z.string(),
         icon: z.string(),
+      })
+    ).optional(),
+    skills: z.array(
+      z.object({
+        name: z.string(),
+        level: z.enum(["beginner", "intermediate", "advanced", "expert"]),
+        category: z.string().optional(),
+      })
+    ).optional(),
+    languages: z.array(
+      z.object({
+        language: z.string(),
+        proficiency: z.string(),
+        level: z.enum(["beginner", "intermediate", "advanced", "expert"]).optional(),
+      })
+    ).optional(),
+    education: z.array(
+      z.object({
+        institution: z.string(),
+        degree: z.string(),
+        dateRange: z.string(),
+      })
+    ).optional(),
+    companies: z.array(
+      z.object({
+        name: z.string(),
+        positions: z.array(
+          z.object({
+            title: z.string(),
+            dateRange: z.string(),
+            responsibilities: z.array(z.string()),
+            achievements: z.array(z.string()).optional(),
+          })
+        ),
       })
     ).optional(),
   }),

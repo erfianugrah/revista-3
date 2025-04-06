@@ -1,0 +1,200 @@
+---
+interface Props {
+  title: string;
+  company?: string;
+  dateRange: string;
+}
+
+const { title, company, dateRange } = Astro.props;
+
+// Duration analysis for both scaling and color coding
+const analyzeDuration = (dateRange: string) => {
+  // Extract months and years from date range if possible
+  // Match patterns like "July 2019 – Dec 2020" or "Oct 2024 – Present"
+  const monthYearPattern = /(\w+)\s+(\d{4})\s*[–-]\s*(?:Present|(\w+)\s+(\d{4}))/i;
+  const matches = dateRange.match(monthYearPattern);
+  
+  if (matches) {
+    const startYear = parseInt(matches[2]);
+    const endYear = matches[4] ? parseInt(matches[4]) : new Date().getFullYear();
+    
+    // Approximate months (simplified)
+    const getMonthIndex = (month: string) => {
+      const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+      return months.findIndex(m => month.toLowerCase().startsWith(m.toLowerCase()));
+    };
+    
+    const startMonth = getMonthIndex(matches[1]);
+    const endMonth = matches[3] ? getMonthIndex(matches[3]) : new Date().getMonth();
+    
+    // Calculate duration in years (including partial years)
+    const durationYears = (endYear - startYear) + (endMonth - startMonth) / 12;
+    
+    // Calculate scale factor (between 0.5-4)
+    const scale = Math.max(0.5, Math.min(4, durationYears / 1.2));
+    
+    // Determine color category based on duration
+    let colorCategory;
+    if (durationYears < 0.75) {
+      colorCategory = 'short'; // Less than 9 months
+    } else if (durationYears < 2) {
+      colorCategory = 'medium'; // 9 months to 2 years
+    } else if (durationYears < 4) {
+      colorCategory = 'long'; // 2-4 years
+    } else {
+      colorCategory = 'very-long'; // 4+ years
+    }
+    
+    return { scale, colorCategory, durationYears };
+  }
+  
+  return { scale: 1, colorCategory: 'medium', durationYears: 1 }; // Default values
+};
+
+const { scale: durationScale, colorCategory, durationYears } = analyzeDuration(dateRange);
+---
+
+<div class={`job-section duration-${colorCategory}`} style={`--duration-scale: ${durationScale}`}>
+  <h3 class="text-xl font-medium text-blue-700 dark:text-blue-300 mb-1">
+    <span class="job-title">{title}</span>
+    <span class="duration-indicator ml-2 text-xs" title={`Duration: ~${durationYears.toFixed(1)} years`}></span>
+  </h3>
+  <p class="text-slate-600 dark:text-slate-400 italic mb-3">
+    <span class="date-range">{dateRange}</span>
+  </p>
+  <div class="job-content ml-1">
+    <slot />
+  </div>
+</div>
+
+<style>
+  /* Scale job sections based on duration */
+  .job-section {
+    padding-bottom: calc(var(--duration-scale, 1) * 1rem);
+  }
+  
+  /* Color coding for job durations */
+  .duration-short::before {
+    background-color: var(--color-amber-400) !important;
+  }
+  
+  .duration-medium::before {
+    background-color: var(--color-blue-500) !important;
+  }
+  
+  .duration-long::before {
+    background-color: var(--color-green-500) !important;
+  }
+  
+  .duration-very-long::before {
+    background-color: var(--color-purple-500) !important;
+  }
+  
+  /* Dark mode colors */
+  :global(.dark) .duration-short::before {
+    background-color: var(--color-amber-500) !important;
+  }
+  
+  :global(.dark) .duration-medium::before {
+    background-color: var(--color-blue-400) !important;
+  }
+  
+  :global(.dark) .duration-long::before {
+    background-color: var(--color-green-400) !important;
+  }
+  
+  :global(.dark) .duration-very-long::before {
+    background-color: var(--color-purple-400) !important;
+  }
+  
+  /* Duration indicator dots */
+  .duration-indicator {
+    display: inline-flex;
+    position: relative;
+  }
+  
+  .duration-indicator::after {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-left: 4px;
+  }
+  
+  .duration-short .duration-indicator::after {
+    background-color: var(--color-amber-400);
+  }
+  
+  .duration-medium .duration-indicator::after {
+    background-color: var(--color-blue-500);
+  }
+  
+  .duration-long .duration-indicator::after {
+    background-color: var(--color-green-500);
+  }
+  
+  .duration-very-long .duration-indicator::after {
+    background-color: var(--color-purple-500);
+  }
+  
+  :global(.dark) .duration-short .duration-indicator::after {
+    background-color: var(--color-amber-500);
+  }
+  
+  :global(.dark) .duration-medium .duration-indicator::after {
+    background-color: var(--color-blue-400);
+  }
+  
+  :global(.dark) .duration-long .duration-indicator::after {
+    background-color: var(--color-green-400);
+  }
+  
+  :global(.dark) .duration-very-long .duration-indicator::after {
+    background-color: var(--color-purple-400);
+  }
+
+  /* Connect dots to timeline with matching colors */
+  .duration-short::after {
+    background-color: var(--color-amber-200) !important;
+  }
+  
+  .duration-medium::after {
+    background-color: var(--color-blue-200) !important;
+  }
+  
+  .duration-long::after {
+    background-color: var(--color-green-200) !important;
+  }
+  
+  .duration-very-long::after {
+    background-color: var(--color-purple-200) !important;
+  }
+  
+  :global(.dark) .duration-short::after {
+    background-color: var(--color-amber-800) !important;
+  }
+  
+  :global(.dark) .duration-medium::after {
+    background-color: var(--color-blue-700) !important;
+  }
+  
+  :global(.dark) .duration-long::after {
+    background-color: var(--color-green-800) !important;
+  }
+  
+  :global(.dark) .duration-very-long::after {
+    background-color: var(--color-purple-800) !important;
+  }
+  
+  /* Print mode - no colors */
+  @media print {
+    .duration-short::before,
+    .duration-medium::before,
+    .duration-long::before,
+    .duration-very-long::before,
+    .duration-indicator::after {
+      display: none !important;
+    }
+  }
+</style>
