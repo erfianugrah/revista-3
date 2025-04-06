@@ -27,23 +27,20 @@
 </div>
 
 <script>
-  // Apply simple timeline look to the CV
   document.addEventListener("DOMContentLoaded", () => {
-    // Simple left border for company sections
-    document.querySelectorAll("h3 .job-title").forEach(element => {
-      if (element.parentElement && element.parentElement.parentElement) {
-        element.parentElement.parentElement.classList.add('job-section');
-      }
-    });
-    
-    // Mark company headers
+    // Only add basic styling classes
     document.querySelectorAll("h2 .company-name").forEach(element => {
       if (element.parentElement && element.parentElement.parentElement) {
         element.parentElement.parentElement.classList.add('company-section');
       }
     });
     
-    // Mark education headers
+    document.querySelectorAll("h3 .job-title").forEach(element => {
+      if (element.parentElement && element.parentElement.parentElement) {
+        element.parentElement.parentElement.classList.add('job-section');
+      }
+    });
+    
     document.querySelectorAll(".school-name").forEach(element => {
       if (element.parentElement && element.parentElement.parentElement) {
         element.parentElement.parentElement.classList.add('education-section');
@@ -120,62 +117,32 @@
     color: var(--color-blue-300);
   }
 
-  /* Simple timeline styles */
+  /* Basic styling with better spacing */
   :global(.job-section) {
     position: relative;
-    border-left: 2px solid var(--color-slate-200);
-    padding-left: 1rem;
-    margin-left: 0.25rem;
-  }
-
-  :global(.dark .job-section) {
-    border-left-color: var(--color-slate-700);
+    margin-bottom: 1.5rem;
   }
   
   :global(.company-section) {
     position: relative;
-    margin-left: 0.25rem;
-  }
-  
-  :global(.company-section::before) {
-    content: '';
-    position: absolute;
-    top: 1rem;
-    left: -0.35rem;
-    width: 0.75rem;
-    height: 0.75rem;
-    background-color: var(--color-blue-500);
-    border-radius: 50%;
-  }
-  
-  :global(.dark .company-section::before) {
-    background-color: var(--color-blue-400);
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
   }
   
   :global(.education-section) {
     position: relative;
-    border-left: 2px solid var(--color-emerald-200);
-    padding-left: 1rem;
-    margin-left: 0.25rem;
+    margin-bottom: 1.5rem;
   }
   
-  :global(.dark .education-section) {
-    border-left-color: var(--color-emerald-700);
-  }
-  
-  :global(.education-section::before) {
-    content: '';
-    position: absolute;
-    top: 1rem;
-    left: -0.35rem;
-    width: 0.75rem;
-    height: 0.75rem;
-    background-color: var(--color-emerald-500);
-    border-radius: 50%;
-  }
-  
-  :global(.dark .education-section::before) {
-    background-color: var(--color-emerald-400);
+  /* Print adjustments */
+  @media print {
+    :global(.job-section),
+    :global(.company-section),
+    :global(.education-section) {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      page-break-inside: avoid;
+    }
   }
 
   /* Print specific styles */
@@ -279,14 +246,18 @@
     
     /* Hide timeline elements when printing */
     :global(.job-section),
+    :global(.job-content),
     :global(.education-section) {
-      border-left: none !important;
       padding-left: 0 !important;
       margin-left: 0 !important;
     }
     
     :global(.company-section::before),
-    :global(.education-section::before) {
+    :global(.job-section::before),
+    :global(.job-section::after),
+    :global(.job-content::before),
+    :global(.education-section::before),
+    :global(.education-section::after) {
       display: none !important;
     }
   }
