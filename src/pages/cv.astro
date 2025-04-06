@@ -1,12 +1,21 @@
 ---
 import ProseCv from "../components/Prose_cv.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
 const pageTitle = "CV";
 const description = "Erfi Anugrah's CV";
 const site_name = "stoicopa";
 import { getEntry, render } from "astro:content";
 const entry = await getEntry("cv", "resume");
 const { Content } = await render(entry);
+
+// Define sections for the CV navigation
+const sections = [
+  { id: "experience", label: "Experience" },
+  { id: "skills", label: "Skills" },
+  { id: "languages", label: "Languages" },
+  { id: "education", label: "Education" }
+];
 ---
 
 <BaseLayout
@@ -15,23 +24,311 @@ const { Content } = await render(entry);
   site_name={site_name}
   is404Page={false}
 >
-  <div
-    class="max-w-4xl mx-auto bg-white dark:bg-slate-800 shadow-lg rounded-lg overflow-hidden"
-  >
-    <div
-      class="bg-slate-100 dark:bg-slate-700 px-8 py-6 border-b border-slate-200 dark:border-slate-600"
-    >
-      <h1
-        class="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2 font-inconsolata uppercase tracking-wide"
-      >
-        ERFI ANUGRAH
-      </h1>
-      <p class="text-lg text-slate-600 dark:text-slate-300 font-inconsolata">
-        {entry.data.description}
-      </p>
+  <div class="max-w-4xl mx-auto bg-white dark:bg-slate-800 shadow-lg rounded-lg overflow-hidden print:shadow-none print:border print:border-slate-200">
+    <!-- Header section -->
+    <div class="bg-slate-100 dark:bg-slate-700 px-8 py-6 border-b border-slate-200 dark:border-slate-600 print:bg-white print:border-slate-200">
+      <div class="flex flex-col md:flex-row md:justify-between md:items-start">
+        <div>
+          <h1 class="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2 font-inconsolata uppercase tracking-wide">
+            ERFI ANUGRAH
+          </h1>
+          <p class="text-lg text-slate-600 dark:text-slate-300 font-inconsolata">
+            {entry.data.description}
+          </p>
+          
+          <!-- Social links in header -->
+          <div class="mt-4 flex flex-wrap gap-x-4 gap-y-2 font-inconsolata print:mt-3">
+            {entry.data.contacts && entry.data.contacts.map((contact) => (
+              <a 
+                href={contact.url} 
+                class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium flex items-center text-sm"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span class="inline-block w-4 h-4 mr-1.5">
+                  {contact.icon === 'mail' && <Icon name="mdi:email" class="w-4 h-4" />}
+                  {contact.icon === 'website' && <Icon name="mdi:web" class="w-4 h-4" />}
+                  {contact.icon === 'linkedin' && <Icon name="mdi:linkedin" class="w-4 h-4" />}
+                  {contact.icon === 'github' && <Icon name="mdi:github" class="w-4 h-4" />}
+                </span>
+                {contact.value}
+              </a>
+            ))}
+          </div>
+        </div>
+        <div class="mt-4 md:mt-0">
+          <button id="print-cv" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition print:hidden flex items-center">
+            <Icon name="mdi:printer" class="h-5 w-5 mr-2" />
+            Save as PDF
+          </button>
+        </div>
+      </div>
     </div>
-    <ProseCv>
-      <Content />
-    </ProseCv>
+
+    <!-- CV navigation -->
+    <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-8 py-3 sticky top-0 z-10 print:hidden">
+      <nav class="cv-nav">
+        <ul class="flex flex-wrap gap-x-6 gap-y-2 font-inconsolata">
+          {sections.map(section => (
+            <li>
+              <a 
+                href={`#${section.id}`} 
+                class="text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 font-medium text-sm transition"
+              >
+                {section.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <!-- CV content -->
+    <div id="cv-content">
+      <ProseCv>
+        <Content />
+      </ProseCv>
+    </div>
   </div>
 </BaseLayout>
+
+<script>
+  // Print functionality
+  document.getElementById('print-cv')?.addEventListener('click', () => {
+    window.print();
+  });
+
+  // There's just one print button now
+
+  // Add IDs to section headings for navigation
+  document.addEventListener('DOMContentLoaded', () => {
+    // Add section IDs for navigation
+    const headings = document.querySelectorAll('#cv-content h2');
+    headings.forEach(heading => {
+      const text = heading.textContent?.trim().toLowerCase() || '';
+      if (text.includes('work experience')) {
+        heading.id = 'experience';
+      } else if (text.includes('skills')) {
+        heading.id = 'skills';
+      } else if (text.includes('languages')) {
+        heading.id = 'languages';
+      } else if (text.includes('education')) {
+        heading.id = 'education';
+      }
+    });
+
+    // Enhance skills section with visual indicators
+    const skillsSection = document.querySelector('#skills');
+    if (skillsSection) {
+      const skillsList = skillsSection.nextElementSibling;
+      if (skillsList && skillsList.tagName === 'UL') {
+        skillsList.classList.add('skills-grid');
+        
+        // Add skill level indicators
+        const skillItems = skillsList.querySelectorAll('li');
+        skillItems.forEach(item => {
+          // Create skill bar wrapper
+          const skillText = item.textContent || '';
+          const skillWrapper = document.createElement('div');
+          skillWrapper.className = 'skill-wrapper';
+          
+          // Create skill name
+          const skillName = document.createElement('span');
+          skillName.className = 'skill-name';
+          skillName.textContent = skillText;
+          
+          // Clear original item and append new structure
+          item.textContent = '';
+          skillWrapper.appendChild(skillName);
+          item.appendChild(skillWrapper);
+        });
+      }
+    }
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('.cv-nav a').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const href = this.getAttribute('href');
+        if (href) {
+          const targetElement = document.querySelector(href);
+          if (targetElement) {
+            // Highlight the section temporarily
+            targetElement.classList.add('highlight-section');
+            setTimeout(() => {
+              targetElement.classList.remove('highlight-section');
+            }, 2000);
+            
+            // Scroll to the section
+            targetElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+            
+            // Update active state in navigation
+            document.querySelectorAll('.cv-nav a').forEach(a => a.classList.remove('active'));
+            this.classList.add('active');
+          }
+        }
+      });
+    });
+    
+    // Highlight active section on scroll
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          if (id) {
+            document.querySelectorAll('.cv-nav a').forEach(a => {
+              a.classList.remove('active');
+              if (a.getAttribute('href') === `#${id}`) {
+                a.classList.add('active');
+              }
+            });
+          }
+        }
+      });
+    }, observerOptions);
+    
+    // Observe all section headings
+    document.querySelectorAll('#experience, #skills, #languages, #education').forEach(section => {
+      observer.observe(section);
+    });
+  });
+</script>
+
+<style>
+  @media print {
+    @font-face {
+      font-family: 'Inconsolata';
+      src: local('Inconsolata');
+      font-display: swap;
+    }
+    
+    body {
+      font-size: 12pt;
+      color: #000;
+      background-color: #fff;
+      font-family: 'Inconsolata', monospace !important;
+    }
+    
+    /* Full page width for printing */
+    #cv-content, 
+    #cv-content > :global(*),
+    .contact-info {
+      max-width: 100% !important;
+      font-family: 'Inconsolata', monospace !important;
+    }
+    
+    /* Ensure proper page margins */
+    @page {
+      margin: 1cm;
+      size: A4;
+    }
+    
+    /* Hide site elements during print */
+    :global(header), :global(footer), :global(nav), :global(button) {
+      display: none !important;
+    }
+    
+    /* Add visible space for better section separation in print */
+    #cv-content > :global(section),
+    #cv-content > :global(div) {
+      margin-bottom: 2rem;
+    }
+    
+    /* Ensure all text uses the correct font */
+    :global(h1), :global(h2), :global(h3), :global(h4), :global(p), :global(li), :global(a), :global(span), :global(div) {
+      font-family: 'Inconsolata', monospace !important;
+    }
+  }
+
+  /* Active state for navigation */
+  .cv-nav a.active {
+    color: var(--color-blue-600);
+    font-weight: 600;
+  }
+  :global(.dark) .cv-nav a.active {
+    color: var(--color-blue-400);
+  }
+
+  /* Add highlight effect on scroll */
+  @keyframes highlight {
+    0% { background-color: rgba(59, 130, 246, 0.1); }
+    100% { background-color: transparent; }
+  }
+
+  .highlight-section {
+    animation: highlight 2s ease-out;
+  }
+
+  /* Skills section styling */
+  .skills-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem !important;
+    padding-left: 0 !important;
+    list-style-type: none !important;
+  }
+
+  .skills-grid li {
+    background-color: var(--color-slate-50);
+    border: 1px solid var(--color-slate-200);
+    border-radius: 0.5rem;
+    padding: 0.75rem !important;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .skills-grid li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-color: var(--color-blue-300);
+  }
+
+  :global(.dark) .skills-grid li {
+    background-color: var(--color-slate-700);
+    border-color: var(--color-slate-600);
+  }
+
+  :global(.dark) .skills-grid li:hover {
+    border-color: var(--color-blue-500);
+  }
+
+  .skill-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .skill-name {
+    font-weight: 600;
+    color: var(--color-slate-700);
+  }
+
+  :global(.dark) .skill-name {
+    color: var(--color-slate-300);
+  }
+
+  @media print {
+    .skills-grid {
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .skills-grid li {
+      border: 1px solid #ddd !important;
+      background-color: #fff !important;
+      page-break-inside: avoid;
+    }
+    
+    .skill-name {
+      color: #000 !important;
+    }
+  }
+</style>

@@ -113,6 +113,14 @@ const cv = defineCollection({
     }).optional(),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
+    contacts: z.array(
+      z.object({
+        type: z.string(),
+        value: z.string(),
+        url: z.string(),
+        icon: z.string(),
+      })
+    ).optional(),
   }),
 });
 // 3. Export a single `collections` object to register your collection(s)

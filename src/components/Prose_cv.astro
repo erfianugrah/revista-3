@@ -8,28 +8,67 @@
     dark:bg-slate-800 dark:prose-invert
     prose-headings:font-inconsolata
     prose-h1:text-3xl prose-h1:font-bold prose-h1:mb-6
-    prose-h2:text-2xl prose-h2:font-semibold prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-blue-800 dark:prose-h2:text-blue-400
+    prose-h2:text-2xl prose-h2:font-semibold prose-h2:mt-10 prose-h2:mb-6 prose-h2:text-blue-800 dark:prose-h2:text-blue-400 prose-h2:pb-2 prose-h2:border-b prose-h2:border-slate-200 dark:prose-h2:border-slate-700
     prose-h3:text-xl prose-h3:font-medium prose-h3:mt-6 prose-h3:mb-3 prose-h3:text-blue-700 dark:prose-h3:text-blue-300
     prose-h4:text-lg prose-h4:font-medium prose-h4:mt-4 prose-h4:mb-2 prose-h4:text-blue-600 dark:prose-h4:text-slate-400
     prose-p:my-2 prose-p:leading-relaxed
-    prose-ul:my-2 prose-ul:list-disc prose-ul:pl-6
-    prose-li:my-1
-    prose-a:text-blue-600 prose-a:no-underline prose-a:hover:underline
-    prose-table:my-4 prose-table:w-full prose-table:border-collapse
-    prose-th:border prose-th:border-slate-300 dark:prose-th:border-slate-600 prose-th:px-4 prose-th:py-2 prose-th:bg-slate-100 dark:prose-th:bg-slate-700 prose-th:font-semibold
-    prose-td:border prose-td:border-slate-300 dark:prose-td:border-slate-600 prose-td:px-4 prose-td:py-2
+    prose-ul:my-3 prose-ul:list-disc prose-ul:pl-6
+    prose-li:my-1.5 prose-li:leading-relaxed
+    prose-a:text-blue-600 prose-a:no-underline prose-a:hover:underline hover:prose-a:text-blue-800
+    prose-table:my-6 prose-table:w-full prose-table:border-collapse prose-table:shadow-sm
+    prose-th:border prose-th:border-slate-300 dark:prose-th:border-slate-600 prose-th:px-4 prose-th:py-3 prose-th:bg-slate-100 dark:prose-th:bg-slate-700 prose-th:font-semibold
+    prose-td:border prose-td:border-slate-300 dark:prose-td:border-slate-600 prose-td:px-4 prose-td:py-3
     sm:px-12 sm:py-16
-    lg:max-w-4xl font-inconsolata"
+    lg:max-w-4xl font-inconsolata print:py-8 print:px-6"
 >
-  <slot />
+  <div class="cv-sections space-y-10">
+    <slot />
+  </div>
 </div>
+
+<script>
+  // Apply simple timeline look to the CV
+  document.addEventListener("DOMContentLoaded", () => {
+    // Simple left border for company sections
+    document.querySelectorAll("h3 .job-title").forEach(element => {
+      if (element.parentElement && element.parentElement.parentElement) {
+        element.parentElement.parentElement.classList.add('job-section');
+      }
+    });
+    
+    // Mark company headers
+    document.querySelectorAll("h2 .company-name").forEach(element => {
+      if (element.parentElement && element.parentElement.parentElement) {
+        element.parentElement.parentElement.classList.add('company-section');
+      }
+    });
+    
+    // Mark education headers
+    document.querySelectorAll(".school-name").forEach(element => {
+      if (element.parentElement && element.parentElement.parentElement) {
+        element.parentElement.parentElement.classList.add('education-section');
+      }
+    });
+  });
+</script>
 
 <style>
   /* Custom styles for resume elements - updated for Tailwind v4 */
+  .cv-sections > :global(*) {
+    margin-bottom: 1.5rem;
+  }
+
+  .cv-sections > :global(*:last-child) {
+    margin-bottom: 0;
+  }
+
   :global(.prose .company-name) {
     font-size: var(--text-6); /* text-2xl in v4 */
     font-weight: 700; /* font-bold */
     color: var(--color-blue-900);
+    position: relative;
+    display: inline-block;
+    margin-bottom: 0.5rem;
   }
 
   :global(.dark .prose .company-name) {
@@ -40,6 +79,8 @@
     font-size: var(--text-5); /* text-xl in v4 */
     font-weight: 600; /* font-semibold */
     color: var(--color-blue-700);
+    margin-top: 0.75rem;
+    position: relative;
   }
 
   :global(.dark .prose .job-title) {
@@ -61,6 +102,8 @@
     font-size: var(--text-5); /* text-xl in v4 */
     font-weight: 700; /* font-bold */
     color: var(--color-blue-800);
+    margin-bottom: 0.25rem;
+    position: relative;
   }
 
   :global(.dark .prose .school-name) {
@@ -75,5 +118,208 @@
 
   :global(.dark .prose .degree) {
     color: var(--color-blue-300);
+  }
+
+  /* Simple timeline styles */
+  :global(.job-section) {
+    position: relative;
+    border-left: 2px solid var(--color-slate-200);
+    padding-left: 1rem;
+    margin-left: 0.25rem;
+  }
+
+  :global(.dark .job-section) {
+    border-left-color: var(--color-slate-700);
+  }
+  
+  :global(.company-section) {
+    position: relative;
+    margin-left: 0.25rem;
+  }
+  
+  :global(.company-section::before) {
+    content: '';
+    position: absolute;
+    top: 1rem;
+    left: -0.35rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: var(--color-blue-500);
+    border-radius: 50%;
+  }
+  
+  :global(.dark .company-section::before) {
+    background-color: var(--color-blue-400);
+  }
+  
+  :global(.education-section) {
+    position: relative;
+    border-left: 2px solid var(--color-emerald-200);
+    padding-left: 1rem;
+    margin-left: 0.25rem;
+  }
+  
+  :global(.dark .education-section) {
+    border-left-color: var(--color-emerald-700);
+  }
+  
+  :global(.education-section::before) {
+    content: '';
+    position: absolute;
+    top: 1rem;
+    left: -0.35rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: var(--color-emerald-500);
+    border-radius: 50%;
+  }
+  
+  :global(.dark .education-section::before) {
+    background-color: var(--color-emerald-400);
+  }
+
+  /* Print specific styles */
+  @media print {
+    :global(.prose) {
+      max-width: 100%;
+      font-size: 11pt;
+    }
+    
+    /* Major section headings */
+    :global(.prose h2) {
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      color: #000 !important;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    
+    /* Only use page breaks for major sections like Skills and Education */
+    :global(.prose h2#skills),
+    :global(.prose h2#languages),
+    :global(.prose h2#education) {
+      page-break-before: always;
+      break-before: page;
+    }
+    
+    /* Company sections */
+    :global(.prose .company-name) {
+      margin-top: 1.5rem;
+      page-break-before: avoid;
+      break-before: avoid;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    
+    /* Job titles */
+    :global(.prose .job-title) {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    
+    /* Date ranges */
+    :global(.prose .date-range) {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    
+    /* Job descriptions */
+    :global(.prose .job-title + * + ul) {
+      page-break-before: avoid;
+      break-before: avoid;
+      page-break-inside: auto;
+      break-inside: auto;
+    }
+    
+    /* Keep at least 2 lines together when breaking */
+    :global(.prose li) {
+      page-break-inside: auto;
+      break-inside: auto;
+      orphans: 3;
+      widows: 3;
+    }
+    
+    /* Allow breaks inside longer lists */
+    :global(.prose ul) {
+      page-break-inside: auto;
+      break-inside: auto;
+    }
+    
+    /* School section */
+    :global(.prose .school-name) {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    
+    :global(.prose .degree) {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    
+    /* Text colors */
+    :global(.prose .company-name),
+    :global(.prose .school-name),
+    :global(.prose .job-title),
+    :global(.prose .degree),
+    :global(.prose .date-range) {
+      color: #000 !important;
+    }
+    
+    /* Tables */
+    :global(.prose table) {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    
+    /* Improve orphans and widows for all text */
+    :global(.prose p) {
+      orphans: 3;
+      widows: 3;
+    }
+    
+    /* Hide timeline elements when printing */
+    :global(.job-section),
+    :global(.education-section) {
+      border-left: none !important;
+      padding-left: 0 !important;
+      margin-left: 0 !important;
+    }
+    
+    :global(.company-section::before),
+    :global(.education-section::before) {
+      display: none !important;
+    }
+  }
+
+  /* Skills section enhancements */
+  :global(.prose ul:has(li:first-child:contains("HTML")), 
+          .prose ul:has(li:first-child:contains("English"))) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem 1.5rem;
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  :global(.prose ul:has(li:first-child:contains("HTML")) li, 
+          .prose ul:has(li:first-child:contains("English")) li) {
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  :global(.prose ul:has(li:first-child:contains("HTML")) li::before, 
+          .prose ul:has(li:first-child:contains("English")) li::before) {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--color-blue-500);
+    font-weight: bold;
+  }
+
+  @media (max-width: 640px) {
+    :global(.prose ul:has(li:first-child:contains("HTML")), 
+            .prose ul:has(li:first-child:contains("English"))) {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
