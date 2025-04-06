@@ -1,58 +1,314 @@
 /* src/styles/cv-print.css */
+/* Styles for print mode */
 @media print {
+  /* Page setup */
   @page {
     margin: 1cm;
     size: A4;
   }
   
+  /* Force light mode for printing */
+  :root {
+    color-scheme: light !important;
+  }
+  
+  html {
+    /* Force light mode for print */
+    background-color: white !important;
+    filter: none !important;
+  }
+  
+  /* Custom print wrapper */
+  .cv-print-wrapper {
+    background-color: white !important;
+    color: black !important;
+  }
+  
+  /* All content within print wrapper should use light theme */
+  .cv-print-wrapper * {
+    color: black !important;
+    background-color: white !important;
+    border-color: #ddd !important;
+  }
+  
+  /* Basic body styling */
   body {
-    font-size: 12pt;
-    color: #000;
-    background-color: #fff;
+    font-size: 11pt;
+    line-height: 1.3;
+    color: #000 !important;
+    background-color: #fff !important;
     font-family: 'Inconsolata', monospace !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
   
-  /* Header sections */
+  /* Remove dark mode entirely */
+  .dark {
+    background-color: #fff !important;
+    color: #000 !important;
+  }
+  
+  /* Force background colors and images to print */
+  html {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  /* Container adjustments */
+  .max-w-4xl {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    background-color: #fff !important;
+    color: #000 !important;
+  }
+  
+  /* Make sure all wrappers use light theme */
+  .bg-white.dark\:bg-slate-800 {
+    background-color: #fff !important;
+    color: #000 !important;
+  }
+  
+  /* Typography and headings */
   h1, h2, h3, h4 {
-    page-break-after: avoid;
-    break-after: avoid;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    margin-top: 0 !important;
+    color: #000 !important;
   }
   
-  /* Major section headings */
-  h2#skills, h2#languages, h2#education {
-    page-break-before: always;
-    break-before: page;
+  h1 {
+    font-size: 18pt !important;
+    margin-bottom: 0.3cm !important;
+    color: #000 !important;
   }
   
-  /* Hide UI elements */
-  header, footer, nav, button, .cv-nav {
+  h2 {
+    font-size: 14pt !important;
+    margin-bottom: 0.2cm !important;
+    border-bottom: 1pt solid #000 !important;
+    padding-bottom: 0.1cm !important;
+    color: #000 !important;
+  }
+  
+  h3 {
+    font-size: 12pt !important;
+    margin-bottom: 0.1cm !important;
+    color: #000 !important;
+  }
+  
+  h4 {
+    font-size: 11pt !important;
+    margin-bottom: 0.1cm !important;
+    color: #000 !important;
+  }
+  
+  /* Force all text elements to use black text */
+  p, span, div, li, a {
+    color: #000 !important;
+  }
+  
+  /* Major section headings - page breaks */
+  h2#skills {
+    page-break-before: auto !important;
+    break-before: auto !important;
+    margin-top: 1cm !important;
+    padding-top: 0.5cm !important;
+  }
+  
+  h2#languages, h2#education {
+    page-break-before: always !important;
+    break-before: page !important;
+    margin-top: 0.5cm !important;
+    padding-top: 0.5cm !important;
+  }
+  
+  /* Add a tiny bit of spacing after paragraphs */
+  p {
+    margin-bottom: 0.15cm !important;
+  }
+  
+  /* Hide UI elements - more comprehensive */
+  header, 
+  nav, 
+  footer,
+  [aria-label*="nav"],
+  [id*="toggle"],
+  [class*="toggle"],
+  [class*="nav"],
+  [class*="header"],
+  [class*="footer"],
+  [class*="button"],
+  button, 
+  .cv-nav, 
+  .print\\:hidden,
+  [id="print-cv"],
+  [id="mobile-nav-toggle"],
+  [id="theme-toggle"],
+  [id="nav-toggle-icon"],
+  [id="section-links"],
+  .fixed,
+  .absolute,
+  .group,
+  [class*="dark:"],
+  svg,
+  .hidden,
+  .sticky {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
   }
   
-  /* Contact information */
-  .contact-item a, .contact-item svg {
+  /* Contact information and header styling */
+  .bg-slate-100, .dark\:bg-slate-700, .dark\:bg-slate-800, .bg-white {
+    background-color: #fff !important;
+    padding: 0 !important;
+    margin-bottom: 0.5cm !important;
+    color: #000 !important;
+  }
+
+  /* Make sure name and job title appear */
+  .text-2xl, .text-3xl, .text-base, .text-lg, .uppercase {
+    display: block !important;
+    color: #000 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    font-weight: bold !important;
+    font-size: 18pt !important;
+  }
+
+  /* Contact info at top */
+  .text-base, .text-lg {
+    font-size: 12pt !important;
+    font-weight: normal !important;
+    margin-top: 0.25cm !important;
+    margin-bottom: 0.5cm !important;
+  }
+  
+  /* Force light theme for all content */
+  .dark\:text-slate-100,
+  .dark\:text-slate-200,
+  .dark\:text-slate-300,
+  .dark\:text-slate-400 {
+    color: #000 !important;
+  }
+  
+  .dark\:bg-slate-800,
+  .dark\:bg-slate-700,
+  .dark\:bg-slate-900 {
+    background-color: #fff !important;
+  }
+  
+  /* Contact links special handling for print */
+  a[rel="noopener noreferrer"], .contact-item a {
     color: #000 !important;
     text-decoration: none !important;
+    display: inline-block !important;
+    margin-right: 0.5cm !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    font-size: 10pt !important;
   }
   
-  /* Company sections */
-  .company-section, .job-section, .education-section {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    page-break-inside: avoid;
-  }
-  
-  /* Text colors */
-  .company-name, .school-name, .job-title, .degree, .date-range {
+  /* Special override for the email, LinkedIn and GitHub links */
+  a[href*="mailto"], a[href*="linkedin"], a[href*="github"] {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
     color: #000 !important;
+    text-decoration: none !important;
+    font-size: 10pt !important;
+    margin-right: 0.5cm !important;
   }
   
-  /* Lists */
-  ul, li {
-    page-break-inside: auto;
-    break-inside: auto;
-    orphans: 3;
-    widows: 3;
+  /* Make the hidden span with the full URL visible */
+  a[rel="noopener noreferrer"] span.hidden,
+  a[href*="mailto"] span.hidden,
+  a[href*="linkedin"] span.hidden,
+  a[href*="github"] span.hidden {
+    display: inline !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+  }
+  
+  /* Ensure all contact values are visible in print */
+  a[rel="noopener noreferrer"] span.hidden {
+    display: inline !important;
+  }
+  
+  /* Company and job sections */
+  .company-section {
+    margin-top: 0.4cm !important;
+    margin-bottom: 0.3cm !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  
+  .job-section, .education-section {
+    margin-top: 0.2cm !important;
+    margin-bottom: 0.3cm !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  
+  /* Text formatting */
+  .company-name, .school-name {
+    color: #000 !important;
+    font-weight: bold !important;
+  }
+  
+  .job-title {
+    color: #000 !important;
+    font-weight: 600 !important;
+  }
+  
+  .date-range {
+    color: #333 !important;
+    font-style: italic !important;
+    font-size: 10pt !important;
+  }
+  
+  .degree {
+    color: #000 !important;
+    font-weight: 500 !important;
+  }
+  
+  /* Improved list formatting */
+  ul {
+    margin-top: 0.15cm !important;
+    margin-bottom: 0.2cm !important;
+    padding-left: 0.5cm !important;
+  }
+  
+  li {
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    orphans: 3 !important;
+    widows: 3 !important;
+    margin-bottom: 0.05cm !important;
+    font-size: 10pt !important;
+  }
+  
+  /* Nested lists */
+  li ul {
+    margin-top: 0.05cm !important;
+    margin-bottom: 0.05cm !important;
   }
   
   /* Hide visual elements */
@@ -64,28 +320,139 @@
     display: none !important;
   }
 
-  /* Skills visualization */
+  /* Skills visualization - improved for print */
   .skills-grid {
     display: grid !important;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.2cm !important;
+    margin-top: 0.2cm !important;
+    padding-left: 0 !important;
+    list-style-type: none !important;
   }
   
-  .skills-grid li {
-    border: 1px solid #ddd !important;
+  .skills-grid > * {
+    border: 1px solid #ccc !important;
     background-color: #fff !important;
-    page-break-inside: avoid;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
   
   .skill-item {
-    border: 1px solid #ddd !important;
+    border: 1px solid #ccc !important;
     background-color: #fff !important;
+    padding: 0.15cm !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
   
-  .skill-item .h-2 {
+  /* Skill name and level */
+  .skill-item .font-medium {
+    font-weight: bold !important;
+    font-size: 10pt !important;
+    color: #000 !important;
+  }
+  
+  .skill-item .text-xs {
+    font-size: 8pt !important;
+    color: #333 !important;
+  }
+  
+  /* Skill bar */
+  .skill-item .h-2,
+  .dark .skill-item .h-2 {
     background-color: #eee !important;
+    height: 0.1cm !important;
+    margin-top: 0.1cm !important;
   }
   
-  .skill-item .h-2 div {
+  .skill-item .h-2 div,
+  .dark .skill-item .h-2 div,
+  .skill-item .h-2 div[class*="bg-"],
+  .dark .skill-item .h-2 div[class*="bg-"] {
     background-color: #333 !important;
+    height: 100% !important;
   }
+  
+  /* Professional page header/footer */
+  @page {
+    @top-center {
+      content: "Erfi Anugrah | Curriculum Vitae";
+      font-family: 'Inconsolata', monospace;
+      font-size: 9pt;
+      color: #666;
+    }
+    @bottom-center {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: 'Inconsolata', monospace;
+      font-size: 9pt;
+      color: #666;
+    }
+    @bottom-right {
+      content: "www.erfianugrah.com/cv";
+      font-family: 'Inconsolata', monospace;
+      font-size: 8pt;
+      color: #666;
+    }
+    @bottom-left {
+      content: "Updated: " attr(data-updated-date);
+      font-family: 'Inconsolata', monospace;
+      font-size: 8pt;
+      color: #666;
+    }
+  }
+  
+  /* Job section separators */
+  .job-section:not(:last-child) {
+    border-bottom: 1px dotted #ccc !important;
+    padding-bottom: 0.2cm !important;
+  }
+  
+  /* Job section specific print styles */
+  .job-section {
+    margin-bottom: 0.2cm !important;
+    padding-left: 0 !important;
+    position: relative !important;
+  }
+  
+  /* Duration indicator styling for print */
+  .duration-indicator::after {
+    width: 0.15cm !important;
+    height: 0.15cm !important;
+    border: 1px solid #666 !important;
+    background-color: white !important;
+    display: inline-block !important;
+    margin-left: 0.1cm !important;
+  }
+  
+  /* Expand any truncated text */
+  .line-clamp-2, .line-clamp-3 {
+    -webkit-line-clamp: unset !important;
+    display: block !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    white-space: normal !important;
+  }
+  
+  /* CV content area padding */
+  #cv-content {
+    padding: 0 0.5cm !important;
+    margin: 0 !important;
+  }
+
+  /* Fix footer overflow */
+  #cv-content .prose {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  /* Fix flex layouts in print */
+  .flex {
+    display: block !important;
+  }
+  
+  /* Fix color legend display */
+  .duration-legend {
+    display: none !important;
+  }
+  
 }

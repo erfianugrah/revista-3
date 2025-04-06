@@ -23,3 +23,5 @@ pnpm-debug.log*
 # misc scripts
 replacer.py
 venv
+
+**/CLAUDE.local.md

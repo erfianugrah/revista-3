@@ -73,6 +73,26 @@ const { scale: durationScale, colorCategory, durationYears } = analyzeDuration(d
     padding-bottom: calc(var(--duration-scale, 1) * 1rem);
   }
   
+  @media print {
+    .job-section {
+      margin-bottom: 0.75rem !important;
+      padding-left: 0 !important;
+    }
+    
+    /* Add visual separator in print since we lose the timeline visualization */
+    .job-section:not(:last-child) {
+      border-bottom: 1px dotted #eee;
+      padding-bottom: 0.75rem;
+    }
+    
+    .duration-indicator::after {
+      width: 6px !important;
+      height: 6px !important;
+      border: 1px solid #333 !important;
+      background-color: white !important;
+    }
+  }
+  
   /* Color coding for job durations */
   .duration-short::before {
     background-color: var(--color-amber-400) !important;

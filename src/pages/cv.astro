@@ -55,8 +55,17 @@ const getShortLabel = (contact) => {
 >
   <!-- Structured data for SEO -->
   <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+  
+  <!-- Basic inline print styles -->
+  <style>
+    @media print {
+      @page { size: A4; margin: 1cm; }
+      /* Add some basic styles here in case the external stylesheet doesn't load */
+      body { font-family: 'Inconsolata', monospace !important; font-size: 11pt; color: #000; }
+    }
+  </style>
 
-  <div class="max-w-4xl mx-auto bg-white dark:bg-slate-800 shadow-lg rounded-lg overflow-hidden print:shadow-none print:border print:border-slate-200">
+  <div class="cv-print-wrapper max-w-4xl mx-auto bg-white dark:bg-slate-800 shadow-lg rounded-lg overflow-hidden print:shadow-none print:border print:border-slate-200">
     <!-- Header section with responsive design -->
     <div class="bg-slate-100 dark:bg-slate-700 px-4 sm:px-8 py-6 border-b border-slate-200 dark:border-slate-600 print:bg-white print:border-slate-200">
       <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
@@ -86,12 +95,12 @@ const getShortLabel = (contact) => {
         </div>
         <div class="mt-2 md:mt-0 self-start">
           <div class="relative group">
-            <button id="print-cv" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition print:hidden flex items-center text-sm sm:text-base">
-              <Icon name="mdi:printer" class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
+            <button id="print-cv" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-5 rounded-md transition print:hidden flex items-center text-sm sm:text-base shadow-md hover:shadow-lg">
+              <Icon name="mdi:printer" class="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2" width="20" height="20" />
               Save as PDF
             </button>
-            <div class="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-slate-700 shadow-md rounded p-3 text-xs text-slate-700 dark:text-slate-200 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-              This will open your browser's print dialog. Select "Save as PDF" option in the print dialog to save your CV as a PDF file.
+            <div class="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-slate-700 shadow-lg rounded-md p-3 text-xs text-slate-700 dark:text-slate-200 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 border border-slate-200 dark:border-slate-600">
+              This will open your browser's print dialog where you can save as PDF. All styling, colors and formatting will be preserved in the PDF output.
             </div>
           </div>
         </div>
@@ -122,11 +131,12 @@ const getShortLabel = (contact) => {
     </div>
 
     <!-- CV content -->
-    <div id="cv-content">
+    <div id="cv-content" data-updated-date={new Date(entry.data.updatedDate).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'})}>
       <ProseCv>
         <Content />
       </ProseCv>
     </div>
+    
   </div>
 </BaseLayout>
 
@@ -175,17 +185,39 @@ const getShortLabel = (contact) => {
     // No need to add IDs to section headings anymore since we're using CVSection components
     // No need for skill visualization enhancements since we're using the SkillBar component
 
-    // Enhanced print button with visual feedback
+    // Enhanced print functionality
     if (elements.printButton) {
       elements.printButton.addEventListener('click', () => {
-        const originalText = elements.printButton.innerHTML;
+        // Create a notification with more helpful text
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-700 text-white px-6 py-4 rounded-md shadow-xl z-50 transition-all duration-500 text-center max-w-md print:hidden';
+        notification.innerHTML = `
+          <div class="font-bold text-lg mb-2">Opening Print Dialog...</div>
+          <div class="text-sm mb-3">When the dialog opens, select "Save as PDF" for best results</div>
+          <div class="text-xs">All styling and formatting will be preserved in the PDF</div>
+        `;
+        document.body.appendChild(notification);
         
-        elements.printButton.innerHTML = `<svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Preparing PDF...`;
-        
+        // Trigger print after a small delay to allow the notification to show
         setTimeout(() => {
-          elements.printButton.innerHTML = originalText;
+          // Hide notification right before printing to ensure it doesn't show in print
+          notification.style.display = 'none';
           window.print();
-        }, 500);
+          
+          // Show and then fade out notification after print dialog appears
+          setTimeout(() => {
+            notification.style.display = '';
+            setTimeout(() => {
+              notification.style.opacity = '0';
+              notification.style.transform = 'translate(-50%, -50%) scale(0.9)';
+              setTimeout(() => {
+                if (notification.parentNode) {
+                  document.body.removeChild(notification);
+                }
+              }, 500);
+            }, 500);
+          }, 500);
+        }, 800);
       });
     }
 
@@ -290,6 +322,14 @@ const getShortLabel = (contact) => {
   });
 </script>
 
+<!-- 
+  Simple PDF generation using browser's print functionality:
+  - Uses the browser's native print dialog
+  - All print styles are applied through CSS media queries
+  - Provides a notification when opening the print dialog
+  - Simple and reliable approach
+-->
+
 <style>
   /* Mobile navigation dropdown */
   @media (max-width: 768px) {
@@ -322,4 +362,5 @@ const getShortLabel = (contact) => {
   .highlight-section {
     animation: highlight-pulse 2s ease-out;
   }
+  
 </style>
