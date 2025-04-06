@@ -1,0 +1,75 @@
+---
+interface Props {
+  name: string;
+  level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  category?: string;
+  proficiency?: string;
+}
+
+const { name, level, category, proficiency } = Astro.props;
+
+// Map level to percentage and color
+const levelMap = {
+  beginner: { width: '25%', color: 'bg-slate-400', label: 'Beginner' },
+  intermediate: { width: '50%', color: 'bg-blue-400', label: 'Intermediate' },
+  advanced: { width: '75%', color: 'bg-blue-500', label: 'Advanced' },
+  expert: { width: '95%', color: 'bg-blue-600', label: 'Expert' }
+};
+
+const { width, color, label } = levelMap[level];
+
+// For languages, use the provided proficiency or fall back to the level label
+const displayLabel = category === 'language' && proficiency ? proficiency : label;
+---
+
+<div class={`skill-item ${category ? `skill-${category}` : ''} p-3 border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 hover:shadow-md transition`}>
+  <div class="flex justify-between mb-1">
+    <span class="font-medium text-slate-800 dark:text-slate-200">{name}</span>
+    <span class="text-xs text-slate-500 dark:text-slate-400">{displayLabel}</span>
+  </div>
+  <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+    <div class={`h-full ${color} rounded-full`} style={`width: ${width}`}></div>
+  </div>
+</div>
+
+<style>
+  /* Special styling for language skill bars */
+  .skill-language .h-2 div.bg-slate-400 {
+    background-color: var(--color-indigo-300) !important;
+  }
+  
+  .skill-language .h-2 div.bg-blue-400 {
+    background-color: var(--color-indigo-400) !important;
+  }
+  
+  .skill-language .h-2 div.bg-blue-500 {
+    background-color: var(--color-indigo-500) !important;
+  }
+  
+  .skill-language .h-2 div.bg-blue-600 {
+    background-color: var(--color-indigo-600) !important;
+  }
+  
+  .skill-language {
+    border-color: var(--color-indigo-100) !important;
+  }
+  
+  :global(.dark) .skill-language {
+    border-color: var(--color-indigo-900) !important;
+  }
+  
+  @media print {
+    .skill-item {
+      border: 1px solid #ddd !important;
+      background-color: #fff !important;
+    }
+    
+    .skill-item .h-2 {
+      background-color: #eee !important;
+    }
+    
+    .skill-item .h-2 div {
+      background-color: #333 !important;
+    }
+  }
+</style>

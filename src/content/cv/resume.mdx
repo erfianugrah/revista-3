@@ -37,12 +37,15 @@ skills:
     level: "expert"
     category: "frontend"
   - name: "React"
-    level: "expert"
+    level: "intermediate"
     category: "frontend"
-  - name: "Python scripting"
+  - name: "Python"
     level: "advanced"
     category: "backend"
-  - name: "Rust (basic)"
+  - name: "Rust"
+    level: "beginner"
+    category: "backend"
+  - name: "Golang"
     level: "beginner"
     category: "backend"
   - name: "Grafana/Prometheus"
@@ -55,7 +58,7 @@ skills:
     level: "advanced"
     category: "devops"
   - name: "Networking"
-    level: "expert"
+    level: "advanced"
     category: "networking"
   - name: "Kubernetes"
     level: "advanced"
@@ -143,20 +146,15 @@ companies:
           - "Assisted in managing training camp operations, ensuring incident-free operations"
 ---
 
-import CVSection from '../../components/CVSection.astro';
-import CVCompany from '../../components/CVCompany.astro';
-import CVTimeline from '../../components/CVTimeline.astro';
-import SkillBar from '../../components/SkillBar.astro';
-import EducationTimeline from '../../components/EducationTimeline.astro';
-import CVColorLegend from '../../components/CVColorLegend.astro';
+import { Section, Company, Timeline, SkillBar, EducationTimeline, ColorLegend } from '../../components/cv';
 
-<CVColorLegend className="mb-4" />
+<ColorLegend className="mb-4" />
 
-<CVSection id="experience" title="Work Experience">
+<Section id="experience" title="Work Experience">
   {frontmatter.companies.map(company => (
-    <CVCompany name={company.name}>
+    <Company name={company.name}>
       {company.positions.map(position => (
-        <CVTimeline title={position.title} dateRange={position.dateRange}>
+        <Timeline title={position.title} dateRange={position.dateRange}>
           <ul>
             {position.responsibilities.map(responsibility => (
               <li>{responsibility}</li>
@@ -171,13 +169,13 @@ import CVColorLegend from '../../components/CVColorLegend.astro';
               </li>
             )}
           </ul>
-        </CVTimeline>
+        </Timeline>
       ))}
-    </CVCompany>
+    </Company>
   ))}
-</CVSection>
+</Section>
 
-<CVSection id="skills" title="Skills">
+<Section id="skills" title="Skills">
   <div class="skills-grid">
     {frontmatter.skills.map(skill => (
       <SkillBar 
@@ -187,27 +185,21 @@ import CVColorLegend from '../../components/CVColorLegend.astro';
       />
     ))}
   </div>
-</CVSection>
+</Section>
 
-<CVSection id="languages" title="Languages">
-  <table class="w-full">
-    <thead>
-      <tr>
-        <th>Language</th>
-        <th>Proficiency</th>
-      </tr>
-    </thead>
-    <tbody>
-      {frontmatter.languages.map(lang => (
-        <tr>
-          <td>{lang.language}</td>
-          <td>{lang.proficiency}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</CVSection>
+<Section id="languages" title="Languages">
+  <div class="skills-grid">
+    {frontmatter.languages.map(lang => (
+      <SkillBar 
+        name={lang.language} 
+        level={lang.level} 
+        category="language" 
+        proficiency={lang.proficiency} 
+      />
+    ))}
+  </div>
+</Section>
 
-<CVSection id="education" title="Education">
+<Section id="education" title="Education">
   <EducationTimeline education={frontmatter.education} />
-</CVSection>
+</Section>
