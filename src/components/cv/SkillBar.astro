@@ -22,10 +22,10 @@ const { width, color, label } = levelMap[level];
 const displayLabel = category === 'language' && proficiency ? proficiency : label;
 ---
 
-<div class={`skill-item ${category ? `skill-${category}` : ''} p-3 border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 hover:shadow-md transition`}>
-  <div class="flex justify-between mb-1">
-    <span class="font-medium text-slate-800 dark:text-slate-200">{name}</span>
-    <span class="text-xs text-slate-500 dark:text-slate-400">{displayLabel}</span>
+<div class={`skill-item ${category ? `skill-${category}` : ''} p-3 border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 hover:shadow-md transition overflow-hidden`}>
+  <div class="grid grid-cols-[1fr,auto] gap-2 mb-1">
+    <span class="font-medium text-slate-800 dark:text-slate-200 truncate" title={name}>{name}</span>
+    <span class="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap shrink-0">{displayLabel}</span>
   </div>
   <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
     <div class={`h-full ${color} rounded-full`} style={`width: ${width}`}></div>
@@ -56,6 +56,30 @@ const displayLabel = category === 'language' && proficiency ? proficiency : labe
   
   :global(.dark) .skill-language {
     border-color: var(--color-indigo-900) !important;
+  }
+  
+  /* Better grid layout for skill names and levels */
+  .skill-item {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  /* Ensure consistent height for all skill items */
+  .skill-item > div:first-child {
+    min-height: 1.5rem;
+  }
+  
+  /* Fix for long skill names */
+  .skill-item .font-medium {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Make sure we can see the level */
+  .skill-item .text-xs {
+    text-align: right;
+    flex-shrink: 0;
   }
   
   @media print {

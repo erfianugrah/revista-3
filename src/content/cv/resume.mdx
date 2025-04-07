@@ -82,15 +82,15 @@ languages:
 education:
   - institution: "Nanyang Technological University, Nanyang Business School, Singapore"
     degree: "Bachelor of Business (Marketing) (Honours with Merit)"
-    dateRange: "Aug 2015 – July 2019"
+    dateRange: { start: "2015-08", end: "2019-07" }
   - institution: "Pioneer Junior College"
     degree: "GCE 'A' Levels"
-    dateRange: "Jan 2011 – Dec 2012"
+    dateRange: { start: "2011-01", end: "2012-12" }
 companies:
   - name: "Cloudflare"
     positions:
       - title: "Senior Customer Solutions Engineer"
-        dateRange: "Oct 2024 – Present"
+        dateRange: { start: "2024-10", end: "Present" }
         responsibilities:
           - "Designing and implementing enterprise-grade solutions for complex customer requirements"
           - "Leading strategic technical discussions to address evolving customer use cases"
@@ -98,7 +98,7 @@ companies:
           - "Contributing to technical documentation and knowledge base development"
           - "Mentoring junior engineers and sharing technical expertise across the team"
       - title: "Customer Solutions Engineer"
-        dateRange: "Jan 2021 – Oct 2024"
+        dateRange: { start: "2021-01", end: "2024-10" }
         responsibilities:
           - "Elevate product adoption and address new use cases during customers' journey with Cloudflare"
           - "Handle customer escalations, complex onboardings, and migrations"
@@ -109,7 +109,7 @@ companies:
           - "Cloudflare Capabilities Award Q4 2021"
           - "Most Customer Focused Award Q4 2021"
       - title: "Solutions Engineer"
-        dateRange: "July 2019 – Dec 2020"
+        dateRange: { start: "2019-07", end: "2020-12" }
         responsibilities:
           - "Conducted POCs, demos, and technical discussions for prospects, from startups to enterprises, primarily within ASEAN"
           - "Led webinars, presentations, and demos at tradeshows and developer-oriented events"
@@ -118,7 +118,7 @@ companies:
         achievements:
           - "Won the MVP award in Q1 2020"
       - title: "Marketing Intern"
-        dateRange: "July 2018 – Dec 2018"
+        dateRange: { start: "2018-07", end: "2018-12" }
         responsibilities:
           - "Led APAC marketing campaigns, collaborating with demand gen, product, events, advertising & sales teams in HQ"
           - "Launched integrated ABM campaigns (content syndication, ads, webinars & email drips)"
@@ -130,7 +130,7 @@ companies:
   - name: "Advanced Materials Technologies"
     positions:
       - title: "Marketing Intern"
-        dateRange: "May 2017 – July 2017"
+        dateRange: { start: "2017-05", end: "2017-07" }
         responsibilities:
           - "Conducted market research, profiling current and prospective business partners"
           - "Created marketing assets including photos, logos, and videos"
@@ -139,7 +139,7 @@ companies:
   - name: "Singapore Police Force"
     positions:
       - title: "KINS, First Team-in-Charge, Acting Guard Commander"
-        dateRange: "May 2013 – March 2015"
+        dateRange: { start: "2013-05", end: "2015-03" }
         responsibilities:
           - "Excelled in team management and security deployment"
           - "Performed administration duties and assumed Guard Commander role when needed"
@@ -176,7 +176,7 @@ import { Section, Company, Timeline, SkillBar, EducationTimeline, ColorLegend } 
 </Section>
 
 <Section id="skills" title="Skills">
-  <div class="skills-grid">
+  <div class="skills-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
     {frontmatter.skills.map(skill => (
       <SkillBar 
         name={skill.name} 
@@ -188,7 +188,7 @@ import { Section, Company, Timeline, SkillBar, EducationTimeline, ColorLegend } 
 </Section>
 
 <Section id="languages" title="Languages">
-  <div class="skills-grid">
+  <div class="skills-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
     {frontmatter.languages.map(lang => (
       <SkillBar 
         name={lang.language} 

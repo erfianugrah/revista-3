@@ -146,7 +146,13 @@ const cv = defineCollection({
       z.object({
         institution: z.string(),
         degree: z.string(),
-        dateRange: z.string(),
+        dateRange: z.union([
+          z.string(), 
+          z.object({
+            start: z.string(),
+            end: z.string().optional()
+          })
+        ]),
       })
     ).optional(),
     companies: z.array(
@@ -155,7 +161,13 @@ const cv = defineCollection({
         positions: z.array(
           z.object({
             title: z.string(),
-            dateRange: z.string(),
+            dateRange: z.union([
+              z.string(), 
+              z.object({
+                start: z.string(),
+                end: z.string().optional()
+              })
+            ]),
             responsibilities: z.array(z.string()),
             achievements: z.array(z.string()).optional(),
           })
