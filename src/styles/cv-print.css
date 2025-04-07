@@ -31,10 +31,10 @@
     border-color: #ddd !important;
   }
   
-  /* Basic body styling */
+  /* Basic body styling with consistent fonts */
   body {
-    font-size: 11pt;
-    line-height: 1.3;
+    font-size: 9pt;
+    line-height: 1.25;
     color: #000 !important;
     background-color: #fff !important;
     font-family: 'Inconsolata', monospace !important;
@@ -43,6 +43,11 @@
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
+  }
+  
+  /* Ensure consistent font family throughout */
+  * {
+    font-family: 'Inconsolata', monospace !important;
   }
   
   /* Remove dark mode entirely */
@@ -84,30 +89,46 @@
     color: #000 !important;
   }
   
+  /* Keep section headers with at least some of their content */
+  h2 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+  
+  h2 + * {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+  }
+  
+  /* Standard typographic scale for print */
   h1 {
-    font-size: 18pt !important;
-    margin-bottom: 0.3cm !important;
+    font-size: 14pt !important;
+    margin-bottom: 0.2cm !important;
     color: #000 !important;
+    font-family: 'Inconsolata', monospace !important;
   }
   
   h2 {
-    font-size: 14pt !important;
-    margin-bottom: 0.2cm !important;
+    font-size: 12pt !important;
+    margin-bottom: 0.15cm !important;
     border-bottom: 1pt solid #000 !important;
-    padding-bottom: 0.1cm !important;
+    padding-bottom: 0.08cm !important;
     color: #000 !important;
+    font-family: 'Inconsolata', monospace !important;
   }
   
   h3 {
-    font-size: 12pt !important;
+    font-size: 10pt !important;
     margin-bottom: 0.1cm !important;
     color: #000 !important;
+    font-family: 'Inconsolata', monospace !important;
   }
   
   h4 {
-    font-size: 11pt !important;
+    font-size: 9pt !important;
     margin-bottom: 0.1cm !important;
     color: #000 !important;
+    font-family: 'Inconsolata', monospace !important;
   }
   
   /* Force all text elements to use black text */
@@ -115,12 +136,62 @@
     color: #000 !important;
   }
   
-  /* Major section headings - page breaks */
-  h2#skills {
+  /* Contact links styling for print */
+  .cv-print-wrapper a[href] {
+    display: inline-flex !important;
+    align-items: center !important;
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+  
+  /* Put contacts on one line in print */
+  .mt-3.flex.flex-wrap {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    gap: 0.2cm !important;
+    margin-top: 0.1cm !important;
+    margin-bottom: 0.1cm !important;
+    width: 100% !important;
+  }
+  
+  /* Size and space the contact items evenly */
+  .mt-3.flex.flex-wrap a {
+    flex: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    font-size: 8pt !important;
+  }
+  
+  /* Force work experience to be more compact */
+  h2#experience {
     page-break-before: auto !important;
     break-before: auto !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    font-size: 11pt !important;
+    margin-bottom: 0.1cm !important;
+    padding-bottom: 0.05cm !important;
+  }
+  
+  h2#experience + * {
+    page-break-before: avoid !important;
+    break-before: avoid !important; 
+  }
+
+  h2#skills {
+    page-break-before: always !important;
+    break-before: page !important;
     margin-top: 1cm !important;
     padding-top: 0.5cm !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
   }
   
   h2#languages, h2#education {
@@ -128,6 +199,109 @@
     break-before: page !important;
     margin-top: 0.5cm !important;
     padding-top: 0.5cm !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+  
+  /* Keep section elements with their section headings */
+  h2 + div, section > h2 + div {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+  }
+  
+  /* Ensure work experience section and first three positions stay on first page */
+  #experience {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+  
+  .first-company-wrapper {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+  }
+  
+  /* Keep first three positions together on first page */
+  .first-page-positions {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  
+  /* Make the first three positions more compact */
+  .first-page-positions .job-section {
+    padding-bottom: 0.1cm !important;
+    margin-bottom: 0.1cm !important;
+  }
+  
+  /* Job titles and dates formatting */
+  h3 .job-title {
+    font-weight: bold !important;
+  }
+  
+  .date-range {
+    font-style: italic !important;
+  }
+  
+  .first-page-positions ul {
+    margin-top: 0.05cm !important;
+    margin-bottom: 0.1cm !important;
+    padding-left: 0.3cm !important;
+  }
+  
+  .first-page-positions li {
+    margin-bottom: 0.02cm !important;
+    font-size: 9pt !important;
+  }
+  
+  .first-page-positions li strong {
+    font-weight: bold !important;
+  }
+  
+  /* List formatting */
+  ul {
+    margin-top: 0.05cm !important;
+    margin-bottom: 0.1cm !important;
+    padding-left: 0.3cm !important;
+  }
+  
+  /* Make nested lists compact */
+  li ul {
+    margin-top: 0.05cm !important;
+    margin-bottom: 0.05cm !important;
+  }
+  
+  /* Standard page breaks for companies and positions */
+  .company-wrapper > .company-section {
+    margin-top: 0.3cm !important;
+    margin-bottom: 0.2cm !important;
+  }
+  
+  .job-section {
+    margin-top: 0.15cm !important;
+    margin-bottom: 0.15cm !important;
+  }
+  
+  /* Special handling for skills-languages-education section */
+  .skills-languages-education {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+  
+  .skills-languages-education section {
+    margin-bottom: 0.6cm !important;
+  }
+  
+  /* Adjust spacing for sections */
+  .skills-languages-education h2 {
+    margin-bottom: 0.15cm !important;
+    padding-bottom: 0.05cm !important;
+  }
+  
+  .skills-languages-education #languages {
+    margin-top: 0.3cm !important;
+  }
+  
+  .skills-languages-education #education {
+    margin-top: 0.3cm !important;
   }
   
   /* Add a tiny bit of spacing after paragraphs */
@@ -158,9 +332,10 @@
   .absolute,
   .group,
   [class*="dark:"],
-  svg,
+  button svg,
   .hidden,
-  .sticky {
+  .sticky,
+  [aria-label="Toggle theme"] {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
@@ -169,6 +344,18 @@
     position: absolute !important;
     overflow: hidden !important;
     pointer-events: none !important;
+  }
+  
+  /* Selectively show contact icons in print */
+  a svg {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    height: 0.4cm !important;
+    width: 0.4cm !important;
+    overflow: visible !important;
+    color: #000 !important;
   }
   
   /* Contact information and header styling */
@@ -190,12 +377,52 @@
     font-size: 18pt !important;
   }
 
-  /* Contact info at top */
-  .text-base, .text-lg {
-    font-size: 12pt !important;
-    font-weight: normal !important;
-    margin-top: 0.25cm !important;
-    margin-bottom: 0.5cm !important;
+  /* Optimize header spacing for print */
+  .bg-slate-100 {
+    padding-top: 0.3cm !important;
+    padding-bottom: 0.3cm !important;
+  }
+  
+  /* Make the header more compact */
+  .space-y-2 {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  
+  /* Make name more prominent but compact */
+  h1.text-2xl, h1.text-3xl, h1.uppercase {
+    margin-bottom: 0.1cm !important;
+    padding-bottom: 0 !important;
+  }
+  
+  /* Hide the description line in print */
+  /* Only hide description in print mode */
+  @media print {
+    .space-y-2 > p {
+      display: none !important;
+      visibility: hidden !important;
+      height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  }
+  
+  /* Make the header super compact */
+  .bg-slate-100 {
+    padding: 0.1cm !important;
+    margin: 0 !important;
+  }
+  
+  .space-y-2 {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Name small and compact */
+  h1.text-2xl, h1.text-3xl {
+    font-size: 14pt !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
   }
   
   /* Force light theme for all content */
@@ -254,15 +481,15 @@
   
   /* Company and job sections */
   .company-section {
-    margin-top: 0.4cm !important;
-    margin-bottom: 0.3cm !important;
+    margin-top: 0.25cm !important;
+    margin-bottom: 0.2cm !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
   
   .job-section, .education-section {
-    margin-top: 0.2cm !important;
-    margin-bottom: 0.3cm !important;
+    margin-top: 0.15cm !important;
+    margin-bottom: 0.15cm !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
@@ -281,7 +508,8 @@
   .date-range {
     color: #333 !important;
     font-style: italic !important;
-    font-size: 10pt !important;
+    font-size: 8pt !important;
+    font-family: 'Inconsolata', monospace !important;
   }
   
   .degree {
@@ -291,24 +519,25 @@
   
   /* Improved list formatting */
   ul {
-    margin-top: 0.15cm !important;
-    margin-bottom: 0.2cm !important;
-    padding-left: 0.5cm !important;
+    margin-top: 0.1cm !important;
+    margin-bottom: 0.15cm !important;
+    padding-left: 0.4cm !important;
   }
   
   li {
     page-break-inside: auto !important;
     break-inside: auto !important;
-    orphans: 3 !important;
-    widows: 3 !important;
+    orphans: 2 !important;
+    widows: 2 !important;
     margin-bottom: 0.05cm !important;
-    font-size: 10pt !important;
+    font-size: 9pt !important;
+    font-family: 'Inconsolata', monospace !important;
   }
   
   /* Nested lists */
   li ul {
-    margin-top: 0.05cm !important;
-    margin-bottom: 0.05cm !important;
+    margin-top: 0.03cm !important;
+    margin-bottom: 0.03cm !important;
   }
   
   /* Hide visual elements */
@@ -323,9 +552,9 @@
   /* Skills visualization - improved for print */
   .skills-grid {
     display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
-    gap: 0.2cm !important;
-    margin-top: 0.2cm !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 0.15cm !important;
+    margin-top: 0.15cm !important;
     padding-left: 0 !important;
     list-style-type: none !important;
   }
@@ -345,14 +574,15 @@
     break-inside: avoid !important;
   }
   
-  /* Skill name and level */
+  /* Skill name and level - consistent fonts */
   .skill-item .font-medium {
     font-weight: bold !important;
-    font-size: 10pt !important;
+    font-size: 9pt !important;
     color: #000 !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     display: block !important;
+    font-family: 'Inconsolata', monospace !important;
   }
   
   .skill-item .text-xs {
@@ -360,24 +590,25 @@
     color: #333 !important;
     white-space: nowrap !important;
     text-align: right !important;
+    font-family: 'Inconsolata', monospace !important;
   }
   
   /* Improved grid layout in print */
   .skill-item > div:first-child {
     display: grid !important;
     grid-template-columns: 1fr auto !important;
-    gap: 0.1cm !important;
+    gap: 0.08cm !important;
     align-items: center !important;
     width: 100% !important;
-    min-height: 0.5cm !important;
+    min-height: 0.3cm !important;
   }
   
   /* Skill bar */
   .skill-item .h-2,
   .dark .skill-item .h-2 {
     background-color: #eee !important;
-    height: 0.1cm !important;
-    margin-top: 0.1cm !important;
+    height: 0.08cm !important;
+    margin-top: 0.05cm !important;
   }
   
   .skill-item .h-2 div,

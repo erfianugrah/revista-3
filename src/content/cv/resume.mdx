@@ -151,55 +151,88 @@ import { Section, Company, Timeline, SkillBar, EducationTimeline, ColorLegend } 
 <ColorLegend className="mb-4" />
 
 <Section id="experience" title="Work Experience">
-  {frontmatter.companies.map(company => (
-    <Company name={company.name}>
-      {company.positions.map(position => (
-        <Timeline title={position.title} dateRange={position.dateRange}>
-          <ul>
-            {position.responsibilities.map(responsibility => (
-              <li>{responsibility}</li>
-            ))}
-            {position.achievements && (
-              <li><strong>Awards and Recognition</strong>:
-                <ul>
-                  {position.achievements.map(achievement => (
-                    <li>{achievement}</li>
-                  ))}
-                </ul>
-              </li>
-            )}
-          </ul>
-        </Timeline>
+  <div class="company-wrapper">
+    {frontmatter.companies.map(company => (
+      <Company name={company.name}>
+        {company.positions.map(position => (
+          <Timeline title={position.title} dateRange={position.dateRange}>
+            <ul>
+              {position.responsibilities.map(responsibility => (
+                <li>{responsibility}</li>
+              ))}
+              {position.achievements && (
+                <li><strong>Awards and Recognition</strong>:
+                  <ul>
+                    {position.achievements.map(achievement => (
+                      <li>{achievement}</li>
+                    ))}
+                  </ul>
+                </li>
+              )}
+            </ul>
+          </Timeline>
+        ))}
+      </Company>
+    ))}
+  </div>
+</Section>
+
+<style>
+  {/* Add print-specific styles here */}
+  {`
+    @media print {
+      .work-experience-wrapper {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      
+      /* Override any other styles that might cause breaks */
+      .work-experience-wrapper * {
+        page-break-before: avoid !important;
+        break-before: avoid !important;
+      }
+    }
+  `}
+</style>
+
+<div class="page-break-before skills-languages-education">
+  <Section id="skills" title="Skills">
+    <div class="skills-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+      {frontmatter.skills.map(skill => (
+        <SkillBar 
+          name={skill.name} 
+          level={skill.level} 
+          category={skill.category} 
+        />
       ))}
-    </Company>
-  ))}
-</Section>
+    </div>
+  </Section>
 
-<Section id="skills" title="Skills">
-  <div class="skills-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-    {frontmatter.skills.map(skill => (
-      <SkillBar 
-        name={skill.name} 
-        level={skill.level} 
-        category={skill.category} 
-      />
-    ))}
-  </div>
-</Section>
+  <Section id="languages" title="Languages">
+    <div class="skills-grid grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 gap-2">
+      {frontmatter.languages.map(lang => (
+        <SkillBar 
+          name={lang.language} 
+          level={lang.level} 
+          category="language" 
+          proficiency={lang.proficiency} 
+        />
+      ))}
+    </div>
+  </Section>
 
-<Section id="languages" title="Languages">
-  <div class="skills-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-    {frontmatter.languages.map(lang => (
-      <SkillBar 
-        name={lang.language} 
-        level={lang.level} 
-        category="language" 
-        proficiency={lang.proficiency} 
-      />
-    ))}
-  </div>
-</Section>
+  <Section id="education" title="Education">
+    <EducationTimeline education={frontmatter.education} />
+  </Section>
+</div>
 
-<Section id="education" title="Education">
-  <EducationTimeline education={frontmatter.education} />
-</Section>
+<style>
+  {`
+    @media print {
+      .page-break-before {
+        page-break-before: always !important;
+        break-before: page !important;
+      }
+    }
+  `}
+</style>

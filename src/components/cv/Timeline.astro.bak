@@ -1,4 +1,12 @@
 ---
+/**
+ * Timeline component that supports both string date ranges and structured date objects.
+ * 
+ * String format: "Month YYYY – Month YYYY" or "Month YYYY – Present"
+ * Object format: { start: "YYYY-MM", end: "YYYY-MM" } or { start: "YYYY-MM", end: "Present" }
+ * 
+ * The object format provides more reliable date parsing and calculations.
+ */
 interface Props {
   title: string;
   company?: string;
@@ -66,7 +74,7 @@ const analyzeDuration = (dateRange: string | { start: string; end?: string }) =>
   
   // Calculate duration in years
   const durationYears = (endDate.getFullYear() - startDate.getFullYear()) + 
-                      (endDate.getMonth() - startDate.getMonth()) / 12;
+                        (endDate.getMonth() - startDate.getMonth()) / 12;
   
   // Calculate scale factor (between 0.5-4)
   const scale = Math.max(0.5, Math.min(4, durationYears / 1.2));
@@ -90,22 +98,109 @@ const { scale: durationScale, colorCategory, durationYears, displayDateRange } =
 ---
 
 <div class={`job-section duration-${colorCategory}`} style={`--duration-scale: ${durationScale}`}>
-  <h3 class="text-xl font-medium text-blue-700 dark:text-blue-300 mb-1">
-    <span class="job-title">{title}</span>
-    <span class="duration-indicator ml-2 text-xs" title={`Duration: ~${durationYears.toFixed(1)} years`}></span>
-  </h3>
-  <p class="text-slate-600 dark:text-slate-400 italic mb-3">
-    <span class="date-range">{displayDateRange}</span>
-  </p>
+  <div class="job-header">
+    <h3 class="text-xl font-medium text-blue-700 dark:text-blue-300 mb-1 flex items-center">
+      <span class="job-title flex-grow">{title}</span>
+      <span class="duration-indicator ml-2 mr-2 text-xs" title={`Duration: ~${durationYears.toFixed(1)} years`}></span>
+    </h3>
+    <p class="text-slate-600 dark:text-slate-400 italic mb-3">
+      <span class="date-range">{displayDateRange}</span>
+    </p>
+  </div>
   <div class="job-content ml-1">
     <slot />
   </div>
 </div>
 
 <style>
+  .job-header {
+    position: relative;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+  }
+  
+  .job-content {
+    padding-left: 0.5rem;
+  }
+  
+  @media print {
+    .job-header {
+      padding: 0;
+      background-color: transparent !important;
+    }
+  }
+  
+  /* Fix for the flex layout */
+  h3.flex.items-center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .job-title {
+    max-width: 80%;
+  }
+</style>
+
+<style>
   /* Scale job sections based on duration */
   .job-section {
+    position: relative;
+    padding-left: 30px;
     padding-bottom: calc(var(--duration-scale, 1) * 1rem);
+    margin-left: 15px;
+  }
+  
+  /* Timeline visualization */
+  .job-section::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 10px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    z-index: 2;
+    border: 2px solid var(--color-white);
+  }
+  
+  :global(.dark) .job-section::before {
+    border-color: var(--color-slate-800);
+  }
+  
+  @media print {
+    .job-section {
+      margin-bottom: 0.75rem !important;
+      margin-left: 0 !important;
+      padding-left: 0 !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+    
+    /* Keep job title with at least some content */
+    .job-section h3 {
+      page-break-after: avoid !important;
+      break-after: avoid !important;
+    }
+    
+    .job-section .job-content {
+      page-break-before: avoid !important;
+      break-before: avoid !important;
+    }
+    
+    /* Add visual separator in print since we lose the timeline visualization */
+    .job-section:not(:last-child) {
+      border-bottom: 1px dotted #eee;
+      padding-bottom: 0.75rem;
+    }
+    
+    .duration-indicator::after {
+      width: 6px !important;
+      height: 6px !important;
+      border: 1px solid #333 !important;
+      background-color: white !important;
+    }
   }
   
   /* Color coding for job durations */
@@ -190,45 +285,68 @@ const { scale: durationScale, colorCategory, durationYears, displayDateRange } =
   }
 
   /* Connect dots to timeline with matching colors */
-  .duration-short::after {
+  .job-section::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 24px;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--color-slate-200);
+    z-index: 1;
+  }
+  
+  :global(.dark) .job-section::after {
+    background-color: var(--color-slate-700);
+  }
+  
+  /* Last job item should not have a connector line */
+  .job-section:last-child::after {
+    display: none;
+  }
+  
+  /* Color coding for the connector line */
+  .duration-short.job-section::after {
     background-color: var(--color-amber-200) !important;
   }
   
-  .duration-medium::after {
+  .duration-medium.job-section::after {
     background-color: var(--color-blue-200) !important;
   }
   
-  .duration-long::after {
+  .duration-long.job-section::after {
     background-color: var(--color-green-200) !important;
   }
   
-  .duration-very-long::after {
+  .duration-very-long.job-section::after {
     background-color: var(--color-purple-200) !important;
   }
   
-  :global(.dark) .duration-short::after {
+  :global(.dark) .duration-short.job-section::after {
     background-color: var(--color-amber-800) !important;
   }
   
-  :global(.dark) .duration-medium::after {
+  :global(.dark) .duration-medium.job-section::after {
     background-color: var(--color-blue-700) !important;
   }
   
-  :global(.dark) .duration-long::after {
+  :global(.dark) .duration-long.job-section::after {
     background-color: var(--color-green-800) !important;
   }
   
-  :global(.dark) .duration-very-long::after {
+  :global(.dark) .duration-very-long.job-section::after {
     background-color: var(--color-purple-800) !important;
   }
   
-  /* Print mode - no colors */
+  /* Print mode - no timeline visualization */
   @media print {
     .duration-short::before,
     .duration-medium::before,
     .duration-long::before,
     .duration-very-long::before,
-    .duration-indicator::after {
+    .duration-indicator::after,
+    .job-section::before,
+    .job-section::after {
       display: none !important;
     }
   }
