@@ -1,4 +1,4 @@
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
 import markdoc from "@astrojs/markdoc";
@@ -67,6 +67,24 @@ export default defineConfig({
 
   experimental: {
     clientPrerender: true,
+    fonts: [
+      {
+        provider: fontProviders.fontsource(),
+        name: "Inconsolata",
+        cssVariable: "--font-inconsolata",
+        display: "swap",
+        fallbacks: ["monospace"],
+        optimizedFallbacks: true,
+      },
+      {
+        provider: fontProviders.fontsource(),
+        name: "Overpass Mono",
+        cssVariable: "--font-overpass-mono",
+        display: "swap",
+        fallbacks: ["monospace"],
+        optimizedFallbacks: true,
+      },
+    ],
     // responsiveImages: true,
     // directRenderScript: true
   },
@@ -90,4 +108,3 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 });
-

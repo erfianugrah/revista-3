@@ -3,9 +3,8 @@ import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import ScrollToTop from "../components/scroll-to-top";
-import "@fontsource-variable/overpass-mono";
-import "@fontsource-variable/inconsolata";
 import { getImage } from "astro:assets";
+import { Font } from "astro:assets";
 import "../styles/global.css";
 let baseUrl = new URL(Astro.request.url).origin;
 const metaImage = await getImage({
@@ -91,10 +90,7 @@ const formattedUpdatedDate = updatedDate
   : null;
 ---
 
-<html
-  class="bg-[rgb(244,242,238)] dark:bg-[rgb(34,33,37)]"
-  lang="en"
->
+<html class="bg-[rgb(244,242,238)] dark:bg-[rgb(34,33,37)]" lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/webp" href={favicon_webp.src} />
@@ -102,6 +98,10 @@ const formattedUpdatedDate = updatedDate
     <link rel="canonical" href={new URL(Astro.url.pathname, baseUrl).href} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Fonts -->
+    <Font cssVariable="--font-inconsolata" preload />
+    <Font cssVariable="--font-overpass-mono" preload />
 
     <!-- Basic SEO -->
     <title>{title || pageTitle}</title>
