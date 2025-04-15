@@ -74,6 +74,7 @@ export default defineConfig({
         cssVariable: "--font-inconsolata",
         display: "swap",
         fallbacks: ["monospace"],
+        weights: [200, 400, 700, 900],
         optimizedFallbacks: true,
       },
       {
@@ -82,6 +83,7 @@ export default defineConfig({
         cssVariable: "--font-overpass-mono",
         display: "swap",
         fallbacks: ["monospace"],
+        weights: [300, 400, 700],
         optimizedFallbacks: true,
       },
     ],
