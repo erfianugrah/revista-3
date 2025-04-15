@@ -74,4 +74,4 @@ Special pages in each collection directory generate RSS feeds, making content av
 
 ## Type Safety
 
-All pages benefit from full TypeScript support with Astro v5.5.3's enhanced type system and the performance optimizations in Astro's latest version. The content collections use a consistent schema that enables type-safe access to content throughout the pages.
+All pages benefit from full TypeScript support with Astro v5.7.0's enhanced type system and the performance optimizations in Astro's latest version. The content collections use a consistent schema that enables type-safe access to content throughout the pages.

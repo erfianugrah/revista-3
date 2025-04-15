@@ -5,13 +5,13 @@
 
 ## Overview
 
-This project uses Astro v5.6.0 with enhanced component features and Tailwind CSS v4.0.8 for styling. Components leverage the latest Astro features for improved performance and type safety.
+This project uses Astro v5.7.0 with enhanced component features and Tailwind CSS v4.0.8 for styling. Components leverage the latest Astro features for improved performance and type safety.
 
 ## Key Components
 
 ### Page & Layout Components
 
-- **[BlogPost.astro](layouts/BlogPost.astro)**: Core layout component for all content pages including [short form](https://www.erfianugrah.com/short_form/), [long form](https://www.erfianugrah.com/long_form/), and [tag pages](https://www.erfianugrah.com/long_form/tags/gleichgesinnte/).
+- **[BlogPost.astro](components/BlogPost.astro)**: Core layout component for all content pages including [short form](https://www.erfianugrah.com/short_form/), [long form](https://www.erfianugrah.com/long_form/), and [tag pages](https://www.erfianugrah.com/long_form/tags/gleichgesinnte/).
 
 - **[Homepage.astro](components/Homepage.astro)**: Used in [index.astro](pages/index.astro) to create the landing page. References [homepage.js](scripts/homePage.js) for randomizing featured images.
 
@@ -19,7 +19,7 @@ This project uses Astro v5.6.0 with enhanced component features and Tailwind CSS
 
 - **[Header.astro](components/Header.astro)**: Main header component that incorporates:
   - **[Hamburger.astro](components/Hamburger.astro)**: Mobile menu toggle
-  - **[ThemeIcon.astro](components/ThemeIcon.astro)**: Light/dark mode switcher using [themetoggle.js](scripts/themetoggle.js)
+  - **[ThemeToggle.astro](components/ThemeToggle.astro)**: Light/dark mode switcher that wraps the React-based ThemeToggle component
   - **[Navigation.astro](components/Navigation.astro)**: Site navigation menu
   - **[Pagefind.astro](components/Pagefind.astro)**: Search functionality using [Pagefind](https://pagefind.app/) integration
 

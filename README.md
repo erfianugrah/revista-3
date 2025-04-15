@@ -1,10 +1,10 @@
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-5.3.5-blue.svg?cacheSeconds=2592000" />
-  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.6.2-FF5D01.svg?logo=astro&logoColor=white" />
+  <img alt="Version" src="https://img.shields.io/badge/version-5.3.6-blue.svg?cacheSeconds=2592000" />
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.7.0-FF5D01.svg?logo=astro&logoColor=white" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.0.8-38B2AC.svg?logo=tailwind-css&logoColor=white" />
   <img alt="React" src="https://img.shields.io/badge/React-19.0.0-61DAFB.svg?logo=react&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.7.2-3178C6.svg?logo=typescript&logoColor=white" />
-  <img alt="MDX" src="https://img.shields.io/badge/MDX-4.2.1-1B1F24.svg?logo=mdx&logoColor=white" />
+  <img alt="MDX" src="https://img.shields.io/badge/MDX-4.2.4-1B1F24.svg?logo=mdx&logoColor=white" />
   <img alt="Bun" src="https://img.shields.io/badge/Bun-Latest-F9F1E1.svg?logo=bun&logoColor=black" />
   <br/>
   <img alt="GitHub CI/CD" src="https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF.svg?logo=github-actions&logoColor=white" />
@@ -15,7 +15,7 @@
 
 ## Overview
 
-Revista is a photography portfolio and blog built on Astro v5.6.0. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
+Revista is a photography portfolio and blog built on Astro v5.7.0. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
 
 ## Project Structure
 
@@ -114,6 +114,11 @@ graph TD
     - `404.astro`: Custom 404 error page
     - `cv.astro`: CV page
   - `content/`: Markdown content for blog posts and collections ([Content Collections Documentation](src/Content-README.md))
+  - Architecture and implementation documentation:
+    - [Technical Architecture](src/Architecture-README.md): Component structure, state management, and design patterns
+    - [Performance Optimization](src/Performance-README.md): Techniques used for site speed optimization
+    - [Docker Implementation](src/Docker-README.md): Container configuration and deployment
+    - [CI/CD Implementation](src/CI-CD-README.md): Build and deployment automation
   - `content.config.ts`: Configuration file for content collections using Astro's glob loader pattern
   - `styles/`: CSS files for styling
     - `global.css`: Global styles and Tailwind v4 imports
@@ -129,11 +134,11 @@ graph TD
 
 ## Key Features
 
-1. **Multiple Content Collections**: The site organizes content into different types (long_form, short_form, muses, zeitweilig, authors, cv), each managed as an Astro content collection using the glob loader pattern introduced in Astro v5.6.0. This gives me type-safe content management, explicit file selection, and simplified querying.
+1. **Multiple Content Collections**: The site organizes content into different types (long_form, short_form, muses, zeitweilig, authors, cv), each managed as an Astro content collection using the glob loader pattern. This gives me type-safe content management, explicit file selection, and simplified querying.
 
 2. **Responsive Design**: The site uses Tailwind CSS for a mobile-first approach. I've customized the breakpoints to match my specific needs at 800px, 1200px, 1900px, 2500px, and 3800px, which ensures the site looks good on everything from phones to ultra-wide monitors.
 
-3. **Dark Mode**: Users can toggle between light and dark themes with JavaScript in `themetoggle.js`. I store this preference in localStorage so it persists across visits. The dark theme uses a deep charcoal background with light text for comfortable reading at night.
+3. **Dark Mode**: Users can toggle between light and dark themes with the ThemeToggle component. Theme preference is stored in localStorage so it persists across visits. The dark theme uses a deep charcoal background with light text for comfortable reading at night.
 
 4. **Dynamic Routing**: Routes are generated from the content collections themselves. Each post and tag gets its own URL automatically, making content organization much simpler.
 
@@ -387,7 +392,7 @@ Additional styles live in `src/styles/`:
 
 Client-side JavaScript lives in the `src/scripts/` directory:
 
-- `themetoggle.js`: Handles the dark/light theme switching
+- `themetoggle.js`: Handles the dark/light theme switching (legacy implementation)
 - `menu.js`: Controls the mobile navigation menu
 - `lightbox.js`: Powers the image lightbox using GLightbox
 - `burgundy.js`: Generates those random Ron Burgundy quotes for the 404 page
@@ -575,10 +580,10 @@ To start working with this project:
    ```
    
    This installs:
-   - Astro v5.6.0
+   - Astro v5.7.0
    - Tailwind CSS v4.0.8
    - React v19.0.0
-   - MDX v4.2.3 and other dependencies
+   - MDX v4.2.4 and other dependencies
 
 3. Run the development server:
    ```
