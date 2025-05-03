@@ -1,40 +1,25 @@
 ---
 import "../styles/MasonryLayout.css";
-import { getImage } from "astro:assets";
+import { Picture } from "astro:assets";
 const { images } = Astro.props;
-const imageAssets = await Promise.all(
-  images.map(async (image) => {
-    if (image) {
-      return await getImage({
-        src: image.src,
-        alt: image.alt,
-        // inferSize: true,
-        width: 3840,
-        height: 2160,
-        // layout: "responsive",
-        decoding: "async",
-        format: "avif",
-        loading: "lazy",
-      });
-    }
-    return null;
-  }),
-);
 ---
 
 <div class="masonry not-prose">
   {
-    imageAssets.map((imageAsset, index) =>
-      imageAsset ? (
+    images.map((image, index) =>
+      image ? (
         <div key={index} class="image-container" id="gallery">
-          <a href={imageAsset.src} class="image-link glightbox">
-            <img
-              src={imageAsset.src}
-              alt={imageAsset.attributes.alt}
-              loading={imageAsset.attributes.loading}
-              decoding={imageAsset.attributes.decoding}
-              width={imageAsset.attributes.width}
-              height={imageAsset.attributes.height}
+          <a href={image.src} class="image-link glightbox">
+            <Picture
+              src={image.src}
+              alt={image.alt}
+              widths={[800, 1600, 3840]}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              formats={["avif", "webp"]}
+              loading="lazy"
+              decoding="async"
+              quality={100}
+              inferSize={true}
               class="image"
             />
           </a>

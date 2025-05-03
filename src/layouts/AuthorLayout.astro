@@ -2,7 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import "../styles/glightbox.css";
 import Prose from "../components/Prose.astro";
-import { getImage, Image } from "astro:assets";
+import { getImage, Picture } from "astro:assets";
 const { frontmatter } = Astro.props;
 const updatedDate = frontmatter?.updatedDate
   .toDateString()
@@ -52,14 +52,14 @@ const metaImage = image
       image ? (
         <div>
           <div class="md:h-[480px] h-[360px]">
-            <Image
+            <Picture
               src={image}
               alt={alt}
-              <!-- layout="responsive", -->
-              <!-- inferSize -->
-              height={720}
+              widths={[400, 800, 1280]}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              formats={["avif", "webp"]}
+              inferSize={true}
               decoding="async"
-              format="avif"
               loading="lazy"
               class="object-contain h-full"
               data-pagefind-meta="image[src]"

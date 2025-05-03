@@ -14,11 +14,11 @@ const allPosts = await getCollection(collection);
 const otherPosts = allPosts.filter((post) => post.id !== currentId);
 const shouldRender = otherPosts.length > 0;
 
+// We need to keep using getImage here since this data is used in client-side JS
 async function optimizeImage(src, alt) {
   return await getImage({
     src,
     alt,
-    // layout: "responsive",
     width: 640,
     height: 360,
     format: "avif",

@@ -2,17 +2,8 @@
 import Hamburger from "./Hamburger.tsx";
 import Navigation from "./Navigation.astro";
 import ThemeToggle from "./ThemeToggle.astro";
-import { getImage } from "astro:assets";
+import { Picture } from "astro:assets";
 const { is404Page = false } = Astro.props;
-
-const favicon_avif = await getImage({
-  src: "https://cdn.erfianugrah.com/ea_favicon.png",
-  alt: "favicon",
-  width: "640",
-  height: "480",
-  decoding: "async",
-  format: "avif",
-});
 ---
 
 <header class="mb-[20px] mt-[-10px]">
@@ -21,12 +12,14 @@ const favicon_avif = await getImage({
       !is404Page && (
         <div class="flex items-center h-[30px]">
           <a href="/" class="block">
-            <img
-              class="favicon dark:invert w-[30px] h-[30px]"
-              src={favicon_avif.src}
+            <Picture
+              src="https://cdn.erfianugrah.com/ea_favicon.png"
               alt="Home"
-              width="30"
-              height="30"
+              width={30}
+              height={30}
+              formats={["avif", "webp"]}
+              inferSize={true}
+              class="favicon dark:invert w-[30px] h-[30px]"
             />
           </a>
         </div>
