@@ -232,39 +232,90 @@ async function main() {
     // Get answers from user
     const answers = await inquirer.prompt(questions);
     
-    // Process answers into frontmatter
+    // Process answers into frontmatter with the correct order
     const frontmatter = {
       title: answers.title,
+      slug: slugify(answers.title),
       pubDate: new Date().toISOString(),
-      tags: answers.tags
+      updatedDate: undefined,  // Will be removed if not set
+      tags: answers.tags,
+      author: answers.author,
+      description: answers.description
     };
     
-    // Add other fields from answers
-    for (const [key, value] of Object.entries(answers)) {
-      if (key === 'title' || key === 'tags' || key === 'includeImage') continue;
-      
-      if (key.startsWith('image.')) {
-        // Handle image fields
-        const [_, prop] = key.split('.');
-        if (!frontmatter.image) frontmatter.image = {};
-        frontmatter.image[prop] = value;
-      } else {
-        frontmatter[key] = value;
+    // Add image if included
+    if (answers.includeImage) {
+      frontmatter.image = {};
+      // Collect all image properties
+      for (const [key, value] of Object.entries(answers)) {
+        if (key.startsWith('image.')) {
+          const [_, prop] = key.split('.');
+          frontmatter.image[prop] = value;
+        }
       }
     }
     
-    // Optional slug based on title
-    frontmatter.slug = slugify(answers.title);
+    // Add other fields from answers
+    for (const [key, value] of Object.entries(answers)) {
+      if (key === 'title' || key === 'tags' || key === 'includeImage' || 
+          key === 'author' || key === 'description' || key.startsWith('image.')) continue;
+      
+      frontmatter[key] = value;
+    }
+    
+    // Remove undefined fields
+    Object.keys(frontmatter).forEach(key => {
+      if (frontmatter[key] === undefined) {
+        delete frontmatter[key];
+      }
+    });
     
     // Generate filename using date-slug.mdx pattern
     const date = getFormattedDate();
     const filename = `${date}-${frontmatter.slug}.mdx`;
     const filePath = path.join(contentDir, collectionType, filename);
     
-    // Generate file content
-    const yamlFrontmatter = yaml.stringify(frontmatter);
+    // Generate file content with specific formatting to match existing files
+    // Format tags as [ 'tag1', 'tag2' ] instead of YAML list
+    let tagsFormatted = `[ ${frontmatter.tags.map(tag => `'${tag}'`).join(', ')} ]`;
+    
+    // Format author with quotes
+    let authorFormatted = `"${frontmatter.author}"`;
+    
+    // Format image if present
+    let imageFormatted = '';
+    if (frontmatter.image) {
+      const props = Object.entries(frontmatter.image)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(' , ');
+      imageFormatted = `{ ${props} }`;
+    }
+    
+    // Create frontmatter with custom formatting
+    let formattedFrontmatter = `title: ${frontmatter.title} 
+slug: ${frontmatter.slug} 
+pubDate: ${frontmatter.pubDate}`;
+
+    // Add updatedDate if present
+    if (frontmatter.updatedDate) {
+      formattedFrontmatter += `\nupdatedDate: ${frontmatter.updatedDate}`;
+    }
+    
+    // Add tags and author
+    formattedFrontmatter += `\ntags: ${tagsFormatted}
+author: ${authorFormatted}`;
+    
+    // Add image if present
+    if (frontmatter.image) {
+      formattedFrontmatter += `\nimage: ${imageFormatted}`;
+    }
+    
+    // Add description
+    formattedFrontmatter += `\ndescription: ${frontmatter.description}`;
+    
     const fileContent = `---
-${yamlFrontmatter}---
+${formattedFrontmatter}
+---
 
 Enter your content here.
 `;
@@ -272,7 +323,7 @@ Enter your content here.
     // Show preview
     console.log(chalk.yellow('\nContent Preview:'));
     console.log(chalk.gray('---'));
-    console.log(chalk.cyan(yamlFrontmatter));
+    console.log(chalk.cyan(formattedFrontmatter));
     console.log(chalk.gray('---'));
     console.log(chalk.gray('Enter your content here.'));
     
@@ -333,23 +384,20 @@ function handleNonInteractiveMode(schemas, options) {
   
   console.log(chalk.green(`\nCreating new ${chalk.bold(collectionType)} content in non-interactive mode\n`));
   
-  // Prepare frontmatter
+  // Prepare frontmatter with the correct order
   const frontmatter = {
     title: options.title,
+    slug: slugify(options.title),
+    pubDate: options.pubDate || new Date().toISOString(),
+    // Add updated date if provided
+    ...(options.updatedDate && { updatedDate: options.updatedDate }),
     // Convert tags to the [ 'tag1', 'tag2' ] format
     tags: options.tags ? 
-      `[ ${options.tags.split(',').map(tag => `'${tag.trim()}'`).join(', ')} ]` : 
-      `[ '${collectionType}' ]`,
+      options.tags.split(',').map(tag => tag.trim()) : 
+      [collectionType],
     author: options.author || 'Erfi Anugrah',
-    description: options.description,
-    pubDate: options.pubDate || new Date().toISOString(),
-    slug: slugify(options.title)
+    description: options.description
   };
-  
-  // Add updated date if provided
-  if (options.updatedDate) {
-    frontmatter.updatedDate = options.updatedDate;
-  }
   
   // Add image if provided
   if (options.imageSrc && options.imageAlt) {
@@ -373,19 +421,47 @@ function handleNonInteractiveMode(schemas, options) {
   const filename = `${filenameDate}-${frontmatter.slug}.mdx`;
   const filePath = path.join(contentDir, collectionType, filename);
   
-  // Generate file content with custom tags format
-  // For proper YAML serialization while keeping the tags in the desired format
-  let yamlFrontmatter = yaml.stringify(frontmatter, {
-    keepSourceTokens: true,
-    keepNodeTypes: true,
-    lineWidth: 0
-  });
+  // Generate file content with specific formatting to match existing files
+  // Format tags as [ 'tag1', 'tag2' ] instead of YAML list
+  let tagsFormatted = `[ ${frontmatter.tags.map(tag => `'${tag}'`).join(', ')} ]`;
   
-  // Since tags is now a string pretending to be an array, we need to make sure it's formatted correctly
-  yamlFrontmatter = yamlFrontmatter.replace(/tags: ['"]?\[(.+?)\]['"]?/g, 'tags: [$1]');
+  // Format author with quotes
+  let authorFormatted = `"${frontmatter.author}"`;
+  
+  // Format image if present
+  let imageFormatted = '';
+  if (frontmatter.image) {
+    const props = Object.entries(frontmatter.image)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join(' , ');
+    imageFormatted = `{ ${props} }`;
+  }
+  
+  // Create frontmatter with custom formatting
+  let formattedFrontmatter = `title: ${frontmatter.title} 
+slug: ${frontmatter.slug} 
+pubDate: ${frontmatter.pubDate}`;
+
+  // Add updatedDate if present
+  if (frontmatter.updatedDate) {
+    formattedFrontmatter += `\nupdatedDate: ${frontmatter.updatedDate}`;
+  }
+  
+  // Add tags and author
+  formattedFrontmatter += `\ntags: ${tagsFormatted}
+author: ${authorFormatted}`;
+  
+  // Add image if present
+  if (frontmatter.image) {
+    formattedFrontmatter += `\nimage: ${imageFormatted}`;
+  }
+  
+  // Add description
+  formattedFrontmatter += `\ndescription: ${frontmatter.description}`;
   
   const fileContent = `---
-${yamlFrontmatter}---
+${formattedFrontmatter}
+---
 
 Enter your content here.
 `;
@@ -393,7 +469,7 @@ Enter your content here.
   // Show preview
   console.log(chalk.yellow('\nContent Preview:'));
   console.log(chalk.gray('---'));
-  console.log(chalk.cyan(yamlFrontmatter));
+  console.log(chalk.cyan(formattedFrontmatter));
   console.log(chalk.gray('---'));
   console.log(chalk.gray('Enter your content here.'));
   
