@@ -3,6 +3,8 @@ import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
 import markdoc from "@astrojs/markdoc";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 import icon from "astro-icon";
 import { remarkReadingTime } from "./src/scripts/remark-reading-time.mjs";
 import undiciRetry from "./src/scripts/undici-retry.js";
@@ -38,6 +40,8 @@ export default defineConfig({
         wrap: true,
       },
       gfm: false,
+      remarkPlugins: [remarkMath],
+      rehypePlugins: [rehypeKatex],
     }),
     markdoc(),
     undiciRetry(),
@@ -57,7 +61,8 @@ export default defineConfig({
       wrap: true,
     },
     gfm: false,
-    remarkPlugins: [remarkGfm, remarkReadingTime],
+    remarkPlugins: [remarkGfm, remarkMath, remarkReadingTime],
+    rehypePlugins: [rehypeKatex],
   },
 
   prefetch: {
