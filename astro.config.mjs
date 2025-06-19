@@ -15,6 +15,8 @@ export default defineConfig({
   site: "https://www.erfianugrah.com",
 
   image: {
+    responsiveStyles: true,
+    layout: "constrained",
     domains: ["erfianugrah.com", "cdn.erfianugrah.com"],
     service: {
       entrypoint: "astro/assets/services/sharp",
