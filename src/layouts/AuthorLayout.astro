@@ -54,12 +54,10 @@ const metaImage = image
             <Image
               src={image}
               alt={alt}
-              height={720}
-              width={1280}
+              inferSize={true}
               decoding="async"
               format="avif"
               loading="lazy"
-              class="object-contain h-full"
               data-pagefind-meta="image[src]"
             />
           </div>

@@ -20,8 +20,7 @@ const publishedDate = new Date(pubDate).toLocaleDateString("en-US", {
           <Image
             src={image}
             alt={alt}
-            width={1280}
-            height={720}
+            inferSize={true}
             decoding="async"
             format="avif"
             quality={65}
