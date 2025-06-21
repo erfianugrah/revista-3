@@ -15,7 +15,7 @@ const publishedDate = new Date(pubDate).toLocaleDateString("en-US", {
 >
   {
     image && (
-      <div class="flex sm:w-1/3 md:h-[480px] h-[360px] fade-image rounded-lg overflow-hidden">
+      <div class="flex sm:w-1/3 md:h-[480px] h-[360px] fade-image rounded-lg">
         <a href={url} aria-label={`View full post: ${title}`}>
           <Image
             src={image}
@@ -25,7 +25,7 @@ const publishedDate = new Date(pubDate).toLocaleDateString("en-US", {
             format="avif"
             quality={65}
             class="h-full object-cover object-center post-image"
-            style={`--position-x: ${positionx}; --position-y: ${positiony};`}
+            style={`--position-x: ${positionx}; --position-y: ${positiony}; height: 100%`}
           />
         </a>
       </div>
