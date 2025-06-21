@@ -32,7 +32,8 @@ const backgroundImage = image
   ? await getImage({
       src: image,
       alt: alt,
-      inferSize: true,
+      width: 3840,
+      height: 2160,
       format: "avif",
       loading: "eager",
       decoding: "sync",
@@ -44,7 +45,8 @@ const mobileBackgroundImage = image
   ? await getImage({
       src: image,
       alt: alt,
-      inferSize: true,
+      width: 1920,
+      height: 1080,
       format: "avif",
       quality: "65",
       loading: "eager",
