@@ -32,11 +32,11 @@ const backgroundImage = image
   ? await getImage({
       src: image,
       alt: alt,
-      // layout: "responsive",
-      width: 3840,
-      height: 2160,
-      decoding: "async",
+      inferSize: true,
       format: "avif",
+      loading: "eager",
+      decoding: "sync",
+      fetchpriority: "high",
     })
   : null;
 
@@ -44,12 +44,12 @@ const mobileBackgroundImage = image
   ? await getImage({
       src: image,
       alt: alt,
-      // layout: "responsive",
-      width: 1920,
-      height: 1080,
-      decoding: "async",
+      inferSize: true,
       format: "avif",
       quality: "65",
+      loading: "eager",
+      decoding: "sync",
+      fetchpriority: "high",
     })
   : null;
 
@@ -57,7 +57,6 @@ const metaImage = image
   ? await getImage({
       src: image,
       alt: alt,
-      // layout: "responsive",
       width: 1280,
       height: 720,
       decoding: "async",
