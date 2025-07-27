@@ -5,16 +5,26 @@ export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
-    const theme = localStorage.getItem('theme') || 'light'
-    setIsDark(theme === 'dark')
-    document.documentElement.classList.toggle('dark', theme === 'dark')
+    // Check initial theme state from DOM
+    const checkTheme = () => {
+      setIsDark(document.documentElement.classList.contains('dark'))
+    }
+    
+    checkTheme()
+    
+    // Listen for theme changes
+    const observer = new MutationObserver(checkTheme)
+    observer.observe(document.documentElement, { 
+      attributes: true, 
+      attributeFilter: ['class'] 
+    })
+    
+    return () => observer.disconnect()
   }, [])
 
   const toggleTheme = () => {
-    const newTheme = isDark ? 'light' : 'dark'
-    setIsDark(!isDark)
-    document.documentElement.classList.toggle('dark', !isDark)
-    localStorage.setItem('theme', newTheme)
+    // Dispatch custom event for Astro script to handle
+    window.dispatchEvent(new Event('theme-toggle'))
   }
 
   return (

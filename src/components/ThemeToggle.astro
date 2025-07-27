@@ -37,16 +37,6 @@ import ThemeToggle from "./ThemeToggle";
 </style>
 
 <script>
-  function applyTheme(theme: "light" | "dark") {
-    if (theme === "light") {
-      document.documentElement.classList.remove("dark");
-    } else {
-      document.documentElement.classList.add("dark");
-    }
-    document.documentElement.classList.add("theme-transition");
-    localStorage.setItem("theme", theme);
-  }
-
   function getThemePreference(): "light" | "dark" {
     return (
       (localStorage.getItem("theme") as "light" | "dark") ||
@@ -56,35 +46,25 @@ import ThemeToggle from "./ThemeToggle";
     );
   }
 
-  // Apply theme on initial load
-  document.addEventListener("DOMContentLoaded", () => {
-    applyTheme(getThemePreference());
-  });
+  function applyTheme(theme: "light" | "dark") {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    localStorage.setItem("theme", theme);
+  }
 
-  // Listen for astro:page-load event to apply theme after navigation
-  document.addEventListener("astro:page-load", () => {
-    applyTheme(getThemePreference());
-  });
+  function toggleTheme() {
+    const currentTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    applyTheme(newTheme);
+  }
 
-  // Listen for astro:after-swap event for view transitions
+  // Apply theme immediately on script execution
+  applyTheme(getThemePreference());
+
+  // Listen for theme toggle events from React component
+  window.addEventListener("theme-toggle", toggleTheme);
+
+  // Apply theme on Astro navigation events
   document.addEventListener("astro:after-swap", () => {
     applyTheme(getThemePreference());
   });
-
-  // Remove transition class to prevent transition on page load
-  window.addEventListener("load", () => {
-    document.documentElement.classList.remove("theme-transition");
-  });
-
-  // Observe theme changes and update localStorage
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.attributeName === "class") {
-        const isDark = document.documentElement.classList.contains("dark");
-        localStorage.setItem("theme", isDark ? "dark" : "light");
-      }
-    });
-  });
-
-  observer.observe(document.documentElement, { attributes: true });
 </script>
