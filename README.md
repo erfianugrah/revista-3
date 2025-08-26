@@ -1,5 +1,5 @@
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-5.7.2-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-5.7.3-blue.svg?cacheSeconds=2592000" />
   <img alt="Astro" src="https://img.shields.io/badge/Astro-5.13.3-FF5D01.svg?logo=astro&logoColor=white" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.0.8-38B2AC.svg?logo=tailwind-css&logoColor=white" />
   <img alt="React" src="https://img.shields.io/badge/React-19.0.0-61DAFB.svg?logo=react&logoColor=white" />
@@ -17,6 +17,8 @@
 ## Overview
 
 Revista is a photography portfolio and blog built on Astro v5.13.3. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
+
+The project supports multiple deployment targets with optimized builds for each platform, including GitHub Pages with proper base path configuration.
 
 ## Project Structure
 
@@ -163,7 +165,23 @@ All content lives in Markdown files located in the `src/content/` directory. Eac
 
 The project includes custom CLI tools for creating and managing content:
 
-#### Content Creation CLI
+#### Build Commands
+
+```bash
+# Development server
+bun run dev
+
+# Standard production build
+bun run build
+
+# GitHub Pages specific build (includes base path configuration)
+bun run build:github-pages
+
+# Preview production build
+bun run preview
+```
+
+### Content Creation CLI
 
 ```bash
 # Run the content creator
@@ -654,8 +672,9 @@ While the site is currently in English, I've structured it with future translati
 
 3. **GitHub Pages**:
    - Provides an additional deployment target using GitHub's native hosting
-   - Automatically deploys from the same build artifacts as other platforms
+   - Uses a separate build process with correct base path (`/revista-3`) configuration
    - Includes proper permissions and environment configuration for Pages deployment
+   - Maintains compatibility with other deployment targets through environment-specific builds
 
 ## Development Tools
 
@@ -692,9 +711,10 @@ The GitHub Actions workflow in `.github/workflows/deploy.yml` handles deployment
    - Deploys to Cloudflare Pages via Wrangler
 
 4. **GitHub Pages Deployment**:
-   - Deploys to GitHub Pages using the official GitHub Actions
-   - Uses proper permissions and environment configuration
-   - Runs in parallel with other deployment targets for efficiency
+   - Uses a dedicated build process with environment-specific configuration
+   - Builds independently with the correct site URL and base path for GitHub Pages
+   - Employs the `build:github-pages` npm script for proper routing
+   - Maintains full compatibility with other deployment platforms
 
 5. **Docker Handling**:
    - Builds a multi-architecture Docker image for broader compatibility
@@ -806,7 +826,7 @@ To start working with this project:
    ```
    
    This installs:
-   - Astro v5.7.0
+   - Astro v5.13.3
    - Tailwind CSS v4.0.8
    - React v19.0.0
    - MDX v4.2.4 and other dependencies
@@ -817,11 +837,15 @@ To start working with this project:
    ```
 
 4. Build for production:
-   ```
+   ```bash
+   # Standard build (for Cloudflare, Deno, Docker)
    bun run build
+   
+   # GitHub Pages specific build (with base path)
+   bun run build:github-pages
    ```
    
-   This also runs Pagefind indexing via the postbuild script.
+   Both commands include Pagefind indexing for search functionality.
 
 5. Preview the production build:
    ```

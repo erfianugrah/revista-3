@@ -40,39 +40,56 @@ The primary workflow file is `.github/workflows/deploy.yml`, which orchestrates 
 
 ## Build Process
 
-The build process is optimized for speed and reliability:
+The build process supports multiple deployment targets with different configurations:
+
+### Standard Build (Shared by Cloudflare, Deno, Docker)
 
 ```yaml
 jobs:
-  build:
+  build-revista:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
       
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-          restore-keys: ${{ runner.os }}-bun-
+          path: |
+            ~/.bun/install/cache
+            node_modules
+            .astro
+            dist
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-${{ hashFiles('**/package.json') }}-${{ hashFiles('src/**') }}
       
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
       
       - name: Build site
         run: bun run build
         
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: build-output
+          name: dist
           path: dist/
 ```
+
+### GitHub Pages Build (Independent)
+
+GitHub Pages uses its own build process to accommodate the different base path requirement:
+
+```bash
+# Environment variable sets GitHub Pages configuration
+GITHUB_PAGES=true astro build && pagefind --site dist
+```
+
+This approach ensures:
+- **Standard deployments** use `site: "https://www.erfianugrah.com"` with no base path
+- **GitHub Pages** uses `site: "https://erfianugrah.github.io"` with `base: "/revista-3"`
+- **Complete isolation** between deployment configurations
 
 Key optimizations:
 
@@ -171,7 +188,6 @@ This provides a secondary deployment target using Deno's edge platform.
 
 ```yaml
 deploy-to-github-pages:
-  needs: build-revista
   runs-on: ubuntu-latest
   permissions:
     contents: read
@@ -184,11 +200,28 @@ deploy-to-github-pages:
     name: github-pages
     url: ${{ steps.deployment.outputs.page_url }}
   steps:
-    - name: Download build artifacts
-      uses: actions/download-artifact@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Bun environment
+      uses: oven-sh/setup-bun@v1
+
+    - name: Cache dependencies
+      uses: actions/cache@v4
       with:
-        name: dist
-        path: dist
+        path: |
+          ~/.bun/install/cache
+          node_modules
+        key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-${{ hashFiles('**/package.json') }}
+        restore-keys: |
+          ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-
+          ${{ runner.os }}-bun-
+
+    - name: Install project dependencies
+      run: bun install
+
+    - name: Build for GitHub Pages
+      run: bun run build:github-pages
 
     - name: Setup Pages
       uses: actions/configure-pages@v5
@@ -204,11 +237,12 @@ deploy-to-github-pages:
 ```
 
 Key features:
-1. Uses the official GitHub Pages Actions for deployment
-2. Configures proper permissions for Pages write access and OIDC token
-3. Sets up concurrency control to prevent conflicting deployments
-4. Creates a `github-pages` environment with the deployment URL
-5. Uses the latest GitHub Actions for Pages (v5, v3, v4 respectively)
+1. **Independent Build Process**: Unlike other deployments, GitHub Pages builds from source with its own environment
+2. **Environment-Specific Configuration**: Uses `GITHUB_PAGES=true` environment variable to set correct `site` and `base` paths
+3. **Dedicated Build Command**: Uses `build:github-pages` npm script for proper base path configuration
+4. **Proper Permissions**: Configures Pages write access and OIDC token authentication
+5. **Concurrency Control**: Prevents conflicting deployments with proper job isolation
+6. **Latest GitHub Actions**: Uses official Pages Actions (configure-pages@v5, upload-pages-artifact@v3, deploy-pages@v4)
 
 ### Docker Deployment
 
@@ -261,7 +295,9 @@ The workflow uses GitHub Secrets for sensitive information:
 - `DOCKERHUB_USERNAME` - Docker Hub account
 - `DOCKERHUB_TOKEN` - Authentication for Docker Hub
 
-Note: GitHub Pages deployment doesn't require additional secrets as it uses GitHub's built-in OIDC authentication with the `id-token: write` permission.
+**GitHub Pages Specific:**
+- No additional secrets required (uses built-in OIDC with `id-token: write`)
+- Environment variable `GITHUB_PAGES=true` automatically set during GitHub Pages build
 
 ## Workflow Triggers
 
@@ -309,6 +345,7 @@ The CI/CD pipeline is optimized for speed:
 
 Typical build and deploy times:
 - Full pipeline execution: ~4-6 minutes
-- Build job: ~1-2 minutes
+- Standard build job: ~1-2 minutes (shared by Cloudflare, Deno, Docker)
+- GitHub Pages independent build: ~2-3 minutes (includes full build + image processing)
 - Each deployment job: ~1-2 minutes
-- GitHub Pages deployment: ~1-2 minutes (includes artifact upload and Pages deployment)
+- Overall efficiency gained through parallel execution
