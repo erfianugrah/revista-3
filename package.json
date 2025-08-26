@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "postbuild": "pagefind --site dist",
+    "build:github-pages": "GITHUB_PAGES=true astro build && pagefind --site dist",
     "create": "node scripts/create-content.js",
     "update-post": "node scripts/update-post.js",
     "update": "node scripts/update-post.js",
