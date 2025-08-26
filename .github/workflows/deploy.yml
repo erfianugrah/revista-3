@@ -299,8 +299,40 @@ jobs:
             --certificate-identity-regexp="https://github.com/${GITHUB_REPOSITORY}/.*" \
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com
 
+  deploy-to-github-pages:
+    needs: build-revista
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
   purge-cloudflare-cache:
-    needs: [deploy-to-deno, deploy-to-cloudflare, sign-docker-image]
+    needs: [deploy-to-deno, deploy-to-cloudflare, deploy-to-github-pages, sign-docker-image]
     runs-on: ubuntu-latest
     steps:
       - name: Purge Cloudflare Cache

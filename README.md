@@ -1,6 +1,6 @@
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-5.7.0-blue.svg?cacheSeconds=2592000" />
-  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.13.2-FF5D01.svg?logo=astro&logoColor=white" />
+  <img alt="Version" src="https://img.shields.io/badge/version-5.7.1-blue.svg?cacheSeconds=2592000" />
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.13.3-FF5D01.svg?logo=astro&logoColor=white" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.0.8-38B2AC.svg?logo=tailwind-css&logoColor=white" />
   <img alt="React" src="https://img.shields.io/badge/React-19.0.0-61DAFB.svg?logo=react&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.7.2-3178C6.svg?logo=typescript&logoColor=white" />
@@ -11,11 +11,12 @@
   <img alt="Docker" src="https://img.shields.io/badge/Docker-Enabled-2496ED.svg?logo=docker&logoColor=white" />
   <img alt="Cloudflare" src="https://img.shields.io/badge/Cloudflare-Deployed-F38020.svg?logo=cloudflare&logoColor=white" />
   <img alt="Deno Deploy" src="https://img.shields.io/badge/Deno-Deployed-000000.svg?logo=deno&logoColor=white" />
+  <img alt="GitHub Pages" src="https://img.shields.io/badge/GitHub%20Pages-Deployed-222222.svg?logo=github&logoColor=white" />
 </p>
 
 ## Overview
 
-Revista is a photography portfolio and blog built on Astro v5.7.0. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
+Revista is a photography portfolio and blog built on Astro v5.13.3. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
 
 ## Project Structure
 
@@ -651,6 +652,11 @@ While the site is currently in English, I've structured it with future translati
    - Provides a secondary deployment target
    - Shows how the site can adapt to different hosting environments
 
+3. **GitHub Pages**:
+   - Provides an additional deployment target using GitHub's native hosting
+   - Automatically deploys from the same build artifacts as other platforms
+   - Includes proper permissions and environment configuration for Pages deployment
+
 ## Development Tools
 
 1. **Bun**: 
@@ -685,12 +691,17 @@ The GitHub Actions workflow in `.github/workflows/deploy.yml` handles deployment
 3. **Cloudflare Deployment**:
    - Deploys to Cloudflare Pages via Wrangler
 
-4. **Docker Handling**:
+4. **GitHub Pages Deployment**:
+   - Deploys to GitHub Pages using the official GitHub Actions
+   - Uses proper permissions and environment configuration
+   - Runs in parallel with other deployment targets for efficiency
+
+5. **Docker Handling**:
    - Builds a multi-architecture Docker image for broader compatibility
    - Pushes to Docker Hub for container-based deployments
    - Signs the image with Cosign for security verification
 
-5. **Cache Management**:
+6. **Cache Management**:
    - Purges Cloudflare's edge cache after each deployment
 
 ## Docker Setup
@@ -823,7 +834,8 @@ The project supports several deployment methods:
 
 1. Cloudflare Pages (primary)
 2. Deno Deploy
-3. Docker container (deployable to any container platform)
+3. GitHub Pages
+4. Docker container (deployable to any container platform)
 
 ## Contributing
 

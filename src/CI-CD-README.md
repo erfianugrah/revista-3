@@ -5,7 +5,7 @@
 
 ## Overview
 
-This project uses GitHub Actions for its CI/CD pipeline, automating builds, testing, and deployments to multiple targets including Cloudflare, Deno Deploy, and Docker Hub.
+This project uses GitHub Actions for its CI/CD pipeline, automating builds, testing, and deployments to multiple targets including Cloudflare, Deno Deploy, GitHub Pages, and Docker Hub.
 
 ## Workflow Architecture
 
@@ -18,7 +18,8 @@ graph TD
     C --> D["Deploy"]
     D --> E1["Cloudflare Pages"]  
     D --> E2["Deno Deploy"]
-    D --> E3["Docker Hub"]
+    D --> E3["GitHub Pages"]
+    D --> E4["Docker Hub"]
     
     classDef setup fill:#f5d6c3,stroke:#333,stroke-width:1px
     classDef build fill:#c3e8f5,stroke:#333,stroke-width:1px
@@ -30,7 +31,7 @@ graph TD
     class B build
     class C test
     class D deploy
-    class E1,E2,E3 target
+    class E1,E2,E3,E4 target
 ```
 
 ## Workflow File Structure
@@ -166,6 +167,49 @@ deploy-deno:
 
 This provides a secondary deployment target using Deno's edge platform.
 
+### GitHub Pages
+
+```yaml
+deploy-to-github-pages:
+  needs: build-revista
+  runs-on: ubuntu-latest
+  permissions:
+    contents: read
+    pages: write
+    id-token: write
+  concurrency:
+    group: "pages"
+    cancel-in-progress: false
+  environment:
+    name: github-pages
+    url: ${{ steps.deployment.outputs.page_url }}
+  steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: dist
+        path: dist
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
+
+    - name: Upload to GitHub Pages
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: dist
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+```
+
+Key features:
+1. Uses the official GitHub Pages Actions for deployment
+2. Configures proper permissions for Pages write access and OIDC token
+3. Sets up concurrency control to prevent conflicting deployments
+4. Creates a `github-pages` environment with the deployment URL
+5. Uses the latest GitHub Actions for Pages (v5, v3, v4 respectively)
+
 ### Docker Deployment
 
 ```yaml
@@ -217,6 +261,8 @@ The workflow uses GitHub Secrets for sensitive information:
 - `DOCKERHUB_USERNAME` - Docker Hub account
 - `DOCKERHUB_TOKEN` - Authentication for Docker Hub
 
+Note: GitHub Pages deployment doesn't require additional secrets as it uses GitHub's built-in OIDC authentication with the `id-token: write` permission.
+
 ## Workflow Triggers
 
 The workflow runs automatically on:
@@ -255,12 +301,14 @@ This improves reliability by automatically retrying operations that might fail d
 
 The CI/CD pipeline is optimized for speed:
 
-1. Parallel deployments to multiple targets
+1. Parallel deployments to multiple targets (Cloudflare, Deno, GitHub Pages, Docker)
 2. Artifact sharing between jobs to avoid rebuilding
 3. Caching of dependencies and Docker layers
 4. Use of Bun instead of npm for faster installation and building
+5. Concurrent deployment jobs that run simultaneously for faster overall pipeline execution
 
 Typical build and deploy times:
-- Full pipeline execution: ~3-5 minutes
+- Full pipeline execution: ~4-6 minutes
 - Build job: ~1-2 minutes
 - Each deployment job: ~1-2 minutes
+- GitHub Pages deployment: ~1-2 minutes (includes artifact upload and Pages deployment)
