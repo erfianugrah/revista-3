@@ -1,6 +1,6 @@
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-5.7.3-blue.svg?cacheSeconds=2592000" />
-  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.13.3-FF5D01.svg?logo=astro&logoColor=white" />
+  <img alt="Version" src="https://img.shields.io/badge/version-5.7.4blue.svg?cacheSeconds=2592000" />
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.13.5-FF5D01.svg?logo=astro&logoColor=white" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.0.8-38B2AC.svg?logo=tailwind-css&logoColor=white" />
   <img alt="React" src="https://img.shields.io/badge/React-19.0.0-61DAFB.svg?logo=react&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.7.2-3178C6.svg?logo=typescript&logoColor=white" />
@@ -31,11 +31,11 @@ The project supports multiple deployment targets with optimized builds for each 
 graph TD
     classDef root fill:#f9f7f3,stroke:#333,stroke-width:2px
     classDef mainDir fill:#f2e9de,stroke:#333,stroke-width:1px
-    
+
     A["/revista" Root] --> B["📁 src"]
     A --> C["📁 public<br>(static assets)"]
     A --> D["⚙️ Configuration Files<br>(astro.config, tailwind.config)"]
-    
+
     class A root
     class B,C,D mainDir
 ```
@@ -46,21 +46,21 @@ graph TD
 graph TD
     classDef mainDir fill:#f2e9de,stroke:#333,stroke-width:1px
     classDef contentDir fill:#e9d8c4,stroke:#333,stroke-width:1px
-    
+
     B["📁 src"] --> E["📁 components<br>(UI building blocks)"]
     B --> F["📁 layouts<br>(page templates)"]
     B --> G["📁 pages<br>(routes)"]
     B --> H["📁 content<br>(markdown collections)"]
     B --> I["📁 styles<br>(CSS)"]
     B --> J["📁 scripts<br>(client JS)"]
-    
+
     H --> K["📝 long_form<br>(articles)"]
     H --> L["📝 short_form<br>(quick posts)"]
     H --> M["📝 muses<br>(photography)"]
     H --> N["📝 zeitweilig<br>(temporary thoughts)"]
     H --> O["📝 authors<br>(contributor info)"]
     H --> P["📝 cv<br>(resume data)"]
-    
+
     class B,E,F,G,H,I,J mainDir
     class K,L,M,N,O,P contentDir
 ```
@@ -74,31 +74,32 @@ graph TD
     classDef pageFile fill:#f0e0e3,stroke:#333,stroke-width:1px
     classDef styleFile fill:#f0e3e0,stroke:#333,stroke-width:1px
     classDef scriptFile fill:#e0e3f0,stroke:#333,stroke-width:1px
-    
+
     E["📁 components"] --> E1["🧩 BlogPost.astro"]
     E --> E2["🧩 Footer.astro"]
     E --> E3["🧩 Header.astro"]
     E --> E4["🧩 Navigation.astro"]
-    
+
     F["📁 layouts"] --> F1["📄 BaseLayout.astro"]
     F --> F2["📄 MarkdownPostLayout.astro"]
-    
+
     G["📁 pages"] --> G1["🌐 index.astro<br>(homepage)"]
     G --> G2["🌐 404.astro<br>(error page)"]
     G --> G3["🌐 cv.astro<br>(resume)"]
-    
+
     I["📁 styles"] --> I1["🎨 global.css<br>(site-wide styles)"]
     I --> I2["🎨 MasonryLayout.css<br>(photo grid styling)"]
-    
+
     J["📁 scripts"] --> J1["⚡ menu.js<br>(mobile navigation)"]
     J --> J2["⚡ themetoggle.js<br>(dark/light mode)"]
-    
+
     class E1,E2,E3,E4 compFile
     class F1,F2 layoutFile
     class G1,G2,G3 pageFile
     class I1,I2 styleFile
     class J1,J2 scriptFile
 ```
+
 </details>
 
 ### Key Directories and Files
@@ -203,6 +204,7 @@ bun run create --non-interactive --type muses --title "Post Title" --description
 ```
 
 This interactive tool:
+
 - Dynamically reads schema requirements from content.config.ts
 - Provides a user-friendly interface with colored prompts
 - Validates input according to schema requirements
@@ -226,6 +228,7 @@ bun run update-post --file muses/2025-05-19-commodification.mdx \
 ```
 
 This tool allows you to:
+
 - Update publication or update dates
 - Change tags or categories
 - Update image metadata
@@ -243,14 +246,14 @@ For detailed documentation on both tools, see [scripts/README.md](scripts/README
 graph TD
     classDef rootDir fill:#f5f5f5,stroke:#333,stroke-width:2px
     classDef contentType fill:#e8f4f8,stroke:#333,stroke-width:1px
-    
+
     A["📁 content/"] --> B["📁 long_form/<br><i>in-depth articles</i>"]
     A --> C["📁 short_form/<br><i>brief posts</i>"]
     A --> D["📁 muses/<br><i>photo collections</i>"]
     A --> E["📁 zeitweilig/<br><i>ephemeral content</i>"]
     A --> F["📁 authors/<br><i>contributor profiles</i>"]
     A --> G["📁 cv/<br><i>professional info</i>"]
-    
+
     class A rootDir
     class B,C,D,E,F,G contentType
 ```
@@ -261,13 +264,13 @@ graph TD
 graph TD
     classDef contentType fill:#e8f4f8,stroke:#333,stroke-width:1px
     classDef mdFile fill:#f8f4e8,stroke:#333,stroke-width:1px
-    
+
     B["📁 long_form/"] --> H["📄 iceland-trip.mdx<br><i>frontmatter + markdown</i>"]
     B --> I["📄 camera-review.mdx<br><i>frontmatter + markdown</i>"]
-    
+
     C["📁 short_form/"] --> J["📄 new-lens.mdx<br><i>frontmatter + markdown</i>"]
     C --> K["📄 photo-tip.mdx<br><i>frontmatter + markdown</i>"]
-    
+
     class B,C contentType
     class H,I,J,K mdFile
 ```
@@ -278,18 +281,19 @@ graph TD
 graph TD
     classDef contentType fill:#e8f4f8,stroke:#333,stroke-width:1px
     classDef mdFile fill:#f8f4e8,stroke:#333,stroke-width:1px
-    
+
     D["📁 muses/"] --> L["📄 urban-geometry.mdx<br><i>photo gallery post</i>"]
-    
+
     E["📁 zeitweilig/"] --> M["📄 thoughts-on-bw.mdx<br><i>creative exploration</i>"]
-    
+
     F["📁 authors/"] --> N["📄 about-me.mdx<br><i>author bio</i>"]
-    
+
     G["📁 cv/"] --> O["📄 resume.mdx<br><i>professional experience</i>"]
-    
+
     class D,E,F,G contentType
     class L,M,N,O mdFile
 ```
+
 </details>
 
 Each content collection is defined with a specific schema in `content.config.ts` using Zod for validation. Here's a simplified example of the frontmatter structure:
@@ -328,8 +332,8 @@ image:
 pubDate: 2024-01-21
 ---
 
-My weekend explorations took me to Kungsholmen, where the lowering sun 
-creates dramatic shadows across the sleek glass facades of Stockholm's 
+My weekend explorations took me to Kungsholmen, where the lowering sun
+creates dramatic shadows across the sleek glass facades of Stockholm's
 business district...
 ```
 
@@ -348,7 +352,7 @@ Revista uses a mix of file-based routing and dynamic route generation:
 graph TD
     classDef rootRoute fill:#f8f8f8,stroke:#333,stroke-width:2px
     classDef staticRoute fill:#f0f8ff,stroke:#333,stroke-width:1px
-    
+
     A["🏠 www.erfianugrah.com<br>(Root)"] --> B["❌ /404<br>(Custom error page)"]
     A --> C["👤 /authors<br>(Contributor profiles)"]
     A --> D["📋 /cv<br>(Resume page)"]
@@ -362,7 +366,7 @@ graph TD
     F -.-> F0["📡 /short_form/rss.xml"]
     G -.-> G0["📡 /muses/rss.xml"]
     H -.-> H0["📡 /zeitweilig/rss.xml"]
-    
+
     class A rootRoute
     class B,C,D,E,F,G,H staticRoute
     class E0,F0,G0,H0 staticRoute
@@ -375,17 +379,17 @@ graph TD
     classDef staticRoute fill:#f0f8ff,stroke:#333,stroke-width:1px
     classDef dynamicRoute fill:#fff0f5,stroke:#333,stroke-width:1px
     classDef tagRoute fill:#f5fff0,stroke:#333,stroke-width:1px
-    
+
     %% Long-form routes
     E["📚 /long_form"] --> I["📄 /long_form/[post-slug]<br>(Individual article pages)"]
     E --> J["🏷️ /long_form/tags<br>(Tags index)"]
     J --> K["🔖 /long_form/tags/[tag]<br>(Articles with specific tag)"]
-    
+
     %% Short-form routes
     F["📝 /short_form"] --> L["📄 /short_form/[post-slug]<br>(Individual post pages)"]
     F --> M["🏷️ /short_form/tags<br>(Tags index)"]
     M --> N["🔖 /short_form/tags/[tag]<br>(Posts with specific tag)"]
-    
+
     class E,F staticRoute
     class I,L dynamicRoute
     class J,K,M,N tagRoute
@@ -398,21 +402,22 @@ graph TD
     classDef staticRoute fill:#f0f8ff,stroke:#333,stroke-width:1px
     classDef dynamicRoute fill:#fff0f5,stroke:#333,stroke-width:1px
     classDef tagRoute fill:#f5fff0,stroke:#333,stroke-width:1px
-    
+
     %% Muses routes
     G["🖼️ /muses"] --> O["🖼️ /muses/[post-slug]<br>(Individual gallery pages)"]
     G --> P["🏷️ /muses/tags<br>(Tags index)"]
     P --> Q["🔖 /muses/tags/[tag]<br>(Galleries with specific tag)"]
-    
+
     %% Zeitweilig routes
     H["⏳ /zeitweilig"] --> R["📄 /zeitweilig/[post-slug]<br>(Individual content pages)"]
     H --> S["🏷️ /zeitweilig/tags<br>(Tags index)"]
     S --> T["🔖 /zeitweilig/tags/[tag]<br>(Content with specific tag)"]
-    
+
     class G,H staticRoute
     class O,R dynamicRoute
     class P,Q,S,T tagRoute
 ```
+
 </details>
 
 The routing system combines static and dynamic routes:
@@ -461,7 +466,6 @@ The site uses Tailwind CSS v4.0.8 for styling, with carefully configured setting
      - Excellent readability at different sizes
      - Variable font support for optimal performance
      - Wide character set support
-   
 2. **Color System**
    - **Base Light Theme**: Clean white background (#f5f5f5) with deep charcoal text (#333333)
    - **Dark Theme**: Rich dark background (#222125) with high-contrast light text (#f5f5f5)
@@ -501,29 +505,30 @@ The site uses Tailwind CSS v4.0.8 for styling, with carefully configured setting
 1. **Dark Mode Strategy**
    - **Class-based Implementation**: Using Tailwind's `class` strategy for theme switching
      ```js
-     darkMode: 'class' // Toggle with JavaScript using ThemeToggle.tsx
+     darkMode: "class"; // Toggle with JavaScript using ThemeToggle.tsx
      ```
    - **Implementation**: `ThemeToggle.tsx` React component controls the theme, adding/removing the `dark` class on the document
 
 2. **CSS Organization**
    - **Global Styles**: `src/styles/global.css` contains:
+
      ```css
      /* Base imports and Tailwind directives */
-     @import 'tailwindcss/base';
-     @import 'tailwindcss/components';
-     @import 'tailwindcss/utilities';
-     
+     @import "tailwindcss/base";
+     @import "tailwindcss/components";
+     @import "tailwindcss/utilities";
+
      /* Global custom styles */
      :root {
        /* Custom CSS variables */
      }
-     
+
      /* Dark mode specific overrides */
      .dark {
        /* Dark mode CSS variables */
      }
      ```
-   
+
    - **Component-specific CSS**:
      - `MasonryLayout.css`: Custom grid-based implementation
      - `cv-print.css`: Print-specific styles for the CV page
@@ -545,6 +550,7 @@ The site uses Tailwind CSS v4.0.8 for styling, with carefully configured setting
 Client-side JavaScript lives in the `src/scripts/` directory, providing essential interactivity while maintaining a focus on performance:
 
 ### Core UI Scripts
+
 - **`themetoggle.js`**: Manages dark/light theme switching with the following features:
   - Persists user preference in localStorage
   - Respects user's system preference via `prefers-color-scheme` media query
@@ -558,6 +564,7 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
   - Implements touch events for mobile devices
 
 ### Media Management
+
 - **`lightbox.js`**: Implements image gallery lightbox functionality using GLightbox:
   - Enables fullscreen image viewing
   - Supports keyboard navigation
@@ -571,6 +578,7 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
   - Handles empty image arrays gracefully
 
 ### Content Enhancement
+
 - **`burgundy.js`**: Creates the dynamic quote system for the 404 page:
   - Stores a collection of Ron Burgundy quotes
   - Randomly selects and displays a different quote on each page load
@@ -587,6 +595,7 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
   - Ensures fresh content appears on each page load
 
 ### Build Utilities
+
 - **`remark-reading-time.mjs`**: MDX plugin that calculates and adds reading time estimates to posts
 - **`remark-modified-time.mjs`**: MDX plugin that extracts and normalizes file modification timestamps
 - **`updateImageLinks.js`**: Build-time utility for processing and optimizing image references
@@ -642,7 +651,7 @@ The search functionality is implemented with minimal JavaScript and maintains th
   document.addEventListener("astro:page-load", () => {
     // Modal control logic
     // ...
-    
+
     // Initialize Pagefind UI
     new PagefindUI({
       element: "#search",
@@ -662,11 +671,11 @@ While the site is currently in English, I've structured it with future translati
 
 ## External Integrations
 
-1. **Cloudflare**: 
+1. **Cloudflare**:
    - Handles hosting and CDN services
    - The CI/CD pipeline includes cache purging to ensure visitors see the latest content
 
-2. **Deno Deploy**: 
+2. **Deno Deploy**:
    - Provides a secondary deployment target
    - Shows how the site can adapt to different hosting environments
 
@@ -678,20 +687,20 @@ While the site is currently in English, I've structured it with future translati
 
 ## Development Tools
 
-1. **Bun**: 
+1. **Bun**:
    - Works as both the JavaScript runtime and package manager
    - Significantly faster than Node.js and npm, especially on M-series Macs
    - All scripts in `package.json` run through Bun
 
-2. **TypeScript**: 
+2. **TypeScript**:
    - The project uses TypeScript v5.7.2 throughout
    - Astro's built-in TypeScript support with `@astrojs/check` v0.9.4 catches type errors during build
 
-3. **Prettier**: 
+3. **Prettier**:
    - Code formatting with Prettier v3.4.2 ensures consistent style
    - The Astro Prettier plugin (prettier-plugin-astro v0.14.1) properly formats .astro files
 
-4. **Tailwind CSS v4**: 
+4. **Tailwind CSS v4**:
    - The latest Tailwind CSS v4.0.8 with better performance and smaller bundles
    - Configured with the typography plugin for long-form content
 
@@ -788,6 +797,7 @@ My Caddyfile is quite simple, as I'm using Cloudflare as my edge CDN:
 ```
 
 This setup:
+
 1. Uses Caddy as the web server on Alpine Linux for a small footprint
 2. Sets up proper permissions for security
 3. Configures caching and security headers
@@ -815,16 +825,18 @@ For local development, you'll need:
 To start working with this project:
 
 1. Clone the repository:
+
    ```
    git clone https://github.com/your-username/revista.git
    cd revista
    ```
 
 2. Install dependencies:
+
    ```
    bun install
    ```
-   
+
    This installs:
    - Astro v5.13.3
    - Tailwind CSS v4.0.8
@@ -832,19 +844,21 @@ To start working with this project:
    - MDX v4.2.4 and other dependencies
 
 3. Run the development server:
+
    ```
    bun run dev
    ```
 
 4. Build for production:
+
    ```bash
    # Standard build (for Cloudflare, Deno, Docker)
    bun run build
-   
+
    # GitHub Pages specific build (with base path)
    bun run build:github-pages
    ```
-   
+
    Both commands include Pagefind indexing for search functionality.
 
 5. Preview the production build:
@@ -925,6 +939,7 @@ The CV page uses a dedicated component system in `src/components/cv/` to create 
    - `ColorLegend.astro`: Explains the timeline color coding system
 
 2. **Single Source of Truth**: All CV content is maintained in a single file (`src/content/cv/resume.mdx`) with a structured schema:
+
    ```yaml
    ---
    title: "Erfi Anugrah"
@@ -958,6 +973,7 @@ For detailed implementation information, see [`src/components/cv/README.md`](src
 The photo gallery displays use a custom masonry layout implementation:
 
 1. **CSS Grid-Based Masonry**: Instead of using a library, the site implements a modern CSS Grid approach to masonry layouts:
+
    ```css
    .masonry {
      display: grid;
@@ -965,17 +981,18 @@ The photo gallery displays use a custom masonry layout implementation:
      grid-gap: 16px;
      grid-auto-flow: dense;
    }
-   
+
    .image-container:nth-child(3n) {
      grid-row: span 2;
    }
-   
+
    .image-container:nth-child(4n) {
      grid-column: span 2;
    }
    ```
 
 2. **Image Optimization**: The `Masonry.astro` component uses Astro's built-in image optimization:
+
    ```astro
    const imageAssets = await Promise.all(
      images.map(async (image) => {
@@ -994,6 +1011,7 @@ The photo gallery displays use a custom masonry layout implementation:
    ```
 
 3. **Responsive Breakpoints**: The masonry layout adapts to screen sizes with custom media queries:
+
    ```css
    @media (max-width: 768px) {
      .masonry {
@@ -1003,6 +1021,7 @@ The photo gallery displays use a custom masonry layout implementation:
    ```
 
 4. **Lightbox Integration**: The masonry gallery integrates with GLightbox for fullscreen viewing:
+
    ```astro
    <a href={imageAsset.src} class="image-link glightbox">
      <img src={imageAsset.src} alt={imageAsset.attributes.alt} loading="lazy" />
@@ -1010,11 +1029,12 @@ The photo gallery displays use a custom masonry layout implementation:
    ```
 
 5. **Animation Effects**: Subtle hover animations enhance the user experience:
+
    ```css
    .image-container:hover {
      transform: scale(1.01);
    }
-   
+
    .image-container:hover .image {
      transform: scale(1.005);
    }
