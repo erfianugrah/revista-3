@@ -17,11 +17,11 @@
     "ui": "node scripts/update-post-interactive.js"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
+    "@astrojs/check": "0.9.5",
     "@astrojs/markdoc": "0.15.8",
-    "@astrojs/mdx": "4.3.7",
+    "@astrojs/mdx": "4.3.8",
     "@astrojs/react": "4.4.0",
-    "@astrojs/rss": "4.0.12",
+    "@astrojs/rss": "4.0.13",
     "@astrojs/sitemap": "3.6.0",
     "@astrojs/tailwind": "6.0.2",
     "@fontsource-variable/inconsolata": "^5.2.8",
@@ -32,7 +32,7 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.1",
     "@types/sanitize-html": "^2.16.0",
-    "astro": "5.14.4",
+    "astro": "5.15.1",
     "astro-icon": "^1.1.5",
     "caniuse-lite": "^1.0.30001750",
     "class-variance-authority": "^0.7.1",
