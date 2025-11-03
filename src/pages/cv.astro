@@ -3,7 +3,7 @@ import ProseCv from "../components/Prose_cv.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Icon } from "astro-icon/components";
 import { Contact } from "../components/cv";
-import ThemeToggle from "../components/ThemeToggle.astro";
+import ThemeToggle from "../components/ThemeToggle";
 import "../styles/cv-print.css";
 
 import { getEntry, render } from "astro:content";
@@ -156,6 +156,33 @@ const getShortLabel = (contact) => {
 </BaseLayout>
 
 <script>
+  // Theme handling for CV page
+  function getThemePreference(): "light" | "dark" {
+    return (
+      (localStorage.getItem("theme") as "light" | "dark") ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light")
+    );
+  }
+
+  function applyTheme(theme: "light" | "dark") {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    localStorage.setItem("theme", theme);
+  }
+
+  function toggleTheme() {
+    const currentTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    applyTheme(newTheme);
+  }
+
+  // Apply theme immediately on script execution
+  applyTheme(getThemePreference());
+
+  // Listen for theme toggle events from React component
+  window.addEventListener("theme-toggle", toggleTheme);
+
   document.addEventListener('DOMContentLoaded', () => {
     // Cache DOM elements for better performance
     const elements = {
