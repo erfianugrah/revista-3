@@ -63,7 +63,7 @@ jobs:
 
   deploy-to-deno:
     needs: build-revista
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'release'
     runs-on: ubuntu-latest
     permissions:
       id-token: write
