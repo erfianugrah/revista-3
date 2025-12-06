@@ -20,6 +20,8 @@ jobs:
 
       - name: Setup Bun environment
         uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: "1.2.21"
 
       - name: Cache dependencies and build artifacts
         uses: actions/cache@v4
@@ -96,6 +98,8 @@ jobs:
 
       - name: Setup Bun environment
         uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: "1.2.21"
 
       - name: Install dependencies
         run: bun install
@@ -237,6 +241,8 @@ jobs:
 
       - name: Setup Bun environment
         uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: "1.2.21"
 
       - name: Cache dependencies
         uses: actions/cache@v4
