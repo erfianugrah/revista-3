@@ -113,6 +113,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
           packageManager: bun
+          wranglerVersion: "4.53.0"
 
   build-and-push-docker:
     needs: build-revista
