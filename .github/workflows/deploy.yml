@@ -29,8 +29,6 @@ jobs:
           path: |
             ~/.bun/install/cache
             node_modules
-            .astro
-            dist
           key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb', '**/package.json', 'astro.config.mjs', 'tailwind.config.mjs') }}
           restore-keys: |
             ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb', '**/package.json') }}-
