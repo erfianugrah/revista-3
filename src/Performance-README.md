@@ -94,7 +94,7 @@ This configuration:
 
 ## CDN Integration
 
-The site is deployed to Cloudflare for edge caching:
+The site is deployed to Cloudflare Workers with Static Assets for edge caching:
 
 ### Cache Control Headers
 
@@ -125,8 +125,9 @@ Benefits:
 
 The project deploys to multiple edge platforms:
 
-1. **Cloudflare Pages**: Main deployment with global edge distribution
+1. **Cloudflare Workers (with Static Assets)**: Main deployment with global edge distribution
 2. **Deno Deploy**: Secondary deployment for additional edge presence
+3. **GitHub Pages**: Tertiary deployment for GitHub-hosted access
 
 ## Mobile Optimization
 

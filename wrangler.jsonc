@@ -1,0 +1,21 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "revista",
+	"compatibility_date": "2025-12-06",
+	"build": {
+		"command": "bun run build"
+	},
+	"assets": {
+		"directory": "./dist"
+	},
+	"routes": [
+		{
+			"pattern": "erfianugrah.com/*",
+			"custom_domain": true
+		},
+		{
+			"pattern": "www.erfianugrah.com/*",
+			"custom_domain": true
+		}
+	]
+}

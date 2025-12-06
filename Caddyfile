@@ -3,10 +3,10 @@
 		metrics
 	}
 
-	debug
+	# debug (disabled for production)
 	grace_period 5s
 	log {
-		level debug
+		level info
 		output file /var/log/access.log {
 			roll_size 1gb
 			roll_keep 5
@@ -35,7 +35,7 @@
 		file_server
 	}
 	log {
-		level debug
+		level info
 		output file /var/log/revista-access.log {
 			roll_size 1gb
 			roll_keep 5

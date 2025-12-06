@@ -29,10 +29,9 @@ jobs:
             node_modules
             .astro
             dist
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-${{ hashFiles('**/package.json') }}-${{ hashFiles('src/**') }}
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb', '**/package.json', 'astro.config.mjs', 'tailwind.config.mjs') }}
           restore-keys: |
-            ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-${{ hashFiles('**/package.json') }}-
-            ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-
+            ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb', '**/package.json') }}-
             ${{ runner.os }}-bun-
 
       - name: Install project dependencies
@@ -87,14 +86,12 @@ jobs:
           entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
           root: "dist"
 
-  deploy-to-cloudflare:
+  deploy-to-cloudflare-workers:
     needs: build-revista
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
 
       - name: Download built artifacts
         uses: actions/download-artifact@v4
@@ -102,118 +99,27 @@ jobs:
           name: dist
           path: dist
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-
-      - name: Get git information
-        id: git-info
-        run: |
-          echo "COMMIT_HASH=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-          echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
-          echo "BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_OUTPUT
-          echo "COMMIT_DIRTY=$(if [[ -n $(git status -s) ]]; then echo true; else echo false; fi)" >> $GITHUB_OUTPUT
-
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=revista-4 --commit-hash "${{ steps.git-info.outputs.COMMIT_HASH }}" --commit-message "${{ steps.git-info.outputs.COMMIT_MESSAGE }}" --branch "${{ steps.git-info.outputs.BRANCH_NAME }}" --commit-dirty ${{ steps.git-info.outputs.COMMIT_DIRTY }}
-          wranglerVersion: '4.28.1'
+          command: deploy
           packageManager: bun
 
-  prepare-docker:
+  build-and-push-docker:
     needs: build-revista
     runs-on: ubuntu-latest
     outputs:
-      new_tag: ${{ steps.get_tag.outputs.NEW_TAG }}
+      digest: ${{ steps.build.outputs.digest }}
+      tags: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
-
-      - name: Determine version increment type
-        id: check_commit_message
-        run: |
-          COMMIT_MSG=$(git log -1 --pretty=%B)
-          if echo "$COMMIT_MSG" | grep -qE "^\[major\]"; then
-            echo "VERSION_INCREMENT=major" >> $GITHUB_OUTPUT
-          elif echo "$COMMIT_MSG" | grep -qE "^\[minor\]"; then
-            echo "VERSION_INCREMENT=minor" >> $GITHUB_OUTPUT
-          else
-            echo "VERSION_INCREMENT=patch" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Generate new version tag
-        id: get_tag
-        run: |
-          # Fetch all tags and sort them
-          echo "Fetching tags for ${REGISTRY_IMAGE}..."
-          TAGS_JSON=$(curl -s "https://hub.docker.com/v2/repositories/${REGISTRY_IMAGE}/tags/?page_size=100")
-          echo "Fetched tags JSON:"
-          echo "$TAGS_JSON" | jq '.'
-          
-          ALL_TAGS=$(echo "$TAGS_JSON" | jq -r '.results[].name' | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sort -V)
-          echo "Sorted semantic version tags:"
-          echo "$ALL_TAGS"
-          
-          if [ -z "$ALL_TAGS" ]; then
-            echo "No existing semantic version tags found."
-            NEW_TAG="0.0.1"
-          else
-            LATEST_TAG=$(echo "$ALL_TAGS" | tail -n 1)
-            echo "Latest tag: $LATEST_TAG"
-            
-            # Remove 'v' prefix if present
-            LATEST_TAG=${LATEST_TAG#v}
-            
-            IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST_TAG"
-            
-            # Increment version based on commit message or default to patch
-            case "${{ steps.check_commit_message.outputs.VERSION_INCREMENT }}" in
-              major)
-                MAJOR=$((MAJOR+1))
-                MINOR=0
-                PATCH=0
-                ;;
-              minor)
-                MINOR=$((MINOR+1))
-                PATCH=0
-                ;;
-              patch|*)
-                PATCH=$((PATCH+1))
-                ;;
-            esac
-            
-            NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
-            
-            # Check if the new tag already exists
-            while echo "$ALL_TAGS" | grep -q "^v?${NEW_TAG}$"; do
-              case "${{ steps.check_commit_message.outputs.VERSION_INCREMENT }}" in
-                major)
-                  MAJOR=$((MAJOR+1))
-                  ;;
-                minor)
-                  MINOR=$((MINOR+1))
-                  ;;
-                patch|*)
-                  PATCH=$((PATCH+1))
-                  ;;
-              esac
-              NEW_TAG="${MAJOR}.${MINOR}.${PATCH}"
-            done
-          fi
-          
-          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
-          echo "New tag: $NEW_TAG"
-
-  build-and-push-docker:
-    needs: [build-revista, prepare-docker]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+          sparse-checkout: |
+            Dockerfile
+            Caddyfile
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -233,31 +139,46 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
 
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY_IMAGE }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
       - name: Build and push Docker image
+        id: build
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
           push: true
-          tags: |
-            ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare-docker.outputs.new_tag }}
-            ${{ env.REGISTRY_IMAGE }}:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           provenance: true
           sbom: true
 
   inspect-docker-image:
-    needs: [prepare-docker, build-and-push-docker]
+    needs: build-and-push-docker
     runs-on: ubuntu-latest
     steps:
       - name: Inspect Docker image
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.prepare-docker.outputs.new_tag }}
+          echo "Inspecting image digest: ${{ needs.build-and-push-docker.outputs.digest }}"
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}@${{ needs.build-and-push-docker.outputs.digest }}
 
   sign-docker-image:
-    needs: [prepare-docker, build-and-push-docker, inspect-docker-image]
+    needs: [build-and-push-docker, inspect-docker-image]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -275,27 +196,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
 
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Get image digest
-        id: get_digest
-        run: |
-          DIGEST=$(docker buildx imagetools inspect ${REGISTRY_IMAGE}:${{ needs.prepare-docker.outputs.new_tag }} --format '{{json .}}' | jq -r 'if .manifest then .manifest.digest elif .Descriptor then .Descriptor.digest else .digest end')
-          echo "IMAGE_DIGEST=${DIGEST}" >> $GITHUB_OUTPUT
-          echo "Image digest: ${DIGEST}"
-
       - name: Sign the Docker image
         env:
           COSIGN_EXPERIMENTAL: 1
         run: |
-          cosign sign --yes ${REGISTRY_IMAGE}@${{ steps.get_digest.outputs.IMAGE_DIGEST }}
+          cosign sign --yes ${REGISTRY_IMAGE}@${{ needs.build-and-push-docker.outputs.digest }}
 
       - name: Verify Docker image signature
         env:
           COSIGN_EXPERIMENTAL: 1
         run: |
-          cosign verify ${REGISTRY_IMAGE}@${{ steps.get_digest.outputs.IMAGE_DIGEST }} \
+          cosign verify ${REGISTRY_IMAGE}@${{ needs.build-and-push-docker.outputs.digest }} \
             --certificate-identity-regexp="https://github.com/${GITHUB_REPOSITORY}/.*" \
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com
 
@@ -348,7 +259,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
   purge-cloudflare-cache:
-    needs: [deploy-to-deno, deploy-to-cloudflare, deploy-to-github-pages, sign-docker-image]
+    needs: [deploy-to-deno, deploy-to-cloudflare-workers, deploy-to-github-pages]
     runs-on: ubuntu-latest
     steps:
       - name: Purge Cloudflare Cache
