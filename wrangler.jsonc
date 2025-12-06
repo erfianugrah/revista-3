@@ -8,11 +8,11 @@
 	},
 	"routes": [
 		{
-			"pattern": "erfianugrah.com/*",
+			"pattern": "erfianugrah.com",
 			"custom_domain": true
 		},
 		{
-			"pattern": "www.erfianugrah.com/*",
+			"pattern": "www.erfianugrah.com",
 			"custom_domain": true
 		}
 	]
