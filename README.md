@@ -1,5 +1,5 @@
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-5.8.4-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-5.8.5-blue.svg?cacheSeconds=2592000" />
   <img alt="Astro" src="https://img.shields.io/badge/Astro-5.16.4-FF5D01.svg?logo=astro&logoColor=white" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.1.17-38B2AC.svg?logo=tailwind-css&logoColor=white" />
   <img alt="React" src="https://img.shields.io/badge/React-19.2.1-61DAFB.svg?logo=react&logoColor=white" />
@@ -885,12 +885,12 @@ The project supports several deployment methods:
 
 ### Deployment Secrets & Tokens
 
-| Target                | Required secrets (GitHub Actions)                                                                                     | Notes                                                           |
-|-----------------------|-----------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
-| Cloudflare Pages      | `CLOUDFLARE_WRANGLER_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ZONE_ID`, `CLOUDFLARE_CACHE_PURGE_TOKEN`, `CLOUDFLARE_ZONE_NAME`, `CLOUDFLARE_WWW` | Wrangler deploy + cache purge hosts                             |
-| Deno Deploy           | _None referenced in the workflow_                                                                                     | Uses `deployctl` with public project settings                   |
-| GitHub Pages          | _None beyond repository permissions_                                                                                  | Build uses `build:github-pages` base/path config                |
-| Docker Hub            | `DOCKER_USERNAME`, `DOCKER_REGISTRY_TOKEN`                                                                            | Used for pushing versioned images                               |
+| Target           | Required secrets (GitHub Actions)                                                                                                                    | Notes                                            |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Cloudflare Pages | `CLOUDFLARE_WRANGLER_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ZONE_ID`, `CLOUDFLARE_CACHE_PURGE_TOKEN`, `CLOUDFLARE_ZONE_NAME`, `CLOUDFLARE_WWW` | Wrangler deploy + cache purge hosts              |
+| Deno Deploy      | _None referenced in the workflow_                                                                                                                    | Uses `deployctl` with public project settings    |
+| GitHub Pages     | _None beyond repository permissions_                                                                                                                 | Build uses `build:github-pages` base/path config |
+| Docker Hub       | `DOCKER_USERNAME`, `DOCKER_REGISTRY_TOKEN`                                                                                                           | Used for pushing versioned images                |
 
 ## Contributing
 
