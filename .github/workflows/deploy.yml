@@ -63,6 +63,7 @@ jobs:
 
   deploy-to-deno:
     needs: build-revista
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -105,7 +106,6 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
-          packageManager: bun
 
   build-and-push-docker:
     needs: build-revista
@@ -150,7 +150,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=sha,prefix={{branch}}-
+            type=sha
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
@@ -211,6 +211,7 @@ jobs:
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com
 
   deploy-to-github-pages:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -259,7 +260,8 @@ jobs:
         uses: actions/deploy-pages@v4
 
   purge-cloudflare-cache:
-    needs: [deploy-to-deno, deploy-to-cloudflare-workers, deploy-to-github-pages]
+    needs: [deploy-to-cloudflare-workers]
+    if: always() && needs.deploy-to-cloudflare-workers.result == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Purge Cloudflare Cache
