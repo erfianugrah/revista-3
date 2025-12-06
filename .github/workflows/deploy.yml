@@ -94,6 +94,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Bun environment
+        uses: oven-sh/setup-bun@v1
+
       - name: Download built artifacts
         uses: actions/download-artifact@v4
         with:
@@ -106,6 +109,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
+          packageManager: bun
 
   build-and-push-docker:
     needs: build-revista
