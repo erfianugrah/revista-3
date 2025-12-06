@@ -9,11 +9,13 @@
 	"routes": [
 		{
 			"pattern": "erfianugrah.com",
-			"custom_domain": true
+			"custom_domain": true,
+			"override_existing_dns_record": true
 		},
 		{
 			"pattern": "www.erfianugrah.com",
-			"custom_domain": true
+			"custom_domain": true,
+			"override_existing_dns_record": true
 		}
 	]
 }
