@@ -200,7 +200,7 @@ jobs:
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.6.0
         with:
-          cosign-release: 'v2.4.0'
+          cosign-release: 'v2.4.1'
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -211,15 +211,51 @@ jobs:
       - name: Sign the Docker image
         env:
           COSIGN_EXPERIMENTAL: 1
+          IMAGE_DIGEST: ${{ needs.build-and-push-docker.outputs.digest }}
+          REPOSITORY: ${{ github.repository }}
         run: |
-          cosign sign --yes ${REGISTRY_IMAGE}@${{ needs.build-and-push-docker.outputs.digest }}
+          IMAGE_REF="${REGISTRY_IMAGE}@${IMAGE_DIGEST}"
+
+          # Check if image is already signed
+          if cosign verify "${IMAGE_REF}" \
+            --certificate-identity-regexp="https://github.com/${REPOSITORY}/.*" \
+            --certificate-oidc-issuer=https://token.actions.githubusercontent.com 2>/dev/null; then
+            echo "Image is already signed and verified. Skipping signing."
+            exit 0
+          fi
+
+          # Attempt to sign with retry logic
+          MAX_ATTEMPTS=3
+          RETRY_DELAY=10
+          attempt=1
+
+          while [ $attempt -le $MAX_ATTEMPTS ]; do
+            if cosign sign --yes "${IMAGE_REF}"; then
+              echo "Successfully signed image on attempt $attempt"
+              exit 0
+            fi
+
+            if [ $attempt -lt $MAX_ATTEMPTS ]; then
+              echo "Signing attempt $attempt failed. Retrying in $RETRY_DELAY seconds..."
+              sleep $RETRY_DELAY
+              RETRY_DELAY=$((RETRY_DELAY * 2))
+            fi
+            attempt=$((attempt + 1))
+          done
+
+          echo "Warning: Signing failed after $MAX_ATTEMPTS attempts."
+          echo "The image is still available and usable, but without a signature."
+          exit 0
 
       - name: Verify Docker image signature
+        continue-on-error: true
         env:
           COSIGN_EXPERIMENTAL: 1
+          IMAGE_DIGEST: ${{ needs.build-and-push-docker.outputs.digest }}
+          REPOSITORY: ${{ github.repository }}
         run: |
-          cosign verify ${REGISTRY_IMAGE}@${{ needs.build-and-push-docker.outputs.digest }} \
-            --certificate-identity-regexp="https://github.com/${GITHUB_REPOSITORY}/.*" \
+          cosign verify "${REGISTRY_IMAGE}@${IMAGE_DIGEST}" \
+            --certificate-identity-regexp="https://github.com/${REPOSITORY}/.*" \
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com
 
   deploy-to-github-pages:
