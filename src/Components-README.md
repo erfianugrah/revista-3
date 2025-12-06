@@ -5,7 +5,7 @@
 
 ## Overview
 
-This project uses Astro v5.15.9 with enhanced component features and Tailwind CSS v4.1.14 for styling. Components leverage the latest Astro features for improved performance and type safety.
+This project uses Astro v5.16.4 with enhanced component features and Tailwind CSS v4.1.17 for styling. Components leverage the latest Astro features for improved performance and type safety.
 
 ## Key Components
 
@@ -49,7 +49,7 @@ Components are organized in a hierarchical structure, with layout components (li
 
 - All components follow Astro's `.astro` file format with a mix of frontmatter, HTML templates, and component script sections
 - Components leverage Astro's optimized rendering for minimal client-side JavaScript
-- All styling uses Tailwind CSS v4.1.14 utilities for consistency and performance
+- All styling uses Tailwind CSS v4.1.17 utilities for consistency and performance
 
 ## Deprecated Components
 

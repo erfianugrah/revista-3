@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project provides a containerized deployment option using Docker with Caddy as the web server. The container runs a custom Astro v5.15.9 + Tailwind CSS v4.1.14 build optimized for performance and security.
+This project provides a containerized deployment option using Docker with Caddy as the web server. The container runs a custom Astro v5.16.4 + Tailwind CSS v4.1.17 build optimized for performance and security.
 
 ## Key Components
 
@@ -51,6 +51,11 @@ services:
 volumes:
   caddy_data:
   caddy_config:
+
+## Runtime Configuration
+
+- **Caddy data/config**: The included volume mounts (`/data` and `/config`) persist Caddy state, logs, and cache across container restarts.
+- **GitHub Pages builds**: If you need the GitHub Pages base path, run `bun run build:github-pages` before building the image so the generated `dist` matches that environment.
 ```
 
 ## Multi-Architecture Support

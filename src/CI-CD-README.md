@@ -126,6 +126,8 @@ Tests include:
 1. HTML validation for standards compliance
 2. Internal link checking to prevent broken navigation
 
+You can replicate the same checks locally with `bun run lint:site` (builds the site, then runs the HTML validator and hyperlink checker).
+
 ## Deployment Targets
 
 ### Cloudflare Pages

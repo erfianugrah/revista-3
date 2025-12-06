@@ -26,7 +26,7 @@ Each collection is defined in [content.config.ts](/src/content.config.ts) with a
 
 ```typescript
 const short_form = defineCollection({
-  // Modern Astro v5.15.9 collection pattern
+  // Modern Astro v5.16.4 collection pattern
   loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/short_form" }),
   schema: z.object({
     title: z.string(),
@@ -69,7 +69,7 @@ description: It started with an idea or rather an intention to create something 
 <!-- Content goes here -->
 ```
 
-## Astro v5.15.9 Enhancements
+## Astro v5.16.4 Enhancements
 
 The content collections in this project use Astro's modern glob loader pattern. The key benefits include:
 

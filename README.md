@@ -1,10 +1,10 @@
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-5.8.4-blue.svg?cacheSeconds=2592000" />
-  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.15.9-FF5D01.svg?logo=astro&logoColor=white" />
-  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.1.14-38B2AC.svg?logo=tailwind-css&logoColor=white" />
-  <img alt="React" src="https://img.shields.io/badge/React-19.2.0-61DAFB.svg?logo=react&logoColor=white" />
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.16.4-FF5D01.svg?logo=astro&logoColor=white" />
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.1.17-38B2AC.svg?logo=tailwind-css&logoColor=white" />
+  <img alt="React" src="https://img.shields.io/badge/React-19.2.1-61DAFB.svg?logo=react&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9.3-3178C6.svg?logo=typescript&logoColor=white" />
-  <img alt="MDX" src="https://img.shields.io/badge/MDX-4.3.11-1B1F24.svg?logo=mdx&logoColor=white" />
+  <img alt="MDX" src="https://img.shields.io/badge/MDX-4.3.12-1B1F24.svg?logo=mdx&logoColor=white" />
   <img alt="Bun" src="https://img.shields.io/badge/Bun-Latest-F9F1E1.svg?logo=bun&logoColor=black" />
   <br/>
   <img alt="GitHub CI/CD" src="https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF.svg?logo=github-actions&logoColor=white" />
@@ -16,7 +16,7 @@
 
 ## Overview
 
-Revista is a photography portfolio and blog built on Astro v5.15.9. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
+Revista is a photography portfolio and blog built on Astro v5.16.4. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
 
 The project supports multiple deployment targets with optimized builds for each platform, including GitHub Pages with proper base path configuration.
 
@@ -453,7 +453,7 @@ Each collection follows the same pattern of routes: index, individual posts, tag
 
 ## Styling System
 
-The site uses Tailwind CSS v4.1.14 for styling, with carefully configured settings in `tailwind.config.mjs` to create a cohesive design system:
+The site uses Tailwind CSS v4.1.17 for styling, with carefully configured settings in `tailwind.config.mjs` to create a cohesive design system:
 
 ### Design System Components
 
@@ -612,11 +612,11 @@ I've optimized the site in several ways:
 
 3. **Preloading and Prefetching**: Astro's `prefetch` feature loads linked pages before the user clicks, making navigation feel instant.
 
-4. **Efficient Bundling**: Astro v5.15.9 includes improved bundling and tree-shaking to minimize client-side code, with enhanced hydration strategies and faster component rendering.
+4. **Efficient Bundling**: Astro v5.16.4 includes improved bundling and tree-shaking to minimize client-side code, with enhanced hydration strategies and faster component rendering.
 
 5. **Cloudflare CDN**: The site uses Cloudflare's CDN with custom cache headers to serve content from edge locations worldwide.
 
-6. **Tailwind Optimizations**: Tailwind CSS v4.1.14's improved performance and lighter bundle size help pages load quickly.
+6. **Tailwind Optimizations**: Tailwind CSS v4.1.17's improved performance and lighter bundle size help pages load quickly.
 
 ## Search Functionality
 
@@ -701,7 +701,7 @@ While the site is currently in English, I've structured it with future translati
    - The Astro Prettier plugin (prettier-plugin-astro v0.14.1) properly formats .astro files
 
 4. **Tailwind CSS v4**:
-   - The latest Tailwind CSS v4.1.14 with better performance and smaller bundles
+   - The latest Tailwind CSS v4.1.17 with better performance and smaller bundles
    - Configured with the typography plugin for long-form content
 
 ## CI/CD Workflow
@@ -815,8 +815,8 @@ This setup:
 
 For local development, you'll need:
 
-1. Bun (latest version)
-2. Node.js (LTS version)
+1. Bun 1.2.21 (lockfile and scripts are generated with this version)
+2. Node.js 20+ (only needed if you prefer npm/yarn tooling; builds run with Bun)
 3. Git
 4. VS Code with the Astro extension is recommended
 
@@ -831,25 +831,25 @@ To start working with this project:
    cd revista
    ```
 
-2. Install dependencies:
+1. Install dependencies:
 
    ```
    bun install
    ```
 
    This installs:
-   - Astro v5.15.9
-   - Tailwind CSS v4.1.14
-   - React v19.2.0
-   - MDX v4.3.11 and other dependencies
+   - Astro v5.16.4
+   - Tailwind CSS v4.1.17
+   - React v19.2.1
+   - MDX v4.3.12 and other dependencies
 
-3. Run the development server:
+1. Run the development server:
 
    ```
    bun run dev
    ```
 
-4. Build for production:
+1. Build for production:
 
    ```bash
    # Standard build (for Cloudflare, Deno, Docker)
@@ -861,7 +861,15 @@ To start working with this project:
 
    Both commands include Pagefind indexing for search functionality.
 
-5. Preview the production build:
+1. (Optional) Run local quality checks before committing:
+
+   ```bash
+   bun run lint:site   # build, HTML validate, and internal link check
+   ```
+
+1. Content workflows: the CLI helpers for creating/editing posts are documented in `scripts/README.md`.
+
+1. Preview the production build:
    ```
    bun run preview
    ```
@@ -874,6 +882,15 @@ The project supports several deployment methods:
 2. Deno Deploy
 3. GitHub Pages
 4. Docker container (deployable to any container platform)
+
+### Deployment Secrets & Tokens
+
+| Target                | Required secrets (GitHub Actions)                                                                                     | Notes                                                           |
+|-----------------------|-----------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
+| Cloudflare Pages      | `CLOUDFLARE_WRANGLER_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ZONE_ID`, `CLOUDFLARE_CACHE_PURGE_TOKEN`, `CLOUDFLARE_ZONE_NAME`, `CLOUDFLARE_WWW` | Wrangler deploy + cache purge hosts                             |
+| Deno Deploy           | _None referenced in the workflow_                                                                                     | Uses `deployctl` with public project settings                   |
+| GitHub Pages          | _None beyond repository permissions_                                                                                  | Build uses `build:github-pages` base/path config                |
+| Docker Hub            | `DOCKER_USERNAME`, `DOCKER_REGISTRY_TOKEN`                                                                            | Used for pushing versioned images                               |
 
 ## Contributing
 
