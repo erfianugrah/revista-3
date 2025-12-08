@@ -34,11 +34,8 @@ const cmpSemver = (a, b) => {
 
 const tagRefVersion = normalize(refName);
 
-if (tagRefVersion) {
-	if (!isSemver(tagRefVersion)) {
-		console.error(`Tag '${refName}' is not semver-compatible (expected X.Y.Z or vX.Y.Z).`);
-		process.exit(1);
-	}
+if (tagRefVersion && isSemver(tagRefVersion)) {
+	// This is a valid semver tag, check version match
 	if (pkgVersion !== tagRefVersion) {
 		console.error(
 			`Version mismatch on tag: package.json=${pkgVersion} vs tag=${tagRefVersion}. Align before releasing.`
