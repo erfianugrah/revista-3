@@ -1,0 +1,32 @@
+name: Version Consistency
+
+on:
+  push:
+    tags:
+      - 'v*'
+      - '[0-9]*'
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # need tags for comparisons
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Verify package version matches tag
+        run: bun scripts/check-version-tag.mjs
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}

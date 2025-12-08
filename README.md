@@ -1,5 +1,5 @@
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-5.8.5-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/github/v/tag/erfianugrah/revista-3?label=version" />
   <img alt="Astro" src="https://img.shields.io/badge/Astro-5.16.4-FF5D01.svg?logo=astro&logoColor=white" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.1.17-38B2AC.svg?logo=tailwind-css&logoColor=white" />
   <img alt="React" src="https://img.shields.io/badge/React-19.2.1-61DAFB.svg?logo=react&logoColor=white" />
@@ -14,11 +14,22 @@
   <img alt="GitHub Pages" src="https://img.shields.io/badge/GitHub%20Pages-Deployed-222222.svg?logo=github&logoColor=white" />
 </p>
 
+## Quick Links
+- Documentation Index: `docs/README.md`
+
 ## Overview
 
 Revista is a photography portfolio and blog built on Astro v5.16.4. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
 
 The project supports multiple deployment targets with optimized builds for each platform, including GitHub Pages with proper base path configuration.
+
+## Documentation Map
+- **Docs Index:** `docs/README.md`
+- **Architecture:** `src/Architecture-README.md`
+- **Performance:** `src/Performance-README.md`
+- **CI/CD & Deployments:** `src/CI-CD-README.md`
+- **Components/Layout/Pages:** `src/Components-README.md`, `src/Layouts-README.md`, `src/Pages-README.md`
+- **Content Collections:** `src/Content-README.md`
 
 ## Project Structure
 
