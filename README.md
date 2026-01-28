@@ -1,10 +1,10 @@
 <p>
   <img alt="Version" src="https://img.shields.io/github/v/tag/erfianugrah/revista-3?label=version" />
-  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.16.4-FF5D01.svg?logo=astro&logoColor=white" />
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.16.15-FF5D01.svg?logo=astro&logoColor=white" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.1.17-38B2AC.svg?logo=tailwind-css&logoColor=white" />
   <img alt="React" src="https://img.shields.io/badge/React-19.2.1-61DAFB.svg?logo=react&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9.3-3178C6.svg?logo=typescript&logoColor=white" />
-  <img alt="MDX" src="https://img.shields.io/badge/MDX-4.3.12-1B1F24.svg?logo=mdx&logoColor=white" />
+  <img alt="MDX" src="https://img.shields.io/badge/MDX-4.3.13-1B1F24.svg?logo=mdx&logoColor=white" />
   <img alt="Bun" src="https://img.shields.io/badge/Bun-Latest-F9F1E1.svg?logo=bun&logoColor=black" />
   <br/>
   <img alt="GitHub CI/CD" src="https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF.svg?logo=github-actions&logoColor=white" />
@@ -19,7 +19,7 @@
 
 ## Overview
 
-Revista is a photography portfolio and blog built on Astro v5.16.4. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
+Revista is a photography portfolio and blog built on Astro v5.16.15. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
 
 The project supports multiple deployment targets with optimized builds for each platform, including GitHub Pages with proper base path configuration.
 
@@ -623,7 +623,7 @@ I've optimized the site in several ways:
 
 3. **Preloading and Prefetching**: Astro's `prefetch` feature loads linked pages before the user clicks, making navigation feel instant.
 
-4. **Efficient Bundling**: Astro v5.16.4 includes improved bundling and tree-shaking to minimize client-side code, with enhanced hydration strategies and faster component rendering.
+4. **Efficient Bundling**: Astro v5.16.15 includes improved bundling and tree-shaking to minimize client-side code, with enhanced hydration strategies and faster component rendering.
 
 5. **Cloudflare CDN**: The site uses Cloudflare's CDN with custom cache headers to serve content from edge locations worldwide.
 
@@ -849,10 +849,10 @@ To start working with this project:
    ```
 
    This installs:
-   - Astro v5.16.4
-   - Tailwind CSS v4.1.17
-   - React v19.2.1
-   - MDX v4.3.12 and other dependencies
+   - Astro v5.16.15
+    - Tailwind CSS v4.1.17
+    - React v19.2.1
+    - MDX v4.3.13 and other dependencies
 
 1. Run the development server:
 

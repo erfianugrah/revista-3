@@ -1,7 +1,7 @@
 {
   "name": "Revistav4",
   "type": "module",
-  "version": "5.9.2",
+  "version": "5.9.3",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -21,11 +21,11 @@
   },
   "dependencies": {
     "@astrojs/check": "0.9.6",
-    "@astrojs/markdoc": "0.15.9",
-    "@astrojs/mdx": "4.3.12",
+    "@astrojs/markdoc": "0.15.10",
+    "@astrojs/mdx": "4.3.13",
     "@astrojs/react": "4.4.2",
-    "@astrojs/rss": "4.0.14",
-    "@astrojs/sitemap": "3.6.0",
+    "@astrojs/rss": "4.0.15",
+    "@astrojs/sitemap": "3.7.0",
     "@astrojs/tailwind": "6.0.2",
     "@fontsource-variable/inconsolata": "^5.2.8",
     "@fontsource-variable/overpass-mono": "^5.2.8",
@@ -35,7 +35,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/sanitize-html": "^2.16.0",
-    "astro": "5.16.4",
+    "astro": "5.16.15",
     "astro-icon": "^1.1.5",
     "caniuse-lite": "^1.0.30001759",
     "class-variance-authority": "^0.7.1",
