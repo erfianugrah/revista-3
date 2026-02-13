@@ -1,19 +1,19 @@
 import { shuffle } from "./utils.ts";
 
-function handlePageLoad() {
-  const imageElements = Array.from(document.querySelectorAll("#randomimage"));
+function handlePageLoad(): void {
+  const imageElements = Array.from(
+    document.querySelectorAll<HTMLElement>("#randomimage"),
+  );
 
-  if (imageElements.length === 0) {
-    return; // Exit the function if no #randomimage elements are found
-  }
+  if (imageElements.length === 0) return;
 
   imageElements.forEach((element) => {
     try {
-      const imageData = JSON.parse(element.dataset.images);
-      const width = JSON.parse(element.dataset.width);
-      const height = JSON.parse(element.dataset.height);
+      const imageData = JSON.parse(element.dataset.images ?? "{}");
+      const width = JSON.parse(element.dataset.width ?? "{}");
+      const height = JSON.parse(element.dataset.height ?? "{}");
 
-      const items = imageData.large.map((_, index) => ({
+      const items = imageData.large.map((_: string, index: number) => ({
         image: {
           large: imageData.large[index],
           medium: imageData.medium[index],
@@ -24,11 +24,16 @@ function handlePageLoad() {
         height,
       }));
 
-      const shuffledItems = shuffle(items);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const shuffledItems = shuffle(items) as any[];
 
-      const imgElement = element.querySelector("img");
-      const sourceLarge = element.querySelector("source[data-srcset-large]");
-      const sourceMedium = element.querySelector("source[data-srcset-medium]");
+      const imgElement = element.querySelector<HTMLImageElement>("img");
+      const sourceLarge = element.querySelector<HTMLSourceElement>(
+        "source[data-srcset-large]",
+      );
+      const sourceMedium = element.querySelector<HTMLSourceElement>(
+        "source[data-srcset-medium]",
+      );
 
       if (imgElement && sourceLarge && sourceMedium) {
         const firstItem = shuffledItems[0];

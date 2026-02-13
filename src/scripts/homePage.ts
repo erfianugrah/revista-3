@@ -1,17 +1,19 @@
 import { shuffle } from "./utils.ts";
 
-function handlePageLoad() {
-  const imageElements = Array.from(document.querySelectorAll("#homepage"));
+function handlePageLoad(): void {
+  const imageElements = Array.from(
+    document.querySelectorAll<HTMLElement>("#homepage"),
+  );
 
   imageElements.forEach((element) => {
     try {
-      const images = JSON.parse(element.dataset.images);
-      const alt = JSON.parse(element.dataset.alt);
-      const urls = JSON.parse(element.dataset.urls);
-      const width = JSON.parse(element.dataset.width);
-      const height = JSON.parse(element.dataset.height);
+      const images = JSON.parse(element.dataset.images ?? "{}");
+      const alt = JSON.parse(element.dataset.alt ?? "[]");
+      const urls = JSON.parse(element.dataset.urls ?? "[]");
+      const width = JSON.parse(element.dataset.width ?? "{}");
+      const height = JSON.parse(element.dataset.height ?? "{}");
 
-      const items = images.large.map((_, index) => ({
+      const items = images.large.map((_: string, index: number) => ({
         image: {
           large: images.large[index],
           medium: images.medium[index],
@@ -23,12 +25,17 @@ function handlePageLoad() {
         height,
       }));
 
-      const shuffledItems = shuffle(items);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const shuffledItems = shuffle(items) as any[];
 
-      const imgElement = element.querySelector("img");
-      const sourceLarge = element.querySelector("source[data-srcset-large]");
-      const sourceMedium = element.querySelector("source[data-srcset-medium]");
-      const anchorElement = element.querySelector("a");
+      const imgElement = element.querySelector<HTMLImageElement>("img");
+      const sourceLarge = element.querySelector<HTMLSourceElement>(
+        "source[data-srcset-large]",
+      );
+      const sourceMedium = element.querySelector<HTMLSourceElement>(
+        "source[data-srcset-medium]",
+      );
+      const anchorElement = element.querySelector<HTMLAnchorElement>("a");
 
       if (imgElement && sourceLarge && sourceMedium && anchorElement) {
         const firstItem = shuffledItems[0];
@@ -44,7 +51,6 @@ function handlePageLoad() {
         anchorElement.href = firstItem.url;
         imgElement.classList.remove("hidden");
 
-        // Add ARIA label for better accessibility
         anchorElement.setAttribute("aria-label", `View ${firstItem.alt}`);
       }
     } catch (error) {

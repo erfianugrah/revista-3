@@ -13,15 +13,15 @@ const { title, images, alt, urls, width, height } = Astro.props;
     data-width={JSON.stringify(width)}
     data-height={JSON.stringify(height)}
   >
-    <a>
+    <a href="#">
       <picture>
-        <source media="(min-width: 1280px)" srcset="" data-srcset-large />
-        <source media="(min-width: 768px)" srcset="" data-srcset-medium />
+        <source media="(min-width: 1280px)" data-srcset-large />
+        <source media="(min-width: 768px)" data-srcset-medium />
         <img
           id="randomHomePageImage"
           class="hidden h-[440px] sm:h-[600px] lg:h-[700px] xl:h-[1000px] object-contain w-full object-center"
-          src=""
-          alt=""
+          src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+          alt="Loading image"
           data-srcset-small
         />
       </picture>
@@ -29,4 +29,4 @@ const { title, images, alt, urls, width, height } = Astro.props;
     <slot />
   </div>
 </BaseLayout>
-<script src="../scripts/homePage.js"></script>
+<script src="../scripts/homePage.ts"></script>

@@ -1,7 +1,7 @@
 import GLightbox from "glightbox";
 
-function initialize() {
-  const lightbox = GLightbox({
+function initialize(): void {
+  GLightbox({
     touchNavigation: true,
     closeButton: true,
     loop: true,
@@ -12,7 +12,7 @@ function initialize() {
     closeEffect: "fade",
     slideEffect: "fade",
     dragAutoSnap: true,
-    cssEfects: {
+    cssEffects: {
       fade: { in: "fadeIn", out: "fadeOut" },
     },
   });
