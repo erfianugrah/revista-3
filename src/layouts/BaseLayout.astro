@@ -29,6 +29,20 @@ const favicon_webp = await getImage({
 
 const pageTitle = "stoicopa";
 const metaDescription = "My personal hamster wheel.";
+
+export interface Props {
+  image?: string;
+  description?: string;
+  author?: string;
+  pubDate?: string;
+  updatedDate?: string;
+  title?: string;
+  site_name?: string;
+  alt?: string;
+  is404Page?: boolean;
+  hideHeaderFooter?: boolean;
+}
+
 const {
   image,
   description,

@@ -1,6 +1,11 @@
 ---
 import "../styles/MasonryLayout.css";
 import { getImage } from "astro:assets";
+
+export interface Props {
+  images: Array<{ src: string; alt: string } | null>;
+}
+
 const { images } = Astro.props;
 const imageAssets = await Promise.all(
   images.map(async (image) => {

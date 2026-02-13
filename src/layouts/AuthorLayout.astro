@@ -4,6 +4,19 @@ import "../styles/glightbox.css";
 import Prose from "../components/Prose.astro";
 import { getImage, Image } from "astro:assets";
 import { formatDate } from "../scripts/utils.ts";
+
+export interface Props {
+  frontmatter: {
+    title: string;
+    description: string;
+    author: string;
+    tags: string[];
+    image?: { src: string; alt: string };
+    pubDate: Date;
+    updatedDate?: Date;
+  };
+}
+
 const { frontmatter } = Astro.props;
 const updatedDate = formatDate(frontmatter?.updatedDate);
 const publishedDate = formatDate(frontmatter?.pubDate);

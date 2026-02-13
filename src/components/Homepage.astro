@@ -1,5 +1,15 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+export interface Props {
+  title: string;
+  images: string;
+  alt: string;
+  urls: string;
+  width: Record<string, number>;
+  height: Record<string, number>;
+}
+
 const { title, images, alt, urls, width, height } = Astro.props;
 ---
 

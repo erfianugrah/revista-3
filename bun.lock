@@ -25,7 +25,6 @@
         "clsx": "^2.1.1",
         "dayjs": "^1.11.19",
         "framer-motion": "^12.23.25",
-        "glightbox": "^3.3.1",
         "katex": "^0.16.25",
         "lucide-react": "^0.556.0",
         "markdown-it": "^14.1.0",
@@ -967,8 +966,6 @@
     "gettemporaryfilepath": ["gettemporaryfilepath@1.0.1", "", {}, "sha512-MVCSgF1blIZuIV3KYhMKOwU1OSxPF1s+ZcyqWMSGR5Fzl6fN7EjIXDFGu9PmWAAwyGjMjmkS2ruqPaj13J3SXA=="],
 
     "github-slugger": ["github-slugger@2.0.0", "", {}, "sha512-IaOQ9puYtjrkq7Y0Ygl9KDZnrf/aiUJYUpVf89y8kyaxbRG7Y1SrX/jaumrv81vc61+kiMempujsM3Yw7w5qcw=="],
-
-    "glightbox": ["glightbox@3.3.1", "", {}, "sha512-nXoKfJRnQTDaAFAw5799hjpfAAHx5aLvOLG0SIGudeMCwtHgO3P2/avNYapJ+SL4UEZxO2YNBPtq6pzMhSx42g=="],
 
     "glob": ["glob@10.5.0", "", { "dependencies": { "foreground-child": "^3.1.0", "jackspeak": "^3.1.2", "minimatch": "^9.0.4", "minipass": "^7.1.2", "package-json-from-dist": "^1.0.0", "path-scurry": "^1.11.1" }, "bin": { "glob": "dist/esm/bin.mjs" } }, "sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg=="],
 

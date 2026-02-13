@@ -4,6 +4,11 @@ import GetRandomImage from "../components/getRandomImage.astro";
 import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
 
+export interface Props {
+  directory: string;
+  title: string;
+}
+
 const { directory, title } = Astro.props;
 const allContent = await getCollection(directory);
 const tags = [...new Set(allContent.map((post) => post.data.tags).flat())];

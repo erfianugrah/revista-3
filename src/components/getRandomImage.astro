@@ -1,4 +1,12 @@
 ---
+export interface Props {
+  images: string;
+  tag: string;
+  url: string;
+  width: Record<string, number>;
+  height: Record<string, number>;
+}
+
 const { images, tag, url, width, height } = Astro.props;
 ---
 

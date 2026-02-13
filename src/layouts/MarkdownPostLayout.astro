@@ -8,6 +8,20 @@ import HeroImage from "../components/HeroImage.tsx";
 import NextPost from "../components/NextPost.astro";
 import { formatDate } from "../scripts/utils.ts";
 
+export interface Props {
+  frontmatter: {
+    title: string;
+    description: string;
+    author: string;
+    tags: string[];
+    image?: { src: string; alt: string; positionx?: string; positiony?: string };
+    pubDate: Date;
+    updatedDate?: Date;
+  };
+  currentId: string;
+  collection: string;
+}
+
 const { frontmatter, currentId, collection } = Astro.props;
 const updatedDate = formatDate(frontmatter?.updatedDate);
 const publishedDate = formatDate(frontmatter?.pubDate);

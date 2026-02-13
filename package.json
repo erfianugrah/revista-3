@@ -41,7 +41,6 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
     "framer-motion": "^12.23.25",
-    "glightbox": "^3.3.1",
     "katex": "^0.16.25",
     "lucide-react": "^0.556.0",
     "markdown-it": "^14.1.0",

@@ -3,6 +3,11 @@ import Hamburger from "./Hamburger.tsx";
 import Navigation from "./Navigation.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import { getImage } from "astro:assets";
+
+export interface Props {
+  is404Page?: boolean;
+}
+
 const { is404Page = false } = Astro.props;
 
 const favicon_avif = await getImage({
