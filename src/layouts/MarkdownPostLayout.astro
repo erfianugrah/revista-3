@@ -6,18 +6,11 @@ import Prose from "../components/Prose.astro";
 import { getImage } from "astro:assets";
 import HeroImage from "../components/HeroImage.tsx";
 import NextPost from "../components/NextPost.astro";
+import { formatDate } from "../scripts/utils.ts";
 
 const { frontmatter, currentId, collection } = Astro.props;
-const updatedDate = frontmatter?.updatedDate
-  .toDateString()
-  .split(" ")
-  .slice(1)
-  .join(" ");
-const publishedDate = frontmatter?.pubDate
-  .toDateString()
-  .split(" ")
-  .slice(1)
-  .join(" ");
+const updatedDate = formatDate(frontmatter?.updatedDate);
+const publishedDate = formatDate(frontmatter?.pubDate);
 const title = frontmatter?.title;
 const description = frontmatter?.description;
 const authorFullName = frontmatter?.author;
@@ -74,8 +67,8 @@ const metaImage = image
   alt={alt ? metaImage?.attributes.alt : ""}
   description={description}
   author={author}
-  pubDate={updatedDate}
-  updatedDate={publishedDate}
+  pubDate={publishedDate}
+  updatedDate={updatedDate}
   is404Page={false}
 >
   {

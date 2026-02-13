@@ -173,7 +173,7 @@ const formattedUpdatedDate = updatedDate
   >
     {!hideHeaderFooter && <Header is404Page={is404Page} />}
     <slot />
-    <ScrollToTop client:load />
+    <ScrollToTop client:idle />
     {!hideHeaderFooter && <Footer />}
   </body>
 </html>

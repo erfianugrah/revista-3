@@ -19,20 +19,12 @@ const quotes = [
 let shuffledQuotes = [];
 let currentIndex = 0;
 
-// Fisher-Yates shuffle function
-function shuffleArray(array) {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
+import { shuffle } from "./utils.ts";
 
 // Function to get next quote
 function getNextQuote() {
   if (currentIndex === 0 || currentIndex === shuffledQuotes.length) {
-    shuffledQuotes = shuffleArray(quotes);
+    shuffledQuotes = shuffle(quotes);
     currentIndex = 0;
   }
   return shuffledQuotes[currentIndex++];
@@ -43,7 +35,10 @@ function fitTextToContainer(quoteElement, containerElement) {
   let fontSize = 24;
   quoteElement.style.fontSize = `${fontSize}px`;
 
-  while (quoteElement.scrollHeight > containerElement.clientHeight && fontSize > 12) {
+  while (
+    quoteElement.scrollHeight > containerElement.clientHeight &&
+    fontSize > 12
+  ) {
     fontSize--;
     quoteElement.style.fontSize = `${fontSize}px`;
   }
@@ -51,7 +46,7 @@ function fitTextToContainer(quoteElement, containerElement) {
 
 // Function to set and fit quote
 function setAndFitQuote() {
-  const quoteElement = document.getElementById('quote');
+  const quoteElement = document.getElementById("quote");
   const containerElement = quoteElement.parentElement;
   quoteElement.textContent = getNextQuote();
   fitTextToContainer(quoteElement, containerElement);
@@ -60,11 +55,11 @@ function setAndFitQuote() {
 // Initialize quote and set up event listeners
 function initializeQuote() {
   setAndFitQuote();
-  const quoteBtn = document.getElementById('getQuoteBtn');
+  const quoteBtn = document.getElementById("getQuoteBtn");
   if (quoteBtn) {
-    quoteBtn.addEventListener('click', setAndFitQuote);
+    quoteBtn.addEventListener("click", setAndFitQuote);
   }
 }
 
 // Use the 'astro:page-load' event listener
-document.addEventListener('astro:page-load', initializeQuote);
+document.addEventListener("astro:page-load", initializeQuote);

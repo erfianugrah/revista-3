@@ -1,3 +1,5 @@
+import { shuffle } from "./utils.ts";
+
 function handlePageLoad() {
   const imageElements = Array.from(document.querySelectorAll("#randomimage"));
 
@@ -22,18 +24,14 @@ function handlePageLoad() {
         height,
       }));
 
-      // Shuffle the items array (Fisher-Yates algorithm)
-      for (let i = items.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [items[i], items[j]] = [items[j], items[i]];
-      }
+      const shuffledItems = shuffle(items);
 
       const imgElement = element.querySelector("img");
       const sourceLarge = element.querySelector("source[data-srcset-large]");
       const sourceMedium = element.querySelector("source[data-srcset-medium]");
 
       if (imgElement && sourceLarge && sourceMedium) {
-        const firstItem = items[0];
+        const firstItem = shuffledItems[0];
 
         sourceLarge.srcset = firstItem.image.large;
         sourceMedium.srcset = firstItem.image.medium;
@@ -52,4 +50,3 @@ function handlePageLoad() {
 }
 
 document.addEventListener("astro:page-load", handlePageLoad);
-// document.addEventListener('astro:after-swap', handlePageLoad);

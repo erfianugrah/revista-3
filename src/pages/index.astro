@@ -1,6 +1,5 @@
 ---
 import Homepage from "../components/Homepage.astro";
-const { pageTitle } = Astro.props;
 import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
 
@@ -83,7 +82,7 @@ const imageSizes = {
 {
   allImages.large.length > 0 ? (
     <Homepage
-      title={pageTitle}
+      title="Home"
       images={JSON.stringify(allImages)}
       alt={JSON.stringify(allAlts)}
       urls={JSON.stringify(allUrls)}

@@ -1,4 +1,4 @@
-import GLightbox from 'glightbox';
+import GLightbox from "glightbox";
 
 function initialize() {
   const lightbox = GLightbox({
@@ -8,15 +8,14 @@ function initialize() {
     width: "85vw",
     height: "85vh",
     preload: true,
-    openEffect: 'fade',
-    closeEffect: 'fade',
-    slideEffect: 'fade',
+    openEffect: "fade",
+    closeEffect: "fade",
+    slideEffect: "fade",
     dragAutoSnap: true,
     cssEfects: {
-      fade: { in: 'fadeIn', out: 'fadeOut' }
-    }
+      fade: { in: "fadeIn", out: "fadeOut" },
+    },
   });
 }
 
-document.addEventListener('astro:page-load', initialize);
-document.addEventListener('astro:after-swap', initialize);
+document.addEventListener("astro:page-load", initialize);
