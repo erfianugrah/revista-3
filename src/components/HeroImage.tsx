@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 interface HeroImageProps {
   title: string;
@@ -28,14 +28,17 @@ export default function HeroImage({
     const parallaxElement = parallaxRef.current;
     if (!heroElement || !parallaxElement) return;
 
+    // Bind to a const so closures can see the narrowed non-null type
+    const pEl = parallaxElement;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            parallaxElement.style.willChange = "transform";
+            pEl.style.willChange = "transform";
             window.addEventListener("scroll", updateParallax);
           } else {
-            parallaxElement.style.willChange = "auto";
+            pEl.style.willChange = "auto";
             window.removeEventListener("scroll", updateParallax);
           }
         });
@@ -48,7 +51,7 @@ export default function HeroImage({
     function updateParallax() {
       const scrollPosition = window.scrollY;
       const parallaxFactor = 0.3;
-      parallaxElement.style.transform = `translate3d(0, ${scrollPosition * parallaxFactor}px, 0)`;
+      pEl.style.transform = `translate3d(0, ${scrollPosition * parallaxFactor}px, 0)`;
     }
 
     return () => {

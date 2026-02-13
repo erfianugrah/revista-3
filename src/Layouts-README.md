@@ -1,11 +1,12 @@
 # Astro Layouts
 
 ### Refer to [Astro docs on Layouts](https://docs.astro.build/en/basics/layouts/)
+
 ---
 
 ## Overview
 
-This project uses Astro v5.16.4's enhanced layout capabilities with Tailwind CSS v4.1.17 for styling. Layouts provide reusable UI structures that define the visual framework for different page types throughout the site.
+This project uses Astro v5.17.2's enhanced layout capabilities with Tailwind CSS v4.1.17 for styling. Layouts provide reusable UI structures that define the visual framework for different page types throughout the site.
 
 ## Layout Architecture
 
@@ -25,8 +26,8 @@ You'll see `<slot />` elements frequently throughout these layout files. This is
 ```astro
 ---
 // Example layout frontmatter
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 ---
 
 <html>

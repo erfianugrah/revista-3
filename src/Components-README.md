@@ -1,11 +1,12 @@
 # Astro Components
 
 ### Refer to [Astro docs on Components](https://docs.astro.build/en/basics/astro-components/)
+
 ---
 
 ## Overview
 
-This project uses Astro v5.16.4 with enhanced component features and Tailwind CSS v4.1.17 for styling. Components leverage the latest Astro features for improved performance and type safety.
+This project uses Astro v5.17.2 with enhanced component features and Tailwind CSS v4.1.17 for styling. Components leverage the latest Astro features for improved performance and type safety.
 
 ## Key Components
 
@@ -13,12 +14,12 @@ This project uses Astro v5.16.4 with enhanced component features and Tailwind CS
 
 - **[BlogPost.astro](components/BlogPost.astro)**: Core layout component for all content pages including [short form](https://www.erfianugrah.com/short_form/), [long form](https://www.erfianugrah.com/long_form/), and [tag pages](https://www.erfianugrah.com/long_form/tags/gleichgesinnte/).
 
-- **[Homepage.astro](components/Homepage.astro)**: Used in [index.astro](pages/index.astro) to create the landing page. References [homepage.js](scripts/homePage.js) for randomizing featured images.
+- **[Homepage.astro](components/Homepage.astro)**: Used in [index.astro](pages/index.astro) to create the landing page. References [homePage.ts](scripts/homePage.ts) for randomizing featured images.
 
 ### Header Components
 
 - **[Header.astro](components/Header.astro)**: Main header component that incorporates:
-  - **[Hamburger.astro](components/Hamburger.astro)**: Mobile menu toggle
+  - **[Hamburger.tsx](components/Hamburger.tsx)**: Mobile menu toggle
   - **[ThemeToggle.astro](components/ThemeToggle.astro)**: Light/dark mode switcher that wraps the React-based ThemeToggle component
   - **[Navigation.astro](components/Navigation.astro)**: Site navigation menu
   - **[Pagefind.astro](components/Pagefind.astro)**: Search functionality using [Pagefind](https://pagefind.app/) integration
@@ -27,7 +28,7 @@ This project uses Astro v5.16.4 with enhanced component features and Tailwind CS
 
 ### Content Presentation Components
 
-- **[Masonry.astro](components/Masonry.astro)**: Photo gallery layout used in [MarkdownPostLayout.astro](layouts/MarkdownPostLayout.astro) to display images from [Content Collections](content/). Uses [masonry.css](styles/MasonryLayout.css) and [glightbox.js](scripts/lightbox.js) for the gallery lightbox functionality.
+- **[Masonry.astro](components/Masonry.astro)**: Photo gallery layout used in [MarkdownPostLayout.astro](layouts/MarkdownPostLayout.astro) to display images from [Content Collections](content/). Uses [masonry.css](styles/MasonryLayout.css) and [lightbox.ts](scripts/lightbox.ts) for the gallery lightbox functionality.
 
 - **[getRandomImage.astro](components/getRandomImage.astro)**: Used in [TagLayout.astro](layouts/TagLayout.astro) to randomize featured images from content collections.
 
@@ -39,7 +40,7 @@ This project uses Astro v5.16.4 with enhanced component features and Tailwind CS
 
 ### Utility Components
 
-- **[sortbydate.jsx](components/sortbydate.jsx)**: Used in [Pages](pages/) to chronologically order posts rendered by [BlogPost.astro](layouts/BlogPost.astro).
+- **[sortbydate.tsx](components/sortbydate.tsx)**: Used in [Pages](pages/) to chronologically order posts rendered by [BlogPost.astro](layouts/BlogPost.astro).
 
 ## Component Relationships
 

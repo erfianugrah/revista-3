@@ -1,6 +1,7 @@
 # Docker Implementation
 
 ### Detailed Docker configuration for the Revista project
+
 ---
 
 ## Overview
@@ -58,7 +59,7 @@ WORKDIR /app
 RUN npm install -g bun
 
 # Copy package files and install dependencies
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
 # Copy source files and build
@@ -84,6 +85,7 @@ CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile
 ```
 
 This improved approach would:
+
 1. Build the site inside the container
 2. Ensure build environment consistency
 3. Reduce the final image size by excluding build tools
@@ -101,6 +103,7 @@ docker buildx build \
 ```
 
 This enables deployment on:
+
 - Standard x86_64 servers (linux/amd64)
 - ARM-based servers (linux/arm64)
 - Raspberry Pi and similar devices (linux/arm/v6, linux/arm/v7)
@@ -147,7 +150,7 @@ This configuration provides:
 The project includes a `compose.yaml` file for easy deployment:
 
 ```yaml
-version: '3'
+version: "3"
 services:
   revista:
     build: .
@@ -187,6 +190,7 @@ The final image size is optimized at approximately 40MB by:
 3. Not installing additional packages
 
 This small footprint provides:
+
 - Faster container startup
 - Reduced storage requirements
 - Smaller attack surface

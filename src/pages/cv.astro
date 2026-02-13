@@ -2,7 +2,6 @@
 import ProseCv from "../components/Prose_cv.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Icon } from "astro-icon/components";
-import { Contact } from "../components/cv";
 import ThemeToggle from "../components/ThemeToggle";
 import "../styles/cv-print.css";
 
@@ -162,7 +161,7 @@ const getShortLabel = (contact) => {
 
   initTheme();
 
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("astro:page-load", () => {
     const navToggle = document.getElementById("mobile-nav-toggle");
     const navLinks = document.getElementById("section-links");
     const navIcon = document.getElementById("nav-toggle-icon");

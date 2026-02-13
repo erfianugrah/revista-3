@@ -26,8 +26,10 @@ interface CollectionPost {
 
 /**
  * Build static paths for a collection's [...id] detail pages.
+ * Generic so the original Astro collection entry type is preserved
+ * (required by `render()`).
  */
-export function buildDetailPaths(entries: CollectionPost[]) {
+export function buildDetailPaths<T extends CollectionPost>(entries: T[]) {
   return entries.map((entry) => ({
     params: { id: entry.id },
     props: { entry },
@@ -37,8 +39,8 @@ export function buildDetailPaths(entries: CollectionPost[]) {
 /**
  * Build static paths for a collection's tags/[tag] pages.
  */
-export function buildTagPaths(
-  entries: CollectionPost[],
+export function buildTagPaths<T extends CollectionPost>(
+  entries: T[],
   collectionSlug: string,
 ) {
   const uniqueTags = [...new Set(entries.map((post) => post.data.tags).flat())];

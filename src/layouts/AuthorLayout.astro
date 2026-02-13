@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import "../styles/glightbox.css";
+import "../styles/lightbox.css";
 import Prose from "../components/Prose.astro";
 import { getImage, Image } from "astro:assets";
 import { formatDate } from "../scripts/utils.ts";
@@ -15,6 +15,8 @@ export interface Props {
     pubDate: Date;
     updatedDate?: Date;
   };
+  currentId?: string;
+  collection?: string;
 }
 
 const { frontmatter } = Astro.props;
@@ -59,7 +61,7 @@ const metaImage = image
           <div class="md:h-[480px] h-[360px]">
             <Image
               src={image}
-              alt={alt}
+              alt={alt ?? ""}
               inferSize={true}
               decoding="async"
               format="avif"

@@ -1,6 +1,7 @@
 # Astro Pages
 
 ### Refer to [Astro docs on Pages](https://docs.astro.build/en/basics/astro-pages/)
+
 ---
 
 ## Overview
@@ -14,7 +15,7 @@ This project contains several types of pages:
 ### Static Pages
 
 - **[index.astro](pages/index.astro)**: The homepage that uses [Homepage.astro](components/Homepage.astro) for layout and featured content
-- **[404.astro](pages/404.astro)**: Custom error page featuring random quotes from [burgundy.js](scripts/burgundy.js)
+- **[404.astro](pages/404.astro)**: Custom error page featuring random quotes from [burgundy.ts](scripts/burgundy.ts)
 - **[cv.astro](pages/cv.astro)**: Resume page using specialized CV components and layouts
 
 ### Collection Index Pages
@@ -38,13 +39,13 @@ Dynamic page routes (such as individual blog posts) are generated from content c
 ```astro
 ---
 // Example from a dynamic route page
-import { getCollection } from 'astro:content';
+import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-  const posts = await getCollection('short_form');
-  return posts.map(post => ({
+  const posts = await getCollection("short_form");
+  return posts.map((post) => ({
     params: { id: post.slug },
-    props: { post }
+    props: { post },
   }));
 }
 
@@ -74,4 +75,4 @@ Special pages in each collection directory generate RSS feeds, making content av
 
 ## Type Safety
 
-All pages benefit from full TypeScript support with Astro v5.16.4's enhanced type system and the performance optimizations in Astro's latest version. The content collections use a consistent schema that enables type-safe access to content throughout the pages.
+All pages benefit from full TypeScript support with Astro v5.17.2's enhanced type system and the performance optimizations in Astro's latest version. The content collections use a consistent schema that enables type-safe access to content throughout the pages.

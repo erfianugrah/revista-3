@@ -52,9 +52,15 @@ function setAndFitQuote(): void {
 }
 
 function initializeQuote(): void {
-  setAndFitQuote();
   const quoteBtn = document.getElementById("getQuoteBtn");
-  quoteBtn?.addEventListener("click", setAndFitQuote);
+  if (!quoteBtn) return;
+
+  setAndFitQuote();
+
+  // Clone+replace to remove any stale listeners from previous navigation
+  const freshBtn = quoteBtn.cloneNode(true) as HTMLElement;
+  quoteBtn.replaceWith(freshBtn);
+  freshBtn.addEventListener("click", setAndFitQuote);
 }
 
 document.addEventListener("astro:page-load", initializeQuote);

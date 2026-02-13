@@ -1,6 +1,7 @@
 # Performance Optimization
 
 ### Performance strategy for the Revista project
+
 ---
 
 ## Overview
@@ -19,16 +20,16 @@ The performance strategy for this site addresses multiple aspects of web perform
 The project leverages Astro's islands architecture to minimize JavaScript:
 
 - Static HTML rendering for most content
-- Selective hydration only where needed (with `client:load`, `client:visible` directives)
+- Selective hydration only where needed (with `client:idle`, `client:visible` directives)
 - Example: The ThemeToggle component only hydrates itself, not the entire page
 
 ```astro
-<!-- Only this component gets JavaScript -->  
-<ThemeToggle client:load />  
-  
-<!-- These remain static HTML -->  
-<Navigation />  
-<SiteTitle />  
+<!-- Only this component gets JavaScript -->
+<ThemeToggle client:idle />
+
+<!-- These remain static HTML -->
+<Navigation />
+<SiteTitle />
 ```
 
 ### Image Optimization
@@ -44,7 +45,7 @@ const imageAssets = await Promise.all(
     if (image) {
       return await getImage({
         src: image.src,
-        width: 3840,  // Maximum quality size
+        width: 3840, // Maximum quality size
         height: 2160, // Maintains aspect ratio
         format: "avif", // Optimal compression format
         loading: "lazy", // Defer loading of off-screen images
@@ -57,6 +58,7 @@ const imageAssets = await Promise.all(
 ```
 
 Benefits:
+
 - AVIF format reduces file size by ~50% compared to JPEG
 - Proper width/height attributes prevent Cumulative Layout Shift (CLS)
 - Lazy loading defers off-screen image loading
@@ -65,15 +67,7 @@ Benefits:
 
 #### Bundle Size Reduction
 
-Tailwind's JIT compiler generates only the CSS actually used on the page:
-
-```javascript
-// tailwind.config.mjs
-export default {
-  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
-  // Configuration ensures only used styles are included
-}
-```
+Tailwind CSS v4 automatically detects content sources, generating only the CSS actually used on the page. No explicit `content` configuration is needed — the framework scans `src/` automatically.
 
 #### Resource Hints
 
@@ -88,6 +82,7 @@ prefetch: {
 ```
 
 This configuration:
+
 - Prefetches pages when links enter the viewport
 - Speeds up perceived navigation time
 - Prioritizes likely navigation targets
@@ -117,6 +112,7 @@ Custom headers are defined in the Caddyfile:
 ```
 
 Benefits:
+
 - Different cache policies for different asset types
 - Longer cache for images (30 days)
 - Shorter cache for HTML/CSS/JS (1 week)
@@ -157,6 +153,7 @@ The Masonry layout adapts for mobile with optimized configurations:
 ```
 
 This creates:
+
 - Smaller grid cells on mobile to fit more content
 - Simplified layout patterns to avoid complex reflows
 - Better touch-friendly spacing
@@ -188,6 +185,7 @@ build: {
 ```
 
 These settings provide:
+
 - Parallelized build processes
 - Performance metrics for build optimization
 - Efficient asset processing
@@ -201,6 +199,7 @@ The project is regularly tested for performance using:
 - Network waterfall analysis
 
 Key metrics targeted:
+
 - **LCP (Largest Contentful Paint)**: Under 2.5s
 - **FID (First Input Delay)**: Under 100ms
 - **CLS (Cumulative Layout Shift)**: Under 0.1

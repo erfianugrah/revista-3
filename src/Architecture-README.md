@@ -1,26 +1,27 @@
 # Architecture Documentation
 
 ### Technical architecture of the Revista project
+
 ---
 
 ## Component Architecture
 
 ### React + Astro Integration
 
-This project uses a combination of Astro components (`.astro` files) and React components (`.tsx/.jsx` files) to create a performant, interactive website. Here's how they work together:
+This project uses a combination of Astro components (`.astro` files) and React components (`.tsx` files) to create a performant, interactive website. Here's how they work together:
 
 ```mermaid
 graph TD
     classDef astroFile fill:#f5d6c3,stroke:#333,stroke-width:1px
     classDef reactFile fill:#c3e8f5,stroke:#333,stroke-width:1px
     classDef scriptFile fill:#d6f5c3,stroke:#333,stroke-width:1px
-    
+
     A["BaseLayout.astro"] --> B["Header.astro"]
     B --> C["ThemeToggle.astro"]
-    C -->|"client:load"| D["ThemeToggle.tsx"]
+    C -->|"client:idle"| D["ThemeToggle.tsx"]
     B --> E["Navigation.astro"]
     B --> F["Hamburger.tsx"]
-    
+
     class A,B,C,E astroFile
     class D,F reactFile
 ```
@@ -30,45 +31,45 @@ graph TD
 1. **ThemeToggle Component**:
    - **ThemeToggle.astro**: A lightweight wrapper that imports and renders the React component
    - **ThemeToggle.tsx**: A React component that uses `framer-motion` for animations and manages theme state
-   - **Connection**: The `.astro` file uses the `client:load` directive to hydrate the component on page load
+   - **Connection**: The `.astro` file uses the `client:idle` directive to hydrate the component when the browser is idle
 
 ```astro
-<!-- ThemeToggle.astro -->
 ---
 import ThemeToggle from "./ThemeToggle";
 ---
 
-<ThemeToggle client:load />
+<!-- ThemeToggle.astro -->
+<ThemeToggle client:idle />
 ```
 
 ```tsx
 // ThemeToggle.tsx (simplified)
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false)
-  
+  const [isDark, setIsDark] = useState(false);
+
   // Load theme from localStorage
   useEffect(() => {
-    const theme = localStorage.getItem('theme') || 'light'
-    setIsDark(theme === 'dark')
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-  }, [])
-  
+    const theme = localStorage.getItem("theme") || "light";
+    setIsDark(theme === "dark");
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, []);
+
   // Toggle theme handler
   const toggleTheme = () => {
-    const newTheme = isDark ? 'light' : 'dark'
-    setIsDark(!isDark)
-    document.documentElement.classList.toggle('dark', !isDark)
-    localStorage.setItem('theme', newTheme)
-  }
-  
+    const newTheme = isDark ? "light" : "dark";
+    setIsDark(!isDark);
+    document.documentElement.classList.toggle("dark", !isDark);
+    localStorage.setItem("theme", newTheme);
+  };
+
   return (
     <button onClick={toggleTheme} aria-label="Toggle theme">
       {/* SVG with motion animations */}
     </button>
-  )
+  );
 }
 ```
 
@@ -86,15 +87,15 @@ The Masonry layout is a key visual feature of the site, implemented with CSS Gri
 ```mermaid
 graph TD
     A["Masonry.astro"] --> B["MasonryLayout.css"]
-    A --> C["lightbox.js"]
+    A --> C["lightbox.ts"]
     A --> D["astro:assets"]
     D --> E["getImage optimization"]
-    
+
     classDef component fill:#f5d6c3,stroke:#333,stroke-width:1px
     classDef style fill:#c3e8f5,stroke:#333,stroke-width:1px
     classDef script fill:#d6f5c3,stroke:#333,stroke-width:1px
     classDef module fill:#f5c3e8,stroke:#333,stroke-width:1px
-    
+
     class A component
     class B style
     class C script
@@ -126,7 +127,7 @@ graph TD
   .masonry {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
-  
+
   /* Reset spanning on smaller screens */
   .image-container:nth-child(3n),
   .image-container:nth-child(4n) {
@@ -144,7 +145,7 @@ graph TD
    - Sets loading="lazy" for performance
    - Handles proper width/height attributes for CLS prevention
 3. **Rendering**: Images are placed in the grid with CSS handling the layout
-4. **Lightbox Integration**: GLightbox is attached for fullscreen viewing
+4. **Lightbox Integration**: A custom lightbox is attached for fullscreen viewing
 
 ## Custom Tailwind Configuration
 
@@ -163,6 +164,7 @@ screens: {
 ```
 
 These breakpoints were specifically chosen based on:
+
 1. Common display sizes for photography viewing
 2. Optimal image grid layouts at different widths
 3. Text readability considerations
@@ -200,14 +202,16 @@ const muses = defineCollection({
     author: z.string(),
     description: z.string(),
     pubDate: z.coerce.date(),
-    
+
     // Optional fields with complex validation
-    image: z.object({
-      src: z.string(),
-      alt: z.string(),
-      positionx: z.string().optional(),
-      positiony: z.string().optional(),
-    }).optional(),
+    image: z
+      .object({
+        src: z.string(),
+        alt: z.string(),
+        positionx: z.string().optional(),
+        positiony: z.string().optional(),
+      })
+      .optional(),
     updatedDate: z.coerce.date().optional(),
   }),
 });
@@ -223,6 +227,7 @@ The `loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/muses" })` co
 4. `base: "./src/content/muses"` - Sets the root directory for the collection
 
 This provides a way to:
+
 - Organize content in subdirectories (e.g., by year, category)
 - Keep draft content in the same directory but excluded from builds
 - Apply consistent schemas to all content in a collection
@@ -237,6 +242,7 @@ The project uses a multi-layered approach to image optimization:
    - Proper metadata
 
 2. **CDN integration** for external assets:
+
    ```javascript
    // astro.config.mjs
    image: {
@@ -260,6 +266,7 @@ The project uses a multi-layered approach to image optimization:
 The site uses Pagefind for search functionality, integrated as follows:
 
 1. **Build-time indexing**: Pagefind runs as a post-build step to generate search indices
+
    ```json
    "scripts": {
      "postbuild": "pagefind --site dist"
@@ -275,13 +282,13 @@ The site uses Pagefind for search functionality, integrated as follows:
 ```mermaid
 graph TD
     A["MDX Content"] -->|"frontmatter.tags"| B["Tag Collection"]
-    B --> C["Tag Pages"] 
+    B --> C["Tag Pages"]
     B --> D["Tag Index Pages"]
-    
+
     classDef content fill:#f5d6c3,stroke:#333,stroke-width:1px
     classDef data fill:#c3e8f5,stroke:#333,stroke-width:1px
     classDef page fill:#d6f5c3,stroke:#333,stroke-width:1px
-    
+
     class A content
     class B data
     class C,D page
@@ -290,6 +297,7 @@ graph TD
 The tag system works as follows:
 
 1. **Tag Definition**: Each content piece includes tags in its frontmatter
+
    ```yaml
    ---
    title: "Example Post"
@@ -298,17 +306,18 @@ The tag system works as follows:
    ```
 
 2. **Tag Extraction**: During build, Astro extracts all unique tags
+
    ```javascript
    export async function getStaticPaths() {
-     const posts = await getCollection('muses');
-     const tags = [...new Set(posts.flatMap(post => post.data.tags))].sort();
-     
-     return tags.map(tag => ({
+     const posts = await getCollection("muses");
+     const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
+
+     return tags.map((tag) => ({
        params: { tag },
-       props: { 
-         posts: posts.filter(post => post.data.tags.includes(tag)),
-         tag 
-       }
+       props: {
+         posts: posts.filter((post) => post.data.tags.includes(tag)),
+         tag,
+       },
      }));
    }
    ```
@@ -320,6 +329,7 @@ The tag system works as follows:
 4. **Content Association**: Each tag page displays all content with that tag
 
 This architecture allows for:
+
 - Cross-collection tagging
 - Automatic tag page generation
 - Consistent tag URLs across the site

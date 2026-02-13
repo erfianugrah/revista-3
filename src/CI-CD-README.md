@@ -1,6 +1,7 @@
 # CI/CD Implementation
 
 ### Continuous Integration/Deployment for the Revista project
+
 ---
 
 ## Overview
@@ -64,9 +65,9 @@ jobs:
             node_modules
             .astro
             dist
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb', '**/package.json', 'astro.config.mjs', 'tailwind.config.mjs') }}
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json', 'astro.config.mjs', 'tailwind.config.mjs') }}
           restore-keys: |
-            ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb', '**/package.json') }}-
+            ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json') }}-
             ${{ runner.os }}-bun-
 
       - name: Install dependencies
@@ -92,6 +93,7 @@ GITHUB_PAGES=true astro build && pagefind --site dist
 ```
 
 This approach ensures:
+
 - **Standard deployments** use `site: "https://www.erfianugrah.com"` with no base path
 - **GitHub Pages** uses `site: "https://erfianugrah.github.io"` with `base: "/revista-3"`
 - **Complete isolation** between deployment configurations
@@ -132,6 +134,7 @@ deploy-to-cloudflare-workers:
 ```
 
 Key points:
+
 1. Uses Cloudflare Workers with Static Assets (not Pages)
 2. Configured via `wrangler.jsonc` in repository root
 3. Supports future hybrid SSR + static capabilities
@@ -150,7 +153,7 @@ deploy-deno:
       with:
         name: build-output
         path: dist
-    
+
     - name: Deploy to Deno Deploy
       uses: denoland/deployctl@v1
       with:
@@ -190,9 +193,9 @@ deploy-to-github-pages:
         path: |
           ~/.bun/install/cache
           node_modules
-        key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-${{ hashFiles('**/package.json') }}
+        key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}-${{ hashFiles('**/package.json') }}
         restore-keys: |
-          ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-
+          ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}-
           ${{ runner.os }}-bun-
 
     - name: Install project dependencies
@@ -215,6 +218,7 @@ deploy-to-github-pages:
 ```
 
 Key features:
+
 1. **Independent Build Process**: Unlike other deployments, GitHub Pages builds from source with its own environment
 2. **Environment-Specific Configuration**: Uses `GITHUB_PAGES=true` environment variable to set correct `site` and `base` paths
 3. **Dedicated Build Command**: Uses `build:github-pages` npm script for proper base path configuration
@@ -275,6 +279,7 @@ build-and-push-docker:
 ```
 
 Key aspects:
+
 1. **Modern Semantic Versioning**: Uses `docker/metadata-action` for automatic tag generation from GitHub releases
 2. **Multi-Architecture Builds**: Supports AMD64, ARM64, ARMv6, and ARMv7 platforms
 3. **Sparse Checkout**: Only checks out required files (Dockerfile, Caddyfile) for faster builds
@@ -285,6 +290,7 @@ Key aspects:
 #### Docker Versioning
 
 When you create a GitHub release with tag `v1.2.3`, the workflow automatically creates:
+
 - `erfianugrah/revista-4:1.2.3` (full version)
 - `erfianugrah/revista-4:1.2` (major.minor)
 - `erfianugrah/revista-4:1` (major)
@@ -307,6 +313,7 @@ The workflow uses GitHub Secrets for sensitive information:
 - `DOCKER_REGISTRY_TOKEN` - Authentication token for Docker Hub
 
 **GitHub Pages Specific:**
+
 - No additional secrets required (uses built-in OIDC with `id-token: write`)
 - Environment variable `GITHUB_PAGES=true` automatically set during GitHub Pages build
 
@@ -327,6 +334,7 @@ on:
 ```
 
 This ensures:
+
 1. **Push to main**: Automatic deployment of latest changes to all targets
 2. **Pull Requests**: Build verification for PRs (no deployment)
 3. **GitHub Releases**: Triggers semantic versioning for Docker images (e.g., `v1.2.3` → multiple tags)
@@ -368,6 +376,7 @@ The CI/CD pipeline is optimized for speed through multiple strategies:
 ### Pipeline Timing
 
 **Critical Path (Web Deployments):**
+
 ```
 build-revista:              ~2 min (optimized caching)
   ├─ deploy-to-workers:     ~1 min
@@ -379,6 +388,7 @@ Total critical path:        ~5 min ⚡
 ```
 
 **Docker Pipeline (Parallel, Non-Blocking):**
+
 ```
 build-revista:              ~2 min
   └─ build-and-push-docker: ~8-10 min (4 platforms)
@@ -389,6 +399,7 @@ Total Docker path:          ~12 min (parallel)
 ```
 
 **Key Performance Improvements:**
+
 - **Users see updates:** ~5 minutes after push (previously ~12-15 min)
 - **Cache purges:** Immediately after web deployments (doesn't wait for Docker)
 - **Docker images:** Build in background without blocking users

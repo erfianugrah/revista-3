@@ -28,9 +28,16 @@ export function toggleTheme(): void {
  * Initialize theme handling: apply stored preference, listen for
  * toggle events from the React ThemeToggle component, and re-apply
  * on Astro client-side navigations.
+ *
+ * Safe to call multiple times — listeners are registered only once.
  */
+let initialized = false;
+
 export function initTheme(): void {
   applyTheme(getThemePreference());
+
+  if (initialized) return;
+  initialized = true;
 
   window.addEventListener("theme-toggle", toggleTheme);
 
