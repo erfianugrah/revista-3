@@ -25,7 +25,9 @@
   background: rgba(0, 0, 0, 0.94);
 }
 
-/* Image – scale up on open, crossfade on navigate */
+/* Image – scale up on open, crossfade on navigate.
+   IMPORTANT: no transition on transform here — it would make drag/pan laggy.
+   The open/close animation uses a one-shot class instead. */
 .lightbox-img {
   max-width: 92vw;
   max-height: 92vh;
@@ -37,14 +39,17 @@
   transform-origin: center center;
   opacity: 0;
   cursor: zoom-in;
-  transition:
-    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .lightbox-visible .lightbox-img {
   transform: scale(1);
   opacity: 1;
+  /* Animate scale only on open — removed after open completes via JS */
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Crossfade states for prev/next navigation */

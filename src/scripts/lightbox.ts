@@ -4,7 +4,7 @@
  * Features: smooth open/close with scale + fade, image crossfade on
  * prev/next, keyboard nav (arrows + Escape), touch swipe, loop,
  * adjacent preload, body scroll lock, proper View Transitions cleanup,
- * zoom (double-click, scroll wheel, pinch, button), drag/pan when zoomed.
+ * zoom (single-click, scroll wheel, pinch, button), drag/pan when zoomed.
  */
 
 interface LightboxImage {
@@ -25,6 +25,10 @@ let translateY = 0;
 const MIN_SCALE = 1;
 const MAX_SCALE = 4;
 
+// Cached base dimensions of the image at scale=1 (avoids getBoundingClientRect in hot path)
+let imgBaseW = 0;
+let imgBaseH = 0;
+
 // Drag state (mouse + touch-single-finger pan)
 let isDragging = false;
 let dragStartX = 0;
@@ -40,9 +44,6 @@ let touchDeltaX = 0;
 // Pinch state
 let lastPinchDist = 0;
 
-// Double-click detection
-let lastTapTime = 0;
-
 // Track listeners for proper cleanup
 let keydownHandler: ((e: KeyboardEvent) => void) | null = null;
 let wheelHandler: ((e: WheelEvent) => void) | null = null;
@@ -56,36 +57,37 @@ function isZoomed(): boolean {
 function applyTransform(): void {
   if (!imgEl) return;
   imgEl.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-  updateCursor();
 }
 
-function updateCursor(): void {
-  if (!imgEl) return;
-  if (isDragging) {
-    imgEl.style.cursor = "grabbing";
-  } else if (isZoomed()) {
-    imgEl.style.cursor = "grab";
-  } else {
-    imgEl.style.cursor = "zoom-in";
+function setCursor(cursor: string): void {
+  if (imgEl && imgEl.style.cursor !== cursor) {
+    imgEl.style.cursor = cursor;
   }
 }
 
-/** Clamp translate so the image doesn't drift into empty space. */
+/** Cache the image's rendered size at scale=1. Call after image loads or on open. */
+function cacheBaseDimensions(): void {
+  if (!imgEl) return;
+  // naturalWidth/Height + max-width/max-height CSS constraints
+  const vw = window.innerWidth * 0.92;
+  const vh = window.innerHeight * 0.92;
+  const nw = imgEl.naturalWidth || 1;
+  const nh = imgEl.naturalHeight || 1;
+  const ratio = Math.min(vw / nw, vh / nh, 1);
+  imgBaseW = nw * ratio;
+  imgBaseH = nh * ratio;
+}
+
+/** Clamp translate so the image doesn't drift into empty space. Pure math, no DOM reads. */
 function clampTranslate(): void {
-  if (!imgEl || scale <= 1) {
+  if (scale <= 1) {
     translateX = 0;
     translateY = 0;
     return;
   }
 
-  const rect = imgEl.getBoundingClientRect();
-  // The displayed size at scale=1
-  const baseW = rect.width / scale;
-  const baseH = rect.height / scale;
-
-  // How much the scaled image overflows the viewport on each side
-  const overflowX = Math.max(0, (baseW * scale - window.innerWidth) / 2);
-  const overflowY = Math.max(0, (baseH * scale - window.innerHeight) / 2);
+  const overflowX = Math.max(0, (imgBaseW * scale - window.innerWidth) / 2);
+  const overflowY = Math.max(0, (imgBaseH * scale - window.innerHeight) / 2);
 
   translateX = Math.max(-overflowX, Math.min(overflowX, translateX));
   translateY = Math.max(-overflowY, Math.min(overflowY, translateY));
@@ -99,44 +101,70 @@ function resetZoom(): void {
     imgEl.style.transition =
       "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
     applyTransform();
-    // Remove inline transition after it completes so drag is snappy
     setTimeout(() => {
       if (imgEl) imgEl.style.transition = "";
     }, 300);
   }
+  setCursor("zoom-in");
   toggleNavVisibility(true);
 }
 
 /**
- * Zoom toward a specific viewport point (e.g. cursor or pinch center).
+ * Zoom toward a specific viewport point, with an animated transition.
  */
-function zoomAt(clientX: number, clientY: number, newScale: number): void {
+function zoomTo(clientX: number, clientY: number, newScale: number): void {
   if (!imgEl) return;
 
   const prevScale = scale;
   newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, newScale));
   if (newScale === prevScale) return;
 
-  // Keep the point under the cursor fixed during zoom.
-  // The image center in viewport coords:
-  const rect = imgEl.getBoundingClientRect();
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height / 2;
+  // Keep the point under the cursor/finger fixed.
+  // Image center is always at viewport center (since it's in a flex-center overlay).
+  const cx = window.innerWidth / 2 + translateX;
+  const cy = window.innerHeight / 2 + translateY;
 
   const factor = 1 - newScale / prevScale;
-  translateX = translateX + (clientX - cx - translateX) * factor;
-  translateY = translateY + (clientY - cy - translateY) * factor;
+  translateX = translateX + (clientX - cx) * factor;
+  translateY = translateY + (clientY - cy) * factor;
 
   scale = newScale;
   clampTranslate();
 
-  // Smooth for button/dblclick, instant for wheel/pinch
   imgEl.style.transition = "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)";
   applyTransform();
   setTimeout(() => {
     if (imgEl) imgEl.style.transition = "";
   }, 250);
 
+  setCursor(isZoomed() ? "grab" : "zoom-in");
+  toggleNavVisibility(!isZoomed());
+}
+
+/**
+ * Zoom instantly (no transition) — for scroll wheel and pinch.
+ */
+function zoomInstant(clientX: number, clientY: number, newScale: number): void {
+  if (!imgEl) return;
+
+  const prevScale = scale;
+  newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, newScale));
+  if (newScale === prevScale) return;
+
+  const cx = window.innerWidth / 2 + translateX;
+  const cy = window.innerHeight / 2 + translateY;
+
+  const factor = 1 - newScale / prevScale;
+  translateX = translateX + (clientX - cx) * factor;
+  translateY = translateY + (clientY - cy) * factor;
+
+  scale = newScale;
+  clampTranslate();
+
+  imgEl.style.transition = "";
+  applyTransform();
+
+  setCursor(isZoomed() ? "grab" : "zoom-in");
   toggleNavVisibility(!isZoomed());
 }
 
@@ -150,7 +178,6 @@ function toggleNavVisibility(visible: boolean): void {
     el.style.opacity = visible ? "" : "0";
     el.style.pointerEvents = visible ? "" : "none";
   });
-  // Update zoom button icon
   const zoomBtn = overlay.querySelector<HTMLElement>(".lightbox-zoom");
   if (zoomBtn) {
     zoomBtn.innerHTML = isZoomed()
@@ -197,13 +224,14 @@ function showImage(index: number, animate = true): void {
   translateX = 0;
   translateY = 0;
   imgEl.style.transition = "";
+  imgEl.style.transform = "";
+  setCursor("zoom-in");
   toggleNavVisibility(true);
 
   currentIndex = ((index % images.length) + images.length) % images.length;
   const img = images[currentIndex];
 
   if (animate && imgEl.src) {
-    // Crossfade: fade out current, swap src, fade in new
     isAnimating = true;
     const el = imgEl;
     el.classList.add("lightbox-img-exit");
@@ -220,13 +248,13 @@ function showImage(index: number, animate = true): void {
         el.removeEventListener("load", onReady);
         el.classList.remove("lightbox-img-enter");
         isAnimating = false;
-        updateCursor();
+        cacheBaseDimensions();
       };
       el.addEventListener("load", onReady);
       setTimeout(() => {
         el.classList.remove("lightbox-img-enter");
         isAnimating = false;
-        updateCursor();
+        cacheBaseDimensions();
       }, 300);
     };
     el.addEventListener("transitionend", onFaded);
@@ -235,7 +263,17 @@ function showImage(index: number, animate = true): void {
     imgEl.src = img.src;
     imgEl.alt = img.alt;
     imgEl.style.transform = "";
-    updateCursor();
+    // Cache dimensions once loaded
+    const el = imgEl;
+    const onLoad = () => {
+      el.removeEventListener("load", onLoad);
+      cacheBaseDimensions();
+    };
+    if (el.complete && el.naturalWidth) {
+      cacheBaseDimensions();
+    } else {
+      el.addEventListener("load", onLoad);
+    }
   }
 
   const counter = overlay.querySelector<HTMLDivElement>(".lightbox-counter");
@@ -265,11 +303,17 @@ function open(index: number): void {
   void overlay.offsetHeight;
   overlay.classList.add("lightbox-visible");
   document.body.style.overflow = "hidden";
+
+  // After the open animation completes, remove the CSS transition on
+  // transform so drag/pan is instant (no easing on every mousemove).
+  setTimeout(() => {
+    if (imgEl)
+      imgEl.style.transition = "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+  }, 400);
 }
 
 function close(): void {
   if (!overlay) return;
-  // Reset zoom state
   scale = 1;
   translateX = 0;
   translateY = 0;
@@ -298,7 +342,7 @@ function bindOverlayEvents(el: HTMLDivElement): void {
     if (isZoomed()) {
       resetZoom();
     } else {
-      zoomAt(window.innerWidth / 2, window.innerHeight / 2, 2);
+      zoomTo(window.innerWidth / 2, window.innerHeight / 2, 2);
     }
   });
 
@@ -307,20 +351,21 @@ function bindOverlayEvents(el: HTMLDivElement): void {
     if (e.target === el && !hasDragged) close();
   });
 
-  // ── Double-click to toggle zoom ──
-  img.addEventListener("dblclick", (e) => {
-    e.preventDefault();
+  // ── Single click on image: toggle zoom ──
+  img.addEventListener("click", (e) => {
+    // Ignore if we just finished dragging
+    if (hasDragged) return;
     e.stopPropagation();
     if (isZoomed()) {
       resetZoom();
     } else {
-      zoomAt(e.clientX, e.clientY, 2);
+      zoomTo(e.clientX, e.clientY, 2);
     }
   });
 
   // ── Mouse drag for pan ──
   img.addEventListener("mousedown", (e) => {
-    if (e.button !== 0) return; // left click only
+    if (e.button !== 0) return;
     if (!isZoomed()) return;
     e.preventDefault();
     isDragging = true;
@@ -329,7 +374,9 @@ function bindOverlayEvents(el: HTMLDivElement): void {
     dragStartY = e.clientY;
     dragStartTranslateX = translateX;
     dragStartTranslateY = translateY;
-    updateCursor();
+    // Kill any transition so drag is instant
+    img.style.transition = "none";
+    setCursor("grabbing");
   });
 
   window.addEventListener("mousemove", (e) => {
@@ -346,37 +393,23 @@ function bindOverlayEvents(el: HTMLDivElement): void {
   window.addEventListener("mouseup", () => {
     if (isDragging) {
       isDragging = false;
-      updateCursor();
-      // Clear hasDragged after a tick so the click event on overlay doesn't close
+      setCursor("grab");
+      // Clear hasDragged after a tick so the click handler sees it but next click doesn't
       setTimeout(() => {
         hasDragged = false;
-      }, 0);
+      }, 10);
     }
   });
 
-  // ── Touch: swipe (1x) / pan (zoomed) / pinch ──
+  // ── Touch: swipe (1x) / tap-to-zoom / pan (zoomed) / pinch ──
   el.addEventListener(
     "touchstart",
     (e) => {
       if (e.touches.length === 2) {
-        // Pinch start
         e.preventDefault();
         lastPinchDist = getPinchDist(e);
       } else if (e.touches.length === 1) {
-        const now = Date.now();
         const touch = e.touches[0];
-        // Double-tap detection
-        if (now - lastTapTime < 300) {
-          e.preventDefault();
-          if (isZoomed()) {
-            resetZoom();
-          } else {
-            zoomAt(touch.clientX, touch.clientY, 2);
-          }
-          lastTapTime = 0;
-          return;
-        }
-        lastTapTime = now;
 
         if (isZoomed()) {
           // Start pan
@@ -386,6 +419,8 @@ function bindOverlayEvents(el: HTMLDivElement): void {
           dragStartY = touch.clientY;
           dragStartTranslateX = translateX;
           dragStartTranslateY = translateY;
+          // Kill any transition so drag is instant
+          if (imgEl) imgEl.style.transition = "none";
         } else {
           // Start swipe detection
           touchStartX = touch.clientX;
@@ -413,16 +448,12 @@ function bindOverlayEvents(el: HTMLDivElement): void {
         const cx = (t1.clientX + t2.clientX) / 2;
         const cy = (t1.clientY + t2.clientY) / 2;
 
-        // Adjust translate so pinch center stays fixed
         const prevScale = scale;
-        const imgRect = imgEl?.getBoundingClientRect();
-        if (imgRect) {
-          const imgCx = imgRect.left + imgRect.width / 2;
-          const imgCy = imgRect.top + imgRect.height / 2;
-          const factor = 1 - newScale / prevScale;
-          translateX = translateX + (cx - imgCx - translateX) * factor;
-          translateY = translateY + (cy - imgCy - translateY) * factor;
-        }
+        const imgCx = window.innerWidth / 2 + translateX;
+        const imgCy = window.innerHeight / 2 + translateY;
+        const factor = 1 - newScale / prevScale;
+        translateX = translateX + (cx - imgCx) * factor;
+        translateY = translateY + (cy - imgCy) * factor;
 
         scale = newScale;
         lastPinchDist = dist;
@@ -455,14 +486,19 @@ function bindOverlayEvents(el: HTMLDivElement): void {
   el.addEventListener("touchend", (e) => {
     if (isDragging) {
       isDragging = false;
-      updateCursor();
+
+      // Tap-to-zoom: if the finger didn't move, treat as a tap
+      if (!hasDragged && isZoomed()) {
+        resetZoom();
+      }
+
       setTimeout(() => {
         hasDragged = false;
-      }, 0);
+      }, 10);
       return;
     }
 
-    // Snap back if zoomed below 1
+    // Snap back if pinch released below 1x
     if (scale < MIN_SCALE + 0.01 && scale !== 1) {
       resetZoom();
       return;
@@ -487,29 +523,9 @@ function bindOverlayEvents(el: HTMLDivElement): void {
 
     const delta = e.deltaY > 0 ? -0.25 : 0.25;
     const newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale + delta));
-
     if (newScale === scale) return;
 
-    // Zoom toward cursor
-    const imgRect = imgEl?.getBoundingClientRect();
-    if (imgRect) {
-      const imgCx = imgRect.left + imgRect.width / 2;
-      const imgCy = imgRect.top + imgRect.height / 2;
-      const prevScale = scale;
-      translateX =
-        translateX +
-        (e.clientX - imgCx - translateX) * (1 - newScale / prevScale);
-      translateY =
-        translateY +
-        (e.clientY - imgCy - translateY) * (1 - newScale / prevScale);
-    }
-
-    scale = newScale;
-    clampTranslate();
-
-    if (imgEl) imgEl.style.transition = "";
-    applyTransform();
-    toggleNavVisibility(!isZoomed());
+    zoomInstant(e.clientX, e.clientY, newScale);
   };
   el.addEventListener("wheel", wheelHandler, { passive: false });
 }
@@ -545,7 +561,6 @@ function destroy(): void {
     document.removeEventListener("keydown", keydownHandler);
     keydownHandler = null;
   }
-  // wheelHandler is on the overlay, removed when overlay is removed
 
   if (overlay && overlay.parentNode) {
     overlay.parentNode.removeChild(overlay);
@@ -560,6 +575,8 @@ function destroy(): void {
   translateY = 0;
   isDragging = false;
   hasDragged = false;
+  imgBaseW = 0;
+  imgBaseH = 0;
 }
 
 // --------------- Init ---------------
