@@ -1,23 +1,30 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import "../styles/glightbox.css";
+import "../styles/lightbox.css";
 import "katex/dist/katex.min.css";
 import Prose from "../components/Prose.astro";
 import { getImage } from "astro:assets";
 import HeroImage from "../components/HeroImage.tsx";
 import NextPost from "../components/NextPost.astro";
+import { formatDate } from "../scripts/utils.ts";
+
+export interface Props {
+  frontmatter: {
+    title: string;
+    description: string;
+    author: string;
+    tags: string[];
+    image?: { src: string; alt: string; positionx?: string; positiony?: string };
+    pubDate: Date;
+    updatedDate?: Date;
+  };
+  currentId: string;
+  collection: string;
+}
 
 const { frontmatter, currentId, collection } = Astro.props;
-const updatedDate = frontmatter?.updatedDate
-  .toDateString()
-  .split(" ")
-  .slice(1)
-  .join(" ");
-const publishedDate = frontmatter?.pubDate
-  .toDateString()
-  .split(" ")
-  .slice(1)
-  .join(" ");
+const updatedDate = formatDate(frontmatter?.updatedDate);
+const publishedDate = formatDate(frontmatter?.pubDate);
 const title = frontmatter?.title;
 const description = frontmatter?.description;
 const authorFullName = frontmatter?.author;
@@ -74,8 +81,8 @@ const metaImage = image
   alt={alt ? metaImage?.attributes.alt : ""}
   description={description}
   author={author}
-  pubDate={updatedDate}
-  updatedDate={publishedDate}
+  pubDate={publishedDate}
+  updatedDate={updatedDate}
   is404Page={false}
 >
   {
@@ -84,11 +91,11 @@ const metaImage = image
         client:load
         title={title}
         tags={frontmatter.tags}
-        backgroundImage={backgroundImage.src}
-        mobileBackgroundImage={mobileBackgroundImage.src}
+        backgroundImage={backgroundImage!.src}
+        mobileBackgroundImage={mobileBackgroundImage!.src}
         positionX={positionx}
         positionY={positiony}
-        alt={alt}
+        alt={alt ?? ""}
       />
     ) : (
       <div data-pagefind-body>

@@ -1,6 +1,17 @@
 ---
 import { Image } from "astro:assets";
 
+export interface Props {
+  title: string;
+  url: string;
+  image: string;
+  alt: string;
+  description: string;
+  pubDate: Date;
+  positionx: string;
+  positiony: string;
+}
+
 const { title, url, image, alt, description, pubDate, positionx, positiony } =
   Astro.props;
 const publishedDate = new Date(pubDate).toLocaleDateString("en-US", {

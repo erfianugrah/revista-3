@@ -1,7 +1,17 @@
+/* ── Masonry layout ──
+ *
+ * CSS Grid with dense packing and nth-child span rules for visual rhythm.
+ * Cropped items use object-position: center 25% by default so subjects
+ * (faces, upper-third content) stay visible. Per-image overrides via
+ * inline style object-position from Masonry.astro props.
+ *
+ * Progressive enhancement: native CSS masonry via @supports.
+ */
+
 .masonry {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-gap: 16px;
+  grid-gap: 12px;
   grid-auto-flow: dense;
 }
 
@@ -9,9 +19,11 @@
   break-inside: avoid;
   position: relative;
   overflow: hidden;
+  border-radius: 3px;
   transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
+/* Rhythm: every 3rd item spans 2 rows, every 4th spans 2 columns */
 .image-container:nth-child(3n) {
   grid-row: span 2;
 }
@@ -29,18 +41,23 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Smart default: bias crop toward upper portion where subjects usually are.
+     Per-image overrides via inline style take precedence over this. */
+  object-position: center 25%;
   display: block;
   transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
+/* ── Hover ── */
 .image-container:hover {
   transform: scale(1.01);
 }
 
 .image-container:hover .image {
-  transform: scale(1.005);
+  transform: scale(1.03);
 }
 
+/* ── Responsive ── */
 @media (max-width: 768px) {
   .masonry {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -56,5 +73,30 @@
 @media (max-width: 480px) {
   .masonry {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+}
+
+/* ── Native CSS masonry (progressive enhancement) ──
+ * When browsers support grid-template-rows: masonry, items flow
+ * left-to-right with variable heights — no cropping needed. */
+
+@supports (grid-template-rows: masonry) {
+  .masonry {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-rows: masonry;
+    gap: 12px;
+  }
+
+  /* With native masonry, images show at natural aspect ratio */
+  .image {
+    height: auto;
+    object-fit: contain;
+    object-position: center center;
+  }
+
+  .image-container:nth-child(3n),
+  .image-container:nth-child(4n) {
+    grid-row: auto;
+    grid-column: auto;
   }
 }

@@ -1,0 +1,211 @@
+/* ── Custom lightbox styles ── */
+
+/* Overlay – dark backdrop with smooth scale+fade entrance */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lightbox-overlay.lightbox-visible {
+  opacity: 1;
+  visibility: visible;
+  background: rgba(0, 0, 0, 0.94);
+}
+
+/* Image – scale up on open, crossfade on navigate.
+   IMPORTANT: no transition on transform here — it would make drag/pan laggy.
+   The open/close animation uses a one-shot class instead. */
+.lightbox-img {
+  max-width: 92vw;
+  max-height: 92vh;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  border-radius: 2px;
+  transform: scale(0.92);
+  transform-origin: center center;
+  opacity: 0;
+  cursor: zoom-in;
+  will-change: transform;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lightbox-visible .lightbox-img {
+  transform: scale(1);
+  opacity: 1;
+  /* Animate scale only on open — removed after open completes via JS */
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Crossfade states for prev/next navigation */
+.lightbox-img.lightbox-img-exit {
+  opacity: 0;
+  transform: scale(0.97);
+  transition:
+    opacity 0.15s ease-out,
+    transform 0.15s ease-out;
+}
+
+.lightbox-img.lightbox-img-enter {
+  opacity: 0;
+  transform: scale(1.03);
+  transition: none;
+}
+
+/* Buttons – shared base: glassmorphic style */
+.lightbox-close,
+.lightbox-zoom,
+.lightbox-prev,
+.lightbox-next {
+  position: absolute;
+  z-index: 1;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  border-radius: 50%;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-close:hover,
+.lightbox-zoom:hover,
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.lightbox-close:active,
+.lightbox-zoom:active,
+.lightbox-prev:active,
+.lightbox-next:active {
+  transform: scale(0.95);
+}
+
+/* Close button */
+.lightbox-close {
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+}
+
+/* Zoom button – next to close */
+.lightbox-zoom {
+  top: 20px;
+  right: 68px;
+  width: 40px;
+  height: 40px;
+}
+
+/* Prev / Next */
+.lightbox-prev,
+.lightbox-next {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+.lightbox-prev:active,
+.lightbox-next:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.lightbox-prev {
+  left: 20px;
+}
+
+.lightbox-next {
+  right: 20px;
+}
+
+/* Counter – minimal, elegant */
+.lightbox-counter {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+  transition: opacity 0.2s ease;
+}
+
+/* Mobile tweaks */
+@media (max-width: 768px) {
+  .lightbox-img {
+    max-width: 98vw;
+    max-height: 88vh;
+  }
+
+  .lightbox-prev,
+  .lightbox-next {
+    width: 40px;
+    height: 40px;
+  }
+
+  .lightbox-prev {
+    left: 10px;
+  }
+
+  .lightbox-next {
+    right: 10px;
+  }
+
+  .lightbox-close {
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .lightbox-zoom {
+    top: 12px;
+    right: 54px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .lightbox-counter {
+    bottom: 12px;
+  }
+}

@@ -1,14 +1,14 @@
-'use client'
-import React, { useEffect, useRef } from 'react'
+"use client";
+import { useEffect, useRef } from "react";
 
 interface HeroImageProps {
-  title: string
-  tags: string[]
-  backgroundImage: string
-  mobileBackgroundImage: string
-  positionX?: string
-  positionY?: string
-  alt: string
+  title: string;
+  tags: string[];
+  backgroundImage: string;
+  mobileBackgroundImage: string;
+  positionX?: string;
+  positionY?: string;
+  alt: string;
 }
 
 export default function HeroImage({
@@ -16,46 +16,49 @@ export default function HeroImage({
   tags,
   backgroundImage,
   mobileBackgroundImage,
-  positionX = '30%',
-  positionY = '50%',
+  positionX = "30%",
+  positionY = "50%",
   alt,
 }: HeroImageProps) {
-  const heroRef = useRef<HTMLDivElement>(null)
-  const parallaxRef = useRef<HTMLDivElement>(null)
+  const heroRef = useRef<HTMLDivElement>(null);
+  const parallaxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const heroElement = heroRef.current
-    const parallaxElement = parallaxRef.current
-    if (!heroElement || !parallaxElement) return
+    const heroElement = heroRef.current;
+    const parallaxElement = parallaxRef.current;
+    if (!heroElement || !parallaxElement) return;
+
+    // Bind to a const so closures can see the narrowed non-null type
+    const pEl = parallaxElement;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            parallaxElement.style.willChange = 'transform'
-            window.addEventListener('scroll', updateParallax)
+            pEl.style.willChange = "transform";
+            window.addEventListener("scroll", updateParallax);
           } else {
-            parallaxElement.style.willChange = 'auto'
-            window.removeEventListener('scroll', updateParallax)
+            pEl.style.willChange = "auto";
+            window.removeEventListener("scroll", updateParallax);
           }
-        })
+        });
       },
-      { threshold: 0 }
-    )
+      { threshold: 0 },
+    );
 
-    observer.observe(heroElement)
+    observer.observe(heroElement);
 
     function updateParallax() {
-      const scrollPosition = window.pageYOffset
-      const parallaxFactor = 0.3
-      parallaxElement.style.transform = `translate3d(0, ${scrollPosition * parallaxFactor}px, 0)`
+      const scrollPosition = window.scrollY;
+      const parallaxFactor = 0.3;
+      pEl.style.transform = `translate3d(0, ${scrollPosition * parallaxFactor}px, 0)`;
     }
 
     return () => {
-      observer.disconnect()
-      window.removeEventListener('scroll', updateParallax)
-    }
-  }, [])
+      observer.disconnect();
+      window.removeEventListener("scroll", updateParallax);
+    };
+  }, []);
 
   return (
     <div
@@ -67,7 +70,7 @@ export default function HeroImage({
         ref={parallaxRef}
         className="absolute inset-0"
         style={{
-          willChange: 'transform',
+          willChange: "transform",
         }}
       >
         <div
@@ -75,8 +78,8 @@ export default function HeroImage({
           style={{
             backgroundImage: `url(${mobileBackgroundImage})`,
             backgroundPosition: `${positionX} ${positionY}`,
-            top: '-20%',
-            height: '120%',
+            top: "-20%",
+            height: "120%",
           }}
           aria-hidden="true"
         />
@@ -85,8 +88,8 @@ export default function HeroImage({
           style={{
             backgroundImage: `url(${backgroundImage})`,
             backgroundPosition: `${positionX} ${positionY}`,
-            top: '-20%',
-            height: '120%',
+            top: "-20%",
+            height: "120%",
           }}
           aria-hidden="true"
         />
@@ -110,5 +113,5 @@ export default function HeroImage({
       </div>
       <img src={backgroundImage} alt={alt} className="sr-only" />
     </div>
-  )
+  );
 }

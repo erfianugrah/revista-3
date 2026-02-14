@@ -3,6 +3,11 @@ import Hamburger from "./Hamburger.tsx";
 import Navigation from "./Navigation.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import { getImage } from "astro:assets";
+
+export interface Props {
+  is404Page?: boolean;
+}
+
 const { is404Page = false } = Astro.props;
 
 const favicon_avif = await getImage({
@@ -40,7 +45,7 @@ const favicon_avif = await getImage({
               <ThemeToggle />
             </div>
             <div class="flex items-center justify-center h-[30px] w-[30px]">
-              <Hamburger client:load />
+              <Hamburger client:idle />
             </div>
           </>
         )

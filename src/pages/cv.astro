@@ -2,7 +2,6 @@
 import ProseCv from "../components/Prose_cv.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Icon } from "astro-icon/components";
-import { Contact } from "../components/cv";
 import ThemeToggle from "../components/ThemeToggle";
 import "../styles/cv-print.css";
 
@@ -156,213 +155,30 @@ const getShortLabel = (contact) => {
 </BaseLayout>
 
 <script>
-  // Theme handling for CV page
-  function getThemePreference(): "light" | "dark" {
-    return (
-      (localStorage.getItem("theme") as "light" | "dark") ||
-      (window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light")
-    );
-  }
+  import { initTheme } from "../scripts/theme.ts";
+  import { initPrint } from "../scripts/cv-print.ts";
+  import { initMobileNav, initSectionNav, initScrollSpy } from "../scripts/cv-navigation.ts";
 
-  function applyTheme(theme: "light" | "dark") {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("theme", theme);
-  }
+  initTheme();
 
-  function toggleTheme() {
-    const currentTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
-    const newTheme = currentTheme === "dark" ? "light" : "dark";
-    applyTheme(newTheme);
-  }
+  document.addEventListener("astro:page-load", () => {
+    const navToggle = document.getElementById("mobile-nav-toggle");
+    const navLinks = document.getElementById("section-links");
+    const navIcon = document.getElementById("nav-toggle-icon");
+    const sectionLinks = document.querySelectorAll(".section-link");
+    const sections = document.querySelectorAll("h2[id]");
+    const printButton = document.getElementById("print-cv");
 
-  // Apply theme immediately on script execution
-  applyTheme(getThemePreference());
-
-  // Listen for theme toggle events from React component
-  window.addEventListener("theme-toggle", toggleTheme);
-
-  document.addEventListener('DOMContentLoaded', () => {
-    // Cache DOM elements for better performance
-    const elements = {
-      navToggle: document.getElementById('mobile-nav-toggle'),
-      navLinks: document.getElementById('section-links'),
-      navIcon: document.getElementById('nav-toggle-icon'),
-      sectionLinks: document.querySelectorAll('.section-link'),
-      sections: document.querySelectorAll('h2[id]'),
-      printButton: document.getElementById('print-cv')
-    };
-
-    // Mobile navigation toggle
-    if (elements.navToggle && elements.navLinks && elements.navIcon) {
-      elements.navToggle.addEventListener('click', () => {
-        const expanded = elements.navToggle.getAttribute('aria-expanded') === 'true';
-        elements.navToggle.setAttribute('aria-expanded', (!expanded).toString());
-        
-        if (expanded) {
-          elements.navLinks.classList.remove('expanded');
-          elements.navLinks.classList.add('hidden');
-          elements.navLinks.style.maxHeight = '0';
-          elements.navIcon.classList.remove('rotate-180');
-        } else {
-          elements.navLinks.classList.add('expanded');
-          elements.navLinks.classList.remove('hidden');
-          elements.navLinks.style.maxHeight = elements.navLinks.scrollHeight + 'px';
-          elements.navIcon.classList.add('rotate-180');
-        }
-      });
-      
-      // Close menu on Escape key
-      elements.navLinks.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && window.innerWidth < 768) {
-          elements.navToggle.setAttribute('aria-expanded', 'false');
-          elements.navLinks.classList.add('hidden');
-          elements.navIcon.classList.remove('rotate-180');
-          elements.navToggle.focus();
-        }
-      });
+    if (navToggle && navLinks && navIcon) {
+      const els = { navToggle, navLinks, navIcon, sectionLinks, sections };
+      initMobileNav(els);
+      initSectionNav(els);
+      initScrollSpy(els);
     }
 
-    // No need to add IDs to section headings anymore since we're using CVSection components
-    // No need for skill visualization enhancements since we're using the SkillBar component
-
-    // Enhanced print functionality
-    if (elements.printButton) {
-      elements.printButton.addEventListener('click', () => {
-        // Create a notification with more helpful text
-        const notification = document.createElement('div');
-        notification.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-700 text-white px-6 py-4 rounded-md shadow-xl z-50 transition-all duration-500 text-center max-w-md print:hidden';
-        notification.innerHTML = `
-          <div class="font-bold text-lg mb-2">Opening Print Dialog...</div>
-          <div class="text-sm mb-3">When the dialog opens, select "Save as PDF" for best results</div>
-          <div class="text-xs">All styling and formatting will be preserved in the PDF</div>
-        `;
-        document.body.appendChild(notification);
-        
-        // Trigger print after a small delay to allow the notification to show
-        setTimeout(() => {
-          // Hide notification right before printing to ensure it doesn't show in print
-          notification.style.display = 'none';
-          window.print();
-          
-          // Show and then fade out notification after print dialog appears
-          setTimeout(() => {
-            notification.style.display = '';
-            setTimeout(() => {
-              notification.style.opacity = '0';
-              notification.style.transform = 'translate(-50%, -50%) scale(0.9)';
-              setTimeout(() => {
-                if (notification.parentNode) {
-                  document.body.removeChild(notification);
-                }
-              }, 500);
-            }, 500);
-          }, 500);
-        }, 800);
-      });
+    if (printButton) {
+      initPrint(printButton);
     }
-
-    // Section navigation with highlighting
-    document.querySelectorAll('.section-link').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetId = link.getAttribute('href')?.substring(1);
-        if (targetId) {
-          const targetElement = document.getElementById(targetId);
-          if (targetElement) {
-            // Add highlight effect
-            targetElement.classList.add('highlight-section');
-            setTimeout(() => targetElement.classList.remove('highlight-section'), 2000);
-            
-            // Calculate offset based on sticky header
-            const headerHeight = document.querySelector('.cv-nav')?.offsetHeight || 0;
-            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
-            
-            // Smooth scroll
-            window.scrollTo({
-              top: targetPosition,
-              behavior: 'smooth'
-            });
-            
-            // Update active state
-            document.querySelectorAll('.section-link').forEach(lnk => {
-              lnk.classList.remove('active');
-              lnk.classList.remove('text-blue-600', 'dark:text-blue-400', 'font-semibold');
-              lnk.classList.add('text-slate-600', 'dark:text-slate-300');
-              lnk.setAttribute('aria-current', 'false');
-            });
-            
-            link.classList.add('active');
-            link.classList.add('text-blue-600', 'dark:text-blue-400', 'font-semibold');
-            link.classList.remove('text-slate-600', 'dark:text-slate-300');
-            link.setAttribute('aria-current', 'true');
-            
-            // Close mobile nav if needed
-            if (window.innerWidth < 768 && elements.navLinks.classList.contains('expanded')) {
-              elements.navToggle.setAttribute('aria-expanded', 'false');
-              elements.navLinks.classList.remove('expanded');
-              elements.navLinks.classList.add('hidden');
-              elements.navLinks.style.maxHeight = '0';
-              elements.navIcon.classList.remove('rotate-180');
-            }
-            
-            // Update URL hash without scrolling
-            history.replaceState(null, null, `#${targetId}`);
-          }
-        }
-      });
-    });
-    
-    // Active section tracking with Intersection Observer
-    const observerOptions = {
-      root: null,
-      rootMargin: '-80px 0px -40% 0px',
-      threshold: 0
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const id = entry.target.getAttribute('id');
-          if (id) {
-            // Update URL hash without scrolling
-            history.replaceState(null, null, `#${id}`);
-            
-            // Update active nav link
-            document.querySelectorAll('.section-link').forEach(link => {
-              const href = link.getAttribute('href');
-              const isActive = href === `#${id}`;
-              
-              link.classList.toggle('active', isActive);
-              link.classList.toggle('text-blue-600', isActive);
-              link.classList.toggle('dark:text-blue-400', isActive);
-              link.classList.toggle('font-semibold', isActive);
-              link.classList.toggle('text-slate-600', !isActive);
-              link.classList.toggle('dark:text-slate-300', !isActive);
-              link.setAttribute('aria-current', isActive ? 'true' : 'false');
-            });
-          }
-        }
-      });
-    }, observerOptions);
-    
-    // Observe all section headings
-    elements.sections.forEach(section => observer.observe(section));
-    
-    // Initial check for hash in URL
-    if (location.hash) {
-      const id = location.hash.substring(1);
-      const link = document.querySelector(`.section-link[href="#${id}"]`);
-      if (link) {
-        link.classList.add('active');
-        link.classList.add('text-blue-600', 'dark:text-blue-400', 'font-semibold');
-        link.classList.remove('text-slate-600', 'dark:text-slate-300');
-        link.setAttribute('aria-current', 'true');
-      }
-    }
-    
-    // No expandable sections
   });
 </script>
 

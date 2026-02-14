@@ -1,4 +1,12 @@
 ---
+export interface Props {
+  images: string;
+  tag: string;
+  url: string;
+  width: Record<string, number>;
+  height: Record<string, number>;
+}
+
 const { images, tag, url, width, height } = Astro.props;
 ---
 
@@ -11,13 +19,13 @@ const { images, tag, url, width, height } = Astro.props;
 >
   <a href={url}>
     <picture>
-      <source media="(min-width: 1280px)" srcset="" data-srcset-large />
-      <source media="(min-width: 768px)" srcset="" data-srcset-medium />
+      <source media="(min-width: 1280px)" data-srcset-large />
+      <source media="(min-width: 768px)" data-srcset-medium />
       <img
         class="hidden w-full sm:h-[540px] xl:h-[1080px] lg:h-[720px] object-cover object-center"
         style="object-position: 40% 35%;"
-        src=""
-        alt=""
+        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        alt={tag || "Loading image"}
         data-srcset-small
       />
     </picture>
@@ -39,4 +47,4 @@ const { images, tag, url, width, height } = Astro.props;
     opacity: 0.5;
   }
 </style>
-<script src="../scripts/getrandomimage.js"></script>
+<script src="../scripts/getrandomimage.ts"></script>

@@ -3,21 +3,11 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import BlogPost from "../../../components/BlogPost.astro";
 import { sortByDate } from "../../../components/sortbydate";
-export async function getStaticPaths() {
-  const allMuses = await getCollection("muses");
-  const uniqueTags = [
-    ...new Set(allMuses.map((post) => post.data.tags).flat()),
-  ];
+import { buildTagPaths } from "../../../scripts/collections";
 
-  return uniqueTags.map((tag) => {
-    const filteredPosts = allMuses.filter((post) =>
-      post.data.tags.includes(tag),
-    );
-    return {
-      params: { tag },
-      props: { posts: filteredPosts },
-    };
-  });
+export async function getStaticPaths() {
+  const entries = await getCollection("muses");
+  return buildTagPaths(entries, "muses");
 }
 
 const { tag } = Astro.params;

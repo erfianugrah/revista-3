@@ -3,21 +3,11 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import BlogPost from "../../../components/BlogPost.astro";
 import { sortByDate } from "../../../components/sortbydate";
-export async function getStaticPaths() {
-  const allShortForm = await getCollection("short_form");
-  const uniqueTags = [
-    ...new Set(allShortForm.map((post) => post.data.tags).flat()),
-  ];
+import { buildTagPaths } from "../../../scripts/collections";
 
-  return uniqueTags.map((tag) => {
-    const filteredPosts = allShortForm.filter((post) =>
-      post.data.tags.includes(tag),
-    );
-    return {
-      params: { tag },
-      props: { posts: filteredPosts },
-    };
-  });
+export async function getStaticPaths() {
+  const entries = await getCollection("short_form");
+  return buildTagPaths(entries, "short_form");
 }
 
 const { tag } = Astro.params;

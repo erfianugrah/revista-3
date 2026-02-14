@@ -1,6 +1,6 @@
 <p>
   <img alt="Version" src="https://img.shields.io/github/v/tag/erfianugrah/revista-3?label=version" />
-  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.16.15-FF5D01.svg?logo=astro&logoColor=white" />
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-5.17.2-FF5D01.svg?logo=astro&logoColor=white" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.1.17-38B2AC.svg?logo=tailwind-css&logoColor=white" />
   <img alt="React" src="https://img.shields.io/badge/React-19.2.1-61DAFB.svg?logo=react&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9.3-3178C6.svg?logo=typescript&logoColor=white" />
@@ -15,21 +15,26 @@
 </p>
 
 ## Quick Links
+
 - Documentation Index: `docs/README.md`
 
 ## Overview
 
-Revista is a photography portfolio and blog built on Astro v5.16.15. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
+Revista is a photography portfolio and blog built on Astro v5.17.2. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
 
 The project supports multiple deployment targets with optimized builds for each platform, including GitHub Pages with proper base path configuration.
 
 ## Documentation Map
+
 - **Docs Index:** `docs/README.md`
-- **Architecture:** `src/Architecture-README.md`
-- **Performance:** `src/Performance-README.md`
-- **CI/CD & Deployments:** `src/CI-CD-README.md`
-- **Components/Layout/Pages:** `src/Components-README.md`, `src/Layouts-README.md`, `src/Pages-README.md`
-- **Content Collections:** `src/Content-README.md`
+- **Architecture:** `src/README.md`
+- **Performance:** `docs/performance.md`
+- **CI/CD & Deployments:** `.github/README.md`
+- **Components:** `src/components/README.md`
+- **Layouts:** `src/layouts/README.md`
+- **Pages:** `src/pages/README.md`
+- **Content Collections:** `src/content/README.md`
+- **Docker:** `docs/docker.md`
 
 ## Project Structure
 
@@ -101,8 +106,8 @@ graph TD
     I["📁 styles"] --> I1["🎨 global.css<br>(site-wide styles)"]
     I --> I2["🎨 MasonryLayout.css<br>(photo grid styling)"]
 
-    J["📁 scripts"] --> J1["⚡ menu.js<br>(mobile navigation)"]
-    J --> J2["⚡ themetoggle.js<br>(dark/light mode)"]
+    J["📁 scripts"] --> J1["⚡ theme.ts<br>(dark/light mode)"]
+    J --> J2["⚡ lightbox.ts<br>(image lightbox)"]
 
     class E1,E2,E3,E4 compFile
     class F1,F2 layoutFile
@@ -116,31 +121,41 @@ graph TD
 ### Key Directories and Files
 
 - `src/`: Contains the main source code for the site
-  - `components/`: Reusable Astro components ([Components Documentation](src/Components-README.md))
+  - `components/`: Reusable Astro components ([Components Documentation](src/components/README.md))
     - `BlogPost.astro`: Component for rendering individual blog post previews
     - `Footer.astro`: Site-wide footer component
     - `Header.astro`: Site-wide header component
     - `Navigation.astro`: Navigation menu component
-  - `layouts/`: Page layouts used across the site ([Layouts Documentation](src/Layouts-README.md))
+  - `layouts/`: Page layouts used across the site ([Layouts Documentation](src/layouts/README.md))
     - `BaseLayout.astro`: The main layout used by most pages
     - `MarkdownPostLayout.astro`: Layout for rendering Markdown content
-  - `pages/`: Astro pages that generate routes ([Pages Documentation](src/Pages-README.md))
+  - `pages/`: Astro pages that generate routes ([Pages Documentation](src/pages/README.md))
     - `index.astro`: The home page
     - `404.astro`: Custom 404 error page
     - `cv.astro`: CV page
-  - `content/`: Markdown content for blog posts and collections ([Content Collections Documentation](src/Content-README.md))
+  - `content/`: Markdown content for blog posts and collections ([Content Collections Documentation](src/content/README.md))
   - Architecture and implementation documentation:
-    - [Technical Architecture](src/Architecture-README.md): Component structure, state management, and design patterns
-    - [Performance Optimization](src/Performance-README.md): Techniques used for site speed optimization
-    - [Docker Implementation](src/Docker-README.md): Container configuration and deployment
-    - [CI/CD Implementation](src/CI-CD-README.md): Build and deployment automation
+    - [Technical Architecture](src/README.md): Component structure, state management, and design patterns
+    - [Performance Optimization](docs/performance.md): Techniques used for site speed optimization
+    - [Docker Implementation](docs/docker.md): Container configuration and deployment
+    - [CI/CD Implementation](.github/README.md): Build and deployment automation
   - `content.config.ts`: Configuration file for content collections using Astro's glob loader pattern
   - `styles/`: CSS files for styling
     - `global.css`: Global styles and Tailwind v4 imports
     - `MasonryLayout.css`: Styles for the masonry layout used in galleries
-  - `scripts/`: JavaScript files for client-side functionality
-    - `menu.js`: Handles mobile menu functionality
-    - `themetoggle.js`: Manages dark/light theme toggling
+  - `scripts/`: TypeScript files for client-side functionality
+    - `theme.ts`: Shared theme preference, apply, toggle, and init helpers
+    - `lightbox.ts`: Custom image lightbox with keyboard/touch navigation
+    - `homePage.ts`: Homepage dynamic content and random image selection
+    - `getrandomimage.ts`: Random featured image selection for tag pages
+    - `burgundy.ts`: 404 page quote rotation
+    - `rss.ts`: RSS link visibility and URL management
+    - `since94.ts`: Years-since-1994 counter (used in MDX)
+    - `cv-print.ts`: CV print dialog functionality
+    - `cv-navigation.ts`: CV mobile nav, section nav, scroll-spy
+    - `undici-retry.ts`: HTTP fetch retry helper for build-time requests
+    - `utils.ts`: Shared `shuffle()` and `formatDate()` utilities
+    - `collections.ts`: Shared `buildDetailPaths()`, `buildTagPaths()`, `generateRss()` helpers
 - `public/`: Static assets like images and fonts
 - Configuration files:
   - `astro.config.mjs`: Astro configuration
@@ -310,23 +325,25 @@ graph TD
 Each content collection is defined with a specific schema in `content.config.ts` using Zod for validation. Here's a simplified example of the frontmatter structure:
 
 ```typescript
-// Example collection schema in content.config.ts
+// content.config.ts — shared base schema eliminates duplication across collections
+const baseSchema = z.object({
+  title: z.string(),
+  tags: z.array(z.string()),
+  author: z.string(),
+  description: z.string(),
+  image: z.object({
+    src: z.string(),
+    alt: z.string(),
+    positionx: z.string().optional(),
+    positiony: z.string().optional(),
+  }).optional(),
+  pubDate: z.coerce.date(),
+  updatedDate: z.coerce.date().optional(),
+});
+
 const muses = defineCollection({
   loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/muses" }),
-  schema: z.object({
-    title: z.string(),
-    tags: z.array(z.string()),
-    author: z.string(),
-    description: z.string(),
-    image: z.object({
-      src: z.string(),
-      alt: z.string(),
-      positionx: z.string().optional(),
-      positiony: z.string().optional(),
-    }).optional(),
-    pubDate: z.coerce.date(),
-    updatedDate: z.coerce.date().optional(),
-  }),
+  schema: baseSchema,
 });
 
 // Example frontmatter from an actual muses post:
@@ -460,7 +477,7 @@ Each collection follows the same pattern of routes: index, individual posts, tag
    - Tag pages (e.g., `/long_form/tags/tag-name`) are generated for each unique tag used in the collection, also using `getStaticPaths()` in `[tag].astro`.
 
 4. **RSS Feeds**:
-   - Each collection has an RSS feed available at `/{collection}/rss.xml`, generated by `rss.xml.js` files in each collection's directory.
+   - Each collection has an RSS feed available at `/{collection}/rss.xml`, generated by `rss.xml.ts` files in each collection's directory.
 
 ## Styling System
 
@@ -514,20 +531,15 @@ The site uses Tailwind CSS v4.1.17 for styling, with carefully configured settin
 ### Styling Implementation
 
 1. **Dark Mode Strategy**
-   - **Class-based Implementation**: Using Tailwind's `class` strategy for theme switching
-     ```js
-     darkMode: "class"; // Toggle with JavaScript using ThemeToggle.tsx
-     ```
-   - **Implementation**: `ThemeToggle.tsx` React component controls the theme, adding/removing the `dark` class on the document
+   - **Class-based Implementation**: The `dark` class on `<html>` drives Tailwind's dark variant. Theme state is managed by `src/scripts/theme.ts` and toggled via the `ThemeToggle.tsx` React component.
 
 2. **CSS Organization**
    - **Global Styles**: `src/styles/global.css` contains:
 
      ```css
-     /* Base imports and Tailwind directives */
-     @import "tailwindcss/base";
-     @import "tailwindcss/components";
-     @import "tailwindcss/utilities";
+     /* Tailwind v4 single import */
+     @import "tailwindcss";
+     @config '../../tailwind.config.mjs';
 
      /* Global custom styles */
      :root {
@@ -543,7 +555,7 @@ The site uses Tailwind CSS v4.1.17 for styling, with carefully configured settin
    - **Component-specific CSS**:
      - `MasonryLayout.css`: Custom grid-based implementation
      - `cv-print.css`: Print-specific styles for the CV page
-     - `glightbox.css`: Customized styling for the image lightbox
+     - `lightbox.css`: Custom lightbox styling (fade transitions, overlay, controls)
 
 3. **CSS-in-JS Integration**
    - The project uses minimal CSS-in-JS, primarily in the React components like `ThemeToggle.tsx` and `HeroImage.tsx`, where dynamic styling is needed
@@ -562,56 +574,62 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
 
 ### Core UI Scripts
 
-- **`themetoggle.js`**: Manages dark/light theme switching with the following features:
-  - Persists user preference in localStorage
-  - Respects user's system preference via `prefers-color-scheme` media query
-  - Adds/removes the `dark` class on the document for Tailwind's dark mode
-  - Updates all necessary UI elements when theme changes
-
-- **`menu.js`**: Controls the mobile navigation menu:
-  - Toggles visibility of the mobile menu overlay
-  - Handles animation timings for smooth transitions
-  - Manages accessibility attributes like `aria-expanded`
-  - Implements touch events for mobile devices
+- **`theme.ts`**: Shared theme management module with the following features:
+  - `getThemePreference()`: reads from localStorage, falls back to `prefers-color-scheme`
+  - `applyTheme()`: adds/removes the `dark` class on the document root
+  - `toggleTheme()`: cycles the theme and persists to localStorage
+  - `initTheme()`: inline-safe initialiser used by ThemeToggle.astro to prevent FOUC
 
 ### Media Management
 
-- **`lightbox.js`**: Implements image gallery lightbox functionality using GLightbox:
-  - Enables fullscreen image viewing
-  - Supports keyboard navigation
-  - Provides zoom and pan capabilities for images
-  - Implements swipe navigation on touch devices
-  - Shows image captions when available
+- **`lightbox.ts`**: Custom image lightbox (replaced GLightbox — 73 KB → ~2.4 KB gzipped):
+  - Multi-level zoom: click cycles through 2x → 3.5x → reset; Ctrl/Cmd + scroll wheel for incremental zoom (up to 5x) centered on cursor; continuous pinch zoom on touch
+  - Zoom uses `maxWidth`/`maxHeight` expansion (GLightbox technique) with `translate3d` panning — pure compositor operations, no re-rasterization
+  - Keyboard navigation (arrow keys, Escape zooms out first then closes)
+  - Touch swipe navigation at 1x, drag/pan when zoomed
+  - Fade transitions, prev/next/close/zoom controls, image counter
+  - Adjacent image preloading, body scroll lock
+  - Full View Transitions lifecycle support (destroy/reinit on `astro:page-load`)
 
-- **`getrandomimage.js`**: Helper utility used by components to select random featured images
+- **`getrandomimage.ts`**: Helper utility used by components to select random featured images
   - Used in both the homepage and tag pages
   - Ensures images don't repeat in the same view
   - Handles empty image arrays gracefully
 
 ### Content Enhancement
 
-- **`burgundy.js`**: Creates the dynamic quote system for the 404 page:
+- **`burgundy.ts`**: Creates the dynamic quote system for the 404 page:
   - Stores a collection of Ron Burgundy quotes
   - Randomly selects and displays a different quote on each page load
   - Sets up a rotating quote system with fade transitions
 
-- **`rss.js`**: Manages RSS subscription features:
+- **`rss.ts`**: Manages RSS subscription features:
   - Conditionally shows/hides RSS links based on the current page
   - Updates RSS link URLs dynamically
   - Provides visual feedback when subscription options are available
 
-- **`homePage.js`**: Powers the dynamic homepage content:
+- **`homePage.ts`**: Powers the dynamic homepage content:
   - Selects featured content from different collections
   - Implements a weighted random selection algorithm for better variety
   - Ensures fresh content appears on each page load
+
+### Shared Utilities
+
+- **`utils.ts`**: Common helpers shared across scripts:
+  - `shuffle()`: Fisher-Yates array shuffle
+  - `formatDate()`: consistent date formatting using dayjs
+
+- **`collections.ts`**: Shared content collection helpers:
+  - `buildDetailPaths()`: generates `getStaticPaths` for `[...id].astro` pages
+  - `buildTagPaths()`: generates `getStaticPaths` for `tags/[tag].astro` pages
+  - `generateRss()`: generates RSS feed XML for any collection
 
 ### Build Utilities
 
 - **`remark-reading-time.mjs`**: MDX plugin that calculates and adds reading time estimates to posts
 - **`remark-modified-time.mjs`**: MDX plugin that extracts and normalizes file modification timestamps
-- **`updateImageLinks.js`**: Build-time utility for processing and optimizing image references
 
-All scripts are designed to be minimal, focused, and non-blocking to maintain the site's excellent performance profile.
+All scripts are TypeScript (except the two remark plugins which remain `.mjs`), minimal, focused, and non-blocking to maintain the site's performance profile.
 
 ## Performance Optimization
 
@@ -623,7 +641,7 @@ I've optimized the site in several ways:
 
 3. **Preloading and Prefetching**: Astro's `prefetch` feature loads linked pages before the user clicks, making navigation feel instant.
 
-4. **Efficient Bundling**: Astro v5.16.15 includes improved bundling and tree-shaking to minimize client-side code, with enhanced hydration strategies and faster component rendering.
+4. **Efficient Bundling**: Astro v5.17.2 includes improved bundling and tree-shaking to minimize client-side code, with enhanced hydration strategies and faster component rendering.
 
 5. **Cloudflare CDN**: The site uses Cloudflare's CDN with custom cache headers to serve content from edge locations worldwide.
 
@@ -849,10 +867,10 @@ To start working with this project:
    ```
 
    This installs:
-   - Astro v5.16.15
-    - Tailwind CSS v4.1.17
-    - React v19.2.1
-    - MDX v4.3.13 and other dependencies
+   - Astro v5.17.2
+   - Tailwind CSS v4.1.17
+   - React v19.2.1
+   - MDX v4.3.13 and other dependencies
 
 1. Run the development server:
 
@@ -998,77 +1016,41 @@ For detailed implementation information, see [`src/components/cv/README.md`](src
 
 ### Masonry Layout System
 
-The photo gallery displays use a custom masonry layout implementation:
+The photo gallery displays use a CSS Grid masonry layout with focal-point-aware cropping:
 
-1. **CSS Grid-Based Masonry**: Instead of using a library, the site implements a modern CSS Grid approach to masonry layouts:
+1. **CSS Grid with Dense Packing**: Editorial-style grid with `nth-child` span rules for visual rhythm:
 
    ```css
    .masonry {
      display: grid;
      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-     grid-gap: 16px;
+     grid-gap: 12px;
      grid-auto-flow: dense;
    }
 
    .image-container:nth-child(3n) {
      grid-row: span 2;
    }
-
    .image-container:nth-child(4n) {
      grid-column: span 2;
    }
    ```
 
-2. **Image Optimization**: The `Masonry.astro` component uses Astro's built-in image optimization:
+2. **Smart Crop Positioning**: Images default to `object-position: center 25%` so subjects (faces, upper-third content) stay visible when cropped by the grid. Per-image overrides via `positionx`/`positiony` props:
 
-   ```astro
-   const imageAssets = await Promise.all(
-     images.map(async (image) => {
-       if (image) {
-         return await getImage({
-           src: image.src,
-           alt: image.alt,
-           width: 3840,
-           height: 2160,
-           format: "avif",
-           loading: "lazy",
-         });
-       }
-     })
-   );
+   ```jsx
+   // Default smart crop — no override needed for most photos
+   { src: "https://cdn.erfianugrah.com/photo.jpg", alt: "Photo" }
+
+   // Fine-tune a specific image's crop anchor
+   { src: "https://cdn.erfianugrah.com/photo.jpg", alt: "Photo", positionx: "30%", positiony: "10%" }
    ```
 
-3. **Responsive Breakpoints**: The masonry layout adapts to screen sizes with custom media queries:
+3. **Native CSS Masonry (Progressive Enhancement)**: `@supports (grid-template-rows: masonry)` automatically upgrades to true masonry layout when browsers ship CSS Grid Level 3, with no cropping needed.
 
-   ```css
-   @media (max-width: 768px) {
-     .masonry {
-       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-     }
-   }
-   ```
+4. **Custom Lightbox Integration**: Gallery images open in a purpose-built lightbox (~2.4 KB gzipped) with multi-level zoom, cursor-anchored scroll zoom, drag/pan, pinch zoom, keyboard and touch navigation — replacing the 73 KB GLightbox dependency.
 
-4. **Lightbox Integration**: The masonry gallery integrates with GLightbox for fullscreen viewing:
-
-   ```astro
-   <a href={imageAsset.src} class="image-link glightbox">
-     <img src={imageAsset.src} alt={imageAsset.attributes.alt} loading="lazy" />
-   </a>
-   ```
-
-5. **Animation Effects**: Subtle hover animations enhance the user experience:
-
-   ```css
-   .image-container:hover {
-     transform: scale(1.01);
-   }
-
-   .image-container:hover .image {
-     transform: scale(1.005);
-   }
-   ```
-
-This approach provides an elegant, performant solution for displaying photography portfolios with minimal client-side JavaScript.
+5. **Image Optimization**: All thumbnails are processed through Astro's `getImage()` to AVIF format, while lightbox `href` links point to original CDN images for full-resolution viewing.
 
 ## Code of Conduct
 

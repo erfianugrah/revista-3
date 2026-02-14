@@ -1,11 +1,17 @@
+import typography from "@tailwindcss/typography";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
     extend: {
       fontFamily: {
-        "overpass-mono": ["var(--font-overpass-mono)", "Overpass Mono", "monospace"],
-        "inconsolata": ["var(--font-inconsolata)", "Inconsolata", "monospace"],
+        "overpass-mono": [
+          "var(--font-overpass-mono)",
+          "Overpass Mono",
+          "monospace",
+        ],
+        inconsolata: ["var(--font-inconsolata)", "Inconsolata", "monospace"],
       },
       objectPosition: {
         "top-33": "center top 33.33%",
@@ -31,20 +37,18 @@ export default {
       },
     },
     screens: {
-      "sm": "800px",
+      sm: "800px",
       // => @media (min-width: 800px) { ... }
-      "md": "1200px",
+      md: "1200px",
       // => @media (min-width: 1280px) { ... }
-      "lg": "1900px",
+      lg: "1900px",
       // => @media (min-width: 1920px) { ... }
-      "xl": "2500px",
+      xl: "2500px",
       // => @media (min-width: 2560px) { ... }
       "2xl": "3800px",
       // => @media (min-width: 3840px) { ... }
     },
   },
-  plugins: [
-    require("@tailwindcss/typography"),
-  ],
+  plugins: [require("@tailwindcss/typography")],
   darkMode: "class",
 };

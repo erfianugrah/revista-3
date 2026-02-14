@@ -109,13 +109,7 @@ const favicon = await optimizeImage(
 }
 
 <script>
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
+  import { shuffle } from "../scripts/utils.ts";
 
   function updatePosts() {
     const container = document.getElementById("randomPosts");
@@ -125,7 +119,7 @@ const favicon = await optimizeImage(
     const collection = container.dataset.collection;
     const favicon = JSON.parse(container.dataset.favicon || "{}");
 
-    const shuffledPosts = shuffleArray([...posts]);
+    const shuffledPosts = shuffle(posts);
     const selectedPosts = shuffledPosts.slice(0, 3);
 
     const postElements = container.querySelectorAll(".post-item");

@@ -7,13 +7,16 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import icon from "astro-icon";
 import { remarkReadingTime } from "./src/scripts/remark-reading-time.mjs";
-import undiciRetry from "./src/scripts/undici-retry.js";
+import undiciRetry from "./src/scripts/undici-retry.ts";
 import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
-  site: process.env.GITHUB_PAGES === 'true' ? "https://erfianugrah.github.io" : "https://www.erfianugrah.com",
-  base: process.env.GITHUB_PAGES === 'true' ? "/revista-3" : undefined,
+  site:
+    process.env.GITHUB_PAGES === "true"
+      ? "https://erfianugrah.github.io"
+      : "https://www.erfianugrah.com",
+  base: process.env.GITHUB_PAGES === "true" ? "/revista-3" : undefined,
 
   image: {
     // responsiveStyles: true,

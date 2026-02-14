@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project provides a containerized deployment option using Docker with Caddy as the web server. The container runs a custom Astro v5.16.15 + Tailwind CSS v4.1.17 build optimized for performance and security.
+This project provides a containerized deployment option using Docker with Caddy as the web server. The container runs a custom Astro v5.17.2 + Tailwind CSS v4.1.17 build optimized for performance and security.
 
 ## Key Components
 
