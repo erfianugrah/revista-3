@@ -1,57 +1,52 @@
 ---
-import ProseCv from "../components/Prose_cv.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { Icon } from "astro-icon/components";
 import ThemeToggle from "../components/ThemeToggle";
-import "../styles/cv-print.css";
+import fs from "node:fs";
+import path from "node:path";
 
-import { getEntry, render } from "astro:content";
-const entry = await getEntry("cv", "resume");
-const { Content, headings } = await render(entry);
+// --------------- Read exported HTML ---------------
 
-// Get all data from frontmatter
-const { 
-  title, 
-  description: resumeDescription, 
-  fullName,
-  sections = [
-    { id: "experience", label: "Experience" },
-    { id: "skills", label: "Skills" },
-    { id: "languages", label: "Languages" },
-    { id: "education", label: "Education" }
-  ],
-  contacts = []
-} = entry.data;
+const htmlPath = path.join(process.cwd(), "src/content/cv/cv-export.html");
+const rawHtml = fs.readFileSync(htmlPath, "utf-8");
 
-// Page metadata - built from resume data
-const pageTitle = title ? `${title} | CV` : "Erfi Anugrah - CV";
-const description = resumeDescription || "Professional CV for Erfi Anugrah - Customer Solutions Engineer at Cloudflare with expertise in solution design, technical onboarding, and customer success.";
+// Extract all <style> blocks and strip rules that conflict with BaseLayout
+const styleBlocks = [...rawHtml.matchAll(/<style>([\s\S]*?)<\/style>/g)]
+  .map((m) => m[1])
+  .join("\n")
+  // Remove html/body/body>div rule blocks — BaseLayout owns page layout
+  .replace(/\bhtml\s*\{[^}]*\}/g, "")
+  .replace(/\bbody\s*\{[^}]*\}/g, "")
+  .replace(/body\s*>\s*div\s*\{[^}]*\}/g, "")
+  // Rescope "body > div" selectors to ".cv-imported" so they target
+  // the CV content container instead of BaseLayout's body > div
+  .replace(/body\s*>\s*div\b/g, ".cv-imported")
+  // Remove .cv-preview-container hardcoded white bg (keep rest of the rule)
+  .replace(/background-color:\s*white\s*!important;?/g, "")
+  // Remove hardcoded body text color declarations
+  .replace(/color:\s*rgb\(30,\s*30,\s*30\);?/g, "");
+
+// Extract <body> inner content
+const bodyMatch = rawHtml.match(/<body>([\s\S]*)<\/body>/);
+const cvBody = bodyMatch?.[1]?.trim() ?? "";
+
+// Page metadata
+const pageTitle = "ERFI ANUGRAH | CV";
+const description = "Photographer | Writer | Customer Solutions Engineer";
 const site_name = "stoicopa";
 
-// Person schema for structured data
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": title || "Erfi Anugrah",
-  "jobTitle": resumeDescription || "Customer Solutions Engineer",
-  "url": new URL(Astro.url.pathname, Astro.site).href,
-  "sameAs": contacts?.map(contact => contact.url) || [],
-  "workLocation": {
-    "@type": "Place",
-    "name": entry.data.companies?.[0]?.name || "Cloudflare"
-  },
-  "knowsAbout": ["Web Development", "Cloud Computing", "Network Security"]
-};
-
-// Helper function for shorter contact labels on mobile
-const getShortLabel = (contact) => {
-  switch(contact.icon) {
-    case 'mail': return 'Email';
-    case 'linkedin': return 'LinkedIn';
-    case 'github': return 'GitHub';
-    case 'website': return 'Web';
-    default: return contact.value;
-  }
+  name: "Erfi Anugrah",
+  jobTitle: "Senior Customer Solutions Engineer",
+  url: new URL(Astro.url.pathname, Astro.site).href,
+  sameAs: [
+    "https://github.com/erfianugrah",
+    "https://linkedin.com/in/erfianugrah",
+    "https://erfi.dev",
+  ],
+  workLocation: { "@type": "Place", name: "Cloudflare" },
+  knowsAbout: ["Web Development", "Cloud Computing", "Network Security"],
 };
 ---
 
@@ -62,180 +57,112 @@ const getShortLabel = (contact) => {
   is404Page={false}
   hideHeaderFooter={true}
 >
-  <!-- Structured data for SEO -->
   <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
-  
-  <!-- Basic inline print styles -->
-  <style>
-    @media print {
-      @page { size: A4; margin: 1cm; }
-      /* Add some basic styles here in case the external stylesheet doesn't load */
-      body { font-family: 'Inconsolata', monospace !important; font-size: 11pt; color: #000; }
-    }
-  </style>
 
-  <div class="cv-print-wrapper max-w-4xl mx-auto bg-white dark:bg-slate-800 shadow-lg rounded-lg overflow-hidden print:shadow-none print:border print:border-slate-200">
-    <!-- Header section with responsive design -->
-    <div class="bg-slate-100 dark:bg-slate-700 px-4 sm:px-8 py-6 border-b border-slate-200 dark:border-slate-600 print:bg-white print:border-slate-200">
-      <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-        <div class="space-y-2">
-          <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 font-inconsolata uppercase tracking-wide">
-            {fullName}
-          </h1>
-          <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 font-inconsolata print:hidden">
-            {resumeDescription}
-          </p>
-          
-          <!-- Social links with better mobile spacing -->
-          <div class="mt-3 flex flex-wrap gap-x-4 gap-y-2 font-inconsolata text-sm">
-            {contacts && contacts.map((contact) => (
-              <a 
-                href={contact.url} 
-                class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium flex items-center"
-                target="_blank"
-                rel="noopener noreferrer"
-                title={getShortLabel(contact)}
-              >
-                <Icon name={`mdi:${contact.icon === 'mail' ? 'email' : contact.icon}`} class="w-4 h-4 mr-1.5" />
-                <span>{contact.value}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-        <div class="mt-2 md:mt-0 self-start print:hidden">
-          <div class="flex items-center gap-3">
-            <div>
-              <ThemeToggle client:load />
-            </div>
-            <div class="relative group">
-              <button id="print-cv" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-5 rounded-md transition flex items-center text-sm sm:text-base shadow-md hover:shadow-lg">
-                <Icon name="mdi:printer" class="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2" width="20" height="20" />
-                Save as PDF
-              </button>
-              <div class="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-slate-700 shadow-lg rounded-md p-3 text-xs text-slate-700 dark:text-slate-200 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 border border-slate-200 dark:border-slate-600">
-                This will open your browser's print dialog where you can save as PDF. All styling, colors and formatting will be preserved in the PDF output.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <!-- cv-v0 styles -->
+  <Fragment set:html={`<style>${styleBlocks}</style>`} />
+
+  <div class="max-w-4xl mx-auto shadow-[0_4px_24px_-4px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)] rounded-lg overflow-hidden print:shadow-none">
+    <!-- Revista toolbar -->
+    <div class="flex items-center justify-end gap-3 px-4 sm:px-8 py-3 text-gray-700 dark:text-[rgb(245,245,245)] print:hidden">
+      <ThemeToggle client:load />
     </div>
 
-    <!-- Mobile-optimized navigation -->
-    <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-4 sm:px-8 py-3 sticky top-0 z-10 print:hidden">
-      <nav class="cv-nav">
-        <button class="md:hidden w-full text-left flex items-center justify-between py-1 font-inconsolata" id="mobile-nav-toggle">
-          <span class="font-medium text-slate-700 dark:text-slate-300">Navigate Sections</span>
-          <Icon name="mdi:chevron-down" class="w-5 h-5 transition-transform text-slate-500" id="nav-toggle-icon" />
-        </button>
-        <ul class="hidden md:flex md:flex-wrap gap-x-6 gap-y-2 font-inconsolata transition-all max-h-0 md:max-h-none overflow-hidden" id="section-links" role="list" aria-label="CV Sections Navigation">
-          {sections.map(section => (
-            <li>
-              <a 
-                href={`#${section.id}`} 
-                class="text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 font-medium text-sm transition section-link focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:rounded-sm"
-                aria-current={Astro.url.hash === `#${section.id}` ? "true" : "false"}
-              >
-                {section.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+    <!-- Imported CV content -->
+    <div id="cv-content" class="cv-preview-container cv-imported p-4 sm:p-8">
+      <Fragment set:html={cvBody} />
     </div>
-
-    <!-- CV content -->
-    <div id="cv-content" data-updated-date={new Date(entry.data.updatedDate).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'})}>
-      <ProseCv>
-        <Content />
-      </ProseCv>
-    </div>
-    
   </div>
 </BaseLayout>
 
 <script>
   import { initTheme } from "../scripts/theme.ts";
-  import { initPrint } from "../scripts/cv-print.ts";
-  import { initMobileNav, initSectionNav, initScrollSpy } from "../scripts/cv-navigation.ts";
-
   initTheme();
-
-  document.addEventListener("astro:page-load", () => {
-    const navToggle = document.getElementById("mobile-nav-toggle");
-    const navLinks = document.getElementById("section-links");
-    const navIcon = document.getElementById("nav-toggle-icon");
-    const sectionLinks = document.querySelectorAll(".section-link");
-    const sections = document.querySelectorAll("h2[id]");
-    const printButton = document.getElementById("print-cv");
-
-    if (navToggle && navLinks && navIcon) {
-      const els = { navToggle, navLinks, navIcon, sectionLinks, sections };
-      initMobileNav(els);
-      initSectionNav(els);
-      initScrollSpy(els);
-    }
-
-    if (printButton) {
-      initPrint(printButton);
-    }
-  });
 </script>
 
-<!-- 
-  Simple PDF generation using browser's print functionality:
-  - Uses the browser's native print dialog
-  - All print styles are applied through CSS media queries
-  - Provides a notification when opening the print dialog
-  - Simple and reliable approach
--->
-
-<style>
-  /* Mobile navigation dropdown */
-  @media (max-width: 768px) {
-    #section-links.expanded {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      padding: 0.75rem 0;
-      max-height: 200px;
-      transition: max-height 0.3s ease-in-out;
-    }
+<style is:global>
+  /* ── Light mode defaults ──
+     We stripped `background-color: white !important` and `color: rgb(30,30,30)`
+     from the cv-v0 CSS at build time so dark mode can override them. Re-apply
+     them here, without !important, as the light-mode baseline. */
+  .cv-imported {
+    background-color: white;
+    color: rgb(30, 30, 30);
   }
 
-  /* Active state for navigation */
-  .cv-nav a.active {
-    color: var(--color-blue-600);
-    font-weight: 600;
-  }
-  
-  :global(.dark) .cv-nav a.active {
-    color: var(--color-blue-400);
+  /* ── Dark mode ──
+     Target Tailwind utility classes directly (they're real class tokens on
+     elements, e.g. class="text-gray-900 font-bold") rather than attribute
+     substring selectors which were too greedy. */
+
+  /* Container — slightly elevated from page bg so shadow has contrast */
+  .dark .cv-imported {
+    background-color: rgb(45, 44, 49) !important;
+    color: #cbd5e1 !important; /* slate-300 fallback */
   }
 
-  /* Section highlight animation */
-  @keyframes highlight-pulse {
-    0% { background-color: rgba(59, 130, 246, 0.1); }
-    100% { background-color: transparent; }
+  /* Primary text — headings, titles, skill labels (text-gray-900) */
+  .dark .cv-imported .text-gray-900 {
+    color: #f1f5f9 !important; /* slate-100 */
   }
 
-  .highlight-section {
-    animation: highlight-pulse 2s ease-out;
+  /* Body text — descriptions, achievements, bullets (text-gray-700) */
+  .dark .cv-imported .text-gray-700 {
+    color: #cbd5e1 !important; /* slate-300 */
   }
-  
-  /* Ensure job content is always visible */
+
+  /* Secondary text — school names, project language stats (text-gray-600) */
+  .dark .cv-imported .text-gray-600 {
+    color: #94a3b8 !important; /* slate-400 */
+  }
+
+  /* Muted text — dates, durations, "Key Achievements" label (text-gray-500) */
+  .dark .cv-imported .text-gray-500 {
+    color: #64748b !important; /* slate-500 */
+  }
+
+  /* Accent colors — brighten blues for dark background */
+  .dark .cv-imported .text-blue-600 {
+    color: #93c5fd !important; /* blue-300 */
+  }
+  .dark .cv-imported .text-blue-700 {
+    color: #93c5fd !important; /* blue-300 — tech tags */
+  }
+
+  /* Border accents */
+  .dark .cv-imported .border-blue-600 {
+    border-color: #3b82f6 !important; /* blue-500 */
+  }
+  .dark .cv-imported .border-blue-200 {
+    border-color: #475569 !important; /* slate-600 */
+  }
+  .dark .cv-imported .border-gray-300 {
+    border-color: #475569 !important; /* slate-600 */
+  }
+
+  /* Progress bar & language bar tracks */
+  .dark .cv-imported .bg-gray-200 {
+    background-color: #334155 !important; /* slate-700 */
+  }
+
+  /* Tech tag backgrounds */
+  .dark .cv-imported .bg-blue-50 {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+  }
+
+  /* Profile image — soften shadow in dark mode */
+  .dark .cv-imported img.shadow-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  /* SVGs inherit color from parent via currentColor — no override needed */
+
+  /* ── Print ── */
   @media print {
-    .job-content {
-      display: block !important;
-      height: auto !important;
-      max-height: none !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      overflow: visible !important;
-    }
-    
-    .job-header {
-      background-color: transparent !important;
+    .cv-imported {
+      padding: 0 !important;
+      background-color: white !important;
+      color: rgb(30, 30, 30) !important;
     }
   }
 </style>

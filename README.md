@@ -99,7 +99,7 @@ graph TD
     E --> E6["🧩 Masonry.astro"]
     E --> E7["🧩 HeroImage.tsx"]
     E --> E8["🧩 NextPost.astro"]
-    E --> E9["🧩 cv/ components"]
+    E --> E9["🧩 ThemeToggle.tsx"]
 
     F["📁 layouts"] --> F1["📄 BaseLayout.astro"]
     F --> F2["📄 MarkdownPostLayout.astro"]
@@ -158,11 +158,11 @@ graph TD
     - `burgundy.ts`: 404 page quote rotation
     - `rss.ts`: RSS link visibility and URL management
     - `since94.ts`: Years-since-1994 counter (used in MDX)
-    - `cv-print.ts`: CV print dialog functionality
-    - `cv-navigation.ts`: CV mobile nav, section nav, scroll-spy
+
     - `undici-retry.ts`: HTTP fetch retry helper for build-time requests
     - `utils.ts`: Shared `shuffle()` and `formatDate()` utilities
     - `collections.ts`: Shared `buildDetailPaths()`, `buildTagPaths()`, `generateRss()` helpers
+
 - `public/`: Static assets like images and fonts
 - Configuration files:
   - `astro.config.mjs`: Astro configuration
@@ -321,7 +321,7 @@ graph TD
 
     F["📁 authors/"] --> N["📄 about-me.mdx<br><i>author bio</i>"]
 
-    G["📁 cv/"] --> O["📄 resume.mdx<br><i>professional experience</i>"]
+    G["📁 cv/"] --> O["📄 cv-export.html<br><i>exported CV from cv-v0</i>"]
 
     class D,E,F,G contentType
     class L,M,N,O mdFile
@@ -562,7 +562,6 @@ The site uses Tailwind CSS v4.1.17 for styling, with carefully configured settin
 
    - **Component-specific CSS**:
      - `MasonryLayout.css`: Custom grid-based implementation
-     - `cv-print.css`: Print-specific styles for the CV page
      - `lightbox.css`: Custom lightbox styling (fade transitions, overlay, controls)
 
 3. **CSS-in-JS Integration**
@@ -958,48 +957,17 @@ Some ideas I'm considering for future updates:
 
 ## Component Highlights
 
-### CV Component System
+### CV Page
 
-The CV page uses a dedicated component system in `src/components/cv/` to create a professional, interactive resume:
+The CV page (`src/pages/cv.astro`) imports a pre-rendered HTML export from my separate [cv-v0](https://github.com/erfianugrah/cv-v0) Next.js app rather than building the CV from Astro components:
 
-1. **Component-Based Architecture**: The CV is built from specialized components:
-   - `Section.astro`: Base container for each CV section
-   - `Company.astro`: Displays company information with logo and details
-   - `Timeline.astro`: Visualizes position duration with color-coded bars
-   - `SkillBar.astro`: Shows skill proficiency with visual indicators
-   - `EducationTimeline.astro`: Specialized timeline for educational history
-   - `Contact.astro`: Presents contact information with icons
-   - `ColorLegend.astro`: Explains the timeline color coding system
+1. **HTML Import Pipeline**: At build time, `cv.astro` reads `src/content/cv/cv-export.html` (a Puppeteer DOM capture from cv-v0), extracts `<style>` blocks and `<body>` content, strips conflicting `html`/`body` rules, and rescopes `body > div` selectors to `.cv-imported`.
 
-2. **Single Source of Truth**: All CV content is maintained in a single file (`src/content/cv/resume.mdx`) with a structured schema:
+2. **Dark Mode Overrides**: The cv-v0 export uses Tailwind utility classes (`.text-gray-900`, `.text-gray-700`, etc.) as real class tokens, so dark mode is handled by targeting those classes directly under `.dark .cv-imported` with appropriate slate-palette colors.
 
-   ```yaml
-   ---
-   title: "Erfi Anugrah"
-   description: "Photographer | Writer | Customer Solutions Engineer"
-   contacts:
-     - type: email
-       value: erfi@erfianugrah.com
-       url: mailto:erfi@erfianugrah.com
-   companies:
-     - name: "Cloudflare"
-       positions:
-         - title: "Senior Customer Solutions Engineer"
-           dateRange: { start: "2024-10", end: "Present" }
-   skills:
-     - name: "HTML/CSS"
-       level: "expert"
-   education:
-     - institution: "Nanyang Technological University"
-       degree: "Bachelor of Business (Marketing)"
-   ---
-   ```
+3. **Minimal Shell**: The page uses `BaseLayout` with `hideHeaderFooter` and just renders a theme toggle above the imported CV content. No nav, no print button, no section scroll-spy.
 
-3. **Print Optimization**: Special CSS rules in `cv-print.css` ensure the CV looks professional when printed or exported as PDF
-
-4. **Responsive Design**: The CV layout adapts seamlessly from mobile to desktop with Tailwind's responsive utilities
-
-For detailed implementation information, see [`src/components/cv/README.md`](src/components/cv/README.md).
+4. **Updating**: To update the CV, re-export from cv-v0 and replace `src/content/cv/cv-export.html`.
 
 ### Masonry Layout System
 
