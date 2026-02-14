@@ -91,31 +91,26 @@ This configuration:
 
 The site is deployed to Cloudflare Workers with Static Assets for edge caching:
 
-### Cache Control Headers
+### Caddy Configuration
 
-Custom headers are defined in the Caddyfile:
+The Docker container uses Caddy with zstd + gzip compression and precompressed asset delivery:
 
 ```
-# Basic Caddyfile for the Revista site
 :80 {
-    # Set cache control headers for better performance
-    header /* {
-        # Cache static assets for 1 week
-        Cache-Control "public, max-age=604800, must-revalidate"
-    }
-
-    # Special cache settings for images
-    header /assets/* {
-        Cache-Control "public, max-age=2592000, must-revalidate"
+    encode zstd gzip
+    root * /usr/share/caddy
+    try_files {path} {path}/ /404.html
+    file_server {
+        precompressed zstd br gzip
     }
 }
 ```
 
 Benefits:
 
-- Different cache policies for different asset types
-- Longer cache for images (30 days)
-- Shorter cache for HTML/CSS/JS (1 week)
+- zstd compression for better ratios than gzip alone
+- Precompressed asset serving (if `.zst`, `.br`, or `.gz` files exist, Caddy serves those directly)
+- No explicit cache/security headers needed - Cloudflare handles that at the edge
 
 ### Edge Deployment
 
@@ -195,11 +190,11 @@ These settings provide:
 The project is regularly tested for performance using:
 
 - Lighthouse scores for overall performance
-- Web Vitals metrics (LCP, FID, CLS)
+- Web Vitals metrics (LCP, INP, CLS)
 - Network waterfall analysis
 
 Key metrics targeted:
 
 - **LCP (Largest Contentful Paint)**: Under 2.5s
-- **FID (First Input Delay)**: Under 100ms
+- **INP (Interaction to Next Paint)**: Under 200ms
 - **CLS (Cumulative Layout Shift)**: Under 0.1

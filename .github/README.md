@@ -63,8 +63,6 @@ jobs:
           path: |
             ~/.bun/install/cache
             node_modules
-            .astro
-            dist
           key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json', 'astro.config.mjs', 'tailwind.config.mjs') }}
           restore-keys: |
             ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json') }}-
@@ -144,26 +142,34 @@ Key points:
 ### Deno Deploy
 
 ```yaml
-deploy-deno:
-  needs: test
+deploy-to-deno:
+  needs: build-revista
+  if: github.event_name == 'push' || github.event_name == 'pull_request'
   runs-on: ubuntu-latest
+  permissions:
+    id-token: write
+    contents: read
   steps:
-    - name: Download build
-      uses: actions/download-artifact@v3
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
       with:
-        name: build-output
+        name: dist
         path: dist
 
-    - name: Deploy to Deno Deploy
+    - name: Setup Deno
+      uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.x
+
+    - name: Deploy to Deno
       uses: denoland/deployctl@v1
       with:
-        project: revista
-        entrypoint: https://deno.land/std/http/file_server.ts
-        root: dist
-        token: ${{ secrets.DENO_DEPLOY_TOKEN }}
+        project: "revista-3"
+        entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts"
+        root: "dist"
 ```
 
-This provides a secondary deployment target using Deno's edge platform.
+Authentication uses OIDC (`id-token: write`) rather than a deploy token - no secret management needed.
 
 ### GitHub Pages
 
@@ -260,7 +266,7 @@ build-and-push-docker:
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}.{{minor}}
           type=semver,pattern={{major}}
-          type=sha,prefix={{branch}}-
+          type=sha
           type=raw,value=latest,enable={{is_default_branch}}
 
     - name: Build and push Docker image
@@ -295,7 +301,7 @@ When you create a GitHub release with tag `v1.2.3`, the workflow automatically c
 - `erfianugrah/revista-4:1.2` (major.minor)
 - `erfianugrah/revista-4:1` (major)
 - `erfianugrah/revista-4:latest` (if on main branch)
-- `erfianugrah/revista-4:main-<sha>` (commit SHA for tracking)
+- `erfianugrah/revista-4:sha-<sha>` (commit SHA for tracking)
 
 All images are signed with Cosign for supply chain security.
 

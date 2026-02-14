@@ -28,10 +28,10 @@ graph TD
 
 ### Key Integration Points
 
-1. **ThemeToggle Component**:
-   - **ThemeToggle.astro**: A lightweight wrapper that imports and renders the React component
-   - **ThemeToggle.tsx**: A React component that uses `framer-motion` for animations and manages theme state
-   - **Connection**: The `.astro` file uses the `client:idle` directive to hydrate the component when the browser is idle
+1. **ThemeToggle Component** (split architecture):
+   - **ThemeToggle.astro**: Lightweight wrapper that imports and renders the React component with `client:idle`
+   - **ThemeToggle.tsx**: React component using `framer-motion` for sun/moon animations. Watches for `class` attribute changes via `MutationObserver` and dispatches a `theme-toggle` custom event on click.
+   - **theme.ts**: Shared module that handles the actual theme logic - reads/writes `localStorage`, toggles the `dark` class on `<html>`, and listens for both the `theme-toggle` event and `astro:after-swap` (for View Transitions).
 
 ```astro
 ---
@@ -43,40 +43,31 @@ import ThemeToggle from "./ThemeToggle";
 ```
 
 ```tsx
-// ThemeToggle.tsx (simplified)
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+// ThemeToggle.tsx — React handles UI, theme.ts handles state
+const toggleTheme = () => {
+  window.dispatchEvent(new Event("theme-toggle"));
+};
 
-export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
+// MutationObserver watches for class changes on <html>
+// to keep React's isDark state in sync with theme.ts
+```
 
-  // Load theme from localStorage
-  useEffect(() => {
-    const theme = localStorage.getItem("theme") || "light";
-    setIsDark(theme === "dark");
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, []);
-
-  // Toggle theme handler
-  const toggleTheme = () => {
-    const newTheme = isDark ? "light" : "dark";
-    setIsDark(!isDark);
-    document.documentElement.classList.toggle("dark", !isDark);
-    localStorage.setItem("theme", newTheme);
-  };
-
-  return (
-    <button onClick={toggleTheme} aria-label="Toggle theme">
-      {/* SVG with motion animations */}
-    </button>
-  );
+```typescript
+// theme.ts — single source of truth for theme state
+export function initTheme(): void {
+  applyTheme(getThemePreference());
+  window.addEventListener("theme-toggle", toggleTheme);
+  document.addEventListener("astro:after-swap", () => {
+    applyTheme(getThemePreference());
+  });
 }
 ```
 
 2. **State Management**:
-   - Uses React's `useState` and `useEffect` for component state
-   - Persists theme preference in `localStorage`
-   - Updates CSS classes on the document root for theme switching
+   - `theme.ts` owns the state (localStorage + DOM class)
+   - React component is a pure UI layer that dispatches events
+   - `MutationObserver` keeps React in sync without tight coupling
+   - `astro:after-swap` re-applies theme after View Transitions body swap
 
 ## Masonry Image Grid Implementation
 
@@ -193,27 +184,33 @@ These custom utilities provide precise control over image positioning and croppi
 All content is validated using Zod schemas with the following pattern:
 
 ```typescript
+// Shared base schema — all collections use this
+const baseSchema = z.object({
+  title: z.string(),
+  tags: z.array(z.string()),
+  author: z.string(),
+  description: z.string(),
+  image: z
+    .object({
+      src: z.string(),
+      alt: z.string(),
+      positionx: z.string().optional(),
+      positiony: z.string().optional(),
+    })
+    .optional(),
+  pubDate: z.coerce.date(),
+  updatedDate: z.coerce.date().optional(),
+});
+
 const muses = defineCollection({
   loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/muses" }),
-  schema: z.object({
-    // Required fields
-    title: z.string(),
-    tags: z.array(z.string()),
-    author: z.string(),
-    description: z.string(),
-    pubDate: z.coerce.date(),
+  schema: baseSchema,
+});
 
-    // Optional fields with complex validation
-    image: z
-      .object({
-        src: z.string(),
-        alt: z.string(),
-        positionx: z.string().optional(),
-        positiony: z.string().optional(),
-      })
-      .optional(),
-    updatedDate: z.coerce.date().optional(),
-  }),
+// CV extends the base with professional fields
+const cv = defineCollection({
+  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/cv" }),
+  schema: baseSchema.extend({ fullName: z.string().optional() /* ... */ }),
 });
 ```
 

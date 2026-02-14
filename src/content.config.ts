@@ -1,6 +1,15 @@
+/**
+ * Content collection definitions.
+ *
+ * All collections share a `baseSchema` for common frontmatter fields.
+ * The CV collection extends it with professional fields (companies,
+ * skills, education, etc.). Collections use Astro's glob loader to
+ * select MDX files; filenames starting with `_` are excluded (drafts).
+ */
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 
+/** Shared shape of a content collection entry used across all collections. */
 const baseSchema = z.object({
   title: z.string(),
   tags: z.array(z.string()),
@@ -43,6 +52,7 @@ const authors = defineCollection({
   schema: baseSchema,
 });
 
+/** CV extends baseSchema with structured professional data. */
 const cv = defineCollection({
   loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/cv" }),
   schema: baseSchema.extend({

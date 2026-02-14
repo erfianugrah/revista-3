@@ -1,3 +1,14 @@
+/**
+ * Parallax hero image for content pages.
+ *
+ * Uses IntersectionObserver to enable/disable the scroll listener so
+ * the parallax transform only runs while the hero is in the viewport.
+ * The inner div is oversized (-20%/120%) to give headroom for the
+ * parallax offset without exposing gaps. A hidden accessible <img>
+ * at the bottom provides alt text for screen readers.
+ *
+ * Hydrated with client:load since it needs to be visible immediately.
+ */
 "use client";
 import { useEffect, useRef } from "react";
 

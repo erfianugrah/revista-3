@@ -1,4 +1,14 @@
 ---
+/**
+ * Photo gallery with CSS Grid masonry layout.
+ *
+ * Images are optimized to AVIF via getImage(), displayed in a dense grid
+ * with nth-child span rules for visual rhythm, and linked to the custom
+ * lightbox for fullscreen viewing with zoom/pan.
+ *
+ * Per-image focal point overrides (positionx/positiony) control
+ * object-position for cropped thumbnails. Default is center 25%.
+ */
 import "../styles/MasonryLayout.css";
 import { getImage } from "astro:assets";
 

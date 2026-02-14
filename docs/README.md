@@ -15,3 +15,5 @@ Each doc now lives as a `README.md` inside the directory it describes — GitHub
 - **Docker:** `docker.md` — container build/run steps, Caddy config.
 - **CV Components:** `../src/components/cv/README.md` — CV-specific component system.
 - **Build Scripts:** `../scripts/README.md` — content creation CLI, version sync, update-post.
+- **Docker (quick start):** `../README.Docker.md` — quick reference for running the container.
+- **Refactoring Plan:** `../PLAN.md` — historical record of the code quality refactoring (completed).

@@ -95,9 +95,16 @@ graph TD
     E --> E2["🧩 Footer.astro"]
     E --> E3["🧩 Header.astro"]
     E --> E4["🧩 Navigation.astro"]
+    E --> E5["🧩 Homepage.astro"]
+    E --> E6["🧩 Masonry.astro"]
+    E --> E7["🧩 HeroImage.tsx"]
+    E --> E8["🧩 NextPost.astro"]
+    E --> E9["🧩 cv/ components"]
 
     F["📁 layouts"] --> F1["📄 BaseLayout.astro"]
     F --> F2["📄 MarkdownPostLayout.astro"]
+    F --> F3["📄 AuthorLayout.astro"]
+    F --> F4["📄 TagLayout.astro"]
 
     G["📁 pages"] --> G1["🌐 index.astro<br>(homepage)"]
     G --> G2["🌐 404.astro<br>(error page)"]
@@ -109,8 +116,8 @@ graph TD
     J["📁 scripts"] --> J1["⚡ theme.ts<br>(dark/light mode)"]
     J --> J2["⚡ lightbox.ts<br>(image lightbox)"]
 
-    class E1,E2,E3,E4 compFile
-    class F1,F2 layoutFile
+    class E1,E2,E3,E4,E5,E6,E7,E8,E9 compFile
+    class F1,F2,F3,F4 layoutFile
     class G1,G2,G3 pageFile
     class I1,I2 styleFile
     class J1,J2 scriptFile
@@ -390,6 +397,7 @@ graph TD
     A --> H["⏳ /zeitweilig<br>(Ephemeral content)"]
 
     %% RSS feeds
+    C -.-> C0["📡 /authors/rss.xml"]
     E -.-> E0["📡 /long_form/rss.xml"]
     F -.-> F0["📡 /short_form/rss.xml"]
     G -.-> G0["📡 /muses/rss.xml"]
@@ -397,7 +405,7 @@ graph TD
 
     class A rootRoute
     class B,C,D,E,F,G,H staticRoute
-    class E0,F0,G0,H0 staticRoute
+    class C0,E0,F0,G0,H0 staticRoute
 ```
 
 ### Long-form and Short-form Routes
@@ -582,9 +590,9 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
 
 ### Media Management
 
-- **`lightbox.ts`**: Custom image lightbox (replaced GLightbox — 73 KB → ~2.4 KB gzipped):
-  - Multi-level zoom: click cycles through 2x → 3.5x → reset; Ctrl/Cmd + scroll wheel for incremental zoom (up to 5x) centered on cursor; continuous pinch zoom on touch
-  - Zoom uses `maxWidth`/`maxHeight` expansion (GLightbox technique) with `translate3d` panning — pure compositor operations, no re-rasterization
+- **`lightbox.ts`**: Custom image lightbox (replaced GLightbox - 73 KB -> ~2.4 KB gzipped):
+  - Multi-level zoom: click cycles 2x -> 3.5x -> reset; scroll wheel for cursor-anchored incremental zoom (up to 5x); continuous pinch zoom on touch
+  - Zoom uses `scale() + translate3d()` - a single CSS transform, pure compositor operation, no layout recalculation on any frame
   - Keyboard navigation (arrow keys, Escape zooms out first then closes)
   - Touch swipe navigation at 1x, drag/pan when zoomed
   - Fade transitions, prev/next/close/zoom controls, image counter
@@ -610,14 +618,14 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
 
 - **`homePage.ts`**: Powers the dynamic homepage content:
   - Selects featured content from different collections
-  - Implements a weighted random selection algorithm for better variety
+  - Uses Fisher-Yates shuffle (from `utils.ts`) to randomize the selection
   - Ensures fresh content appears on each page load
 
 ### Shared Utilities
 
 - **`utils.ts`**: Common helpers shared across scripts:
   - `shuffle()`: Fisher-Yates array shuffle
-  - `formatDate()`: consistent date formatting using dayjs
+  - `formatDate()`: consistent date formatting using native `Date.toDateString()`
 
 - **`collections.ts`**: Shared content collection helpers:
   - `buildDetailPaths()`: generates `getStaticPaths` for `[...id].astro` pages
@@ -630,6 +638,23 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
 - **`remark-modified-time.mjs`**: MDX plugin that extracts and normalizes file modification timestamps
 
 All scripts are TypeScript (except the two remark plugins which remain `.mjs`), minimal, focused, and non-blocking to maintain the site's performance profile.
+
+### Build Pipeline
+
+- **`prebuild`** (automatic): Runs `scripts/sync-readme-versions.js` to keep version badges in docs in sync with `package.json`.
+- **`postbuild`** (automatic): Runs Pagefind indexing over the `dist/` output.
+
+## Astro Configuration Highlights
+
+The `astro.config.mjs` includes several features worth noting:
+
+1. **Math Rendering**: `remark-math` + `rehype-katex` for LaTeX-style equations in MDX content
+2. **Markdoc Integration**: `@astrojs/markdoc` available alongside MDX for content authoring
+3. **Dual Shiki Themes**: Syntax highlighting uses `rose-pine-dawn` (light) and `tokyo-night` (dark) with `defaultColor: false` so both themes are emitted and CSS controls which one is visible
+4. **Sitemap Generation**: `@astrojs/sitemap` automatically generates `sitemap-index.xml` during build
+5. **Experimental Client Prerendering**: `clientPrerender: true` enables speculative prerendering of linked pages for near-instant navigation
+6. **Experimental Fonts API**: Fonts (Inconsolata, Overpass Mono) are loaded via Astro's font provider system with `optimizedFallbacks: true` for reduced CLS
+7. **undici-retry**: Custom Astro integration (`src/scripts/undici-retry.ts`) that patches the global fetch with retry logic for build-time HTTP requests
 
 ## Performance Optimization
 
@@ -770,67 +795,29 @@ The project's Dockerfile is straightforward:
 
 ```dockerfile
 # Using the lightweight Alpine variant of Caddy for better performance
-FROM caddy:2.8.4-alpine
+FROM caddy:2.9.1-alpine
 
-# Set the working directory for the site files
 WORKDIR /usr/share/caddy
 
-# Copy the Astro-built static files (from the 'dist' directory after 'bun run build')
 COPY ./dist .
-
-# Copy our custom Caddy configuration
 COPY Caddyfile /etc/caddy/Caddyfile
 
-# Set proper ownership and permissions for security
 RUN chown -R root:root /usr/share/caddy && \
-    chmod -R 755 /usr/share/caddy && \
-    # Create Caddy-specific directories with proper permissions
-    mkdir -p /data/caddy /config/caddy && \
-    chmod 700 /data/caddy /config/caddy
+    chmod -R 755 /usr/share/caddy
 
-# Expose the HTTP port (HTTPS is handled by Cloudflare in production)
 EXPOSE 80
 
-# Run Caddy with our custom config
 CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
 ```
 
-My Caddyfile is quite simple, as I'm using Cloudflare as my edge CDN:
-
-```
-# Basic Caddyfile for the Revista site
-:80 {
-    # Enable gzip compression
-    encode gzip
-
-    # Set cache control headers for better performance
-    header /* {
-        # Cache static assets for 1 week
-        Cache-Control "public, max-age=604800, must-revalidate"
-        # Security headers
-        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "DENY"
-        Referrer-Policy "strict-origin-when-cross-origin"
-    }
-
-    # Special cache settings for images
-    header /assets/* {
-        Cache-Control "public, max-age=2592000, must-revalidate"
-    }
-
-    # Serve the static site from the container's working directory
-    root * /usr/share/caddy
-    file_server
-}
-```
+The Caddyfile is straightforward - Cloudflare handles cache headers and security at the edge, so Caddy just serves files with zstd/gzip compression, precompressed asset delivery, structured JSON logging, and a Prometheus metrics endpoint. See [docs/docker.md](docs/docker.md) for the full configuration.
 
 This setup:
 
-1. Uses Caddy as the web server on Alpine Linux for a small footprint
+1. Uses Caddy 2.9.1 on Alpine Linux for a small footprint
 2. Sets up proper permissions for security
-3. Configures caching and security headers
-4. Exposes port 80 (Cloudflare handles the HTTPS in production)
+3. Serves precompressed assets (zstd, brotli, gzip) for fast delivery
+4. Exposes port 80 (Cloudflare handles HTTPS in production)
 
 ## Security Measures
 

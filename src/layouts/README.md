@@ -6,26 +6,24 @@
 
 ## Overview
 
-This project uses Astro v5.17.2's enhanced layout capabilities with Tailwind CSS v4.1.17 for styling. Layouts provide reusable UI structures that define the visual framework for different page types throughout the site.
+Layouts provide the reusable page-level structures that wrap content throughout the site. They define HTML boilerplate, metadata, and shared components (header, footer), then use `<slot />` to inject page-specific content.
 
-## Layout Architecture
+## Layout Hierarchy
 
-Layouts in this project follow a hierarchical structure:
+1. **[BaseLayout.astro](BaseLayout.astro)**: Foundation for all pages - handles the common HTML structure, metadata, global scripts (theme, RSS, scroll-to-top), and shared components like Header and Footer.
 
-1. **Base Layout**: [BaseLayout.astro](layouts/BaseLayout.astro) serves as the foundation for all pages, providing the common HTML structure, metadata handling, and global components like header and footer.
+2. **[MarkdownPostLayout.astro](MarkdownPostLayout.astro)**: Wraps MDX content pages. Handles the hero image (via `HeroImage` React island), formatted dates, Masonry galleries, and the `NextPost` related-content component.
 
-2. **Content-Specific Layouts**:
-   - **[MarkdownPostLayout.astro](layouts/MarkdownPostLayout.astro)**: Handles rendering of MDX content with advanced features like the Masonry image gallery
-   - **[BlogPost.astro](layouts/BlogPost.astro)**: Specialized layout for blog entries with appropriate metadata and styling
-   - **[TagLayout.astro](layouts/TagLayout.astro)**: Layout for tag pages with random featured images via getRandomImage component
+3. **[AuthorLayout.astro](AuthorLayout.astro)**: Layout for author profile pages. Similar structure to MarkdownPostLayout but tailored for contributor bios.
+
+4. **[TagLayout.astro](TagLayout.astro)**: Layout for tag listing pages. Features a random hero image (via `getRandomImage`) and renders tagged content.
 
 ## Content Injection
 
-You'll see `<slot />` elements frequently throughout these layout files. This is Astro's mechanism for content injection, allowing content from [content collections](/src/content.config.ts) to be inserted into the layout. For example:
+`<slot />` is Astro's mechanism for content injection, allowing content from the content collections to be inserted into the layout:
 
 ```astro
 ---
-// Example layout frontmatter
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 ---
@@ -37,7 +35,6 @@ import Footer from "../components/Footer.astro";
   <body>
     <Header />
     <main>
-      <!-- Content from page or component using this layout gets inserted here -->
       <slot />
     </main>
     <Footer />
@@ -47,17 +44,8 @@ import Footer from "../components/Footer.astro";
 
 ## Type Safety
 
-Layouts receive strongly-typed props from content collections, ensuring that the required data is always available for rendering. The content collections are defined using Astro's glob loader pattern, which provides enhanced type safety and explicit file selection.
+Layouts receive strongly-typed props from content collections, validated by the Zod schemas in `content.config.ts`. The glob loader pattern provides explicit file selection and enhanced type safety.
 
 ## Responsive Design
 
-All layouts incorporate responsive design principles through Tailwind CSS v4 utilities. They adapt seamlessly to different screen sizes with custom breakpoints optimized for photography viewing at 800px, 1200px, 1900px, 2500px, and 3800px.
-
-## Performance Optimization
-
-Layouts are designed for optimal performance with:
-
-1. Minimal client-side JavaScript
-2. Efficient rendering through Astro's partial hydration
-3. Properly configured metadata for SEO
-4. Optimized asset loading with prefetch directives
+All layouts use Tailwind CSS v4 utilities with custom breakpoints optimized for photography viewing at 800px, 1200px, 1900px, 2500px, and 3800px.

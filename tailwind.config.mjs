@@ -49,6 +49,6 @@ export default {
       // => @media (min-width: 3840px) { ... }
     },
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [typography],
   darkMode: "class",
 };

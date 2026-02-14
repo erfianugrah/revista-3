@@ -6,39 +6,42 @@
 
 ## Overview
 
-Pages in Astro define the routes of the website. This project uses static site generation (SSG) rather than server-side rendering (SSR) or hybrid rendering for optimal performance and hosting flexibility.
+Pages define the routes of the site. The project uses static site generation (SSG) for optimal performance and hosting flexibility.
 
 ## Page Types
 
-This project contains several types of pages:
-
 ### Static Pages
 
-- **[index.astro](pages/index.astro)**: The homepage that uses [Homepage.astro](components/Homepage.astro) for layout and featured content
-- **[404.astro](pages/404.astro)**: Custom error page featuring random quotes from [burgundy.ts](scripts/burgundy.ts)
-- **[cv.astro](pages/cv.astro)**: Resume page using specialized CV components and layouts
+- **[index.astro](index.astro)**: Homepage using [Homepage.astro](../components/Homepage.astro) for layout and featured content
+- **[404.astro](404.astro)**: Custom error page featuring random quotes from [burgundy.ts](../scripts/burgundy.ts)
+- **[cv.astro](cv.astro)**: Resume page using specialized [CV components](../components/cv/)
 
 ### Collection Index Pages
 
-- **[muses/index.astro](pages/muses/index.astro)**: Photography collections landing page
-- **[short_form/index.astro](pages/short_form/index.astro)**: Short blog posts index
-- **[long_form/index.astro](pages/long_form/index.astro)**: Long-form articles index
-- **[zeitweilig/index.astro](pages/zeitweilig/index.astro)**: Ephemeral content index
-- **[authors/index.astro](pages/authors/index.astro)**: Author profiles index
+Each collection has a top-level index page that lists all its entries:
+
+- **[muses.astro](muses.astro)**: Photography collections landing page
+- **[short_form.astro](short_form.astro)**: Short blog posts index
+- **[long_form.astro](long_form.astro)**: Long-form articles index
+- **[zeitweilig.astro](zeitweilig.astro)**: Ephemeral content index
+- **[authors.astro](authors.astro)**: Author profiles index
 
 ### Dynamic Pages
 
-- **[...collection]/[...id].astro**: Individual content pages generated from collections
-- **[...collection]/tags/[tag].astro**: Tag-specific pages showing all content with a given tag
-- **[...collection]/tags/index.astro**: Tag listings for each collection
+Each collection follows the same routing pattern:
+
+- **`[collection]/[...id].astro`**: Individual content pages generated from collections
+- **`[collection]/tags/[tag].astro`**: Tag-specific pages showing all content with a given tag
+- **`[collection]/tags/index.astro`**: Tag listings for each collection
+
+This applies to all five collections: `muses`, `short_form`, `long_form`, `zeitweilig`, and `authors`.
 
 ## Dynamic Routing
 
-Dynamic page routes (such as individual blog posts) are generated from content collections defined in [content.config.ts](/src/content.config.ts) using Astro's `getStaticPaths()` function. For example:
+Dynamic routes are generated from content collections defined in [content.config.ts](../content.config.ts) using `getStaticPaths()`:
 
 ```astro
 ---
-// Example from a dynamic route page
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -51,28 +54,27 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 ---
-
-<!-- Page layout and content rendering -->
 ```
 
-## Component Integration
-
-Each page incorporates [components](components/) and [layouts](layouts/) to maintain consistency and reuse code throughout the site. Pages typically:
-
-1. Import needed components and layouts
-2. Fetch data from content collections when needed
-3. Define any page-specific logic in the frontmatter
-4. Render the appropriate layout with relevant content
+Most of this boilerplate is handled by the shared helpers in [collections.ts](../scripts/collections.ts) - `buildDetailPaths()` and `buildTagPaths()`.
 
 ## RSS Feed Generation
 
-Special pages in each collection directory generate RSS feeds, making content available for subscription:
+Each collection directory generates an RSS feed via [collections.ts](../scripts/collections.ts)'s `generateRss()` helper:
 
 - `/long_form/rss.xml`
 - `/short_form/rss.xml`
 - `/muses/rss.xml`
 - `/zeitweilig/rss.xml`
+- `/authors/rss.xml`
 
-## Type Safety
+The RSS link icon in the header is conditionally shown by [rss.ts](../scripts/rss.ts) based on the current path.
 
-All pages benefit from full TypeScript support with Astro v5.17.2's enhanced type system and the performance optimizations in Astro's latest version. The content collections use a consistent schema that enables type-safe access to content throughout the pages.
+## Component Integration
+
+Each page incorporates [components](../components/) and [layouts](../layouts/) to maintain consistency. Pages typically:
+
+1. Import needed components and layouts
+2. Fetch data from content collections
+3. Define any page-specific logic in the frontmatter
+4. Render the appropriate layout with relevant content

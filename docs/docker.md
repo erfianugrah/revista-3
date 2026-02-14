@@ -1,99 +1,40 @@
 # Docker Implementation
 
-### Detailed Docker configuration for the Revista project
+### Container configuration for the Revista project
 
 ---
 
 ## Overview
 
-The Docker implementation for this project provides a production-ready container using Caddy as the web server. The container is designed for security, performance, and ease of deployment across various environments.
+The Docker setup provides a production-ready container using Caddy as the web server. I keep it simple - Caddy serves the pre-built static files, and Cloudflare handles HTTPS and edge caching in production.
 
-## Multi-Stage Build Process
-
-The Dockerfile uses a single-stage build to create an optimized image:
+## Dockerfile
 
 ```dockerfile
-# Using the lightweight Alpine variant of Caddy for better performance
-FROM caddy:2.8.4-alpine
+FROM caddy:2.9.1-alpine
 
-# Set the working directory for the site files
 WORKDIR /usr/share/caddy
 
-# Copy the Astro-built static files (from the 'dist' directory after 'bun run build')
 COPY ./dist .
-
-# Copy our custom Caddy configuration
 COPY Caddyfile /etc/caddy/Caddyfile
 
-# Set proper ownership and permissions for security
 RUN chown -R root:root /usr/share/caddy && \
-    chmod -R 755 /usr/share/caddy && \
-    # Create Caddy-specific directories with proper permissions
-    mkdir -p /data/caddy /config/caddy && \
-    chmod 700 /data/caddy /config/caddy
+    chmod -R 755 /usr/share/caddy
 
-# Expose the HTTP port (HTTPS is handled by Cloudflare in production)
 EXPOSE 80
 
-# Run Caddy with our custom config
 CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
 ```
 
-### Key Features
+Key points:
 
-1. **Base Image**: Uses the Alpine variant of Caddy for a minimal footprint (~40MB)
-2. **Security**: Sets proper file permissions for web content
-3. **Configuration**: Uses a custom Caddyfile for optimized serving
-4. **Simplicity**: Assumes the static files are pre-built before Docker build
-
-## Potential Multi-Stage Build Improvement
-
-A more comprehensive multi-stage build could include the build process itself:
-
-```dockerfile
-# Build stage
-FROM node:20-alpine AS builder
-WORKDIR /app
-
-# Install Bun for faster builds
-RUN npm install -g bun
-
-# Copy package files and install dependencies
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
-
-# Copy source files and build
-COPY . .
-RUN bun run build
-
-# Production stage
-FROM caddy:2.8.4-alpine
-WORKDIR /usr/share/caddy
-
-# Copy built files from builder stage
-COPY --from=builder /app/dist .
-COPY Caddyfile /etc/caddy/Caddyfile
-
-# Set permissions and create directories
-RUN chown -R root:root /usr/share/caddy && \
-    chmod -R 755 /usr/share/caddy && \
-    mkdir -p /data/caddy /config/caddy && \
-    chmod 700 /data/caddy /config/caddy
-
-EXPOSE 80
-CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
-```
-
-This improved approach would:
-
-1. Build the site inside the container
-2. Ensure build environment consistency
-3. Reduce the final image size by excluding build tools
-4. Simplify the CI/CD process
+1. **Base Image**: Alpine variant of Caddy 2.9.1 for a minimal footprint
+2. **Security**: Proper file ownership and permissions for web content
+3. **Simplicity**: Assumes static files are pre-built before `docker build`
 
 ## Multi-Architecture Support
 
-The project includes multi-architecture builds for maximum compatibility:
+The CI/CD pipeline builds for multiple architectures:
 
 ```bash
 docker buildx build \
@@ -102,96 +43,117 @@ docker buildx build \
   --push
 ```
 
-This enables deployment on:
-
-- Standard x86_64 servers (linux/amd64)
-- ARM-based servers (linux/arm64)
-- Raspberry Pi and similar devices (linux/arm/v6, linux/arm/v7)
+This covers standard x86_64 servers, ARM-based servers, and Raspberry Pi devices.
 
 ## Caddyfile Configuration
 
 ```
-# Basic Caddyfile for the Revista site
+{
+    servers {
+        metrics
+    }
+
+    grace_period 5s
+    log {
+        level info
+        output file /var/log/access.log {
+            roll_size 1gb
+            roll_keep 5
+            roll_keep_for 168h
+        }
+        format json {
+            time_format wall
+        }
+    }
+}
+
+:2019 {
+    metrics
+}
+
 :80 {
-    # Enable gzip compression
-    encode gzip
-
-    # Set cache control headers for better performance
-    header /* {
-        # Cache static assets for 1 week
-        Cache-Control "public, max-age=604800, must-revalidate"
-        # Security headers
-        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "DENY"
-        Referrer-Policy "strict-origin-when-cross-origin"
-    }
-
-    # Special cache settings for images
-    header /assets/* {
-        Cache-Control "public, max-age=2592000, must-revalidate"
-    }
-
-    # Serve the static site from the container's working directory
+    encode zstd gzip
     root * /usr/share/caddy
-    file_server
+    try_files {path} {path}/ /404.html
+    encode zstd gzip
+    file_server {
+        precompressed zstd br gzip
+    }
+    handle_errors {
+        rewrite * /404.html
+        file_server
+    }
+    log {
+        level info
+        output file /var/log/revista-access.log {
+            roll_size 1gb
+            roll_keep 5
+            roll_keep_for 168h
+        }
+        format json {
+            time_format wall
+        }
+    }
 }
 ```
 
-This configuration provides:
+This provides:
 
-1. **Compression**: Enables gzip compression for faster delivery
-2. **Cache Control**: Sets appropriate cache times for different asset types
-3. **Security Headers**: Adds security headers for enhanced protection
-4. **Static Serving**: Configures the file server for optimal performance
+1. **Compression**: zstd and gzip with precompressed asset support (brotli too)
+2. **Metrics**: Prometheus-compatible metrics endpoint on `:2019`
+3. **Error Handling**: 404 fallback via `try_files` and `handle_errors`
+4. **Structured Logging**: JSON-formatted access logs with rotation (1GB per file, 5 files, 7 day retention)
+5. **Static Serving**: `file_server` with precompressed asset delivery - if a `.zst`, `.br`, or `.gz` version of a file exists, Caddy serves that instead
 
-## Docker Compose Configuration
+No explicit cache or security headers in the Caddyfile - Cloudflare handles all of that at the edge.
 
-The project includes a `compose.yaml` file for easy deployment:
+## Docker Compose
+
+The `compose.yaml` is configured for running behind a reverse proxy:
 
 ```yaml
-version: "3"
+version: "3.9"
+
 services:
   revista:
-    build: .
-    ports:
-      - "8080:80"
+    image: erfianugrah/revista-4:1.27.6
+    hostname: revista
+    container_name: revista
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 128M
     volumes:
-      - caddy_data:/data
-      - caddy_config:/config
+      - /mnt/user/data/revista/log:/var/log
+    environment:
+      - TZ=Asia/Singapore
+    expose:
+      - 80
+    networks:
+      revista:
+        ipv4_address: 172.19.23.2
 
-volumes:
-  caddy_data:
-  caddy_config:
+networks:
+  revista:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.23.0/24
+          gateway: 172.19.23.1
 ```
 
 Key aspects:
 
-1. **Port Mapping**: Maps container port 80 to host port 8080
-2. **Restart Policy**: Ensures the container restarts automatically
-3. **Persistent Volumes**: Creates volumes for Caddy data and configuration
+1. **Resource Limits**: Capped at 1 CPU and 128MB RAM - more than enough for a static site
+2. **Log Volume**: Caddy's JSON access logs are persisted to the host for analysis
+3. **Network Isolation**: Custom bridge network with a static IP for reverse proxy routing
+4. **No Direct Port Exposure**: Uses `expose` instead of `ports` - the reverse proxy handles external traffic
 
 ## Security Considerations
 
-The Docker setup includes several security enhancements:
-
 1. **Read-Only Content**: Web content is not modified at runtime
-2. **Minimal Permissions**: Content files are owned by root but readable by the Caddy process
-3. **Security Headers**: The Caddyfile adds protective HTTP headers
-4. **No Unnecessary Services**: The container runs only Caddy
-
-## Image Size Optimization
-
-The final image size is optimized at approximately 40MB by:
-
-1. Using Alpine Linux as the base OS
-2. Including only the built static files
-3. Not installing additional packages
-
-This small footprint provides:
-
-- Faster container startup
-- Reduced storage requirements
-- Smaller attack surface
-- Faster deployment and downloads
+2. **Minimal Permissions**: Content files are owned by root, readable by the Caddy process
+3. **No Unnecessary Services**: The container runs only Caddy
+4. **Image Signing**: The CI/CD pipeline signs images with Cosign for supply chain security

@@ -6,23 +6,27 @@
 
 ## Overview
 
-This project uses Astro v5.17.2 with enhanced component features and Tailwind CSS v4.1.17 for styling. Components leverage the latest Astro features for improved performance and type safety.
+Components are the reusable building blocks of the site. Most are Astro `.astro` files (zero JS by default), with a few React `.tsx` islands for interactive bits that need client-side state.
 
 ## Key Components
 
 ### Page & Layout Components
 
-- **[BlogPost.astro](BlogPost.astro)**: Core layout component for all content pages including [short form](https://www.erfianugrah.com/short_form/), [long form](https://www.erfianugrah.com/long_form/), and [tag pages](https://www.erfianugrah.com/long_form/tags/gleichgesinnte/).
+- **[BlogPost.astro](BlogPost.astro)**: Core card component for rendering post previews across [short form](https://www.erfianugrah.com/short_form/), [long form](https://www.erfianugrah.com/long_form/), and [tag pages](https://www.erfianugrah.com/long_form/tags/gleichgesinnte/).
 
-- **[Homepage.astro](Homepage.astro)**: Used in [index.astro](../pages/index.astro) to create the landing page. References [homePage.ts](../scripts/homePage.ts) for randomizing featured images.
+- **[Homepage.astro](Homepage.astro)**: Landing page component used in [index.astro](../pages/index.astro). References [homePage.ts](../scripts/homePage.ts) for randomizing featured images via Fisher-Yates shuffle.
+
+- **[HeroImage.tsx](HeroImage.tsx)**: React island (`client:load`) for the parallax hero image on content pages. Uses an `IntersectionObserver` to only run the parallax scroll handler while visible, and `will-change: transform` to keep it on the compositor. Supports per-image `positionX`/`positionY` focal point overrides. The `-20%`/`120%` oversized inner div gives headroom for the parallax offset.
+
+- **[NextPost.astro](NextPost.astro)**: Related content suggestion shown at the bottom of posts. Picks a random post from the same collection (excluding the current one) and renders it as a linked preview card.
 
 ### Header Components
 
-- **[Header.astro](Header.astro)**: Main header component that incorporates:
+- **[Header.astro](Header.astro)**: Main header, incorporates:
   - **[Hamburger.tsx](Hamburger.tsx)**: Mobile menu toggle (`client:idle`)
-  - **[ThemeToggle.astro](ThemeToggle.astro)**: Light/dark mode switcher wrapping the React ThemeToggle component (`client:idle`)
+  - **[ThemeToggle.astro](ThemeToggle.astro)**: Light/dark mode switcher wrapping the React [ThemeToggle.tsx](ThemeToggle.tsx) component (`client:idle`). The React component dispatches a `theme-toggle` custom event; [theme.ts](../scripts/theme.ts) handles the actual class toggle and localStorage persistence.
   - **[Navigation.astro](Navigation.astro)**: Site navigation menu
-  - **[Pagefind.astro](Pagefind.astro)**: Search functionality using [Pagefind](https://pagefind.app/) integration
+  - **[Pagefind.astro](Pagefind.astro)**: Search functionality using [Pagefind](https://pagefind.app/)
 
 - **[Footer.astro](Footer.astro)**: Site footer with social media icons from [astro-icon](../../package.json)
 
@@ -31,6 +35,8 @@ This project uses Astro v5.17.2 with enhanced component features and Tailwind CS
 - **[Masonry.astro](Masonry.astro)**: Photo gallery with CSS Grid masonry layout. Accepts per-image `positionx`/`positiony` focal point overrides (same pattern as hero images). Smart default crop at `center 25%` for portrait photography. Uses [MasonryLayout.css](../styles/MasonryLayout.css) with `@supports` progressive enhancement for native CSS masonry. Integrates with [lightbox.ts](../scripts/lightbox.ts) for fullscreen viewing with multi-level zoom and drag/pan.
 
 - **[getRandomImage.astro](getRandomImage.astro)**: Used in [TagLayout.astro](../layouts/TagLayout.astro) to randomize featured images from content collections.
+
+- **[FormattedDate.astro](FormattedDate.astro)**: Renders a `<time>` element with a formatted date string and a machine-readable `datetime` attribute.
 
 ### Typography Components
 
@@ -42,22 +48,35 @@ This project uses Astro v5.17.2 with enhanced component features and Tailwind CS
 
 - **[sortbydate.tsx](sortbydate.tsx)**: Used in [Pages](../pages/) to chronologically order posts rendered by [BlogPost.astro](BlogPost.astro).
 
+- **[scroll-to-top.tsx](scroll-to-top.tsx)**: React island for the "back to top" button. Uses `IntersectionObserver` for visibility and smooth scrolling via `window.scrollTo`.
+
+### UI Primitives
+
+- **[ui/button.tsx](ui/button.tsx)**: Shared button component built with `class-variance-authority` for consistent styling variants.
+- **[ui/utils.ts](ui/utils.ts)**: `cn()` utility for merging Tailwind classes (wraps `clsx` + `tailwind-merge`).
+
+### CV Components
+
+The `cv/` subdirectory contains specialized components for the resume page. See [cv/README.md](cv/README.md) for details:
+
+- `Company.astro`, `Contact.astro`, `EducationTimeline.astro`, `Section.astro`, `SkillBar.astro`, `Timeline.astro`, `ColorLegend.astro`
+
 ## Component Relationships
 
-Components are organized in a hierarchical structure, with layout components (like BaseLayout and MarkdownPostLayout) wrapping content components. The `<slot />` element is used extensively to inject content from Markdown files in the content collections.
+Components follow a hierarchical structure, with layout components (BaseLayout, MarkdownPostLayout) wrapping content components. `<slot />` injects content from MDX files in the content collections.
 
 ## Notes
 
 - All components follow Astro's `.astro` file format with a mix of frontmatter, HTML templates, and component script sections
-- Components leverage Astro's optimized rendering for minimal client-side JavaScript
-- All styling uses Tailwind CSS v4.1.17 utilities for consistency and performance
+- React islands use `client:idle` unless they need to be visible immediately (HeroImage uses `client:load`)
+- Styling uses Tailwind CSS v4 utilities
 
 ## Removed Components
 
 The following were removed during the code quality refactoring:
 
-- `Greeting.jsx` — unused React greeting component
-- `Search.astro` — superseded by Pagefind integration
-- `Social.astro` / `HomepageMasonry.astro` — dead code, no references
-- `fslightbox.js` — vendored lightbox, replaced by custom `lightbox.ts`
-- GLightbox CSS/JS — replaced by custom lightbox (73 KB → ~2.4 KB gzipped)
+- `Greeting.jsx` - unused React greeting component
+- `Search.astro` - superseded by Pagefind integration
+- `Social.astro` / `HomepageMasonry.astro` - dead code, no references
+- `fslightbox.js` - vendored lightbox, replaced by custom `lightbox.ts`
+- GLightbox CSS/JS - replaced by custom lightbox (73 KB -> ~2.4 KB gzipped)

@@ -1,9 +1,14 @@
+/**
+ * Show the RSS link icon and set its href when the current page
+ * is a collection index that has an RSS feed endpoint.
+ */
 function handlePageLoad(): void {
   const collections = [
     "/short_form/",
     "/long_form/",
     "/muses/",
     "/zeitweilig/",
+    "/authors/",
   ];
   const currentPath = window.location.pathname;
 
