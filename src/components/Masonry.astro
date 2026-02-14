@@ -2,8 +2,15 @@
 import "../styles/MasonryLayout.css";
 import { getImage } from "astro:assets";
 
+export interface MasonryImage {
+  src: string;
+  alt: string;
+  positionx?: string;
+  positiony?: string;
+}
+
 export interface Props {
-  images: Array<{ src: string; alt: string } | null>;
+  images: Array<MasonryImage | null>;
 }
 
 const { images } = Astro.props;
@@ -27,10 +34,16 @@ const imageAssets = await Promise.all(
 
 <div class="masonry not-prose">
   {
-    imageAssets.map((imageAsset, index) =>
-      imageAsset ? (
+    imageAssets.map((imageAsset, index) => {
+      if (!imageAsset) return null;
+      const image = images[index]!;
+      const hasPosition = image.positionx || image.positiony;
+      const posStyle = hasPosition
+        ? `object-position: ${image.positionx ?? "center"} ${image.positiony ?? "center"}`
+        : undefined;
+      return (
         <div key={index} class="image-container" id="gallery">
-          <a href={images[index]!.src} class="image-link glightbox">
+          <a href={image.src} class="image-link glightbox">
             <img
               src={imageAsset.src}
               alt={imageAsset.attributes.alt}
@@ -39,11 +52,12 @@ const imageAssets = await Promise.all(
               width={imageAsset.attributes.width}
               height={imageAsset.attributes.height}
               class="image"
+              style={posStyle}
             />
           </a>
         </div>
-      ) : null,
-    )
+      );
+    })
   }
 </div>
 <script src="../scripts/lightbox.ts"></script>

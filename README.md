@@ -15,6 +15,7 @@
 </p>
 
 ## Quick Links
+
 - Documentation Index: `docs/README.md`
 
 ## Overview
@@ -24,12 +25,16 @@ Revista is a photography portfolio and blog built on Astro v5.17.2. I created it
 The project supports multiple deployment targets with optimized builds for each platform, including GitHub Pages with proper base path configuration.
 
 ## Documentation Map
+
 - **Docs Index:** `docs/README.md`
-- **Architecture:** `src/Architecture-README.md`
-- **Performance:** `src/Performance-README.md`
-- **CI/CD & Deployments:** `src/CI-CD-README.md`
-- **Components/Layout/Pages:** `src/Components-README.md`, `src/Layouts-README.md`, `src/Pages-README.md`
-- **Content Collections:** `src/Content-README.md`
+- **Architecture:** `src/README.md`
+- **Performance:** `docs/performance.md`
+- **CI/CD & Deployments:** `.github/README.md`
+- **Components:** `src/components/README.md`
+- **Layouts:** `src/layouts/README.md`
+- **Pages:** `src/pages/README.md`
+- **Content Collections:** `src/content/README.md`
+- **Docker:** `docs/docker.md`
 
 ## Project Structure
 
@@ -116,24 +121,24 @@ graph TD
 ### Key Directories and Files
 
 - `src/`: Contains the main source code for the site
-  - `components/`: Reusable Astro components ([Components Documentation](src/Components-README.md))
+  - `components/`: Reusable Astro components ([Components Documentation](src/components/README.md))
     - `BlogPost.astro`: Component for rendering individual blog post previews
     - `Footer.astro`: Site-wide footer component
     - `Header.astro`: Site-wide header component
     - `Navigation.astro`: Navigation menu component
-  - `layouts/`: Page layouts used across the site ([Layouts Documentation](src/Layouts-README.md))
+  - `layouts/`: Page layouts used across the site ([Layouts Documentation](src/layouts/README.md))
     - `BaseLayout.astro`: The main layout used by most pages
     - `MarkdownPostLayout.astro`: Layout for rendering Markdown content
-  - `pages/`: Astro pages that generate routes ([Pages Documentation](src/Pages-README.md))
+  - `pages/`: Astro pages that generate routes ([Pages Documentation](src/pages/README.md))
     - `index.astro`: The home page
     - `404.astro`: Custom 404 error page
     - `cv.astro`: CV page
-  - `content/`: Markdown content for blog posts and collections ([Content Collections Documentation](src/Content-README.md))
+  - `content/`: Markdown content for blog posts and collections ([Content Collections Documentation](src/content/README.md))
   - Architecture and implementation documentation:
-    - [Technical Architecture](src/Architecture-README.md): Component structure, state management, and design patterns
-    - [Performance Optimization](src/Performance-README.md): Techniques used for site speed optimization
-    - [Docker Implementation](src/Docker-README.md): Container configuration and deployment
-    - [CI/CD Implementation](src/CI-CD-README.md): Build and deployment automation
+    - [Technical Architecture](src/README.md): Component structure, state management, and design patterns
+    - [Performance Optimization](docs/performance.md): Techniques used for site speed optimization
+    - [Docker Implementation](docs/docker.md): Container configuration and deployment
+    - [CI/CD Implementation](.github/README.md): Build and deployment automation
   - `content.config.ts`: Configuration file for content collections using Astro's glob loader pattern
   - `styles/`: CSS files for styling
     - `global.css`: Global styles and Tailwind v4 imports
@@ -533,7 +538,7 @@ The site uses Tailwind CSS v4.1.17 for styling, with carefully configured settin
 
      ```css
      /* Tailwind v4 single import */
-     @import 'tailwindcss';
+     @import "tailwindcss";
      @config '../../tailwind.config.mjs';
 
      /* Global custom styles */
@@ -577,13 +582,14 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
 
 ### Media Management
 
-- **`lightbox.ts`**: Custom image lightbox (replaced GLightbox):
-  - Enables fullscreen image viewing with fade transitions
-  - Supports keyboard navigation (arrow keys, Escape)
-  - Implements touch swipe navigation on mobile devices
-  - Provides prev/next/close controls and image counter
-  - Preloads adjacent images for smooth navigation
-  - Locks body scroll while open
+- **`lightbox.ts`**: Custom image lightbox (replaced GLightbox — 73 KB → ~2.4 KB gzipped):
+  - Multi-level zoom: click cycles through 2x → 3.5x → reset; Ctrl/Cmd + scroll wheel for incremental zoom (up to 5x) centered on cursor; continuous pinch zoom on touch
+  - Zoom uses `maxWidth`/`maxHeight` expansion (GLightbox technique) with `translate3d` panning — pure compositor operations, no re-rasterization
+  - Keyboard navigation (arrow keys, Escape zooms out first then closes)
+  - Touch swipe navigation at 1x, drag/pan when zoomed
+  - Fade transitions, prev/next/close/zoom controls, image counter
+  - Adjacent image preloading, body scroll lock
+  - Full View Transitions lifecycle support (destroy/reinit on `astro:page-load`)
 
 - **`getrandomimage.ts`**: Helper utility used by components to select random featured images
   - Used in both the homepage and tag pages
@@ -862,9 +868,9 @@ To start working with this project:
 
    This installs:
    - Astro v5.17.2
-    - Tailwind CSS v4.1.17
-    - React v19.2.1
-    - MDX v4.3.13 and other dependencies
+   - Tailwind CSS v4.1.17
+   - React v19.2.1
+   - MDX v4.3.13 and other dependencies
 
 1. Run the development server:
 
@@ -1010,78 +1016,41 @@ For detailed implementation information, see [`src/components/cv/README.md`](src
 
 ### Masonry Layout System
 
-The photo gallery displays use a custom masonry layout implementation:
+The photo gallery displays use a CSS Grid masonry layout with focal-point-aware cropping:
 
-1. **CSS Grid-Based Masonry**: Instead of using a library, the site implements a modern CSS Grid approach to masonry layouts:
+1. **CSS Grid with Dense Packing**: Editorial-style grid with `nth-child` span rules for visual rhythm:
 
    ```css
    .masonry {
      display: grid;
      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-     grid-gap: 16px;
+     grid-gap: 12px;
      grid-auto-flow: dense;
    }
 
    .image-container:nth-child(3n) {
      grid-row: span 2;
    }
-
    .image-container:nth-child(4n) {
      grid-column: span 2;
    }
    ```
 
-2. **Image Optimization**: The `Masonry.astro` component uses Astro's built-in image optimization:
+2. **Smart Crop Positioning**: Images default to `object-position: center 25%` so subjects (faces, upper-third content) stay visible when cropped by the grid. Per-image overrides via `positionx`/`positiony` props:
 
-   ```astro
-   const imageAssets = await Promise.all(
-     images.map(async (image) => {
-       if (image) {
-         return await getImage({
-           src: image.src,
-           alt: image.alt,
-           width: 3840,
-           height: 2160,
-           format: "avif",
-           loading: "lazy",
-         });
-       }
-     })
-   );
+   ```jsx
+   // Default smart crop — no override needed for most photos
+   { src: "https://cdn.erfianugrah.com/photo.jpg", alt: "Photo" }
+
+   // Fine-tune a specific image's crop anchor
+   { src: "https://cdn.erfianugrah.com/photo.jpg", alt: "Photo", positionx: "30%", positiony: "10%" }
    ```
 
-3. **Responsive Breakpoints**: The masonry layout adapts to screen sizes with custom media queries:
+3. **Native CSS Masonry (Progressive Enhancement)**: `@supports (grid-template-rows: masonry)` automatically upgrades to true masonry layout when browsers ship CSS Grid Level 3, with no cropping needed.
 
-   ```css
-   @media (max-width: 768px) {
-     .masonry {
-       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-     }
-   }
-   ```
+4. **Custom Lightbox Integration**: Gallery images open in a purpose-built lightbox (~2.4 KB gzipped) with multi-level zoom, cursor-anchored scroll zoom, drag/pan, pinch zoom, keyboard and touch navigation — replacing the 73 KB GLightbox dependency.
 
-4. **Lightbox Integration**: The masonry gallery integrates with a custom lightbox for fullscreen viewing:
-
-   ```astro
-   <!-- href uses original CDN image; img src uses optimized AVIF thumbnail -->
-   <a href={images[index]!.src} class="image-link glightbox">
-     <img src={imageAsset.src} alt={imageAsset.attributes.alt} loading="lazy" />
-   </a>
-   ```
-
-5. **Animation Effects**: Subtle hover animations enhance the user experience:
-
-   ```css
-   .image-container:hover {
-     transform: scale(1.01);
-   }
-
-   .image-container:hover .image {
-     transform: scale(1.005);
-   }
-   ```
-
-This approach provides an elegant, performant solution for displaying photography portfolios with minimal client-side JavaScript.
+5. **Image Optimization**: All thumbnails are processed through Astro's `getImage()` to AVIF format, while lightbox `href` links point to original CDN images for full-resolution viewing.
 
 ## Code of Conduct
 
