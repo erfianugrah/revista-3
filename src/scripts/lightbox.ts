@@ -79,8 +79,6 @@ function applyZoom(
   cx?: number,
   cy?: number,
 ): void {
-  if (window.innerWidth <= 768) return;
-
   const prevLevel = zoomLevel;
   newLevel = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, newLevel));
   if (newLevel === prevLevel) return;
