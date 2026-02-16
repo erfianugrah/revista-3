@@ -47,7 +47,7 @@ export default defineConfig({
         wrap: true,
       },
       gfm: false,
-      remarkPlugins: [remarkMath],
+      remarkPlugins: [remarkGfm, remarkMath, remarkReadingTime],
       rehypePlugins: [rehypeKatex],
     }),
     markdoc(),

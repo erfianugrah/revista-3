@@ -46,7 +46,7 @@ Components are the reusable building blocks of the site. Most are Astro `.astro`
 
 ### Utility Components
 
-- **[sortbydate.tsx](sortbydate.tsx)**: Used in [Pages](../pages/) to chronologically order posts rendered by [BlogPost.astro](BlogPost.astro).
+- **[sortbydate.ts](sortbydate.ts)**: Used in [Pages](../pages/) to chronologically order posts rendered by [BlogPost.astro](BlogPost.astro). (Pure TypeScript — no JSX, so the file uses `.ts` rather than `.tsx`.)
 
 - **[scroll-to-top.tsx](scroll-to-top.tsx)**: React island for the "back to top" button. Uses `IntersectionObserver` for visibility and smooth scrolling via `window.scrollTo`.
 
@@ -70,6 +70,15 @@ Components follow a hierarchical structure, with layout components (BaseLayout, 
 - All components follow Astro's `.astro` file format with a mix of frontmatter, HTML templates, and component script sections
 - React islands use `client:idle` unless they need to be visible immediately (HeroImage uses `client:load`)
 - Styling uses Tailwind CSS v4 utilities
+
+### Type Safety
+
+Several components carry inline type declarations to satisfy `astro check` without adding external `@types/*` packages:
+
+- **Header.astro**: Image `width`/`height` props use numeric literals (`640`) instead of strings to match Astro's `ImageMetadata` types.
+- **Masonry.astro**: Avoids `key` props on native HTML elements (unlike React, Astro templates don't support `key` on non-component elements).
+- **NextPost.astro**: Uses a `CollectionName` type (from `collections.ts`) for the collection prop, a `PostData` interface for frontmatter fields, and typed `getImage()` parameters.
+- **Pagefind.astro**: Declares `PagefindUI` as a class in the inline script, and uses optional chaining on all DOM queries to handle nullable elements safely.
 
 ## Removed Components
 

@@ -46,6 +46,8 @@ import Footer from "../components/Footer.astro";
 
 Layouts receive strongly-typed props from content collections, validated by the Zod schemas in `content.config.ts`. The glob loader pattern provides explicit file selection and enhanced type safety.
 
+`MarkdownPostLayout` and `TagLayout` accept a `collection` prop typed as `CollectionName` (imported from `collections.ts`) — a union of all content collection keys. This ensures `getCollection()` calls use a valid literal type rather than a plain `string`, which Astro's generated types require.
+
 ## Responsive Design
 
 All layouts use Tailwind CSS v4 utilities with custom breakpoints optimized for photography viewing at 800px, 1200px, 1900px, 2500px, and 3800px.

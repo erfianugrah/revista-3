@@ -39,17 +39,25 @@
   transform-origin: center center;
   opacity: 0;
   cursor: zoom-in;
-  will-change: transform;
+  /* will-change deferred to .zoomed state — avoids GPU texture allocation
+     for full-res images before zoom is needed */
   transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .lightbox-visible .lightbox-img {
   transform: scale(1);
   opacity: 1;
+  will-change: transform, opacity;
   /* Animate scale only on open — removed after open completes via JS */
   transition:
     transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Promote to compositor layer only while zoomed — prevents the browser from
+   holding a full-res GPU texture for large portrait images at rest */
+.lightbox-overlay.zoomed .lightbox-img {
+  will-change: transform;
 }
 
 /* Crossfade states for prev/next navigation */

@@ -3,9 +3,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import GetRandomImage from "../components/getRandomImage.astro";
 import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
+import type { CollectionName } from "../scripts/collections";
+
+interface TagImages {
+  large: (string | null)[];
+  medium: (string | null)[];
+  small: (string | null)[];
+  alt: string[];
+}
 
 export interface Props {
-  directory: string;
+  directory: CollectionName;
   title: string;
 }
 
@@ -13,7 +21,7 @@ const { directory, title } = Astro.props;
 const allContent = await getCollection(directory);
 const tags = [...new Set(allContent.map((post) => post.data.tags).flat())];
 
-const imagesByTag = {};
+const imagesByTag: Record<string, TagImages> = {};
 for (const post of allContent) {
   for (const tag of post.data.tags) {
     if (!imagesByTag[tag]) {

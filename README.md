@@ -627,6 +627,7 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
   - `formatDate()`: consistent date formatting using native `Date.toDateString()`
 
 - **`collections.ts`**: Shared content collection helpers:
+  - `CollectionName` type: union of all content collection keys (`"muses" | "short_form" | …`), used across layouts and pages for type-safe `getCollection()` calls
   - `buildDetailPaths()`: generates `getStaticPaths` for `[...id].astro` pages
   - `buildTagPaths()`: generates `getStaticPaths` for `tags/[tag].astro` pages
   - `generateRss()`: generates RSS feed XML for any collection
@@ -648,12 +649,13 @@ All scripts are TypeScript (except the two remark plugins which remain `.mjs`), 
 The `astro.config.mjs` includes several features worth noting:
 
 1. **Math Rendering**: `remark-math` + `rehype-katex` for LaTeX-style equations in MDX content
-2. **Markdoc Integration**: `@astrojs/markdoc` available alongside MDX for content authoring
-3. **Dual Shiki Themes**: Syntax highlighting uses `rose-pine-dawn` (light) and `tokyo-night` (dark) with `defaultColor: false` so both themes are emitted and CSS controls which one is visible
-4. **Sitemap Generation**: `@astrojs/sitemap` automatically generates `sitemap-index.xml` during build
-5. **Experimental Client Prerendering**: `clientPrerender: true` enables speculative prerendering of linked pages for near-instant navigation
-6. **Experimental Fonts API**: Fonts (Inconsolata, Overpass Mono) are loaded via Astro's font provider system with `optimizedFallbacks: true` for reduced CLS
-7. **undici-retry**: Custom Astro integration (`src/scripts/undici-retry.ts`) that patches the global fetch with retry logic for build-time HTTP requests
+2. **MDX remarkPlugins**: The `mdx()` integration carries its own `remarkPlugins` array (`remarkGfm`, `remarkMath`, `remarkReadingTime`) because MDX replaces (not merges with) the base `markdown.remarkPlugins` when it specifies its own. This ensures GFM tables and reading-time estimates work in `.mdx` files.
+3. **Markdoc Integration**: `@astrojs/markdoc` available alongside MDX for content authoring
+4. **Dual Shiki Themes**: Syntax highlighting uses `rose-pine-dawn` (light) and `tokyo-night` (dark) with `defaultColor: false` so both themes are emitted and CSS controls which one is visible
+5. **Sitemap Generation**: `@astrojs/sitemap` automatically generates `sitemap-index.xml` during build
+6. **Experimental Client Prerendering**: `clientPrerender: true` enables speculative prerendering of linked pages for near-instant navigation
+7. **Experimental Fonts API**: Fonts (Inconsolata, Overpass Mono) are loaded via Astro's font provider system with `optimizedFallbacks: true` for reduced CLS
+8. **undici-retry**: Custom Astro integration (`src/scripts/undici-retry.ts`) that patches the global fetch with retry logic for build-time HTTP requests
 
 ## Performance Optimization
 

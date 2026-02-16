@@ -7,6 +7,7 @@ import { getImage } from "astro:assets";
 import HeroImage from "../components/HeroImage.tsx";
 import NextPost from "../components/NextPost.astro";
 import { formatDate } from "../scripts/utils.ts";
+import type { CollectionName } from "../scripts/collections";
 
 export interface Props {
   frontmatter: {
@@ -19,7 +20,7 @@ export interface Props {
     updatedDate?: Date;
   };
   currentId: string;
-  collection: string;
+  collection: CollectionName;
 }
 
 const { frontmatter, currentId, collection } = Astro.props;
@@ -73,6 +74,7 @@ const metaImage = image
       loading: "lazy",
     })
   : null;
+
 ---
 
 <BaseLayout

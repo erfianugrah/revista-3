@@ -62,13 +62,13 @@
     "@tailwindcss/typography": "^0.5.19",
     "chalk": "^5.6.2",
     "commander": "^14.0.2",
+    "html-validate": "^9.4.0",
+    "hyperlink": "^5.0.1",
     "inquirer": "^13.0.2",
     "inquirer-autocomplete-prompt": "^3.0.1",
     "pagefind": "^1.4.0",
     "prettier": "^3.7.4",
     "prettier-plugin-astro": "^0.14.1",
-    "yaml": "^2.8.2",
-    "html-validate": "^9.4.0",
-    "hyperlink": "^5.0.1"
+    "yaml": "^2.8.2"
   }
 }

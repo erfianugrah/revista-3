@@ -70,6 +70,10 @@ Each collection directory generates an RSS feed via [collections.ts](../scripts/
 
 The RSS link icon in the header is conditionally shown by [rss.ts](../scripts/rss.ts) based on the current path.
 
+## Type Safety
+
+- **index.astro**: The collections array is declared with `as const` so TypeScript narrows its elements to literal collection names. Accumulator arrays in `reduce()` calls are explicitly typed (`CollectionEntry<…>[]`) and post-filter results use non-null assertions where the filter guarantees a value.
+
 ## Component Integration
 
 Each page incorporates [components](../components/) and [layouts](../layouts/) to maintain consistency. Pages typically:

@@ -179,6 +179,14 @@ These custom utilities provide precise control over image positioning and croppi
 
 ## Content Schema and Validation
 
+### CollectionName Type
+
+`src/scripts/collections.ts` exports a `CollectionName` type — a union of all content collection keys (`"muses" | "short_form" | "long_form" | "zeitweilig" | "authors" | "cv"`). This type is used throughout layouts and pages wherever `getCollection()` is called with a dynamic collection name, because Astro's generated types require a literal union member, not a plain `string`.
+
+### MDX remarkPlugins Behavior
+
+When `mdx()` specifies its own `remarkPlugins`, it **replaces** (not merges with) the base `markdown.remarkPlugins`. Because all content in this project is `.mdx`, the MDX integration's `remarkPlugins` array must include every remark plugin that content depends on (`remarkGfm`, `remarkMath`, `remarkReadingTime`).
+
 ### Schema Definition Pattern
 
 All content is validated using Zod schemas with the following pattern:

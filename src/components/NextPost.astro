@@ -2,10 +2,11 @@
 import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
 import Prose from "./Prose.astro";
+import type { CollectionName } from "../scripts/collections";
 
 export interface Props {
   currentId: string;
-  collection: string;
+  collection: CollectionName;
 }
 
 const { currentId, collection } = Astro.props;
@@ -14,7 +15,7 @@ const allPosts = await getCollection(collection);
 const otherPosts = allPosts.filter((post) => post.id !== currentId);
 const shouldRender = otherPosts.length > 0;
 
-async function optimizeImage(src, alt) {
+async function optimizeImage(src: string, alt: string) {
   return await getImage({
     src,
     alt,
@@ -78,7 +79,7 @@ const favicon = await optimizeImage(
             height: favicon.attributes.height,
           })}
         >
-          {[...Array(3)].map((_, index) => (
+          {[...Array(3)].map((_) => (
             <a
               href="#"
               class="no-underline block shrink-0 w-56 md:w-full post-item"
@@ -111,18 +112,29 @@ const favicon = await optimizeImage(
 <script>
   import { shuffle } from "../scripts/utils.ts";
 
+  interface PostData {
+    id: string;
+    title: string;
+    description: string;
+    image: string | null;
+    alt: string;
+  }
+
   function updatePosts() {
     const container = document.getElementById("randomPosts");
     if (!container) return;
 
-    const posts = JSON.parse(container.dataset.posts || "[]");
+    const posts: PostData[] = JSON.parse(container.dataset.posts || "[]");
     const collection = container.dataset.collection;
-    const favicon = JSON.parse(container.dataset.favicon || "{}");
+    const favicon: { src: string } = JSON.parse(
+      container.dataset.favicon || "{}",
+    );
 
     const shuffledPosts = shuffle(posts);
     const selectedPosts = shuffledPosts.slice(0, 3);
 
-    const postElements = container.querySelectorAll(".post-item");
+    const postElements =
+      container.querySelectorAll<HTMLAnchorElement>(".post-item");
     selectedPosts.forEach((post, index) => {
       const element = postElements[index];
       if (element) {

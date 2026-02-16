@@ -3,22 +3,27 @@ import Homepage from "../components/Homepage.astro";
 import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
 
-const collections = ["long_form", "short_form", "muses", "zeitweilig"];
-let allImages = { large: [], medium: [], small: [] };
-let allAlts = [];
-let allUrls = [];
+const collections = ["long_form", "short_form", "muses", "zeitweilig"] as const;
+let allImages: { large: string[]; medium: string[]; small: string[] } = {
+  large: [],
+  medium: [],
+  small: [],
+};
+let allAlts: string[] = [];
+let allUrls: string[] = [];
 
-for (let collection of collections) {
+for (const collection of collections) {
   const allContent = await getCollection(collection);
   const postsWithImages = allContent.filter(
     (post) => post.data.image?.src && post.data.image?.alt,
   );
 
   const imagePromises = postsWithImages.map(async (post) => {
+    const image = post.data.image!;
     const [largeImage, mediumImage, smallImage] = await Promise.all([
       getImage({
-        src: post.data.image.src,
-        alt: post.data.image.alt,
+        src: image.src,
+        alt: image.alt,
         width: 1920,
         height: 1080,
         decoding: "async",
@@ -26,8 +31,8 @@ for (let collection of collections) {
         quality: 65,
       }),
       getImage({
-        src: post.data.image.src,
-        alt: post.data.image.alt,
+        src: image.src,
+        alt: image.alt,
         width: 1280,
         height: 720,
         decoding: "async",
@@ -35,8 +40,8 @@ for (let collection of collections) {
         quality: 65,
       }),
       getImage({
-        src: post.data.image.src,
-        alt: post.data.image.alt,
+        src: image.src,
+        alt: image.alt,
         width: 854,
         height: 480,
         decoding: "async",
@@ -49,7 +54,7 @@ for (let collection of collections) {
       large: largeImage.src,
       medium: mediumImage.src,
       small: smallImage.src,
-      alt: post.data.image.alt,
+      alt: image.alt,
       url: `/${collection}/${post.id}`,
     };
   });

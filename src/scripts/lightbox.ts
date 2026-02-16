@@ -51,6 +51,9 @@ let pinchBaseZoom = 1;
 // Track listeners for proper cleanup
 let keydownHandler: ((e: KeyboardEvent) => void) | null = null;
 
+// rAF throttle for drag/pan — prevents layout thrash on high-Hz displays
+let dragRafId = 0;
+
 /** Whether the image is zoomed beyond fit-to-viewport. */
 function isZoomed(): boolean {
   return zoomLevel > MIN_ZOOM;
@@ -342,7 +345,13 @@ function bindOverlayEvents(el: HTMLDivElement): void {
       hasDragged = true;
     }
 
-    applyTransform(img);
+    // Throttle to one transform update per frame — avoids jank on large images
+    if (!dragRafId) {
+      dragRafId = requestAnimationFrame(() => {
+        dragRafId = 0;
+        applyTransform(img);
+      });
+    }
   });
 
   img.addEventListener("mouseup", (e) => {
@@ -403,7 +412,12 @@ function bindOverlayEvents(el: HTMLDivElement): void {
           panX = dragPanStartX + dx;
           panY = dragPanStartY + dy;
           hasDragged = true;
-          applyTransform(img);
+          if (!dragRafId) {
+            dragRafId = requestAnimationFrame(() => {
+              dragRafId = 0;
+              applyTransform(img);
+            });
+          }
         } else if (!isZoomed()) {
           touchDeltaX = e.touches[0].clientX - touchStartX;
         }
@@ -433,15 +447,29 @@ function bindOverlayEvents(el: HTMLDivElement): void {
     }
   });
 
-  // ── Scroll wheel zoom — centered on cursor ──
+  // ── Scroll wheel zoom — centered on cursor, rAF-throttled ──
+  let wheelRafId = 0;
+  let pendingWheelLevel = 0;
+  let pendingWheelCx = 0;
+  let pendingWheelCy = 0;
+
   el.addEventListener(
     "wheel",
     (e) => {
       if (!overlay?.classList.contains("lightbox-visible")) return;
       e.preventDefault();
-      const newLevel =
+      // Accumulate zoom direction — use latest cursor position
+      pendingWheelLevel =
         e.deltaY < 0 ? zoomLevel * WHEEL_STEP : zoomLevel / WHEEL_STEP;
-      applyZoom(img, newLevel, e.clientX, e.clientY);
+      pendingWheelCx = e.clientX;
+      pendingWheelCy = e.clientY;
+
+      if (!wheelRafId) {
+        wheelRafId = requestAnimationFrame(() => {
+          wheelRafId = 0;
+          applyZoom(img, pendingWheelLevel, pendingWheelCx, pendingWheelCy);
+        });
+      }
     },
     { passive: false },
   );
@@ -492,6 +520,10 @@ function destroy(): void {
   hasDragged = false;
   panX = 0;
   panY = 0;
+  if (dragRafId) {
+    cancelAnimationFrame(dragRafId);
+    dragRafId = 0;
+  }
 }
 
 // --------------- Init ---------------
