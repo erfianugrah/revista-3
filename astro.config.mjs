@@ -104,7 +104,7 @@ export default defineConfig({
   },
 
   build: {
-    concurrency: 4,
+    concurrency: 10,
     measuring: {
       entryBuilding: true,
       pageGeneration: true,
