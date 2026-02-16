@@ -29,7 +29,7 @@ The project supports multiple deployment targets with optimized builds for each 
 - **Docs Index:** `docs/README.md`
 - **Architecture:** `src/README.md`
 - **Performance:** `docs/performance.md`
-- **CI/CD & Deployments:** `.github/README.md`
+- **CI/CD & Deployments:** `.github/CICD.md`
 - **Components:** `src/components/README.md`
 - **Layouts:** `src/layouts/README.md`
 - **Pages:** `src/pages/README.md`
@@ -121,7 +121,7 @@ graph TD
     - [Technical Architecture](src/README.md): Component structure, state management, and design patterns
     - [Performance Optimization](docs/performance.md): Techniques used for site speed optimization
     - [Docker Implementation](docs/docker.md): Container configuration and deployment
-    - [CI/CD Implementation](.github/README.md): Build and deployment automation
+    - [CI/CD Implementation](.github/CICD.md): Build and deployment automation
   - `content.config.ts`: Configuration file for content collections using Astro's glob loader pattern
   - `styles/`: CSS files for styling
     - `global.css`: Global styles and Tailwind v4 imports
