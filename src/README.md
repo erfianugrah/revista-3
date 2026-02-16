@@ -12,18 +12,11 @@ This project uses a combination of Astro components (`.astro` files) and React c
 
 ```mermaid
 graph TD
-    classDef astroFile fill:#f5d6c3,stroke:#333,stroke-width:1px
-    classDef reactFile fill:#c3e8f5,stroke:#333,stroke-width:1px
-    classDef scriptFile fill:#d6f5c3,stroke:#333,stroke-width:1px
-
     A["BaseLayout.astro"] --> B["Header.astro"]
     B --> C["ThemeToggle.astro"]
     C -->|"client:idle"| D["ThemeToggle.tsx"]
     B --> E["Navigation.astro"]
     B --> F["Hamburger.tsx"]
-
-    class A,B,C,E astroFile
-    class D,F reactFile
 ```
 
 ### Key Integration Points
@@ -81,16 +74,6 @@ graph TD
     A --> C["lightbox.ts"]
     A --> D["astro:assets"]
     D --> E["getImage optimization"]
-
-    classDef component fill:#f5d6c3,stroke:#333,stroke-width:1px
-    classDef style fill:#c3e8f5,stroke:#333,stroke-width:1px
-    classDef script fill:#d6f5c3,stroke:#333,stroke-width:1px
-    classDef module fill:#f5c3e8,stroke:#333,stroke-width:1px
-
-    class A component
-    class B style
-    class C script
-    class D,E module
 ```
 
 ### CSS Grid Configuration
@@ -289,14 +272,6 @@ graph TD
     A["MDX Content"] -->|"frontmatter.tags"| B["Tag Collection"]
     B --> C["Tag Pages"]
     B --> D["Tag Index Pages"]
-
-    classDef content fill:#f5d6c3,stroke:#333,stroke-width:1px
-    classDef data fill:#c3e8f5,stroke:#333,stroke-width:1px
-    classDef page fill:#d6f5c3,stroke:#333,stroke-width:1px
-
-    class A content
-    class B data
-    class C,D page
 ```
 
 The tag system works as follows:

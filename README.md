@@ -45,24 +45,15 @@ The project supports multiple deployment targets with optimized builds for each 
 
 ```mermaid
 graph TD
-    classDef root fill:#f9f7f3,stroke:#333,stroke-width:2px
-    classDef mainDir fill:#f2e9de,stroke:#333,stroke-width:1px
-
     A["/revista" Root] --> B["📁 src"]
     A --> C["📁 public<br>(static assets)"]
     A --> D["⚙️ Configuration Files<br>(astro.config, tailwind.config)"]
-
-    class A root
-    class B,C,D mainDir
 ```
 
 ### Source Directory Structure
 
 ```mermaid
 graph TD
-    classDef mainDir fill:#f2e9de,stroke:#333,stroke-width:1px
-    classDef contentDir fill:#e9d8c4,stroke:#333,stroke-width:1px
-
     B["📁 src"] --> E["📁 components<br>(UI building blocks)"]
     B --> F["📁 layouts<br>(page templates)"]
     B --> G["📁 pages<br>(routes)"]
@@ -76,21 +67,12 @@ graph TD
     H --> N["📝 zeitweilig<br>(temporary thoughts)"]
     H --> O["📝 authors<br>(contributor info)"]
     H --> P["📝 cv<br>(resume data)"]
-
-    class B,E,F,G,H,I,J mainDir
-    class K,L,M,N,O,P contentDir
 ```
 
 ### Component Files
 
 ```mermaid
 graph TD
-    classDef compFile fill:#e0f0e3,stroke:#333,stroke-width:1px
-    classDef layoutFile fill:#e3e0f0,stroke:#333,stroke-width:1px
-    classDef pageFile fill:#f0e0e3,stroke:#333,stroke-width:1px
-    classDef styleFile fill:#f0e3e0,stroke:#333,stroke-width:1px
-    classDef scriptFile fill:#e0e3f0,stroke:#333,stroke-width:1px
-
     E["📁 components"] --> E1["🧩 BlogPost.astro"]
     E --> E2["🧩 Footer.astro"]
     E --> E3["🧩 Header.astro"]
@@ -115,12 +97,6 @@ graph TD
 
     J["📁 scripts"] --> J1["⚡ theme.ts<br>(dark/light mode)"]
     J --> J2["⚡ lightbox.ts<br>(image lightbox)"]
-
-    class E1,E2,E3,E4,E5,E6,E7,E8,E9 compFile
-    class F1,F2,F3,F4 layoutFile
-    class G1,G2,G3 pageFile
-    class I1,I2 styleFile
-    class J1,J2 scriptFile
 ```
 
 </details>
@@ -277,44 +253,29 @@ For detailed documentation on both tools, see [scripts/README.md](scripts/README
 
 ```mermaid
 graph TD
-    classDef rootDir fill:#f5f5f5,stroke:#333,stroke-width:2px
-    classDef contentType fill:#e8f4f8,stroke:#333,stroke-width:1px
-
     A["📁 content/"] --> B["📁 long_form/<br><i>in-depth articles</i>"]
     A --> C["📁 short_form/<br><i>brief posts</i>"]
     A --> D["📁 muses/<br><i>photo collections</i>"]
     A --> E["📁 zeitweilig/<br><i>ephemeral content</i>"]
     A --> F["📁 authors/<br><i>contributor profiles</i>"]
     A --> G["📁 cv/<br><i>professional info</i>"]
-
-    class A rootDir
-    class B,C,D,E,F,G contentType
 ```
 
 ### Content Files by Type
 
 ```mermaid
 graph TD
-    classDef contentType fill:#e8f4f8,stroke:#333,stroke-width:1px
-    classDef mdFile fill:#f8f4e8,stroke:#333,stroke-width:1px
-
     B["📁 long_form/"] --> H["📄 iceland-trip.mdx<br><i>frontmatter + markdown</i>"]
     B --> I["📄 camera-review.mdx<br><i>frontmatter + markdown</i>"]
 
     C["📁 short_form/"] --> J["📄 new-lens.mdx<br><i>frontmatter + markdown</i>"]
     C --> K["📄 photo-tip.mdx<br><i>frontmatter + markdown</i>"]
-
-    class B,C contentType
-    class H,I,J,K mdFile
 ```
 
 ### Specialized Content Types
 
 ```mermaid
 graph TD
-    classDef contentType fill:#e8f4f8,stroke:#333,stroke-width:1px
-    classDef mdFile fill:#f8f4e8,stroke:#333,stroke-width:1px
-
     D["📁 muses/"] --> L["📄 urban-geometry.mdx<br><i>photo gallery post</i>"]
 
     E["📁 zeitweilig/"] --> M["📄 thoughts-on-bw.mdx<br><i>creative exploration</i>"]
@@ -322,9 +283,6 @@ graph TD
     F["📁 authors/"] --> N["📄 about-me.mdx<br><i>author bio</i>"]
 
     G["📁 cv/"] --> O["📄 cv-export.html<br><i>exported CV from cv-v0</i>"]
-
-    class D,E,F,G contentType
-    class L,M,N,O mdFile
 ```
 
 </details>
@@ -385,9 +343,6 @@ Revista uses a mix of file-based routing and dynamic route generation:
 
 ```mermaid
 graph TD
-    classDef rootRoute fill:#f8f8f8,stroke:#333,stroke-width:2px
-    classDef staticRoute fill:#f0f8ff,stroke:#333,stroke-width:1px
-
     A["🏠 www.erfianugrah.com<br>(Root)"] --> B["❌ /404<br>(Custom error page)"]
     A --> C["👤 /authors<br>(Contributor profiles)"]
     A --> D["📋 /cv<br>(Resume page)"]
@@ -396,62 +351,37 @@ graph TD
     A --> G["🖼️ /muses<br>(Photography index)"]
     A --> H["⏳ /zeitweilig<br>(Ephemeral content)"]
 
-    %% RSS feeds
     C -.-> C0["📡 /authors/rss.xml"]
     E -.-> E0["📡 /long_form/rss.xml"]
     F -.-> F0["📡 /short_form/rss.xml"]
     G -.-> G0["📡 /muses/rss.xml"]
     H -.-> H0["📡 /zeitweilig/rss.xml"]
-
-    class A rootRoute
-    class B,C,D,E,F,G,H staticRoute
-    class C0,E0,F0,G0,H0 staticRoute
 ```
 
 ### Long-form and Short-form Routes
 
 ```mermaid
 graph TD
-    classDef staticRoute fill:#f0f8ff,stroke:#333,stroke-width:1px
-    classDef dynamicRoute fill:#fff0f5,stroke:#333,stroke-width:1px
-    classDef tagRoute fill:#f5fff0,stroke:#333,stroke-width:1px
-
-    %% Long-form routes
     E["📚 /long_form"] --> I["📄 /long_form/[post-slug]<br>(Individual article pages)"]
     E --> J["🏷️ /long_form/tags<br>(Tags index)"]
     J --> K["🔖 /long_form/tags/[tag]<br>(Articles with specific tag)"]
 
-    %% Short-form routes
     F["📝 /short_form"] --> L["📄 /short_form/[post-slug]<br>(Individual post pages)"]
     F --> M["🏷️ /short_form/tags<br>(Tags index)"]
     M --> N["🔖 /short_form/tags/[tag]<br>(Posts with specific tag)"]
-
-    class E,F staticRoute
-    class I,L dynamicRoute
-    class J,K,M,N tagRoute
 ```
 
 ### Muses and Zeitweilig Routes
 
 ```mermaid
 graph TD
-    classDef staticRoute fill:#f0f8ff,stroke:#333,stroke-width:1px
-    classDef dynamicRoute fill:#fff0f5,stroke:#333,stroke-width:1px
-    classDef tagRoute fill:#f5fff0,stroke:#333,stroke-width:1px
-
-    %% Muses routes
     G["🖼️ /muses"] --> O["🖼️ /muses/[post-slug]<br>(Individual gallery pages)"]
     G --> P["🏷️ /muses/tags<br>(Tags index)"]
     P --> Q["🔖 /muses/tags/[tag]<br>(Galleries with specific tag)"]
 
-    %% Zeitweilig routes
     H["⏳ /zeitweilig"] --> R["📄 /zeitweilig/[post-slug]<br>(Individual content pages)"]
     H --> S["🏷️ /zeitweilig/tags<br>(Tags index)"]
     S --> T["🔖 /zeitweilig/tags/[tag]<br>(Content with specific tag)"]
-
-    class G,H staticRoute
-    class O,R dynamicRoute
-    class P,Q,S,T tagRoute
 ```
 
 </details>
@@ -790,12 +720,24 @@ The GitHub Actions workflow in `.github/workflows/deploy.yml` handles deployment
 
 ## Docker Setup
 
-The project includes Docker support for containerized deployment. For detailed information, see [README.Docker.md](README.Docker.md).
+The project includes Docker support for containerized deployment using Caddy as the web server.
 
-The project's Dockerfile is straightforward:
+### Quick Start
+
+```bash
+# Build the container
+docker build -t revista:latest .
+
+# Run the container
+docker run -p 8080:80 revista:latest
+
+# Or use docker-compose
+docker-compose up -d
+```
+
+### Dockerfile
 
 ```dockerfile
-# Using the lightweight Alpine variant of Caddy for better performance
 FROM caddy:2.9.1-alpine
 
 WORKDIR /usr/share/caddy
@@ -811,14 +753,27 @@ EXPOSE 80
 CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
 ```
 
-The Caddyfile is straightforward - Cloudflare handles cache headers and security at the edge, so Caddy just serves files with zstd/gzip compression, precompressed asset delivery, structured JSON logging, and a Prometheus metrics endpoint. See [docs/docker.md](docs/docker.md) for the full configuration.
+The Caddyfile is straightforward — Cloudflare handles cache headers and security at the edge, so Caddy just serves files with zstd/gzip compression, precompressed asset delivery, structured JSON logging, and a Prometheus metrics endpoint. See [docs/docker.md](docs/docker.md) for the full configuration.
 
-This setup:
+### Multi-Architecture Support
 
-1. Uses Caddy 2.9.1 on Alpine Linux for a small footprint
-2. Sets up proper permissions for security
+The CI/CD pipeline builds for `linux/amd64`, `linux/arm64`, `linux/arm/v6`, and `linux/arm/v7`. For manual multi-platform builds:
+
+```bash
+docker buildx create --name mybuilder --use --driver docker-container
+docker buildx build \
+  --platform linux/arm64,linux/amd64,linux/arm/v6,linux/arm/v7 \
+  -t [repo]/[image-name]:[tag] . \
+  --push
+```
+
+### Key Details
+
+1. Uses Caddy 2.9.1 on Alpine Linux (~40MB image)
+2. Proper file permissions for security
 3. Serves precompressed assets (zstd, brotli, gzip) for fast delivery
 4. Exposes port 80 (Cloudflare handles HTTPS in production)
+5. Volume mounts for `/data` and `/config` persist Caddy state across restarts
 
 ## Security Measures
 

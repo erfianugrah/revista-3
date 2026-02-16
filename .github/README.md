@@ -23,18 +23,6 @@ graph TD
     E1 --> F["Purge Cache"]
     E2 --> F
     E3 --> F
-
-    classDef setup fill:#f5d6c3,stroke:#333,stroke-width:1px
-    classDef build fill:#c3e8f5,stroke:#333,stroke-width:1px
-    classDef deploy fill:#f5c3e8,stroke:#333,stroke-width:1px
-    classDef target fill:#f5f5c3,stroke:#333,stroke-width:1px
-    classDef cache fill:#e8c3f5,stroke:#333,stroke-width:1px
-
-    class A setup
-    class B build
-    class D deploy
-    class E1,E2,E3,E4 target
-    class F cache
 ```
 
 ## Workflow File Structure
