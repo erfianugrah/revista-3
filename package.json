@@ -50,6 +50,7 @@
     "react-dom": "^19.2.1",
     "reading-time": "^1.5.0",
     "rehype-katex": "^7.0.1",
+    "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
     "sanitize-html": "^2.17.0",
     "tailwind-merge": "^3.4.0",
