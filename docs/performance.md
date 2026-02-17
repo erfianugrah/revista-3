@@ -185,6 +185,29 @@ These settings provide:
 - Performance metrics for build optimization
 - Efficient asset processing
 
+## Hero Image Optimization
+
+The `HeroImage` component (`src/components/HeroImage.tsx`) renders the fullscreen parallax hero on content pages. Key optimizations:
+
+### Scroll Performance
+
+- **rAF-batched rendering**: Scroll events trigger a `requestAnimationFrame` loop instead of writing to `style.transform` on every scroll event, avoiding layout thrashing
+- **Idle when settled**: The rAF loop self-terminates when the lerp reaches its target, restarting only on the next scroll event — no wasted frames
+- **Smooth lerp easing**: Parallax position interpolates toward the target (`lerpSpeed = 0.1`) for fluid motion instead of 1:1 mechanical scroll tracking
+- **IntersectionObserver gating**: The scroll listener and rAF loop only run while the hero is in the viewport; `willChange: transform` is toggled accordingly
+
+### Image Loading
+
+- **`<img>` instead of `background-image`**: Uses real `<img>` elements with `fetchPriority="high"` and `decoding="sync"`, giving the browser proper resource prioritization hints that CSS backgrounds don't support
+- **Fade-in on load**: Images start at `opacity: 0` and transition over 700ms on load, preventing the white flash during image decode
+- **Hydration-safe**: On mount, checks `img.complete` to handle images that loaded before React hydration (cached or fast network), preventing images from staying invisible
+
+### Accessibility
+
+- **`prefers-reduced-motion`**: Parallax is completely disabled when the user has motion reduction enabled
+- **Text legibility**: Subtle gradient overlay (top/bottom darkening) and text shadows ensure title/tag readability across all hero images without altering the photograph
+- **Screen reader image**: Hidden `<img>` with alt text preserved for accessibility
+
 ## Monitoring and Metrics
 
 The project is regularly tested for performance using:

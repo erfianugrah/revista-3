@@ -1,16 +1,21 @@
 /**
  * Parallax hero image for content pages.
  *
- * Uses IntersectionObserver to enable/disable the scroll listener so
- * the parallax transform only runs while the hero is in the viewport.
- * The inner div is oversized (-20%/120%) to give headroom for the
- * parallax offset without exposing gaps. A hidden accessible <img>
- * at the bottom provides alt text for screen readers.
+ * Improvements over the original:
+ *  - Scroll handler batched via rAF (no layout thrashing)
+ *  - Smooth lerp easing on scroll parallax
+ *  - rAF loop idles when not scrolling to save CPU
+ *  - Fade-in on image load (no white flash)
+ *  - Text shadow for legibility on bright images
+ *  - Respects prefers-reduced-motion
+ *  - Uses <img> elements instead of CSS background-image for
+ *    better browser loading hints (fetchpriority, decoding)
+ *  - willChange only set while hero is in viewport
  *
  * Hydrated with client:load since it needs to be visible immediately.
  */
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface HeroImageProps {
   title: string;
@@ -33,24 +38,76 @@ export default function HeroImage({
 }: HeroImageProps) {
   const heroRef = useRef<HTMLDivElement>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
+  const desktopImgRef = useRef<HTMLImageElement>(null);
+  const mobileImgRef = useRef<HTMLImageElement>(null);
+  const [desktopLoaded, setDesktopLoaded] = useState(false);
+  const [mobileLoaded, setMobileLoaded] = useState(false);
+
+  // Handle images that loaded before React hydration (cached / SSR)
+  useEffect(() => {
+    if (desktopImgRef.current?.complete) setDesktopLoaded(true);
+    if (mobileImgRef.current?.complete) setMobileLoaded(true);
+  }, []);
 
   useEffect(() => {
     const heroElement = heroRef.current;
     const parallaxElement = parallaxRef.current;
     if (!heroElement || !parallaxElement) return;
 
-    // Bind to a const so closures can see the narrowed non-null type
     const pEl = parallaxElement;
+
+    // Respect reduced-motion preference
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (motionQuery.matches) return;
+
+    let rafId = 0;
+    let isRunning = false;
+    let currentY = window.scrollY * 0.3; // initialise to current position
+    const parallaxFactor = 0.3;
+    const lerpSpeed = 0.1;
+
+    function tick() {
+      const targetY = window.scrollY * parallaxFactor;
+
+      // Lerp toward target for smooth easing
+      currentY += (targetY - currentY) * lerpSpeed;
+
+      // Snap when close enough — then stop the loop to save CPU
+      if (Math.abs(targetY - currentY) < 0.5) {
+        currentY = targetY;
+        pEl.style.transform = `translate3d(0, ${currentY}px, 0)`;
+        isRunning = false;
+        return;
+      }
+
+      pEl.style.transform = `translate3d(0, ${currentY}px, 0)`;
+      rafId = requestAnimationFrame(tick);
+    }
+
+    function startLoop() {
+      if (!isRunning) {
+        isRunning = true;
+        rafId = requestAnimationFrame(tick);
+      }
+    }
+
+    let isInView = false;
+
+    function handleScroll() {
+      if (isInView) startLoop();
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
+          isInView = entry.isIntersecting;
+          if (isInView) {
             pEl.style.willChange = "transform";
-            window.addEventListener("scroll", updateParallax);
+            startLoop();
           } else {
             pEl.style.willChange = "auto";
-            window.removeEventListener("scroll", updateParallax);
+            cancelAnimationFrame(rafId);
+            isRunning = false;
           }
         });
       },
@@ -58,18 +115,16 @@ export default function HeroImage({
     );
 
     observer.observe(heroElement);
-
-    function updateParallax() {
-      const scrollPosition = window.scrollY;
-      const parallaxFactor = 0.3;
-      pEl.style.transform = `translate3d(0, ${scrollPosition * parallaxFactor}px, 0)`;
-    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       observer.disconnect();
-      window.removeEventListener("scroll", updateParallax);
+      window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(rafId);
     };
   }, []);
+
+  const objectPosition = `${positionX} ${positionY}`;
 
   return (
     <div
@@ -77,36 +132,60 @@ export default function HeroImage({
       className="relative flex flex-col justify-center items-center text-center h-screen mb-8 md:-mx-16 -mx-8 overflow-hidden"
       data-pagefind-body
     >
-      <div
-        ref={parallaxRef}
-        className="absolute inset-0"
-        style={{
-          willChange: "transform",
-        }}
-      >
-        <div
-          className="absolute inset-0 bg-cover bg-no-repeat md:hidden"
+      <div ref={parallaxRef} className="absolute inset-0">
+        {/* Mobile image */}
+        <img
+          ref={mobileImgRef}
+          src={mobileBackgroundImage}
+          alt=""
+          aria-hidden="true"
+          fetchPriority="high"
+          decoding="sync"
+          onLoad={() => setMobileLoaded(true)}
+          className={`absolute left-0 right-0 w-full object-cover md:hidden transition-opacity duration-700 ${
+            mobileLoaded ? "opacity-100" : "opacity-0"
+          }`}
           style={{
-            backgroundImage: `url(${mobileBackgroundImage})`,
-            backgroundPosition: `${positionX} ${positionY}`,
+            objectPosition,
             top: "-20%",
             height: "120%",
           }}
-          aria-hidden="true"
         />
-        <div
-          className="absolute inset-0 bg-cover bg-no-repeat hidden md:block"
+        {/* Desktop image */}
+        <img
+          ref={desktopImgRef}
+          src={backgroundImage}
+          alt=""
+          aria-hidden="true"
+          fetchPriority="high"
+          decoding="sync"
+          onLoad={() => setDesktopLoaded(true)}
+          className={`absolute left-0 right-0 w-full object-cover hidden md:block transition-opacity duration-700 ${
+            desktopLoaded ? "opacity-100" : "opacity-0"
+          }`}
           style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundPosition: `${positionX} ${positionY}`,
+            objectPosition,
             top: "-20%",
             height: "120%",
           }}
-          aria-hidden="true"
         />
       </div>
+      {/* Subtle gradient overlay for text legibility */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.2) 100%)",
+        }}
+        aria-hidden="true"
+      />
       <div className="relative">
-        <h1 className="prose prose-slate uppercase font-overpass-mono text-[rgb(245,245,245)] text-4xl fade-in-up delay-150">
+        <h1
+          className="prose prose-slate uppercase font-overpass-mono text-[rgb(245,245,245)] text-4xl fade-in-up delay-150"
+          style={{
+            textShadow: "0 2px 12px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3)",
+          }}
+        >
           {title}
         </h1>
         <div className="flex gap-2 mt-2 fade-in-up delay-300 justify-center">
@@ -115,6 +194,9 @@ export default function HeroImage({
               <a
                 className="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded-sm no-underline"
                 href={`../tags/${tag}`}
+                style={{
+                  textShadow: "0 1px 4px rgba(0,0,0,0.4)",
+                }}
               >
                 {tag}
               </a>
@@ -122,6 +204,7 @@ export default function HeroImage({
           ))}
         </div>
       </div>
+      {/* Accessible image for screen readers / SEO */}
       <img src={backgroundImage} alt={alt} className="sr-only" />
     </div>
   );
