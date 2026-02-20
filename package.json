@@ -1,7 +1,7 @@
 {
   "name": "Revistav4",
   "type": "module",
-  "version": "5.9.3",
+  "version": "6.0.0",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -35,7 +35,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/sanitize-html": "^2.16.0",
-    "astro": "5.17.2",
+    "astro": "5.17.3",
     "astro-icon": "^1.1.5",
     "caniuse-lite": "^1.0.30001759",
     "class-variance-authority": "^0.7.1",

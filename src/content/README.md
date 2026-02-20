@@ -45,7 +45,7 @@ const baseSchema = z.object({
 });
 
 const short_form = defineCollection({
-  // Modern Astro v5.17.2 collection pattern
+  // Modern Astro v5.17.3 collection pattern
   loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/short_form" }),
   schema: baseSchema,
 });
@@ -74,7 +74,7 @@ description: It started with an idea or rather an intention to create something 
 <!-- Content goes here -->
 ```
 
-## Astro v5.17.2 Enhancements
+## Astro v5.17.3 Enhancements
 
 The content collections in this project use Astro's modern glob loader pattern. The key benefits include:
 
