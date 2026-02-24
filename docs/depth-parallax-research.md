@@ -7,7 +7,7 @@ Research conducted on the `feat/depth-parallax` branch exploring AI-generated de
 Used `@huggingface/transformers` v3.8.1 to run **Depth Anything V2 Small** (ONNX, q8 quantised) locally at build time via an Astro integration. No API key needed — the model runs entirely in Node/Bun via ONNX Runtime.
 
 - Scanned MDX frontmatter for `image.src` URLs
-- Downloaded source images from `cdn.erfianugrah.com`
+- Downloaded source images from `image.erfi.io`
 - Generated full-resolution grayscale depth maps (3840px+, ~66MB total for 35 images)
 - Saved as `public/depth-maps/<sha256-hash>.png` (deterministic, cacheable)
 - First run ~77s for 36 images; subsequent builds skip entirely when cached

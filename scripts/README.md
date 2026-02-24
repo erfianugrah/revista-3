@@ -173,7 +173,7 @@ The tool automatically detects all content collections defined in `content.confi
 3. Add optional image information:
    ```
    ? Include image? Yes
-   Image src: https://cdn.erfianugrah.com/stockholm-reflections-01.jpg
+   Image src: https://image.erfi.io/stockholm-reflections-01.jpg
    Image alt: Office building reflection with stark contrast on a winter day
    Image positionx: (optional, e.g., center, 40%): center
    Image positiony: (optional, e.g., top, 20%): top-33
@@ -192,7 +192,7 @@ The tool automatically detects all content collections defined in `content.confi
    author: Erfi Anugrah
    description: A winter wander through Stockholm's glass-filled business district
    image:
-     src: https://cdn.erfianugrah.com/stockholm-reflections-01.jpg
+     src: https://image.erfi.io/stockholm-reflections-01.jpg
      alt: Office building reflection with stark contrast on a winter day
      positionx: center
      positiony: top-33
@@ -281,7 +281,7 @@ bun run update-post --file muses/2017-09-02-the-beginning.mdx --remove-updated-d
 
 # Update image properties
 bun run update-post --file short_form/2021-03-08-hypnagogia.mdx \
-  --image-src "https://cdn.erfianugrah.com/new-image.jpg" \
+  --image-src "https://image.erfi.io/new-image.jpg" \
   --image-alt "New alt text" \
   --image-positionx "center" \
   --image-positiony "top"

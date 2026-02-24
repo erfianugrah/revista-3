@@ -318,7 +318,7 @@ tags: ["sweden", "architecture", "street", "reflection"]
 author: "Erfi Anugrah"
 description: "A winter wander through Stockholm's glass-filled business district"
 image:
-  src: "https://cdn.erfianugrah.com/stockholm-reflections-01.jpg"
+  src: "https://image.erfi.io/stockholm-reflections-01.jpg"
   alt: "Office building reflection with stark contrast on a winter day"
   positionx: "center"
   positiony: "top-33"
@@ -952,10 +952,10 @@ The photo gallery displays use a CSS Grid masonry layout with focal-point-aware 
 
    ```jsx
    // Default smart crop — no override needed for most photos
-   { src: "https://cdn.erfianugrah.com/photo.jpg", alt: "Photo" }
+   { src: "https://image.erfi.io/photo.jpg", alt: "Photo" }
 
    // Fine-tune a specific image's crop anchor
-   { src: "https://cdn.erfianugrah.com/photo.jpg", alt: "Photo", positionx: "30%", positiony: "10%" }
+   { src: "https://image.erfi.io/photo.jpg", alt: "Photo", positionx: "30%", positiony: "10%" }
    ```
 
 3. **Native CSS Masonry (Progressive Enhancement)**: `@supports (grid-template-rows: masonry)` automatically upgrades to true masonry layout when browsers ship CSS Grid Level 3, with no cropping needed.

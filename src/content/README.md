@@ -64,7 +64,7 @@ tags: ["muses"]
 author: "Erfi Anugrah"
 image:
   {
-    src: https://cdn.erfianugrah.com/sisyphean_1.png,
+    src: https://image.erfi.io/sisyphean_1.png,
     alt: sisyphean_1,
     positionx: 20%,
     positiony: 50%,
