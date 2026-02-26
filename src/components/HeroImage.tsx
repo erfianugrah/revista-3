@@ -25,6 +25,7 @@ interface HeroImageProps {
   positionX?: string;
   positionY?: string;
   alt: string;
+  collection: string;
 }
 
 export default function HeroImage({
@@ -35,18 +36,16 @@ export default function HeroImage({
   positionX = "30%",
   positionY = "50%",
   alt,
+  collection,
 }: HeroImageProps) {
   const heroRef = useRef<HTMLDivElement>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
-  const desktopImgRef = useRef<HTMLImageElement>(null);
-  const mobileImgRef = useRef<HTMLImageElement>(null);
-  const [desktopLoaded, setDesktopLoaded] = useState(false);
-  const [mobileLoaded, setMobileLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // Handle images that loaded before React hydration (cached / SSR)
   useEffect(() => {
-    if (desktopImgRef.current?.complete) setDesktopLoaded(true);
-    if (mobileImgRef.current?.complete) setMobileLoaded(true);
+    if (imgRef.current?.complete) setImageLoaded(true);
   }, []);
 
   useEffect(() => {
@@ -133,42 +132,26 @@ export default function HeroImage({
       data-pagefind-body
     >
       <div ref={parallaxRef} className="absolute inset-0">
-        {/* Mobile image */}
-        <img
-          ref={mobileImgRef}
-          src={mobileBackgroundImage}
-          alt=""
-          aria-hidden="true"
-          fetchPriority="high"
-          decoding="sync"
-          onLoad={() => setMobileLoaded(true)}
-          className={`absolute left-0 right-0 w-full object-cover md:hidden transition-opacity duration-700 ${
-            mobileLoaded ? "opacity-100" : "opacity-0"
-          }`}
-          style={{
-            objectPosition,
-            top: "-20%",
-            height: "120%",
-          }}
-        />
-        {/* Desktop image */}
-        <img
-          ref={desktopImgRef}
-          src={backgroundImage}
-          alt=""
-          aria-hidden="true"
-          fetchPriority="high"
-          decoding="sync"
-          onLoad={() => setDesktopLoaded(true)}
-          className={`absolute left-0 right-0 w-full object-cover hidden md:block transition-opacity duration-700 ${
-            desktopLoaded ? "opacity-100" : "opacity-0"
-          }`}
-          style={{
-            objectPosition,
-            top: "-20%",
-            height: "120%",
-          }}
-        />
+        <picture>
+          <source media="(min-width: 1200px)" srcSet={backgroundImage} />
+          <img
+            ref={imgRef}
+            src={mobileBackgroundImage}
+            alt=""
+            aria-hidden="true"
+            fetchPriority="high"
+            decoding="sync"
+            onLoad={() => setImageLoaded(true)}
+            className={`absolute left-0 right-0 w-full object-cover transition-opacity duration-700 ${
+              imageLoaded ? "opacity-100" : "opacity-0"
+            }`}
+            style={{
+              objectPosition,
+              top: "-20%",
+              height: "120%",
+            }}
+          />
+        </picture>
       </div>
       {/* Subtle gradient overlay for text legibility */}
       <div
@@ -193,7 +176,7 @@ export default function HeroImage({
             <p key={tag} className="font-overpass-mono text-xl">
               <a
                 className="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded-sm no-underline"
-                href={`../tags/${tag}`}
+                href={`/${collection}/tags/${tag}`}
                 style={{
                   textShadow: "0 1px 4px rgba(0,0,0,0.4)",
                 }}

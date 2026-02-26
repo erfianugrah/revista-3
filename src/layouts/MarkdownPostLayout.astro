@@ -34,7 +34,7 @@ const image = frontmatter.image?.src;
 const alt = frontmatter.image?.alt;
 const positionx = frontmatter?.image?.positionx;
 const positiony = frontmatter?.image?.positiony;
-let baseUrl = new URL(Astro.request.url).origin;
+const baseUrl = new URL(Astro.request.url).origin;
 
 const backgroundImage = image
   ? await getImage({
@@ -98,6 +98,7 @@ const metaImage = image
         positionX={positionx}
         positionY={positiony}
         alt={alt ?? ""}
+        collection={collection}
       />
     ) : (
       <div data-pagefind-body>
@@ -110,7 +111,7 @@ const metaImage = image
               <p class="font-overpass-mono text-xl">
                 <a
                   class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded-sm no-underline"
-                  href={`../tags/${tag}`}
+                  href={`/${collection}/tags/${tag}`}
                 >
                   {tag}
                 </a>
@@ -151,16 +152,7 @@ const metaImage = image
   <NextPost currentId={currentId} collection={collection} />
 </BaseLayout>
 
-<style>
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
+<style is:global>
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -172,21 +164,16 @@ const metaImage = image
     }
   }
 
-  .fade-in {
-    opacity: 0;
-    animation: fadeIn 1s ease-out forwards;
-  }
-
   .fade-in-up {
     opacity: 0;
     animation: fadeInUp 1s ease-out forwards;
   }
 
-  .delay-300 {
-    animation-delay: 300ms;
+  .delay-150 {
+    animation-delay: 150ms;
   }
 
-  .delay-600 {
-    animation-delay: 600ms;
+  .delay-300 {
+    animation-delay: 300ms;
   }
 </style>

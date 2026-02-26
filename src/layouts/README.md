@@ -16,7 +16,7 @@ Layouts provide the reusable page-level structures that wrap content throughout 
 
 3. **[AuthorLayout.astro](AuthorLayout.astro)**: Layout for author profile pages. Similar structure to MarkdownPostLayout but tailored for contributor bios.
 
-4. **[TagLayout.astro](TagLayout.astro)**: Layout for tag listing pages. Features a random hero image (via `getRandomImage`) and renders tagged content.
+4. **[TagLayout.astro](TagLayout.astro)**: Layout for tag listing pages. Features a random hero image (via `GetRandomImage`) and renders tagged content. Includes an image optimization cache (Map) to de-duplicate `getImage()` calls for the same source.
 
 ## Content Injection
 

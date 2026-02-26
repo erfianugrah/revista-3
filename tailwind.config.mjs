@@ -40,13 +40,13 @@ export default {
       sm: "800px",
       // => @media (min-width: 800px) { ... }
       md: "1200px",
-      // => @media (min-width: 1280px) { ... }
+      // => @media (min-width: 1200px) { ... }
       lg: "1900px",
-      // => @media (min-width: 1920px) { ... }
+      // => @media (min-width: 1900px) { ... }
       xl: "2500px",
-      // => @media (min-width: 2560px) { ... }
+      // => @media (min-width: 2500px) { ... }
       "2xl": "3800px",
-      // => @media (min-width: 3840px) { ... }
+      // => @media (min-width: 3800px) { ... }
     },
   },
   plugins: [typography],

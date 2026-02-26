@@ -7,14 +7,14 @@
 
 <button id="searchButton" class="text-lg pl-[30px] h-[50px]">Search</button>
 
-<div id="myModal" class="modal">
+<dialog id="searchDialog" class="search-dialog">
   <div
-    class="modal-content bg-[rgb(245,245,245)] dark:bg-[rgb(34,33,37)] dark:text-[rgb(245,245,245)] m-2 w-[350px] md:w-[700px]"
+    class="dialog-content bg-[rgb(245,245,245)] dark:bg-[rgb(34,33,37)] dark:text-[rgb(245,245,245)] w-[350px] md:w-[700px]"
   >
-    <span id="closeButton" class="close" role="button" aria-label="Close search">&times;</span>
+    <button id="closeButton" class="close" aria-label="Close search">&times;</button>
     <div id="search" class="m-8" transition:persist></div>
   </div>
-</div>
+</dialog>
 
 <script>
   declare class PagefindUI {
@@ -29,23 +29,23 @@
   let pagefindUI: PagefindUI | null = null;
 
   document.addEventListener("astro:page-load", () => {
-    const modal = document.getElementById("myModal");
+    const dialog = document.getElementById("searchDialog") as HTMLDialogElement | null;
     const searchButton = document.getElementById("searchButton");
     const closeButton = document.getElementById("closeButton");
 
     searchButton?.addEventListener("click", () => {
-      modal?.classList.add("visible");
+      dialog?.showModal();
       document.querySelector<HTMLInputElement>("#search input")?.focus();
     });
 
     closeButton?.addEventListener("click", () => {
-      modal?.classList.remove("visible");
+      dialog?.close();
     });
 
-    // Close the modal when clicking outside
-    window.addEventListener("click", (event) => {
-      if (event.target === modal) {
-        modal?.classList.remove("visible");
+    // Close when clicking the backdrop
+    dialog?.addEventListener("click", (event) => {
+      if (event.target === dialog) {
+        dialog.close();
       }
     });
 
@@ -62,21 +62,25 @@
 </script>
 
 <style is:global>
-  .modal {
-    display: none;
+  .search-dialog {
+    border: none;
+    padding: 0;
+    background: transparent;
+    max-width: 100vw;
+    max-height: 100vh;
+    margin: 0;
     position: fixed;
-    z-index: 1;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
+  }
+
+  .search-dialog::backdrop {
     background-color: rgba(0, 0, 0, 0.4);
   }
-  .modal.visible {
-    display: block;
-  }
-  .modal-content {
+
+  .dialog-content {
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
@@ -90,14 +94,19 @@
     float: right;
     font-size: 28px;
     font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
   }
 
   .close:hover,
   .close:focus {
-    color: black;
+    color: inherit;
+    opacity: 0.7;
     text-decoration: none;
-    cursor: pointer;
   }
+
   .dark {
     --pagefind-ui-text: rgb(245, 245, 245) !important;
     --pagefind-ui-primary: rgb(245, 245, 245) !important;

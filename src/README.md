@@ -23,7 +23,7 @@ graph TD
 
 1. **ThemeToggle Component** (split architecture):
    - **ThemeToggle.astro**: Lightweight wrapper that imports and renders the React component with `client:idle`
-   - **ThemeToggle.tsx**: React component using `framer-motion` for sun/moon animations. Watches for `class` attribute changes via `MutationObserver` and dispatches a `theme-toggle` custom event on click.
+   - **ThemeToggle.tsx**: React component with CSS transitions for sun/moon animations. Watches for `class` attribute changes via `MutationObserver` and dispatches a `theme-toggle` custom event on click.
    - **theme.ts**: Shared module that handles the actual theme logic - reads/writes `localStorage`, toggles the `dark` class on `<html>`, and listens for both the `theme-toggle` event and `astro:after-swap` (for View Transitions).
 
 ```astro

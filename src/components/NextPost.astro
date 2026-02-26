@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
 import Prose from "./Prose.astro";
 import type { CollectionName } from "../scripts/collections";
+import { CDN_FAVICON_URL } from "../consts";
 
 export interface Props {
   currentId: string;
@@ -14,6 +15,8 @@ const allPosts = await getCollection(collection);
 
 const otherPosts = allPosts.filter((post) => post.id !== currentId);
 const shouldRender = otherPosts.length > 0;
+// Limit candidates to avoid serializing the entire collection into HTML
+const MAX_CANDIDATES = 20;
 
 async function optimizeImage(src: string, alt: string) {
   return await getImage({
@@ -29,7 +32,7 @@ async function optimizeImage(src: string, alt: string) {
 }
 
 const postsData = await Promise.all(
-  otherPosts.map(async (post) => {
+  otherPosts.slice(0, MAX_CANDIDATES).map(async (post) => {
     const imageData = post.data.image
       ? await optimizeImage(
           post.data.image.src,
@@ -46,10 +49,7 @@ const postsData = await Promise.all(
   }),
 );
 
-const favicon = await optimizeImage(
-  "https://image.erfi.io/ea_favicon.png",
-  "favicon",
-);
+const favicon = await optimizeImage(CDN_FAVICON_URL, "favicon");
 ---
 
 {

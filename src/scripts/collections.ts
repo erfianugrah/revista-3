@@ -1,6 +1,7 @@
 import rss from "@astrojs/rss";
 import sanitizeHtml from "sanitize-html";
 import MarkdownIt from "markdown-it";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 
 const parser = new MarkdownIt();
 
@@ -77,8 +78,8 @@ export function generateRss(
   }
   return rss({
     stylesheet: "/rss/rss.xsl",
-    title: "stoicopa",
-    description: "My personal hamster wheel.",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     site: context.site,
     items: entries.map((post) => ({
       ...post.data,

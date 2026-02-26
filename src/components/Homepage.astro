@@ -36,6 +36,9 @@ const { title, images, alt, urls, width, height } = Astro.props;
         />
       </picture>
     </a>
+    <noscript>
+      <p class="text-center font-overpass-mono">JavaScript is required to display the homepage image.</p>
+    </noscript>
     <slot />
   </div>
 </BaseLayout>

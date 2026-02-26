@@ -11,8 +11,7 @@ const { images, tag, url, width, height } = Astro.props;
 ---
 
 <div
-  id="randomimage"
-  class="relative group border-0"
+  class="randomimage relative group border-0"
   data-images={images}
   data-width={JSON.stringify(width)}
   data-height={JSON.stringify(height)}
@@ -29,6 +28,9 @@ const { images, tag, url, width, height } = Astro.props;
         data-srcset-small
       />
     </picture>
+    <noscript>
+      <p class="text-center font-overpass-mono">{tag}</p>
+    </noscript>
     <p
       class="absolute inset-0 flex items-center justify-center text-[rgb(245,245,245)] text-2xl xl:text-4xl"
     >
@@ -38,12 +40,12 @@ const { images, tag, url, width, height } = Astro.props;
   <slot />
 </div>
 <style>
-  #randomimage p {
+  .randomimage p {
     transition: opacity 0.3s ease-in-out;
     opacity: 1;
   }
 
-  #randomimage p:hover {
+  .randomimage p:hover {
     opacity: 0.5;
   }
 </style>

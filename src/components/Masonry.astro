@@ -52,7 +52,7 @@ const imageAssets = await Promise.all(
         ? `object-position: ${image.positionx ?? "center"} ${image.positiony ?? "center"}`
         : undefined;
       return (
-        <div class="image-container" id="gallery">
+        <div class="image-container gallery">
           <a href={image.src} class="image-link glightbox">
             <img
               src={imageAsset.src}

@@ -2,13 +2,12 @@
 import Pagefind from "./Pagefind.astro";
 ---
 
-<div id="nav-links" class="nav-links collapsed font-overpass-mono capitalize">
-  <a class="fade-effect" href="/">Home</a>
-  <a class="fade-effect" href="/muses/">Muses</a>
-  <a class="fade-effect" href="/short_form/">Short Form</a>
-  <a class="fade-effect" href="/long_form/tags/">Long Form</a>
-  <a class="fade-effect" href="/zeitweilig/">Zeitweilig</a>
-  <!-- <a href="/tags/">Tags</a> -->
+<div id="nav-links" class="nav-links collapsed font-overpass-mono capitalize" role="menu" aria-label="Site navigation">
+  <a class="fade-effect" href="/" role="menuitem">Home</a>
+  <a class="fade-effect" href="/muses/" role="menuitem">Muses</a>
+  <a class="fade-effect" href="/short_form/" role="menuitem">Short Form</a>
+  <a class="fade-effect" href="/long_form/tags/" role="menuitem">Long Form</a>
+  <a class="fade-effect" href="/zeitweilig/" role="menuitem">Zeitweilig</a>
   <Pagefind class="fade-effect" />
   <slot />
 </div>
