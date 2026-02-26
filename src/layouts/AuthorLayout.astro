@@ -30,7 +30,7 @@ const author = authorFullName.split(" ")[0].toLowerCase();
 const image = frontmatter.image?.src;
 const alt = frontmatter.image?.alt;
 
-let baseUrl = new URL(Astro.request.url).origin;
+const baseUrl = new URL(Astro.request.url).origin;
 
 const metaImage = image
   ? await getImage({
@@ -50,8 +50,8 @@ const metaImage = image
   alt={alt ? metaImage?.attributes.alt : ""}
   description={description}
   author={author}
-  pubDate={updatedDate}
-  updatedDate={publishedDate}
+  pubDate={publishedDate}
+  updatedDate={updatedDate}
   is404Page={false}
 >
   <div class="md:grid md:grid-cols-[1fr_2fr] gap-4 md:px-56" data-pagefind-body>
@@ -80,7 +80,7 @@ const metaImage = image
                 <p class="font-overpass-mono text-center w-full">
                   <a
                     class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded-sm no-underline font-overpass-mono"
-                    href={`../tags/${tag}`}
+                    href={`/authors/tags/${tag}`}
                   >
                     {tag}
                   </a>
@@ -89,27 +89,26 @@ const metaImage = image
             </div>
           </div>
         </div>
-      ) : (
-        <Prose>
-          <h1 class="normal-case font-overpass-mono text-xl m-2">{title}</h1>
-          <div class="grid">
-            {frontmatter.tags.map((tag) => (
-              <p class="font-overpass-mono text-center w-full m-2">
-                <a
-                  class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded-sm no-underline font-overpass-mono"
-                  href={`../tags/${tag}`}
-                >
-                  {tag}
-                </a>
-              </p>
-            ))}
-          </div>
-          <slot />
-        </Prose>
-      )
-    }
-    <Prose>
-      <slot />
-    </Prose>
+    ) : (
+      <div>
+        <h1 class="normal-case font-overpass-mono text-xl m-2">{title}</h1>
+        <div class="grid">
+          {frontmatter.tags.map((tag) => (
+            <p class="font-overpass-mono text-center w-full m-2">
+              <a
+                class="bg-slate-600 text-[rgb(245,245,245)] bg-opacity-50 px-2 py-1 rounded-sm no-underline font-overpass-mono"
+                href={`/authors/tags/${tag}`}
+              >
+                {tag}
+              </a>
+            </p>
+          ))}
+        </div>
+      </div>
+    )
+  }
+  <Prose>
+    <slot />
+  </Prose>
   </div>
 </BaseLayout>

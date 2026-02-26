@@ -4,20 +4,21 @@
  */
 function handlePageLoad(): void {
   const collections = [
-    "/short_form/",
-    "/long_form/",
-    "/muses/",
-    "/zeitweilig/",
-    "/authors/",
+    "short_form",
+    "long_form",
+    "muses",
+    "zeitweilig",
+    "authors",
   ];
-  const currentPath = window.location.pathname;
+  // Normalize path by stripping leading/trailing slashes
+  const currentPath = window.location.pathname.replace(/^\/|\/$/g, "");
 
   if (collections.includes(currentPath)) {
     const rssLink = document.getElementById(
       "rss-link",
     ) as HTMLAnchorElement | null;
     if (!rssLink) return;
-    rssLink.href = currentPath + "rss.xml";
+    rssLink.href = `/${currentPath}/rss.xml`;
     rssLink.style.visibility = "visible";
     rssLink.style.width = "auto";
     rssLink.style.height = "auto";

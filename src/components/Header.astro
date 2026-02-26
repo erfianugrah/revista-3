@@ -3,6 +3,7 @@ import Hamburger from "./Hamburger.tsx";
 import Navigation from "./Navigation.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import { getImage } from "astro:assets";
+import { CDN_FAVICON_URL } from "../consts";
 
 export interface Props {
   is404Page?: boolean;
@@ -11,17 +12,17 @@ export interface Props {
 const { is404Page = false } = Astro.props;
 
 const favicon_avif = await getImage({
-  src: "https://image.erfi.io/ea_favicon.png",
+  src: CDN_FAVICON_URL,
   alt: "favicon",
-  width: 640,
-  height: 480,
+  width: 60,
+  height: 60,
   decoding: "async",
   format: "avif",
 });
 ---
 
 <header class="mb-[20px] mt-[-10px]">
-  <nav class="flex items-center justify-between w-full h-[30px]">
+  <nav aria-label="Main navigation" class="flex items-center justify-between w-full h-[30px]">
     {
       !is404Page && (
         <div class="flex items-center h-[30px]">

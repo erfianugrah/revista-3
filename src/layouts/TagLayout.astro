@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import GetRandomImage from "../components/getRandomImage.astro";
+import GetRandomImage from "../components/GetRandomImage.astro";
 import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
 import type { CollectionName } from "../scripts/collections";
@@ -21,6 +21,25 @@ const { directory, title } = Astro.props;
 const allContent = await getCollection(directory);
 const tags = [...new Set(allContent.map((post) => post.data.tags).flat())];
 
+// De-duplicate image optimization: process each unique src only once
+const imageCache = new Map<string, { large: string | null; medium: string | null; small: string | null }>();
+
+async function getOptimizedImages(src: string, alt: string) {
+  if (imageCache.has(src)) return imageCache.get(src)!;
+  const [largeImage, mediumImage, smallImage] = await Promise.all([
+    getImage({ src, alt, width: 1920, height: 1080, decoding: "async", format: "avif", quality: 65 }),
+    getImage({ src, alt, width: 1280, height: 720, decoding: "async", format: "avif", quality: 65 }),
+    getImage({ src, alt, width: 854, height: 480, decoding: "async", format: "avif", quality: 65 }),
+  ]);
+  const result = {
+    large: largeImage?.src ?? null,
+    medium: mediumImage?.src ?? null,
+    small: smallImage?.src ?? null,
+  };
+  imageCache.set(src, result);
+  return result;
+}
+
 const imagesByTag: Record<string, TagImages> = {};
 for (const post of allContent) {
   for (const tag of post.data.tags) {
@@ -28,38 +47,10 @@ for (const post of allContent) {
       imagesByTag[tag] = { large: [], medium: [], small: [], alt: [] };
     }
     if (post.data.image?.src) {
-      const [largeImage, mediumImage, smallImage] = await Promise.all([
-        getImage({
-          src: post.data.image.src,
-          alt: post.data.image.alt,
-          width: 1920,
-          height: 1080,
-          decoding: "async",
-          format: "avif",
-          quality: 65,
-        }),
-        getImage({
-          src: post.data.image.src,
-          alt: post.data.image.alt,
-          width: 1280,
-          height: 720,
-          decoding: "async",
-          format: "avif",
-          quality: 65,
-        }),
-        getImage({
-          src: post.data.image.src,
-          alt: post.data.image.alt,
-          width: 854,
-          height: 480,
-          decoding: "async",
-          format: "avif",
-          quality: 65,
-        }),
-      ]);
-      imagesByTag[tag].large.push(largeImage ? largeImage.src : null);
-      imagesByTag[tag].medium.push(mediumImage ? mediumImage.src : null);
-      imagesByTag[tag].small.push(smallImage ? smallImage.src : null);
+      const optimized = await getOptimizedImages(post.data.image.src, post.data.image.alt);
+      imagesByTag[tag].large.push(optimized.large);
+      imagesByTag[tag].medium.push(optimized.medium);
+      imagesByTag[tag].small.push(optimized.small);
       imagesByTag[tag].alt.push(post.data.image.alt);
     }
   }

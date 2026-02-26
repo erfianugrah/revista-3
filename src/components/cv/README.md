@@ -31,7 +31,7 @@ title: "Erfi Anugrah"
 description: "Photographer | Writer | Customer Solutions Engineer"
 pubDate: 2023-11-29
 updatedDate: 2024-10-06
-tags: ['cv']
+tags: ["cv"]
 author: "Erfi Anugrah"
 slug: resume
 fullName: "ERFI ANUGRAH"
@@ -132,6 +132,10 @@ import { Section, Company, Timeline, SkillBar, EducationTimeline, ColorLegend } 
 2. **Maintainability**: Update your CV by modifying the resume.mdx file only
 3. **Reusability**: Components can be reused in other contexts
 4. **Consistency**: Visual styling is consistent across the entire CV
+
+## Shared Duration Logic
+
+The `Timeline` and `EducationTimeline` components both use `analyzeDuration()` from `src/scripts/duration.ts` to compute month counts and color-coded duration categories. This was extracted from duplicated inline logic to ensure consistent timeline visualization.
 
 ## Organization Notes
 

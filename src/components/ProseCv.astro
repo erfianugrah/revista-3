@@ -27,7 +27,7 @@
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("astro:page-load", () => {
     // Only add basic styling classes
     document.querySelectorAll("h2 .company-name").forEach(element => {
       if (element.parentElement && element.parentElement.parentElement) {
@@ -44,6 +44,17 @@
     document.querySelectorAll(".school-name").forEach(element => {
       if (element.parentElement && element.parentElement.parentElement) {
         element.parentElement.parentElement.classList.add('education-section');
+      }
+    });
+
+    // Add skills-list class to skill/language lists (replaces unsupported :contains() CSS)
+    document.querySelectorAll(".cv-sections ul").forEach(ul => {
+      const firstLi = ul.querySelector("li");
+      if (firstLi) {
+        const text = firstLi.textContent?.trim() ?? "";
+        if (text.startsWith("HTML") || text.startsWith("English")) {
+          ul.classList.add("skills-list");
+        }
       }
     });
   });
@@ -340,9 +351,8 @@
     }
   }
 
-  /* Skills section enhancements */
-  :global(.prose ul:has(li:first-child:contains("HTML")), 
-          .prose ul:has(li:first-child:contains("English"))) {
+  /* Skills section enhancements — uses .skills-list class added by JS */
+  :global(.prose ul.skills-list) {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem 1.5rem;
@@ -350,14 +360,12 @@
     padding-left: 0;
   }
 
-  :global(.prose ul:has(li:first-child:contains("HTML")) li, 
-          .prose ul:has(li:first-child:contains("English")) li) {
+  :global(.prose ul.skills-list li) {
     position: relative;
     padding-left: 1.5rem;
   }
 
-  :global(.prose ul:has(li:first-child:contains("HTML")) li::before, 
-          .prose ul:has(li:first-child:contains("English")) li::before) {
+  :global(.prose ul.skills-list li::before) {
     content: "•";
     position: absolute;
     left: 0;
@@ -366,8 +374,7 @@
   }
 
   @media (max-width: 640px) {
-    :global(.prose ul:has(li:first-child:contains("HTML")), 
-            .prose ul:has(li:first-child:contains("English"))) {
+    :global(.prose ul.skills-list) {
       grid-template-columns: 1fr;
     }
   }

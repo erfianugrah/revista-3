@@ -2,22 +2,12 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import BlogPost from "../../../components/BlogPost.astro";
-import { sortByDate } from "../../../components/sortbydate";
-export async function getStaticPaths() {
-  const allAuthors = await getCollection("authors");
-  const uniqueTags = [
-    ...new Set(allAuthors.map((post) => post.data.tags).flat()),
-  ];
+import { sortByDate } from "../../../components/sortByDate";
+import { buildTagPaths } from "../../../scripts/collections";
 
-  return uniqueTags.map((tag) => {
-    const filteredPosts = allAuthors.filter((post) =>
-      post.data.tags.includes(tag),
-    );
-    return {
-      params: { tag },
-      props: { posts: filteredPosts },
-    };
-  });
+export async function getStaticPaths() {
+  const entries = await getCollection("authors");
+  return buildTagPaths(entries, "authors");
 }
 
 const { tag } = Astro.params;

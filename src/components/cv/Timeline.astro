@@ -1,92 +1,19 @@
 ---
+import { analyzeDuration } from "../../scripts/duration";
+
 interface Props {
   title: string;
   company?: string;
   dateRange: string | { start: string; end?: string };
 }
 
-const { title, company, dateRange } = Astro.props;
+const { title, dateRange } = Astro.props;
 
-// Duration analysis for both scaling and color coding
-const analyzeDuration = (dateRange: string | { start: string; end?: string }) => {
-  let startDate: Date, endDate: Date = new Date();
-  let displayDateRange: string;
-  
-  // Handle both string and object formats
-  if (typeof dateRange === 'string') {
-    displayDateRange = dateRange;
-    
-    // Extract months and years from date range if possible
-    // Match patterns like "July 2019 – Dec 2020" or "Oct 2024 – Present"
-    const monthYearPattern = /(\w+)\s+(\d{4})\s*[–-]\s*(?:Present|(\w+)\s+(\d{4}))/i;
-    const matches = dateRange.match(monthYearPattern);
-    
-    if (matches) {
-      const startYear = parseInt(matches[2]);
-      const endYear = matches[4] ? parseInt(matches[4]) : new Date().getFullYear();
-      
-      // Approximate months (simplified)
-      const getMonthIndex = (month: string) => {
-        const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-        return months.findIndex(m => month.toLowerCase().startsWith(m.toLowerCase()));
-      };
-      
-      const startMonth = getMonthIndex(matches[1]);
-      const endMonth = matches[3] ? getMonthIndex(matches[3]) : new Date().getMonth();
-      
-      startDate = new Date(startYear, startMonth, 1);
-      endDate = new Date(endYear, endMonth, 1);
-    } else {
-      // If pattern doesn't match, return default values
-      return { scale: 1, colorCategory: 'medium', durationYears: 1, displayDateRange };
-    }
-  } else {
-    // Handle object format with structured data
-    const { start, end } = dateRange;
-    
-    // Parse YYYY-MM format
-    const [startYear, startMonth] = start.split('-').map(n => parseInt(n));
-    startDate = new Date(startYear, startMonth - 1, 1);
-    
-    if (end && end !== 'Present') {
-      const [endYear, endMonth] = end.split('-').map(n => parseInt(n));
-      endDate = new Date(endYear, endMonth - 1, 1);
-    } else {
-      endDate = new Date();
-    }
-    
-    // Format to display: "Jul 2019 – Dec 2020" or "Oct 2024 – Present"
-    const formatDate = (date: Date) => {
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      return `${months[date.getMonth()]} ${date.getFullYear()}`;
-    };
-    
-    displayDateRange = `${formatDate(startDate)} – ${end === 'Present' ? 'Present' : formatDate(endDate)}`;
-  }
-  
-  // Calculate duration in years
-  const durationYears = (endDate.getFullYear() - startDate.getFullYear()) + 
-                      (endDate.getMonth() - startDate.getMonth()) / 12;
-  
-  // Calculate scale factor (between 0.5-4)
-  const scale = Math.max(0.5, Math.min(4, durationYears / 1.2));
-  
-  // Determine color category based on duration
-  let colorCategory;
-  if (durationYears < 0.75) {
-    colorCategory = 'short'; // Less than 9 months
-  } else if (durationYears < 2) {
-    colorCategory = 'medium'; // 9 months to 2 years
-  } else if (durationYears < 4) {
-    colorCategory = 'long'; // 2-4 years
-  } else {
-    colorCategory = 'very-long'; // 4+ years
-  }
-  
-  return { scale, colorCategory, durationYears, displayDateRange };
-};
-
-const { scale: durationScale, colorCategory, durationYears, displayDateRange } = analyzeDuration(dateRange);
+const { scale: durationScale, colorCategory, durationYears, displayDateRange } = analyzeDuration(
+  dateRange,
+  { short: 0.75, medium: 2, long: 4 },
+  true,
+);
 ---
 
 <div class={`job-section duration-${colorCategory}`} style={`--duration-scale: ${durationScale}`}>

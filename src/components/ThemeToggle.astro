@@ -5,34 +5,11 @@ import ThemeToggleComponent from "./ThemeToggle";
 <ThemeToggleComponent client:idle />
 
 <style is:global>
-  /* Keep only the parts needed for the theme toggle functionality */
-  .theme-transition {
-    transition:
-      color 0.3s ease,
-      background-color 0.3s ease;
-  }
-
-  /* Apply transitions to specific elements */
   body,
   .theme-transition {
     transition:
       color 0.3s ease,
       background-color 0.3s ease;
-  }
-
-  #themeToggle {
-    border: 0;
-    background: none;
-    color: currentColor; /* Changed from var(--color-text) */
-    width: 28px;
-    height: 28px;
-    padding: 0;
-    cursor: pointer;
-  }
-
-  #themeToggle svg {
-    width: 100%;
-    height: 100%;
   }
 </style>
 
