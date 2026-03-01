@@ -1,6 +1,26 @@
 @import "tailwindcss";
 
+/*
+  Load the v3 config via @config so Tailwind v4 picks up custom screens,
+  fonts, and the typography plugin. The plugin MUST be loaded with require()
+  rather than an ES module import — the ESM path emits .prose rules as
+  unlayered CSS, which always beats @layer utilities in the cascade and
+  prevents utilities like max-w-7xl / max-sm:px-5 from overriding
+  prose's baked-in max-width:65ch. Using require() keeps .prose inside
+  @layer utilities where later utilities can win by source order.
+*/
 @config '../../tailwind.config.mjs';
+
+/* Typography plugin: suppress smart-quotes on blockquotes.
+   Replaces the old JS-based typography.no-quotes config extension. */
+@utility prose-no-quotes {
+  & blockquote p:first-of-type::before {
+    content: none !important;
+  }
+  & blockquote p:last-of-type::after {
+    content: none !important;
+  }
+}
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
