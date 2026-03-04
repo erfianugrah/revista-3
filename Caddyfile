@@ -23,7 +23,6 @@
 }
 
 :80 {
-	encode zstd gzip
 	root * /usr/share/caddy
 	try_files {path} {path}/ /404.html
 	encode zstd gzip

@@ -81,14 +81,16 @@ export function generateRss(
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     site: context.site,
-    items: entries.map((post) => ({
-      ...post.data,
-      title: post.data.title,
-      pubDate: post.data.pubDate,
-      description: post.data.description,
-      link: `/${collectionSlug}/${post.id}/`,
-      content: sanitizeHtml(parser.render(post.body ?? "")),
-    })),
+    items: [...entries]
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+      .map((post) => ({
+        ...post.data,
+        title: post.data.title,
+        pubDate: post.data.pubDate,
+        description: post.data.description,
+        link: `/${collectionSlug}/${post.id}/`,
+        content: sanitizeHtml(parser.render(post.body ?? "")),
+      })),
     customData: `<language>en-us</language>`,
   });
 }

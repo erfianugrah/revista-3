@@ -196,7 +196,10 @@ function showImage(index: number, animate = true): void {
     const el = imgEl;
     el.classList.add("lightbox-img-exit");
 
+    let faded = false;
     const onFaded = () => {
+      if (faded) return;
+      faded = true;
       el.removeEventListener("transitionend", onFaded);
       el.src = img.src;
       el.alt = img.alt;
@@ -216,6 +219,7 @@ function showImage(index: number, animate = true): void {
       }, 300);
     };
     el.addEventListener("transitionend", onFaded);
+    // Safety net: ensure onFaded fires even if transitionend does not
     setTimeout(onFaded, 200);
   } else {
     imgEl.src = img.src;

@@ -11,16 +11,16 @@ export async function getStaticPaths() {
 }
 
 const { tag } = Astro.params;
-const { posts } = Astro.props;
+const { posts, collectionSlug } = Astro.props;
 ---
 
-<BaseLayout title={tag} is404Page={false}>
+<BaseLayout title={`${tag} — ${collectionSlug}`} is404Page={false}>
   {
     posts
       .sort(sortByDate)
       .map((post) => (
         <BlogPost
-          url={`/short_form/${post.id}/`}
+          url={`/${collectionSlug}/${post.id}/`}
           image={post.data?.image?.src || ""}
           alt={post.data?.image?.alt || ""}
           title={post.data?.title || ""}

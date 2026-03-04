@@ -1,17 +1,24 @@
 export type Theme = "light" | "dark";
 
 export function getThemePreference(): Theme {
-  return (
-    (localStorage.getItem("theme") as Theme) ||
-    (window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light")
-  );
+  try {
+    const stored = localStorage.getItem("theme");
+    if (stored === "dark" || stored === "light") return stored;
+  } catch {
+    // localStorage may be unavailable in private browsing or restricted contexts
+  }
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 }
 
 export function applyTheme(theme: Theme): void {
   document.documentElement.classList.toggle("dark", theme === "dark");
-  localStorage.setItem("theme", theme);
+  try {
+    localStorage.setItem("theme", theme);
+  } catch {
+    // localStorage may be unavailable in private browsing or restricted contexts
+  }
 }
 
 export function toggleTheme(): void {

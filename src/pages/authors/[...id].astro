@@ -10,14 +10,12 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const collection = "authors";
 ---
 
 <AuthorLayout
   frontmatter={entry.data}
   currentId={entry.id}
-  collection={collection}
+  collection="authors"
 >
-  <p class="prose prose-slate dark:prose-invert italic no-underline"></p>
   <Content />
 </AuthorLayout>
