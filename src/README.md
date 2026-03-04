@@ -83,7 +83,7 @@ graph TD
 .masonry {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-gap: 16px;
+  grid-gap: 12px;
   grid-auto-flow: dense;
 }
 

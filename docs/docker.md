@@ -72,7 +72,6 @@ This covers standard x86_64 servers, ARM-based servers, and Raspberry Pi devices
 }
 
 :80 {
-    encode zstd gzip
     root * /usr/share/caddy
     try_files {path} {path}/ /404.html
     encode zstd gzip

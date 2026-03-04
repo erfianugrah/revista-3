@@ -29,7 +29,7 @@ The project leverages Astro's islands architecture to minimize JavaScript:
 
 <!-- These remain static HTML -->
 <Navigation />
-<SiteTitle />
+<Header />
 ```
 
 ### Image Optimization
@@ -168,7 +168,7 @@ Build optimizations in `astro.config.mjs`:
 
 ```javascript
 build: {
-  concurrency: 4, // Parallelized build process
+  concurrency: 10, // Parallelized build process
   measuring: {
     entryBuilding: true,
     pageGeneration: true,

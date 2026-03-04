@@ -47,7 +47,7 @@ import { getCollection } from "astro:content";
 export async function getStaticPaths() {
   const posts = await getCollection("short_form");
   return posts.map((post) => ({
-    params: { id: post.slug },
+    params: { id: post.id },
     props: { post },
   }));
 }

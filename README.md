@@ -433,7 +433,7 @@ The site uses Tailwind CSS v4.1.17 for styling, with carefully configured settin
      - Variable font support for optimal performance
      - Wide character set support
 2. **Color System**
-   - **Base Light Theme**: Clean white background (#f5f5f5) with deep charcoal text (#333333)
+   - **Base Light Theme**: Clean white background (#f2f2f2) with deep charcoal text (#333333)
    - **Dark Theme**: Rich dark background (#222125) with high-contrast light text (#f5f5f5)
    - **Accent Colors**: Minimal use of accent colors, focusing on photography as the visual focus
    - **Photography-Optimized**: The color scheme is designed to enhance rather than compete with images
@@ -455,14 +455,13 @@ The site uses Tailwind CSS v4.1.17 for styling, with carefully configured settin
 4. **Component Styling**
    - **Custom Utilities**: Extended Tailwind with utilities for:
      ```js
-     extend: {
-       objectPosition: {
-         'center-60': 'center 60%',
-         'top-33': 'center 33%',
-         // Additional custom position values
-       },
-       // Other extended utilities
-     }
+      extend: {
+        objectPosition: {
+          'top-33': 'center top 33.33%',
+          'top-50': 'center top 50%',
+        },
+        // Other extended utilities
+      }
      ```
    - **Typography Plugin**: The `@tailwindcss/typography` plugin provides rich styling for long-form content
 
@@ -565,9 +564,8 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
 ### Build Utilities
 
 - **`remark-reading-time.mjs`**: MDX plugin that calculates and adds reading time estimates to posts
-- **`remark-modified-time.mjs`**: MDX plugin that extracts and normalizes file modification timestamps
 
-All scripts are TypeScript (except the two remark plugins which remain `.mjs`), minimal, focused, and non-blocking to maintain the site's performance profile.
+All scripts are TypeScript (except the remark plugin which remains `.mjs`), minimal, focused, and non-blocking to maintain the site's performance profile.
 
 ### Build Pipeline
 
@@ -621,23 +619,24 @@ The site includes search powered by [Pagefind](https://pagefind.app/), integrate
 
 The search functionality is implemented with minimal JavaScript and maintains the site's performance focus by loading the search UI assets only when needed.
 
-```astro
-// Example simplified implementation from Pagefind.astro
-<button id="searchButton" class="text-lg pl-[30px] h-[50px]">Search</button>
+```html
+<!-- Simplified from Pagefind.astro -->
+<button id="searchButton" aria-haspopup="dialog">Search</button>
 
-<div id="myModal" class="modal">
-  <div class="modal-content bg-[rgb(245,245,245)] dark:bg-[rgb(34,33,37)]">
-    <span id="closeButton" class="close">&times;</span>
-    <div id="search" class="m-8" transition:persist></div>
+<dialog id="searchDialog" class="search-dialog">
+  <div class="dialog-content">
+    <button id="closeButton" class="close" aria-label="Close search">
+      &times;
+    </button>
+    <div id="search" class="m-8"></div>
   </div>
-</div>
+</dialog>
 
 <script>
   document.addEventListener("astro:page-load", () => {
-    // Modal control logic
-    // ...
+    const dialog = document.getElementById("searchDialog");
+    // dialog.showModal() / dialog.close() for open/close
 
-    // Initialize Pagefind UI
     new PagefindUI({
       element: "#search",
       showSubResults: true,
@@ -679,10 +678,10 @@ While the site is currently in English, I've structured it with future translati
 
 2. **TypeScript**:
    - The project uses TypeScript v5.9.3 throughout
-   - Astro's built-in TypeScript support with `@astrojs/check` v0.9.5 catches type errors during build
+   - Astro's built-in TypeScript support with `@astrojs/check` v0.9.6 catches type errors during build
 
 3. **Prettier**:
-   - Code formatting with Prettier v3.6.2 ensures consistent style
+   - Code formatting with Prettier v3.7.4 ensures consistent style
    - The Astro Prettier plugin (prettier-plugin-astro v0.14.1) properly formats .astro files
 
 4. **Tailwind CSS v4**:
@@ -702,7 +701,7 @@ The GitHub Actions workflow in `.github/workflows/deploy.yml` handles deployment
    - Pushes the built site to Deno Deploy
 
 3. **Cloudflare Deployment**:
-   - Deploys to Cloudflare Pages via Wrangler
+   - Deploys to Cloudflare Workers (with static assets) via Wrangler
 
 4. **GitHub Pages Deployment**:
    - Uses a dedicated build process with environment-specific configuration
@@ -731,8 +730,8 @@ docker build -t revista:latest .
 # Run the container
 docker run -p 8080:80 revista:latest
 
-# Or use docker-compose
-docker-compose up -d
+# Or use docker compose
+docker compose up -d
 ```
 
 ### Dockerfile
@@ -850,19 +849,19 @@ To start working with this project:
 
 The project supports several deployment methods:
 
-1. Cloudflare Pages (primary)
+1. Cloudflare Workers (primary)
 2. Deno Deploy
 3. GitHub Pages
 4. Docker container (deployable to any container platform)
 
 ### Deployment Secrets & Tokens
 
-| Target           | Required secrets (GitHub Actions)                                                                                                                    | Notes                                            |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| Cloudflare Pages | `CLOUDFLARE_WRANGLER_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ZONE_ID`, `CLOUDFLARE_CACHE_PURGE_TOKEN`, `CLOUDFLARE_ZONE_NAME`, `CLOUDFLARE_WWW` | Wrangler deploy + cache purge hosts              |
-| Deno Deploy      | _None referenced in the workflow_                                                                                                                    | Uses `deployctl` with public project settings    |
-| GitHub Pages     | _None beyond repository permissions_                                                                                                                 | Build uses `build:github-pages` base/path config |
-| Docker Hub       | `DOCKER_USERNAME`, `DOCKER_REGISTRY_TOKEN`                                                                                                           | Used for pushing versioned images                |
+| Target             | Required secrets (GitHub Actions)                                                                                                                    | Notes                                            |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Cloudflare Workers | `CLOUDFLARE_WRANGLER_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ZONE_ID`, `CLOUDFLARE_CACHE_PURGE_TOKEN`, `CLOUDFLARE_ZONE_NAME`, `CLOUDFLARE_WWW` | Wrangler deploy + cache purge hosts              |
+| Deno Deploy        | _None referenced in the workflow_                                                                                                                    | Uses `deployctl` with public project settings    |
+| GitHub Pages       | _None beyond repository permissions_                                                                                                                 | Build uses `build:github-pages` base/path config |
+| Docker Hub         | `DOCKER_USERNAME`, `DOCKER_REGISTRY_TOKEN`                                                                                                           | Used for pushing versioned images                |
 
 ## Contributing
 

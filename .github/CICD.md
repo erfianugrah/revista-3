@@ -21,8 +21,6 @@ graph TD
     D --> E3["GitHub Pages"]
     D --> E4["Docker Hub"]
     E1 --> F["Purge Cache"]
-    E2 --> F
-    E3 --> F
 ```
 
 ## Workflow File Structure
@@ -376,7 +374,7 @@ build-revista:              ~2 min (optimized caching)
   ├─ deploy-to-workers:     ~1 min
   ├─ deploy-to-deno:        ~1 min
   └─ deploy-to-github-pages: ~3 min (independent build)
-      └─ purge-cache:       ~5 sec
+  └─ purge-cache:           ~5 sec (depends on Workers only)
 ─────────────────────────────────────
 Total critical path:        ~5 min ⚡
 ```
