@@ -6,7 +6,8 @@
  * skills, education, etc.). Collections use Astro's glob loader to
  * select MDX files; filenames starting with `_` are excluded (drafts).
  */
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
+import { z } from "astro/zod";
 import { glob } from "astro/loaders";
 
 /** Shared shape of a content collection entry used across all collections. */

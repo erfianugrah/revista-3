@@ -77,28 +77,29 @@ export default defineConfig({
     defaultStrategy: "viewport",
   },
 
+  fonts: [
+    {
+      provider: fontProviders.fontsource(),
+      name: "Inconsolata",
+      cssVariable: "--font-inconsolata",
+      display: "swap",
+      fallbacks: ["monospace"],
+      weights: [200, 400, 700, 900],
+      optimizedFallbacks: true,
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: "Overpass Mono",
+      cssVariable: "--font-overpass-mono",
+      display: "swap",
+      fallbacks: ["monospace"],
+      weights: [300, 400, 700],
+      optimizedFallbacks: true,
+    },
+  ],
+
   experimental: {
     clientPrerender: true,
-    fonts: [
-      {
-        provider: fontProviders.fontsource(),
-        name: "Inconsolata",
-        cssVariable: "--font-inconsolata",
-        display: "swap",
-        fallbacks: ["monospace"],
-        weights: [200, 400, 700, 900],
-        optimizedFallbacks: true,
-      },
-      {
-        provider: fontProviders.fontsource(),
-        name: "Overpass Mono",
-        cssVariable: "--font-overpass-mono",
-        display: "swap",
-        fallbacks: ["monospace"],
-        weights: [300, 400, 700],
-        optimizedFallbacks: true,
-      },
-    ],
     // responsiveImages: true,
     // directRenderScript: true
   },
