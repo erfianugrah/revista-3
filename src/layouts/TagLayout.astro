@@ -27,9 +27,9 @@ const imageCache = new Map<string, { large: string | null; medium: string | null
 async function getOptimizedImages(src: string, alt: string) {
   if (imageCache.has(src)) return imageCache.get(src)!;
   const [largeImage, mediumImage, smallImage] = await Promise.all([
-    getImage({ src, alt, width: 1920, height: 1080, decoding: "async", format: "avif", quality: 65 }),
-    getImage({ src, alt, width: 1280, height: 720, decoding: "async", format: "avif", quality: 65 }),
-    getImage({ src, alt, width: 854, height: 480, decoding: "async", format: "avif", quality: 65 }),
+    getImage({ src, alt, width: 1920, height: 1080, fit: "inside", decoding: "async", format: "avif", quality: 65 }),
+    getImage({ src, alt, width: 1280, height: 720, fit: "inside", decoding: "async", format: "avif", quality: 65 }),
+    getImage({ src, alt, width: 854, height: 480, fit: "inside", decoding: "async", format: "avif", quality: 65 }),
   ]);
   const result = {
     large: largeImage?.src ?? null,
