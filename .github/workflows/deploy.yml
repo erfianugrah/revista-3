@@ -21,12 +21,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
 
       - name: Setup Bun environment
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: "1.2.21"
+          bun-version: "1.3.10"
 
       - name: Cache dependencies and build artifacts
         uses: actions/cache@v4
@@ -102,12 +102,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
 
       - name: Setup Bun environment
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: "1.2.21"
+          bun-version: "1.3.10"
 
       - name: Install dependencies
         run: bun install
@@ -125,7 +125,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
           packageManager: bun
-          wranglerVersion: "4.53.0"
+          wranglerVersion: "4.75.0"
 
   build-and-push-docker:
     runs-on: ubuntu-latest
@@ -275,12 +275,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
 
       - name: Setup Bun environment
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: "1.2.21"
+          bun-version: "1.3.10"
 
       - name: Cache dependencies
         uses: actions/cache@v4
