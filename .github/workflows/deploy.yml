@@ -128,7 +128,6 @@ jobs:
           wranglerVersion: "4.53.0"
 
   build-and-push-docker:
-    needs: build-revista
     runs-on: ubuntu-latest
     outputs:
       digest: ${{ steps.build.outputs.digest }}
@@ -136,16 +135,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            Dockerfile
-            Caddyfile
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
