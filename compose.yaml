@@ -1,8 +1,6 @@
-version: "3.9"
-
 services:
   revista:
-    image: erfianugrah/revista-4:1.27.6
+    image: erfianugrah/revista-4:latest
     hostname: revista
     container_name: revista
     restart: unless-stopped
@@ -10,9 +8,7 @@ services:
       resources:
         limits:
           cpus: "1"
-          memory: 128M
-    volumes:
-      - /mnt/user/data/revista/log:/var/log
+          memory: 64M
     environment:
       - TZ=Asia/Singapore
     expose:
