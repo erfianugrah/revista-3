@@ -1,126 +1,73 @@
 #!/usr/bin/env node
 
 /**
- * Schema Parser for Revista Content CLI
- * 
- * This utility parses the content.config.ts file to extract schema information
- * about the content collections defined in the project.
+ * Schema Inspector for Revista Content CLI
+ *
+ * Standalone utility — not imported by other scripts.
+ * Run directly to verify which collections are defined in content.config.ts:
+ *
+ *   node scripts/parser.js
+ *
+ * The collection schemas are maintained inline in create-content.js and
+ * update-post.js. If you add or rename a collection in content.config.ts,
+ * update those scripts too. Run this tool to check for drift.
  */
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-/**
- * Parse Zod schema from TypeScript content configuration
- * 
- * @param {string} filePath - Path to the content.config.ts file
- * @returns {Object} Collection schemas with required and optional fields
- */
-export async function parseTS(filePath) {
-  try {
-    // Read the content.config.ts file
-    const content = fs.readFileSync(filePath, 'utf8');
-    
-    // Instead of regular expressions, let's use a simpler approach
-    // to identify collections by looking for known patterns
-    const collections = {};
-    const collectionNames = ['muses', 'short_form', 'long_form', 'zeitweilig', 'authors', 'cv'];
-    
-    // Check for each known collection name in the content
-    for (const name of collectionNames) {
-      const collectionRegex = new RegExp(`const\\s+${name}\\s*=\\s*defineCollection\\(`, 'g');
-      
-      if (collectionRegex.test(content)) {
-        // Collection found, add it with standard schema
-        collections[name] = {
-          required: ['title', 'tags', 'author', 'description', 'pubDate'],
-          optional: ['updatedDate', 'image', 'slug'],
-          complex: name === 'cv' ? ['sections', 'contacts', 'skills', 'languages', 'education', 'companies'] : [],
-          imageProps: [
-            { name: 'src', isOptional: false },
-            { name: 'alt', isOptional: false },
-            { name: 'positionx', isOptional: true },
-            { name: 'positiony', isOptional: true }
-          ]
-        };
-      }
-    }
-    
-    // If no collections were found, this might be an error
-    if (Object.keys(collections).length === 0) {
-      // This would be unexpected since we're checking for known collection names
-      console.warn('No collections found in content.config.ts, using default set');
-      
-      // Add all known collections as fallback
-      collectionNames.forEach(name => {
-        collections[name] = {
-          required: ['title', 'tags', 'author', 'description', 'pubDate'],
-          optional: ['updatedDate', 'image', 'slug'],
-          complex: name === 'cv' ? ['sections', 'contacts', 'skills', 'languages', 'education', 'companies'] : [],
-          imageProps: [
-            { name: 'src', isOptional: false },
-            { name: 'alt', isOptional: false },
-            { name: 'positionx', isOptional: true },
-            { name: 'positiony', isOptional: true }
-          ]
-        };
-      });
-    }
-    
-    console.log(`Found ${Object.keys(collections).length} collections: ${Object.keys(collections).join(', ')}`);
-    return collections;
-  } catch (error) {
-    console.error('Error parsing schema:', error);
-    
-    // Return basic collection structure as fallback
-    return {
-      muses: {
-        required: ['title', 'tags', 'author', 'description', 'pubDate'],
-        optional: ['updatedDate', 'image', 'slug'],
-        imageProps: [
-          { name: 'src', isOptional: false },
-          { name: 'alt', isOptional: false },
-          { name: 'positionx', isOptional: true },
-          { name: 'positiony', isOptional: true }
-        ]
-      }
-    };
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const configPath = path.join(__dirname, "..", "src", "content.config.ts");
+
+// Collections that the CLI scripts know about
+const KNOWN_COLLECTIONS = [
+  "muses",
+  "short_form",
+  "long_form",
+  "zeitweilig",
+  "authors",
+  "cv",
+];
+
+const content = fs.readFileSync(configPath, "utf8");
+
+const found = [];
+const missing = [];
+
+for (const name of KNOWN_COLLECTIONS) {
+  const pattern = new RegExp(`const\\s+${name}\\s*=\\s*defineCollection\\(`);
+  if (pattern.test(content)) {
+    found.push(name);
+  } else {
+    missing.push(name);
   }
 }
 
-// Since we're now using a hardcoded schema approach instead of parsing
-// the file dynamically, this function is no longer needed.
-// We're keeping a simplified version for documentation purposes.
+// Also detect any defineCollection calls we don't know about
+const allDefined = [
+  ...content.matchAll(/const\s+(\w+)\s*=\s*defineCollection\(/g),
+].map((m) => m[1]);
+const unknown = allDefined.filter((n) => !KNOWN_COLLECTIONS.includes(n));
 
-/**
- * This is a simplified version of the original schema parsing function.
- * We're now using a hardcoded schema approach for better reliability.
- * 
- * @param {string} schemaContent - Content of the schema definition (not used)
- * @returns {Object} Object containing hardcoded schema information
- */
-function parseSchemaFields(schemaContent) {
-  // Return hardcoded schema structure
-  return {
-    required: ['title', 'tags', 'author', 'description', 'pubDate'],
-    optional: ['updatedDate', 'image', 'slug'],
-    complex: [],
-    imageProps: [
-      { name: 'src', isOptional: false },
-      { name: 'alt', isOptional: false },
-      { name: 'positionx', isOptional: true },
-      { name: 'positiony', isOptional: true }
-    ]
-  };
+console.log(
+  `content.config.ts defines ${allDefined.length} collection(s): ${allDefined.join(", ")}`,
+);
+console.log(
+  `CLI scripts know about ${KNOWN_COLLECTIONS.length}: ${KNOWN_COLLECTIONS.join(", ")}`,
+);
+
+if (missing.length) {
+  console.warn(`\n⚠  Missing from config: ${missing.join(", ")}`);
 }
-
-// For testing the parser directly
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const testFile = path.join(path.dirname(fileURLToPath(import.meta.url)), '../src/content.config.ts');
-  parseTS(testFile).then(schemas => {
-    console.log(JSON.stringify(schemas, null, 2));
-  }).catch(error => {
-    console.error('Error parsing schema:', error);
-  });
+if (unknown.length) {
+  console.warn(
+    `\n⚠  New in config but not in CLI scripts: ${unknown.join(", ")}`,
+  );
+  console.warn(
+    "   Update COLLECTIONS in scripts/create-content.js and scripts/update-post.js",
+  );
+}
+if (!missing.length && !unknown.length) {
+  console.log("\n✅ CLI scripts and content.config.ts are in sync.");
 }

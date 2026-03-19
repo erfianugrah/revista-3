@@ -10,6 +10,11 @@ import { remarkReadingTime } from "./src/scripts/remark-reading-time.mjs";
 import undiciRetry from "./src/scripts/undici-retry.ts";
 import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
+// Use no-op passthrough image service in dev to skip Sharp processing.
+// Images are served as-is during development; full optimization runs in production builds.
+const isDev =
+  process.env.NODE_ENV !== "production" && !process.argv.includes("build");
+
 // https://astro.build/config
 export default defineConfig({
   site:
@@ -23,12 +28,14 @@ export default defineConfig({
     // layout: "full-width",
     // objectFit: "contain",
     domains: ["erfianugrah.com", "image.erfi.io"],
-    service: {
-      entrypoint: "astro/assets/services/sharp",
-      config: {
-        limitInputPixels: false,
-      },
-    },
+    service: isDev
+      ? { entrypoint: "astro/assets/services/noop" }
+      : {
+          entrypoint: "astro/assets/services/sharp",
+          config: {
+            limitInputPixels: false,
+          },
+        },
   },
 
   integrations: [

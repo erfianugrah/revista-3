@@ -2,499 +2,419 @@
 
 /**
  * Revista Content Creator CLI
- * 
- * A command-line tool for creating new content files with the proper
- * frontmatter according to the schema defined in content.config.ts.
+ *
+ * Creates new MDX content files with proper frontmatter matching the
+ * schema defined in content.config.ts.
+ *
+ * Supports both interactive (inquirer prompts) and non-interactive
+ * (all values via CLI flags) modes.
  */
 
-import { Command } from 'commander';
-import chalk from 'chalk';
-import inquirer from 'inquirer';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import yaml from 'yaml';
-import { parseTS } from './parser.js';
+import { Command } from "commander";
+import chalk from "chalk";
+import inquirer from "inquirer";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// Get the directory of the current script
+// --------------- Paths ---------------
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.join(__dirname, '..');
-const contentConfigPath = path.join(rootDir, 'src', 'content.config.ts');
-const contentDir = path.join(rootDir, 'src', 'content');
+const rootDir = path.join(__dirname, "..");
+const contentDir = path.join(rootDir, "src", "content");
 
-// Set up Commander
+// --------------- Collection schemas ---------------
+// Mirrors content.config.ts — update here when the schema changes.
+
+const COLLECTIONS = {
+  muses: { complex: [] },
+  short_form: { complex: [] },
+  long_form: { complex: [] },
+  zeitweilig: { complex: [] },
+  authors: { complex: [] },
+  cv: {
+    complex: [
+      "sections",
+      "contacts",
+      "skills",
+      "languages",
+      "education",
+      "companies",
+    ],
+  },
+};
+
+const BASE_REQUIRED = ["title", "tags", "author", "description", "pubDate"];
+const BASE_OPTIONAL = ["updatedDate", "image"];
+const IMAGE_PROPS = [
+  { name: "src", isOptional: false },
+  { name: "alt", isOptional: false },
+  { name: "positionx", isOptional: true },
+  { name: "positiony", isOptional: true },
+];
+
+// --------------- Helpers ---------------
+
+/** Convert a title into a URL-friendly slug. */
+function slugify(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+/**
+ * Build the frontmatter string for a new content file.
+ *
+ * This is the single source of truth for frontmatter formatting so that
+ * interactive and non-interactive modes produce identical output.
+ */
+function buildFrontmatter({
+  title,
+  slug,
+  pubDate,
+  tags,
+  author,
+  description,
+  image,
+}) {
+  const lines = [];
+
+  lines.push(`title: ${title}`);
+  lines.push(`slug: ${slug}`);
+  lines.push(`pubDate: ${pubDate}`);
+
+  // tags — double-quoted, inline array: ["tag1", "tag2"]
+  const tagsStr = tags.map((t) => `"${t}"`).join(", ");
+  lines.push(`tags: [${tagsStr}]`);
+
+  lines.push(`author: "${author}"`);
+
+  // image (optional) — flow style on one line
+  if (image) {
+    const props = Object.entries(image)
+      .filter(([, v]) => v) // skip empty optional props
+      .map(([k, v]) => `${k}: ${v}`)
+      .join(", ");
+    lines.push(`image: { ${props} }`);
+  }
+
+  lines.push(`description: ${description}`);
+
+  return lines.join("\n");
+}
+
+/**
+ * Write the content file to disk (shared by both modes).
+ * Returns the absolute file path written to (or that would be written to).
+ */
+function writeContentFile({
+  collectionType,
+  slug,
+  pubDate,
+  frontmatter,
+  dryRun,
+}) {
+  const filenameDate = pubDate.split("T")[0]; // YYYY-MM-DD
+  const filename = `${filenameDate}-${slug}.mdx`;
+  const filePath = path.join(contentDir, collectionType, filename);
+
+  // Preview
+  console.log(chalk.yellow("\nContent Preview:"));
+  console.log(chalk.gray("---"));
+  console.log(chalk.cyan(frontmatter));
+  console.log(chalk.gray("---"));
+  console.log(chalk.gray("Enter your content here.\n"));
+
+  if (dryRun) {
+    console.log(chalk.yellow("Dry run - no file created."));
+    console.log(chalk.gray(`Would create file: ${chalk.cyan(filePath)}`));
+    return filePath;
+  }
+
+  return { filePath, filename };
+}
+
+function showNextSteps(filename) {
+  console.log(chalk.blue("\nNext steps:"));
+  console.log(`  1. ${chalk.cyan(`Edit ${filename}`)} to add your content`);
+  console.log(`  2. Run ${chalk.cyan("bun run dev")} to preview your changes`);
+  console.log(`  3. Run ${chalk.cyan("bun run build")} when ready to publish`);
+}
+
+// --------------- CLI setup ---------------
+
 const program = new Command();
 
 program
-  .name('create-content')
-  .description(chalk.blue('CLI to create content files for Revista with proper frontmatter'))
-  .version('1.0.0')
-  .option('-t, --type <type>', 'content type (muses, short_form, long_form, zeitweilig, authors, cv)')
-  .option('-d, --dry-run', 'preview frontmatter without creating the file')
-  .option('--debug', 'show debug information')
-  .option('--non-interactive', 'run in non-interactive mode with provided options')
-  .option('--title <title>', 'title for the content (for non-interactive mode)')
-  .option('--tags <tags>', 'comma-separated tags (for non-interactive mode)')
-  .option('--author <author>', 'author name (for non-interactive mode)')
-  .option('--description <description>', 'content description (for non-interactive mode)')
-  .option('--image-src <src>', 'image source URL (for non-interactive mode)')
-  .option('--image-alt <alt>', 'image alt text (for non-interactive mode)')
-  .option('--pub-date <date>', 'publication date in ISO format (for non-interactive mode)')
-  .option('--updated-date <date>', 'updated date in ISO format (for non-interactive mode)')
+  .name("create-content")
+  .description(
+    chalk.blue(
+      "CLI to create content files for Revista with proper frontmatter",
+    ),
+  )
+  .version("1.0.0")
+  .option(
+    "-t, --type <type>",
+    `content type (${Object.keys(COLLECTIONS).join(", ")})`,
+  )
+  .option("-d, --dry-run", "preview frontmatter without creating the file")
+  .option(
+    "--non-interactive",
+    "run in non-interactive mode with provided options",
+  )
+  .option("--title <title>", "title for the content")
+  .option("--slug <slug>", "custom slug (defaults to slugified title)")
+  .option("--tags <tags>", "comma-separated tags")
+  .option("--author <author>", "author name")
+  .option("--description <description>", "content description")
+  .option("--image-src <src>", "image source URL")
+  .option("--image-alt <alt>", "image alt text")
+  .option("--image-positionx <pos>", "image X position (e.g. 50%)")
+  .option("--image-positiony <pos>", "image Y position (e.g. 40%)")
+  .option("--pub-date <date>", "publication date in ISO format")
   .parse(process.argv);
 
 const options = program.opts();
 
-/**
- * Generate a slug from a title
- * @param {string} title - The title to slugify
- * @returns {string} - URL-friendly slug
- */
-function slugify(title) {
-  return title
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')  // Remove special characters
-    .replace(/[\s_-]+/g, '-')   // Replace spaces and underscores with hyphens
-    .replace(/^-+|-+$/g, '');   // Remove leading/trailing hyphens
-}
+// --------------- Non-interactive mode ---------------
 
-/**
- * Get current date in YYYY-MM-DD format
- * @returns {string} - Formatted date string
- */
-function getFormattedDate() {
-  const now = new Date();
-  return now.toISOString().split('T')[0];
-}
-
-/**
- * Main function to create content
- */
-async function main() {
-  try {
-    console.log(chalk.blue.bold('🌟 Revista Content Creator 🌟'));
-    console.log(chalk.gray('Creates content files with proper frontmatter based on content.config.ts\n'));
-
-    // Parse schemas from content.config.ts
-    const schemas = await parseTS(contentConfigPath);
-    
-    if (options.debug) {
-      console.log(chalk.gray('Parsed schemas:'));
-      console.log(schemas);
-    }
-
-    // Check for non-interactive mode
-    if (options.nonInteractive) {
-      if (!options.type || !options.title || !options.description) {
-        console.error(chalk.red('Error: In non-interactive mode, --type, --title, and --description are required'));
-        process.exit(1);
-      }
-      
-      return handleNonInteractiveMode(schemas, options);
-    }
-
-    // Collect collection type
-    let collectionType = options.type;
-    if (!collectionType) {
-      // Get available collections
-      const collections = Object.keys(schemas);
-      
-      // If no collection type is specified, ask the user
-      const response = await inquirer.prompt([
-        {
-          type: 'list',
-          name: 'collectionType',
-          message: 'Select content type:',
-          choices: collections
-        }
-      ]);
-      
-      collectionType = response.collectionType;
-    }
-    
-    // Validate collection type
-    if (!schemas[collectionType]) {
-      console.error(chalk.red(`Error: Collection type '${collectionType}' not found in schema.`));
-      console.log(chalk.yellow(`Available collection types: ${Object.keys(schemas).join(', ')}`));
-      process.exit(1);
-    }
-    
-    console.log(chalk.green(`\nCreating new ${chalk.bold(collectionType)} content\n`));
-    
-    const schema = schemas[collectionType];
-    
-    // Prepare questions for inquirer
-    const questions = [];
-    
-    // Start with title since we need it for the filename
-    questions.push({
-      type: 'input',
-      name: 'title',
-      message: `${chalk.cyan('Title:')}`,
-      validate: input => input ? true : 'Title is required'
-    });
-    
-    // Add required fields
-    for (const field of schema.required) {
-      // Skip title since we already asked
-      if (field === 'title') continue;
-      
-      if (field === 'pubDate') {
-        // Use current date as default for pubDate
-        continue;
-      } else if (field === 'tags') {
-        questions.push({
-          type: 'input',
-          name: 'tags',
-          message: `${chalk.cyan('Tags')} ${chalk.gray('(comma-separated)')}:`,
-          default: collectionType,
-          filter: input => input.split(',').map(tag => tag.trim())
-        });
-      } else if (field === 'author') {
-        questions.push({
-          type: 'input',
-          name: 'author',
-          message: `${chalk.cyan('Author:')}`,
-          default: 'Erfi Anugrah'
-        });
-      } else if (field === 'description') {
-        questions.push({
-          type: 'input',
-          name: 'description',
-          message: `${chalk.cyan('Description:')}`,
-          validate: input => input ? true : 'Description is required'
-        });
-      } else {
-        // For any other required field
-        questions.push({
-          type: 'input',
-          name: field,
-          message: `${chalk.cyan(field + ':')}`,
-          validate: input => input ? true : `${field} is required`
-        });
-      }
-    }
-    
-    // Ask if user wants to include image
-    questions.push({
-      type: 'confirm',
-      name: 'includeImage',
-      message: 'Include image?',
-      default: false
-    });
-    
-    // Image properties if user wants to include image
-    if (schema.imageProps) {
-      const imageQuestions = schema.imageProps.map(prop => ({
-        type: 'input',
-        name: `image.${prop.name}`,
-        message: `${chalk.cyan(`Image ${prop.name}:`)}`,
-        when: answers => answers.includeImage,
-        validate: input => {
-          if (!prop.isOptional && !input) return `Image ${prop.name} is required`;
-          return true;
-        }
-      }));
-      
-      questions.push(...imageQuestions);
-    } else {
-      // Default image properties
-      questions.push(
-        {
-          type: 'input',
-          name: 'image.src',
-          message: `${chalk.cyan('Image src:')}`,
-          when: answers => answers.includeImage,
-          validate: input => input ? true : 'Image src is required'
-        },
-        {
-          type: 'input',
-          name: 'image.alt',
-          message: `${chalk.cyan('Image alt:')}`,
-          when: answers => answers.includeImage,
-          validate: input => input ? true : 'Image alt is required'
-        },
-        {
-          type: 'input',
-          name: 'image.positionx',
-          message: `${chalk.cyan('Image positionx:')} ${chalk.gray('(optional, e.g., center, 40%)')}`,
-          when: answers => answers.includeImage
-        },
-        {
-          type: 'input',
-          name: 'image.positiony',
-          message: `${chalk.cyan('Image positiony:')} ${chalk.gray('(optional, e.g., top, 20%)')}`,
-          when: answers => answers.includeImage
-        }
-      );
-    }
-    
-    // Get answers from user
-    const answers = await inquirer.prompt(questions);
-    
-    // Process answers into frontmatter with the correct order
-    const frontmatter = {
-      title: answers.title,
-      slug: slugify(answers.title),
-      pubDate: new Date().toISOString(),
-      updatedDate: undefined,  // Will be removed if not set
-      tags: answers.tags,
-      author: answers.author,
-      description: answers.description
-    };
-    
-    // Add image if included
-    if (answers.includeImage) {
-      frontmatter.image = {};
-      // Collect all image properties
-      for (const [key, value] of Object.entries(answers)) {
-        if (key.startsWith('image.')) {
-          const [_, prop] = key.split('.');
-          frontmatter.image[prop] = value;
-        }
-      }
-    }
-    
-    // Add other fields from answers
-    for (const [key, value] of Object.entries(answers)) {
-      if (key === 'title' || key === 'tags' || key === 'includeImage' || 
-          key === 'author' || key === 'description' || key.startsWith('image.')) continue;
-      
-      frontmatter[key] = value;
-    }
-    
-    // Remove undefined fields
-    Object.keys(frontmatter).forEach(key => {
-      if (frontmatter[key] === undefined) {
-        delete frontmatter[key];
-      }
-    });
-    
-    // Generate filename using date-slug.mdx pattern
-    const date = getFormattedDate();
-    const filename = `${date}-${frontmatter.slug}.mdx`;
-    const filePath = path.join(contentDir, collectionType, filename);
-    
-    // Generate file content with specific formatting to match existing files
-    // Format tags as [ 'tag1', 'tag2' ] instead of YAML list
-    let tagsFormatted = `[ ${frontmatter.tags.map(tag => `'${tag}'`).join(', ')} ]`;
-    
-    // Format author with quotes
-    let authorFormatted = `"${frontmatter.author}"`;
-    
-    // Format image if present
-    let imageFormatted = '';
-    if (frontmatter.image) {
-      const props = Object.entries(frontmatter.image)
-        .map(([key, value]) => `${key}: ${value}`)
-        .join(' , ');
-      imageFormatted = `{ ${props} }`;
-    }
-    
-    // Create frontmatter with custom formatting
-    let formattedFrontmatter = `title: ${frontmatter.title} 
-slug: ${frontmatter.slug} 
-pubDate: ${frontmatter.pubDate}`;
-
-    // Add updatedDate if present
-    if (frontmatter.updatedDate) {
-      formattedFrontmatter += `\nupdatedDate: ${frontmatter.updatedDate}`;
-    }
-    
-    // Add tags and author
-    formattedFrontmatter += `\ntags: ${tagsFormatted}
-author: ${authorFormatted}`;
-    
-    // Add image if present
-    if (frontmatter.image) {
-      formattedFrontmatter += `\nimage: ${imageFormatted}`;
-    }
-    
-    // Add description
-    formattedFrontmatter += `\ndescription: ${frontmatter.description}`;
-    
-    const fileContent = `---
-${formattedFrontmatter}
----
-
-Enter your content here.
-`;
-
-    // Show preview
-    console.log(chalk.yellow('\nContent Preview:'));
-    console.log(chalk.gray('---'));
-    console.log(chalk.cyan(formattedFrontmatter));
-    console.log(chalk.gray('---'));
-    console.log(chalk.gray('Enter your content here.'));
-    
-    if (options.dryRun) {
-      console.log(chalk.yellow('\nDry run - no file created.'));
-      return;
-    }
-    
-    // Confirm creation
-    const { confirm } = await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'confirm',
-        message: `Create file at ${chalk.cyan(filePath)}?`,
-        default: true
-      }
-    ]);
-    
-    if (!confirm) {
-      console.log(chalk.yellow('File creation cancelled.'));
-      return;
-    }
-    
-    // Ensure directory exists
-    const dir = path.dirname(filePath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    
-    // Write file
-    fs.writeFileSync(filePath, fileContent);
-    console.log(chalk.green(`\n✅ File created: ${chalk.cyan(filePath)}`));
-    
-    // Show next steps
-    console.log(chalk.blue('\nNext steps:'));
-    console.log(`  1. ${chalk.cyan(`Edit ${filename}`)} to add your content`);
-    console.log(`  2. Run ${chalk.cyan('bun run dev')} to preview your changes`);
-    console.log(`  3. Run ${chalk.cyan('bun run build')} when ready to publish`);
-    
-  } catch (error) {
-    console.error(chalk.red('\nError:'), error);
+function handleNonInteractive() {
+  if (!options.type || !options.title || !options.description) {
+    console.error(
+      chalk.red(
+        "Error: In non-interactive mode, --type, --title, and --description are required",
+      ),
+    );
     process.exit(1);
   }
-}
 
-/**
- * Handle non-interactive mode for content creation
- */
-function handleNonInteractiveMode(schemas, options) {
   const collectionType = options.type;
-  
-  // Validate collection type
-  if (!schemas[collectionType]) {
-    console.error(chalk.red(`Error: Collection type '${collectionType}' not found in schema.`));
-    console.log(chalk.yellow(`Available collection types: ${Object.keys(schemas).join(', ')}`));
+  if (!COLLECTIONS[collectionType]) {
+    console.error(
+      chalk.red(`Error: Unknown collection type '${collectionType}'.`),
+    );
+    console.log(
+      chalk.yellow(`Available types: ${Object.keys(COLLECTIONS).join(", ")}`),
+    );
     process.exit(1);
   }
-  
-  console.log(chalk.green(`\nCreating new ${chalk.bold(collectionType)} content in non-interactive mode\n`));
-  
-  // Prepare frontmatter with the correct order
-  const frontmatter = {
-    title: options.title,
-    slug: slugify(options.title),
-    pubDate: options.pubDate || new Date().toISOString(),
-    // Add updated date if provided
-    ...(options.updatedDate && { updatedDate: options.updatedDate }),
-    // Convert tags to the [ 'tag1', 'tag2' ] format
-    tags: options.tags ? 
-      options.tags.split(',').map(tag => tag.trim()) : 
-      [collectionType],
-    author: options.author || 'Erfi Anugrah',
-    description: options.description
-  };
-  
-  // Add image if provided
+
+  console.log(
+    chalk.green(
+      `\nCreating new ${chalk.bold(collectionType)} content (non-interactive)\n`,
+    ),
+  );
+
+  const slug = options.slug || slugify(options.title);
+  const pubDate = options.pubDate || new Date().toISOString();
+  const tags = options.tags
+    ? options.tags.split(",").map((t) => t.trim())
+    : [collectionType];
+  const author = options.author || "Erfi Anugrah";
+
+  let image;
   if (options.imageSrc && options.imageAlt) {
-    frontmatter.image = {
-      src: options.imageSrc,
-      alt: options.imageAlt
-    };
+    image = { src: options.imageSrc, alt: options.imageAlt };
+    if (options.imagePositionx) image.positionx = options.imagePositionx;
+    if (options.imagePositiony) image.positiony = options.imagePositiony;
   }
-  
-  // Generate filename using date-slug.mdx pattern
-  // If pubDate is provided, use that date for the filename, otherwise use today's date
-  let filenameDate;
-  if (frontmatter.pubDate) {
-    // Extract YYYY-MM-DD from the ISO date string
-    const pubDate = new Date(frontmatter.pubDate);
-    filenameDate = pubDate.toISOString().split('T')[0];
-  } else {
-    filenameDate = getFormattedDate();
-  }
-  
-  const filename = `${filenameDate}-${frontmatter.slug}.mdx`;
-  const filePath = path.join(contentDir, collectionType, filename);
-  
-  // Generate file content with specific formatting to match existing files
-  // Format tags as [ 'tag1', 'tag2' ] instead of YAML list
-  let tagsFormatted = `[ ${frontmatter.tags.map(tag => `'${tag}'`).join(', ')} ]`;
-  
-  // Format author with quotes
-  let authorFormatted = `"${frontmatter.author}"`;
-  
-  // Format image if present
-  let imageFormatted = '';
-  if (frontmatter.image) {
-    const props = Object.entries(frontmatter.image)
-      .map(([key, value]) => `${key}: ${value}`)
-      .join(' , ');
-    imageFormatted = `{ ${props} }`;
-  }
-  
-  // Create frontmatter with custom formatting
-  let formattedFrontmatter = `title: ${frontmatter.title} 
-slug: ${frontmatter.slug} 
-pubDate: ${frontmatter.pubDate}`;
 
-  // Add updatedDate if present
-  if (frontmatter.updatedDate) {
-    formattedFrontmatter += `\nupdatedDate: ${frontmatter.updatedDate}`;
-  }
-  
-  // Add tags and author
-  formattedFrontmatter += `\ntags: ${tagsFormatted}
-author: ${authorFormatted}`;
-  
-  // Add image if present
-  if (frontmatter.image) {
-    formattedFrontmatter += `\nimage: ${imageFormatted}`;
-  }
-  
-  // Add description
-  formattedFrontmatter += `\ndescription: ${frontmatter.description}`;
-  
-  const fileContent = `---
-${formattedFrontmatter}
----
+  const frontmatter = buildFrontmatter({
+    title: options.title,
+    slug,
+    pubDate,
+    tags,
+    author,
+    description: options.description,
+    image,
+  });
 
-Enter your content here.
-`;
+  const result = writeContentFile({
+    collectionType,
+    slug,
+    pubDate,
+    frontmatter,
+    dryRun: options.dryRun,
+  });
 
-  // Show preview
-  console.log(chalk.yellow('\nContent Preview:'));
-  console.log(chalk.gray('---'));
-  console.log(chalk.cyan(formattedFrontmatter));
-  console.log(chalk.gray('---'));
-  console.log(chalk.gray('Enter your content here.'));
-  
-  if (options.dryRun) {
-    console.log(chalk.yellow('\nDry run - no file created.'));
-    console.log(chalk.gray(`Would create file: ${chalk.cyan(filePath)}`));
-    return;
-  }
-  
-  // Ensure directory exists
+  if (options.dryRun) return;
+
+  const { filePath, filename } = result;
   const dir = path.dirname(filePath);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-  
-  // Write file
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+  const fileContent = `---\n${frontmatter}\n---\n\nEnter your content here.\n`;
   fs.writeFileSync(filePath, fileContent);
   console.log(chalk.green(`\n✅ File created: ${chalk.cyan(filePath)}`));
-  
-  // Show next steps
-  console.log(chalk.blue('\nNext steps:'));
-  console.log(`  1. ${chalk.cyan(`Edit ${filename}`)} to add your content`);
-  console.log(`  2. Run ${chalk.cyan('bun run dev')} to preview your changes`);
-  console.log(`  3. Run ${chalk.cyan('bun run build')} when ready to publish`);
+  showNextSteps(filename);
 }
 
-// Run the main function
+// --------------- Interactive mode ---------------
+
+async function handleInteractive() {
+  // Pick collection type
+  let collectionType = options.type;
+  if (!collectionType) {
+    const resp = await inquirer.prompt([
+      {
+        type: "list",
+        name: "collectionType",
+        message: "Select content type:",
+        choices: Object.keys(COLLECTIONS),
+      },
+    ]);
+    collectionType = resp.collectionType;
+  }
+
+  if (!COLLECTIONS[collectionType]) {
+    console.error(
+      chalk.red(`Error: Unknown collection type '${collectionType}'.`),
+    );
+    console.log(
+      chalk.yellow(`Available types: ${Object.keys(COLLECTIONS).join(", ")}`),
+    );
+    process.exit(1);
+  }
+
+  console.log(
+    chalk.green(`\nCreating new ${chalk.bold(collectionType)} content\n`),
+  );
+
+  // Build the prompt questions
+  const questions = [
+    {
+      type: "input",
+      name: "title",
+      message: `${chalk.cyan("Title:")}`,
+      validate: (v) => (v ? true : "Title is required"),
+    },
+    {
+      type: "input",
+      name: "slug",
+      message: `${chalk.cyan("Slug")} ${chalk.gray("(leave blank to auto-generate from title)")}:`,
+      default: "",
+    },
+    {
+      type: "input",
+      name: "tags",
+      message: `${chalk.cyan("Tags")} ${chalk.gray("(comma-separated)")}:`,
+      default: collectionType,
+      filter: (v) => v.split(",").map((t) => t.trim()),
+    },
+    {
+      type: "input",
+      name: "author",
+      message: `${chalk.cyan("Author:")}`,
+      default: "Erfi Anugrah",
+    },
+    {
+      type: "input",
+      name: "description",
+      message: `${chalk.cyan("Description:")}`,
+      validate: (v) => (v ? true : "Description is required"),
+    },
+    {
+      type: "confirm",
+      name: "includeImage",
+      message: "Include image?",
+      default: false,
+    },
+  ];
+
+  // Image sub-questions
+  for (const prop of IMAGE_PROPS) {
+    questions.push({
+      type: "input",
+      name: `image.${prop.name}`,
+      message: `${chalk.cyan(`Image ${prop.name}:`)}${prop.isOptional ? chalk.gray(" (optional)") : ""}`,
+      when: (answers) => answers.includeImage,
+      validate: (v) => {
+        if (!prop.isOptional && !v) return `Image ${prop.name} is required`;
+        return true;
+      },
+    });
+  }
+
+  const answers = await inquirer.prompt(questions);
+
+  const slug = answers.slug || slugify(answers.title);
+  const pubDate = new Date().toISOString();
+
+  // Collect image props
+  let image;
+  if (answers.includeImage) {
+    image = {};
+    for (const [key, value] of Object.entries(answers)) {
+      if (key.startsWith("image.") && value) {
+        image[key.split(".")[1]] = value;
+      }
+    }
+  }
+
+  const frontmatter = buildFrontmatter({
+    title: answers.title,
+    slug,
+    pubDate,
+    tags: answers.tags,
+    author: answers.author,
+    description: answers.description,
+    image,
+  });
+
+  const result = writeContentFile({
+    collectionType,
+    slug,
+    pubDate,
+    frontmatter,
+    dryRun: options.dryRun,
+  });
+
+  if (options.dryRun) return;
+
+  const { filePath, filename } = result;
+
+  // Confirm before writing
+  const { confirm } = await inquirer.prompt([
+    {
+      type: "confirm",
+      name: "confirm",
+      message: `Create file at ${chalk.cyan(filePath)}?`,
+      default: true,
+    },
+  ]);
+
+  if (!confirm) {
+    console.log(chalk.yellow("File creation cancelled."));
+    return;
+  }
+
+  const dir = path.dirname(filePath);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+  const fileContent = `---\n${frontmatter}\n---\n\nEnter your content here.\n`;
+  fs.writeFileSync(filePath, fileContent);
+  console.log(chalk.green(`\n✅ File created: ${chalk.cyan(filePath)}`));
+  showNextSteps(filename);
+}
+
+// --------------- Main ---------------
+
+async function main() {
+  try {
+    console.log(chalk.blue.bold("🌟 Revista Content Creator 🌟"));
+    console.log(chalk.gray("Creates content files with proper frontmatter\n"));
+
+    if (options.nonInteractive) {
+      handleNonInteractive();
+    } else {
+      await handleInteractive();
+    }
+  } catch (error) {
+    console.error(chalk.red("\nError:"), error);
+    process.exit(1);
+  }
+}
+
 main();

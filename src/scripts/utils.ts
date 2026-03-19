@@ -11,10 +11,20 @@ export function shuffle<T>(array: T[]): T[] {
 }
 
 /**
- * Format a Date into "Mon DD, YYYY" style (e.g. "Jan 15, 2025"),
- * dropping the weekday from toDateString().
+ * Format a Date into "Mon DD, YYYY HH:MM:SS.mmm" style
+ * (e.g. "Jan 15, 2025 14:30:05.123"), showing time down to milliseconds.
  * Returns undefined if the input is nullish.
  */
 export function formatDate(date: Date | undefined | null): string | undefined {
-  return date?.toDateString().split(" ").slice(1).join(" ");
+  if (!date) return undefined;
+  const datePart = date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+  const ms = String(date.getMilliseconds()).padStart(3, "0");
+  return `${datePart} ${hours}:${minutes}:${seconds}.${ms}`;
 }

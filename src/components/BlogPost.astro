@@ -14,11 +14,17 @@ export interface Props {
 
 const { title, url, image, alt, description, pubDate, positionx, positiony } =
   Astro.props;
-const publishedDate = new Date(pubDate).toLocaleDateString("en-US", {
+const pd = new Date(pubDate);
+const pdDatePart = pd.toLocaleDateString("en-US", {
   year: "numeric",
   month: "long",
   day: "numeric",
 });
+const pdHours = String(pd.getHours()).padStart(2, "0");
+const pdMinutes = String(pd.getMinutes()).padStart(2, "0");
+const pdSeconds = String(pd.getSeconds()).padStart(2, "0");
+const pdMs = String(pd.getMilliseconds()).padStart(3, "0");
+const publishedDate = `${pdDatePart} ${pdHours}:${pdMinutes}:${pdSeconds}.${pdMs}`;
 ---
 
 <article
