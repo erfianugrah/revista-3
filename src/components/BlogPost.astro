@@ -10,9 +10,10 @@ export interface Props {
   pubDate: Date;
   positionx: string;
   positiony: string;
+  minutesRead?: string;
 }
 
-const { title, url, image, alt, description, pubDate, positionx, positiony } =
+const { title, url, image, alt, description, pubDate, positionx, positiony, minutesRead } =
   Astro.props;
 const pd = new Date(pubDate);
 const pdDatePart = pd.toLocaleDateString("en-US", {
@@ -60,6 +61,11 @@ const publishedDate = `${pdDatePart} ${pdHours}:${pdMinutes}:${pdSeconds}.${pdMs
       >
         Published on {publishedDate}
       </time>
+      {minutesRead && (
+        <p class="font-inconsolata text-sm text-gray-500 dark:text-gray-500 mt-0.5">
+          {minutesRead}
+        </p>
+      )}
     </header>
     <p class="font-inconsolata normal-case line-clamp-3 text-base">
       {description}

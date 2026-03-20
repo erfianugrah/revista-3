@@ -3,6 +3,8 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import BlogPost from "../components/BlogPost.astro";
 import { sortByDate } from "../components/sortByDate";
+import { formatReadingTime } from "../scripts/utils";
+import getReadingTime from "reading-time";
 const pageTitle = "Zeitweilig";
 const allZeitweilig = await getCollection("zeitweilig");
 ---
@@ -21,6 +23,7 @@ const allZeitweilig = await getCollection("zeitweilig");
           pubDate={post.data?.pubDate || ""}
           positionx={post.data?.image?.positionx || ""}
           positiony={post.data?.image?.positiony || ""}
+          minutesRead={formatReadingTime(getReadingTime(post.body ?? "").time)}
         />
       ))
   }

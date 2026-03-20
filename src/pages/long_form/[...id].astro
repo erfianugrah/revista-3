@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import MarkdownPostLayout from "../../layouts/MarkdownPostLayout.astro";
 import { buildDetailPaths } from "../../scripts/collections";
+import { formatReadingTime } from "../../scripts/utils";
 
 export async function getStaticPaths() {
   const entries = await getCollection("long_form");
@@ -18,7 +19,7 @@ const { Content, remarkPluginFrontmatter } = await render(entry);
   collection="long_form"
 >
   <p class="prose prose-slate dark:prose-invert italic no-underline">
-    {remarkPluginFrontmatter.minutesRead}
+    {formatReadingTime(remarkPluginFrontmatter.readingTimeMs)}
   </p>
   <Content />
 </MarkdownPostLayout>
