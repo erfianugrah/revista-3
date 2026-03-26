@@ -34,6 +34,8 @@ export default defineConfig({
           entrypoint: "astro/assets/services/sharp",
           config: {
             limitInputPixels: false,
+            avif: { effort: 4, chromaSubsampling: "4:2:0" },
+            webp: { effort: 6, alphaQuality: 80 },
           },
         },
   },

@@ -1,123 +1,146 @@
 # Repository Guidelines
-
 ## Overview
-Astro 5 static site (blog/portfolio) with MDX content collections, React islands, Tailwind CSS v4, and Pagefind search. Deployed to Cloudflare Workers (static assets) and optionally GitHub Pages. Runtime is Bun.
-
-## Project Structure
-```
+Revista is an Astro 6 static site for photography, writing, and CV content.
+It uses MDX content collections, a small number of React islands, Tailwind CSS v4, and Pagefind search.
+Primary runtime and package manager: Bun. Some helper scripts still run through Node.
+## Rule Sources
+- This `AGENTS.md` is the only agent-instruction file currently present in the repo.
+- No `.cursor/rules/`, `.cursorrules`, or `.github/copilot-instructions.md` files were found during inspection.
+- If any of those files are added later, merge their instructions into this document.
+## Project Map
+```text
 src/
-  components/     PascalCase .astro and .tsx files; ui/ has shadcn components
-  content/        MDX content collections (muses, short_form, long_form, zeitweilig, authors, cv)
-  content.config.ts   Zod schemas for all collections
-  consts.ts       Site-wide constants (title, author, CDN URLs, social links)
-  index.ts        Cloudflare Workers asset entry point
-  layouts/        PascalCase .astro layout files
-  pages/          File-based routing; each collection has detail/RSS/tag routes
-  scripts/        camelCase helpers (collections.ts, theme.ts, utils.ts, etc.)
-  styles/         global.css (Tailwind entry point)
-public/           Static assets (served as-is)
-scripts/          Node build scripts (create-content, update-post, sync-readme-versions)
+  components/       Astro components plus React islands; `ui/` holds shadcn-style helpers
+  content/          MDX content collections: muses, short_form, long_form, zeitweilig, authors, cv
+  content.config.ts Zod-backed collection schemas and glob loaders
+  consts.ts         Site constants, metadata, CDN URLs, social links
+  index.ts          Cloudflare Workers asset entry point
+  layouts/          Shared Astro layouts
+  pages/            File-based routes plus dynamic collection/tag pages
+  scripts/          Client/build helpers such as collections, theme, lightbox, utils
+  styles/           Global and shared CSS
+public/             Static assets served as-is
+scripts/            Node CLI/content maintenance scripts
+dist/               Generated output; do not edit by hand
 ```
-
-Content files: `YYYY-MM-DD-slug.mdx` inside collection folders. Files prefixed with `_` are drafts (excluded by glob loader). Frontmatter is validated against Zod schemas in `content.config.ts`.
-
-## Build, Test, and Development Commands
+## Build, Lint, Test, and Dev Commands
+Use Bun by default.
 ```sh
-bun install                    # Install dependencies (lockfile: bun.lock)
-bun run dev                    # Dev server with HMR (alias: bun run start)
-bun run build                  # Production build (runs prebuild + postbuild/pagefind)
-bun run preview                # Preview built output from dist/
-bun run build:github-pages     # Build with GITHUB_PAGES=true base path
-
-# Linting (requires a build in dist/ first)
-bun run lint:html              # html-validate on dist/**/*.html
-bun run lint:links             # hyperlink checker on dist/index.html (skip external)
-bun run lint:site              # Full pipeline: build + lint:html + lint:links
-
-# Content tooling
-bun run create                 # Interactive new content entry wizard
-bun run update-post            # Update frontmatter (supports --dry-run)
-
-# Formatting
-bun x prettier --write .       # Format all files
-bun x prettier --check .       # Check formatting without writing
-
-# Pagefind (runs automatically in postbuild)
-bun run postbuild              # Re-index search without rebuilding
+bun install                    # install dependencies
+bun run dev                    # Astro dev server
+bun run start                  # alias for dev
+bun run build                  # production build; also runs prebuild + postbuild hooks
+bun run preview                # preview built site from dist/
+bun run build:github-pages     # GitHub Pages build with /revista-3 base path
+bun run prebuild               # sync README/doc version badges
+bun run postbuild              # run Pagefind over dist/ only
+bun run lint:html              # validate generated HTML in dist/
+bun run lint:links             # check internal links from dist/index.html
+bun run lint:site              # full quality gate: build + html + links
+bun x astro check              # project-wide Astro/type/content validation
+bun x prettier --check .       # formatting check
+bun x prettier --write .       # format entire repo
+bun run create                 # interactive content creation wizard
+bun run update-post            # update content frontmatter
+node scripts/parser.js         # verify CLI/content schema drift
 ```
-
-There is **no unit test suite**. The quality gate is `bun run lint:site` (build + HTML validation + link checking). Run it before opening PRs.
-
-## Code Style & Formatting
-
-### Prettier
-Configured in `.prettierrc.mjs`. Uses `prettier-plugin-astro` for `.astro` files. Defaults: 2-space indent, no tabs, double quotes (Prettier default). Run `bun x prettier --write .` before committing.
-
-### TypeScript
-- `tsconfig.json` extends `astro/tsconfigs/base` with `strictNullChecks: true`
-- JSX configured as `react-jsx` with `jsxImportSource: "react"`
-- Use `satisfies` for type-safe object literals (see `src/index.ts`)
-- Use optional chaining and nullish coalescing for defensive access
-- Define interfaces/types near usage; shared types go in the relevant module (e.g., `CollectionName` in `collections.ts`)
-
-### Imports
-- Use ES module imports exclusively (`"type": "module"` in package.json)
-- Astro-specific: `import { ... } from "astro:content"` for collection APIs
-- Group imports: external packages first, then internal modules (`../consts`, `../scripts/...`)
-- Use `import { type Foo }` syntax for type-only imports from value modules
-- Use `@/` path aliases for shadcn components (`@/components`, `@/lib/utils`)
-
-### Naming Conventions
-| Kind | Convention | Example |
-|------|-----------|---------|
-| Components (.astro, .tsx) | PascalCase | `BlogPost.astro`, `Hamburger.tsx` |
-| Layouts | PascalCase | `BaseLayout.astro` |
-| Utility modules | camelCase | `sortByDate.ts`, `collections.ts` |
-| Content files | `YYYY-MM-DD-slug.mdx` | `2025-01-15-my-post.mdx` |
-| Constants | UPPER_SNAKE_CASE | `SITE_TITLE`, `CDN_FAVICON_URL` |
-| Functions/variables | camelCase | `buildDetailPaths`, `sortByDate` |
-| Types/Interfaces | PascalCase | `CollectionPost`, `CollectionName` |
-| CSS classes | Tailwind utilities | Prefer utilities; shared rules in `src/styles/` |
-
-### Component Patterns
-- **Astro components** (.astro): server-rendered by default; preferred for static content
-- **React islands** (.tsx): only for client-side interactivity; use `"use client"` directive; add `client:load` or `client:visible` in the parent .astro file
-- Default exports are used for React components (Astro convention); named exports for utilities
-- Use `useCallback`/`useEffect` cleanup patterns for DOM event listeners in React islands
-- shadcn/ui components live in `src/components/ui/`; use `cn()` from `src/components/ui/utils.ts` for class merging
-
-### Tailwind CSS
-- v4 with `@tailwindcss/vite` plugin; config in `tailwind.config.mjs` referenced via `@config` in `global.css`
-- Dark mode uses `class` strategy
-- Custom breakpoints: sm=800px, md=1200px, lg=1900px, xl=2500px, 2xl=3800px (NOT default Tailwind breakpoints)
-- Font families: `font-inconsolata`, `font-overpass-mono` (both monospace)
-- Typography plugin loaded via `require()` (NOT ESM import) to keep prose in `@layer utilities`
-- Prefer utility classes; extract shared patterns to `src/styles/`
-
-### Error Handling
-- Use optional chaining (`?.`) and nullish coalescing (`??`) for nullable data
-- Content entries may have optional fields; always guard access (see `sortByDate.ts` pattern)
-- React islands: add runtime guards for DOM APIs (getElementById may return null)
-- Cloudflare Worker entry is minimal; errors propagate through the asset handler
-
-## Content Collections
-Six collections defined in `content.config.ts`: muses, short_form, long_form, zeitweilig, authors, cv. All share a `baseSchema` (title, tags, author, description, image?, pubDate, updatedDate?). The cv collection extends it with professional fields.
-
-Shared route helpers in `src/scripts/collections.ts`:
-- `buildDetailPaths()` — generates `[...id]` static paths
-- `buildTagPaths()` — generates `tags/[tag]` static paths
-- `generateRss()` — creates RSS feed for a collection
-
-## Commit & PR Guidelines
-- **Conventional Commits**: `fix:`, `feat:`, `chore:`, `docs:`, `perf:` prefixes
-- Subject line: imperative voice, max 72 characters
-- Separate content-only changes from code changes
-- Never commit `dist/`, generated Pagefind assets, or `.env` files
-- PRs should include: what/why summary, commands run, linked issue, screenshots for UI changes
-
-## Deployment
-- **Cloudflare Workers**: static asset serving via `wrangler.jsonc`; entry at `src/index.ts`
-- **GitHub Pages**: set `GITHUB_PAGES=true` during build for correct base path
-- **Docker**: `caddy:2.9.1-alpine` base image (see `Dockerfile`)
-- Pagefind indexes `dist/` after build; runs automatically via `postbuild` script
-- Secrets belong in platform environment variables; never commit `.env`
+## Single-Test / Targeted Verification
+There is no unit-test or integration-test suite and no single-test runner in this repository today.
+Use the smallest useful check instead:
+```sh
+bun x astro check                              # quickest project-wide type/content check
+bun x prettier --check src/path/to/file.astro  # single-file formatting check
+bun x html-validate dist/path/to/page.html     # validate one generated page
+bun x hyperlink dist/path/to/page.html --skip-external
+```
+- Content-only or markup edits: start with the narrowest command.
+- Layout, routing, or build changes: prefer `bun run lint:site` before handoff.
+- If you add a real test framework later, add package scripts and document single-test usage here.
+## Build Pipeline Facts
+- `bun run build` triggers `prebuild` automatically via package scripts.
+- `prebuild` runs `scripts/sync-readme-versions.js`.
+- `postbuild` runs `pagefind --site dist` automatically after a successful build.
+- `bun run build:github-pages` manually appends Pagefind after an Astro build with `GITHUB_PAGES=true`.
+- `lint:html` and `lint:links` require built files in `dist/`.
+## Formatting
+- Prettier is the formatting authority; config lives in `.prettierrc.mjs`.
+- `prettier-plugin-astro` handles `.astro` files.
+- Use 2-space indentation; prefer double quotes unless a file already uses a different local convention.
+- Do not reformat unrelated files just because you touched one file.
+- Preserve file-local style in vendored or generated-style code such as `src/components/ui/button.tsx`.
+## Imports
+- Use ESM imports only; `package.json` sets `"type": "module"`.
+- Group imports as framework/external packages, then internal modules, then styles when relevant.
+- Use relative imports; no `@/` path alias is configured in `tsconfig.json`.
+- Use `import { type Foo }` when importing types from value modules.
+- Follow nearby extension style for local imports instead of mass-normalizing files.
+- Common Astro imports include `astro:content`, `astro:assets`, and `astro:transitions`.
+## TypeScript and Astro Conventions
+- `tsconfig.json` extends `astro/tsconfigs/base` with `strictNullChecks: true`.
+- JSX uses `react-jsx` with `jsxImportSource: "react"`.
+- Keep shared types near the module that owns them; export them when reused.
+- Use `satisfies` for object literals when it improves safety, as in `src/index.ts`.
+- In `.astro` files, define a `Props` interface when the component accepts props.
+- Prefer explicit return types for exported helpers when the shape is not obvious.
+- Avoid `any`; use unions, interfaces, generics, or Zod-backed data shapes instead.
+## React Island Patterns
+- React is used only for interactive islands such as toggles, menu controls, and scroll helpers.
+- Hydration happens from the parent `.astro` file with `client:load`, `client:idle`, or similar directives.
+- Do not add Next.js-style `"use client"`; that pattern does not belong in this Astro repo.
+- Default exports are the norm for React components in `src/components/*.tsx`.
+- Clean up observers and event listeners in `useEffect` return functions.
+- Guard browser-only APIs if code may run before the DOM is ready.
+## Astro Component Patterns
+- Server-rendered `.astro` components are the default choice.
+- Use frontmatter for imports, derived values, and async work.
+- Keep layouts responsible for document metadata, shared structure, and page-level scripts.
+- Reuse existing helpers like `buildDetailPaths()`, `buildTagPaths()`, and `generateRss()` instead of duplicating route logic.
+- Prefer extending existing content/layout abstractions over creating parallel page-specific implementations.
+## Styling and Tailwind
+- Tailwind CSS v4 is wired through `@tailwindcss/vite` in `astro.config.mjs`.
+- Global entrypoint is `src/styles/global.css` and it references `tailwind.config.mjs` with `@config`.
+- Dark mode uses the `class` strategy.
+- Custom breakpoints are not Tailwind defaults: `sm=800`, `md=1200`, `lg=1900`, `xl=2500`, `2xl=3800`.
+- Font families center on `Inconsolata` and `Overpass Mono`.
+- Prefer utility classes first; add custom CSS only for masonry, lightbox, imported CV styling, or layout edge cases.
+- The typography plugin is loaded with `require()` intentionally; do not convert it to ESM import without rechecking the setup.
+## Naming Conventions
+- Components and layouts use PascalCase (`Header.astro`, `ThemeToggle.tsx`, `BaseLayout.astro`).
+- Utility modules use camelCase (`sortByDate.ts`, `collections.ts`).
+- Constants use UPPER_SNAKE_CASE (`SITE_TITLE`).
+- Functions and locals use camelCase; types and interfaces use PascalCase.
+- Content files use `YYYY-MM-DD-slug.mdx`.
+- Draft content files begin with `_` and are excluded by the glob loaders.
+## Content Collection Rules
+- Collections are defined in `src/content.config.ts` using Zod schemas and Astro glob loaders.
+- Shared frontmatter lives in `baseSchema`; the CV collection extends it with structured resume data.
+- Keep collection names consistent across schemas, routes, pages, and CLI scripts.
+- If you add or rename a collection, update both `src/content.config.ts` and the helpers in `scripts/`.
+- Preserve existing frontmatter formatting unless a tool intentionally rewrites it.
+- `src/content/cv/cv-export.html` is imported/generated content; edit it carefully and avoid incidental cleanup.
+## Content Tooling
+- `bun run create` and `bun run update-post` wrap Node scripts in `scripts/`.
+- `node scripts/parser.js` checks schema drift between the CLI tools and `src/content.config.ts`.
+- When editing content tooling, verify both the runtime command and the drift checker.
+## Error Handling and Defensive Coding
+- Use optional chaining and nullish coalescing for nullable content data.
+- Guard DOM queries like `getElementById`, `querySelector`, and mutation observers.
+- Wrap `localStorage` access in `try/catch`; `src/scripts/theme.ts` is the reference pattern.
+- Throw explicit errors for invalid required runtime or build state, for example missing `context.site` for RSS generation.
+- Prefer small, explicit runtime guards over deeply nested assumptions.
+## Generated and Deployment-Sensitive Files
+- Do not commit `dist/`, generated Pagefind output, or `.env` files.
+- Cloudflare Worker entrypoint is `src/index.ts`; keep it minimal and edge-safe.
+- GitHub Pages behavior is controlled by `GITHUB_PAGES=true` during build.
+- Wrangler config lives in `wrangler.jsonc`.
+## Deployment Notes
+- Primary deployment target is Cloudflare Workers/static assets; GitHub Pages is an alternate target.
+- `GITHUB_PAGES=true` changes the `site` and `base` values in `astro.config.mjs`.
+- `dist/` is generated output and Pagefind indexes it after a successful build.
+## Agent Workflow Recommendations
+- Read the nearby file first and follow its established style before editing.
+- Prefer the smallest effective change; avoid broad refactors unless the task requires them.
+- Run the narrowest relevant verification command after each change.
+- Before handoff on substantive code changes, prefer `bun run lint:site` if time permits.
+- If you touch content tooling or collection schemas, also run `node scripts/parser.js`.
+- Update this file whenever repo conventions, scripts, or rule sources change.
