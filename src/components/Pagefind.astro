@@ -2,11 +2,8 @@
 
 ---
 
-<link href="/pagefind/pagefind-component-ui.css" rel="stylesheet" />
-<script is:inline type="module" src="/pagefind/pagefind-component-ui.js"></script>
-
 <pagefind-config bundle-path="/pagefind/"></pagefind-config>
-<pagefind-modal transition:persist="search-modal">
+<pagefind-modal>
   <pagefind-modal-header>
     <pagefind-input></pagefind-input>
   </pagefind-modal-header>
@@ -20,6 +17,9 @@
 </pagefind-modal>
 
 <script>
+  import "@pagefind/component-ui";
+  import "@pagefind/component-ui/css";
+
   function syncPfTheme() {
     const isDark = document.documentElement.classList.contains("dark");
     document.documentElement.setAttribute(
