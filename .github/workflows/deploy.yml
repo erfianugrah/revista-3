@@ -28,16 +28,23 @@ jobs:
         with:
           bun-version: "1.3.10"
 
-      - name: Cache dependencies and build artifacts
+      - name: Cache dependencies
         uses: actions/cache@v5
         with:
           path: |
             ~/.bun/install/cache
             node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json', 'astro.config.mjs', 'tailwind.config.mjs') }}
+          key: ${{ runner.os }}-bun-deps-${{ hashFiles('**/bun.lock') }}
           restore-keys: |
-            ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json') }}-
-            ${{ runner.os }}-bun-
+            ${{ runner.os }}-bun-deps-
+
+      - name: Cache Astro image assets
+        uses: actions/cache@v5
+        with:
+          path: node_modules/.astro
+          key: ${{ runner.os }}-astro-assets-${{ hashFiles('src/content/**/*.mdx', 'src/content/**/*.md') }}
+          restore-keys: |
+            ${{ runner.os }}-astro-assets-
 
       - name: Install project dependencies
         run: bun install
@@ -288,10 +295,17 @@ jobs:
           path: |
             ~/.bun/install/cache
             node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}-${{ hashFiles('**/package.json') }}
+          key: ${{ runner.os }}-bun-deps-${{ hashFiles('**/bun.lock') }}
           restore-keys: |
-            ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}-
-            ${{ runner.os }}-bun-
+            ${{ runner.os }}-bun-deps-
+
+      - name: Cache Astro image assets
+        uses: actions/cache@v5
+        with:
+          path: node_modules/.astro
+          key: ${{ runner.os }}-astro-assets-${{ hashFiles('src/content/**/*.mdx', 'src/content/**/*.md') }}
+          restore-keys: |
+            ${{ runner.os }}-astro-assets-
 
       - name: Install project dependencies
         run: bun install
