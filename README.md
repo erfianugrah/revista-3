@@ -603,43 +603,38 @@ I've optimized the site in several ways:
 
 ## Search Functionality
 
-The site includes search powered by [Pagefind](https://pagefind.app/) using the [Component UI](https://pagefind.app/docs/search-ui/) (`@pagefind/component-ui`). The search trigger lives in `Header.astro` as a compact icon button alongside the theme toggle and hamburger menu, while the modal and configuration are rendered via `Pagefind.astro` in `Navigation.astro`.
+The site includes search powered by [Pagefind](https://pagefind.app/) using the raw JS API (`/pagefind/pagefind.js`) with a custom search modal. The search trigger is an SVG icon button in `Header.astro` alongside the theme toggle and hamburger, while the modal dialog and search logic live in `Pagefind.astro` (rendered via `Navigation.astro`).
 
 1. **Comprehensive Content Indexing**: Automatically indexes all site content during the build process (via a postbuild script defined in package.json). Content pages use `data-pagefind-body` to mark indexable regions, `data-pagefind-filter` for collection-based filtering, and `data-pagefind-sort`/`data-pagefind-meta` for date sorting and metadata.
 
-2. **Modal Search Interface**: The Pagefind Component UI provides a built-in modal (`<pagefind-modal>`) with search input, results with thumbnail images, keyboard navigation, and sub-results.
+2. **Custom Modal Search**: A native `<dialog>` element with debounced search input, result cards with thumbnail images, excerpt highlighting, and a summary count. The Pagefind JS API is lazy-loaded on first search and cached.
 
-3. **Dark Mode Support**: The `data-pf-theme` attribute on `<html>` is synced with the site's `.dark` class via a MutationObserver, overriding the Component UI's CSS custom properties (`--pf-*`) for both dark and light themes.
+3. **Dark Mode Support**: Uses the site's `.dark` class directly in CSS selectors — no attribute syncing needed.
 
-4. **Keyboard Shortcut**: `Ctrl+K` / `Cmd+K` opens the search modal from anywhere on the page (handled by `<pagefind-modal-trigger>`).
+4. **Keyboard Shortcut**: `Ctrl+K` / `Cmd+K` opens the search modal from anywhere on the page.
 
-5. **Collection Filtering**: Search results can be filtered by content collection (muses, short_form, long_form, zeitweilig, authors) via `data-pagefind-filter` attributes on the content layouts.
+5. **ClientRouter Compatible**: The `setup()` function runs on every `astro:page-load` event, ensuring fresh DOM queries and event listeners after each client-side navigation.
+
+6. **Collection Filtering**: Search results can be filtered by content collection (muses, short_form, long_form, zeitweilig, authors) via `data-pagefind-filter` attributes on the content layouts.
 
 ```html
-<!-- Header.astro: compact search icon in header bar -->
-<pagefind-modal-trigger compact></pagefind-modal-trigger>
+<!-- Header.astro: search icon button -->
+<button id="searchTrigger" aria-label="Search" aria-haspopup="dialog">
+  <svg>...</svg>
+</button>
 
-<!-- Pagefind.astro: modal, config, and theme sync -->
-<link href="/pagefind/pagefind-component-ui.css" rel="stylesheet" />
-<script
-  is:inline
-  type="module"
-  src="/pagefind/pagefind-component-ui.js"
-></script>
+<!-- Pagefind.astro: custom modal with raw JS API -->
+<dialog id="searchDialog">
+  <input id="searchInput" type="search" placeholder="Search..." />
+  <div id="searchResults"></div>
+</dialog>
 
-<pagefind-config bundle-path="/pagefind/"></pagefind-config>
-<pagefind-modal>
-  <pagefind-modal-header>
-    <pagefind-input></pagefind-input>
-  </pagefind-modal-header>
-  <pagefind-modal-body>
-    <pagefind-summary></pagefind-summary>
-    <pagefind-results show-images></pagefind-results>
-  </pagefind-modal-body>
-  <pagefind-modal-footer>
-    <pagefind-keyboard-hints></pagefind-keyboard-hints>
-  </pagefind-modal-footer>
-</pagefind-modal>
+<script>
+  // Lazy-load Pagefind JS API on first search
+  const pagefind = await import("/pagefind/pagefind.js");
+  const search = await pagefind.search(query);
+  // Render results manually...
+</script>
 ```
 
 ## Internationalization

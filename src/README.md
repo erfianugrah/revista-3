@@ -251,9 +251,9 @@ The project uses a multi-layered approach to image optimization:
 
 ## Search Implementation
 
-The site uses Pagefind for search functionality with the [Component UI](https://pagefind.app/docs/search-ui/) (`@pagefind/component-ui`):
+The site uses Pagefind for search functionality with the raw [JS API](https://pagefind.app/docs/api/):
 
-1. **Build-time indexing**: Pagefind runs as a post-build step to generate search indices and the Component UI assets
+1. **Build-time indexing**: Pagefind runs as a post-build step to generate search indices
 
    ```json
    "scripts": {
@@ -261,7 +261,7 @@ The site uses Pagefind for search functionality with the [Component UI](https://
    }
    ```
 
-2. **Search UI**: The `Pagefind.astro` component loads the Component UI via `is:inline` script from `/pagefind/pagefind-component-ui.js`. A compact search icon trigger is placed in `Header.astro` next to the theme toggle and hamburger. The modal, config (`<pagefind-config bundle-path="/pagefind/">`), and dark mode sync live in `Pagefind.astro`.
+2. **Search UI**: `Pagefind.astro` implements a custom `<dialog>` modal with the Pagefind JS API (`/pagefind/pagefind.js`), lazy-loaded on first search. A search icon button in `Header.astro` opens the modal. The `setup()` function rebinds on every `astro:page-load` for ClientRouter compatibility.
 
 3. **Filters and metadata**: Content layouts use `data-pagefind-filter` for collection-based filtering, `data-pagefind-sort` for date sorting, and `data-pagefind-meta` for date and image metadata in search results.
 
