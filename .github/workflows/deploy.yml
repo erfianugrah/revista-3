@@ -270,6 +270,7 @@ jobs:
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com
 
   deploy-to-github-pages:
+    needs: build-revista
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
