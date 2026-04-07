@@ -126,6 +126,9 @@ const metaImage = image
     )
   }
   <div data-pagefind-body>
+    <span data-pagefind-filter={`collection:${collection}`} class="hidden"></span>
+    <span data-pagefind-meta={`date:${publishedDate}`} class="hidden"></span>
+    <span data-pagefind-sort={`date:${frontmatter.pubDate.toISOString()}`} class="hidden"></span>
     <Prose>
       <slot />
       <div class="flex flex-col sm:flex-row align-center">

@@ -251,9 +251,9 @@ The project uses a multi-layered approach to image optimization:
 
 ## Search Implementation
 
-The site uses Pagefind for search functionality, integrated as follows:
+The site uses Pagefind for search functionality with the [Component UI](https://pagefind.app/docs/search-ui/) (`@pagefind/component-ui`):
 
-1. **Build-time indexing**: Pagefind runs as a post-build step to generate search indices
+1. **Build-time indexing**: Pagefind runs as a post-build step to generate search indices and the Component UI assets
 
    ```json
    "scripts": {
@@ -261,9 +261,11 @@ The site uses Pagefind for search functionality, integrated as follows:
    }
    ```
 
-2. **Search UI**: The Pagefind component loads the search interface dynamically
+2. **Search UI**: The `Pagefind.astro` component loads the Component UI via `is:inline` script from `/pagefind/pagefind-component-ui.js`. A compact search icon trigger is placed in `Header.astro` next to the theme toggle and hamburger. The modal, config (`<pagefind-config bundle-path="/pagefind/">`), and dark mode sync live in `Pagefind.astro`.
 
-3. **Integration**: Search results link directly to content pages
+3. **Filters and metadata**: Content layouts use `data-pagefind-filter` for collection-based filtering, `data-pagefind-sort` for date sorting, and `data-pagefind-meta` for date and image metadata in search results.
+
+4. **Integration**: Search results link directly to content pages with thumbnail images where available
 
 ## Tag System Architecture
 

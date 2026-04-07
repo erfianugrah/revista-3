@@ -1,8 +1,8 @@
 <p>
   <img alt="Version" src="https://img.shields.io/github/v/tag/erfianugrah/revista-3?label=version" />
-  <img alt="Astro" src="https://img.shields.io/badge/Astro-6.1-FF5D01.svg?logo=astro&logoColor=white" />
-  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.1.17-38B2AC.svg?logo=tailwind-css&logoColor=white" />
-  <img alt="React" src="https://img.shields.io/badge/React-19.2.1-61DAFB.svg?logo=react&logoColor=white" />
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-6.1.4-FF5D01.svg?logo=astro&logoColor=white" />
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.2.2-38B2AC.svg?logo=tailwind-css&logoColor=white" />
+  <img alt="React" src="https://img.shields.io/badge/React-19.2.4-61DAFB.svg?logo=react&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9.3-3178C6.svg?logo=typescript&logoColor=white" />
   <img alt="MDX" src="https://img.shields.io/badge/MDX-5.0.0-beta.12-1B1F24.svg?logo=mdx&logoColor=white" />
   <img alt="Bun" src="https://img.shields.io/badge/Bun-Latest-F9F1E1.svg?logo=bun&logoColor=black" />
@@ -32,7 +32,7 @@ The project supports multiple deployment targets with optimized builds for each 
 - **CI/CD & Deployments:** `.github/CICD.md`
 - **Components:** `src/components/README.md`
 - **Layouts:** `src/layouts/README.md`
-- **Pages:** `src/pages/README.md`
+- **Pages:** `src/pages/_README.md`
 - **Content Collections:** `src/content/README.md`
 - **Docker:** `docs/docker.md`
 
@@ -112,7 +112,7 @@ graph TD
   - `layouts/`: Page layouts used across the site ([Layouts Documentation](src/layouts/README.md))
     - `BaseLayout.astro`: The main layout used by most pages
     - `MarkdownPostLayout.astro`: Layout for rendering Markdown content
-  - `pages/`: Astro pages that generate routes ([Pages Documentation](src/pages/README.md))
+  - `pages/`: Astro pages that generate routes ([Pages Documentation](src/pages/_README.md))
     - `index.astro`: The home page
     - `404.astro`: Custom 404 error page
     - `cv.astro`: CV page
@@ -419,7 +419,7 @@ Each collection follows the same pattern of routes: index, individual posts, tag
 
 ## Styling System
 
-The site uses Tailwind CSS v4.1.17 for styling, with carefully configured settings in `tailwind.config.mjs` to create a cohesive design system:
+The site uses Tailwind CSS v4.2.2 for styling, with carefully configured settings in `tailwind.config.mjs` to create a cohesive design system:
 
 ### Design System Components
 
@@ -599,51 +599,47 @@ I've optimized the site in several ways:
 
 5. **Cloudflare CDN**: The site uses Cloudflare's CDN with custom cache headers to serve content from edge locations worldwide.
 
-6. **Tailwind Optimizations**: Tailwind CSS v4.1.17's improved performance and lighter bundle size help pages load quickly.
+6. **Tailwind Optimizations**: Tailwind CSS v4.2.2's improved performance and lighter bundle size help pages load quickly.
 
 ## Search Functionality
 
-The site includes search powered by [Pagefind](https://pagefind.app/), integrated into the `Navigation.astro` component through the `Pagefind.astro` component. This search implementation provides:
+The site includes search powered by [Pagefind](https://pagefind.app/) using the [Component UI](https://pagefind.app/docs/search-ui/) (`@pagefind/component-ui`). The search trigger lives in `Header.astro` as a compact icon button alongside the theme toggle and hamburger menu, while the modal and configuration are rendered via `Pagefind.astro` in `Navigation.astro`.
 
-1. **Comprehensive Content Indexing**: Automatically indexes all site content during the build process (via a postbuild script defined in package.json)
+1. **Comprehensive Content Indexing**: Automatically indexes all site content during the build process (via a postbuild script defined in package.json). Content pages use `data-pagefind-body` to mark indexable regions, `data-pagefind-filter` for collection-based filtering, and `data-pagefind-sort`/`data-pagefind-meta` for date sorting and metadata.
 
-2. **Modal Search Interface**: A clean, accessible modal dialog that appears when users click the search button
+2. **Modal Search Interface**: The Pagefind Component UI provides a built-in modal (`<pagefind-modal>`) with search input, results with thumbnail images, keyboard navigation, and sub-results.
 
-3. **Dark Mode Support**: Custom CSS variables in the Pagefind component ensure the search UI respects the site's dark/light theme setting
+3. **Dark Mode Support**: The `data-pf-theme` attribute on `<html>` is synced with the site's `.dark` class via a MutationObserver, overriding the Component UI's CSS custom properties (`--pf-*`) for both dark and light themes.
 
-4. **Sub-Results Display**: Shows nested results for more detailed content exploration with the `showSubResults: true` option
+4. **Keyboard Shortcut**: `Ctrl+K` / `Cmd+K` opens the search modal from anywhere on the page (handled by `<pagefind-modal-trigger>`).
 
-5. **Keyboard Navigation**: Supports keyboard focus and navigation for accessibility
-
-6. **Responsive Design**: Adapts to different screen sizes with custom widths for mobile and desktop
-
-The search functionality is implemented with minimal JavaScript and maintains the site's performance focus by loading the search UI assets only when needed.
+5. **Collection Filtering**: Search results can be filtered by content collection (muses, short_form, long_form, zeitweilig, authors) via `data-pagefind-filter` attributes on the content layouts.
 
 ```html
-<!-- Simplified from Pagefind.astro -->
-<button id="searchButton" aria-haspopup="dialog">Search</button>
+<!-- Header.astro: compact search icon in header bar -->
+<pagefind-modal-trigger compact></pagefind-modal-trigger>
 
-<dialog id="searchDialog" class="search-dialog">
-  <div class="dialog-content">
-    <button id="closeButton" class="close" aria-label="Close search">
-      &times;
-    </button>
-    <div id="search" class="m-8"></div>
-  </div>
-</dialog>
+<!-- Pagefind.astro: modal, config, and theme sync -->
+<link href="/pagefind/pagefind-component-ui.css" rel="stylesheet" />
+<script
+  is:inline
+  type="module"
+  src="/pagefind/pagefind-component-ui.js"
+></script>
 
-<script>
-  document.addEventListener("astro:page-load", () => {
-    const dialog = document.getElementById("searchDialog");
-    // dialog.showModal() / dialog.close() for open/close
-
-    new PagefindUI({
-      element: "#search",
-      showSubResults: true,
-      resetStyles: false,
-    });
-  });
-</script>
+<pagefind-config bundle-path="/pagefind/"></pagefind-config>
+<pagefind-modal>
+  <pagefind-modal-header>
+    <pagefind-input></pagefind-input>
+  </pagefind-modal-header>
+  <pagefind-modal-body>
+    <pagefind-summary></pagefind-summary>
+    <pagefind-results show-images></pagefind-results>
+  </pagefind-modal-body>
+  <pagefind-modal-footer>
+    <pagefind-keyboard-hints></pagefind-keyboard-hints>
+  </pagefind-modal-footer>
+</pagefind-modal>
 ```
 
 ## Internationalization
@@ -685,7 +681,7 @@ While the site is currently in English, I've structured it with future translati
    - The Astro Prettier plugin (prettier-plugin-astro v0.14.1) properly formats .astro files
 
 4. **Tailwind CSS v4**:
-   - The latest Tailwind CSS v4.1.17 with better performance and smaller bundles
+   - The latest Tailwind CSS v4.2.2 with better performance and smaller bundles
    - Configured with the typography plugin for long-form content
 
 ## CI/CD Workflow
@@ -810,7 +806,7 @@ To start working with this project:
 
    This installs:
    - Astro v6.1
-   - Tailwind CSS v4.1.17
+   - Tailwind CSS v4.2.2
    - React v19.2.1
    - MDX v4.3.13 and other dependencies
 
@@ -906,7 +902,7 @@ For questions about this project, please open an issue on the GitHub repository.
 Some ideas I'm considering for future updates:
 
 1. Full multilingual support
-2. Enhanced search with filtering options
+2. Enhanced search with additional filtering and sorting options
 3. Integration with a headless CMS
 4. Automated image optimization workflow
 5. More interactive gallery views

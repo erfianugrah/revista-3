@@ -2,116 +2,113 @@
 
 ---
 
-<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
-<script src="/pagefind/pagefind-ui.js" is:inline></script>
+<link href="/pagefind/pagefind-component-ui.css" rel="stylesheet" />
+<script is:inline type="module" src="/pagefind/pagefind-component-ui.js"></script>
 
-<button id="searchButton" class="text-lg pl-[30px] h-[50px]" aria-haspopup="dialog">Search</button>
-
-<dialog id="searchDialog" class="search-dialog">
-  <div
-    class="dialog-content bg-[rgb(245,245,245)] dark:bg-[rgb(34,33,37)] dark:text-[rgb(245,245,245)] w-[350px] md:w-[700px]"
-  >
-    <button id="closeButton" class="close" aria-label="Close search">&times;</button>
-    <div id="search" class="m-8" transition:persist></div>
-  </div>
-</dialog>
+<pagefind-config bundle-path="/pagefind/"></pagefind-config>
+<pagefind-modal>
+  <pagefind-modal-header>
+    <pagefind-input></pagefind-input>
+  </pagefind-modal-header>
+  <pagefind-modal-body>
+    <pagefind-summary></pagefind-summary>
+    <pagefind-results show-images></pagefind-results>
+  </pagefind-modal-body>
+  <pagefind-modal-footer>
+    <pagefind-keyboard-hints></pagefind-keyboard-hints>
+  </pagefind-modal-footer>
+</pagefind-modal>
 
 <script>
-  declare class PagefindUI {
-    constructor(opts: {
-      element: string;
-      showSubResults: boolean;
-      resetStyles: boolean;
-    });
-    destroy(): void;
+  function syncPfTheme() {
+    const isDark = document.documentElement.classList.contains("dark");
+    document.documentElement.setAttribute(
+      "data-pf-theme",
+      isDark ? "dark" : "light",
+    );
   }
 
-  let pagefindUI: PagefindUI | null = null;
+  // Sync on initial load and after Astro client-side navigations
+  syncPfTheme();
+  document.addEventListener("astro:page-load", syncPfTheme);
+  document.addEventListener("astro:after-swap", syncPfTheme);
 
-  document.addEventListener("astro:page-load", () => {
-    const dialog = document.getElementById("searchDialog") as HTMLDialogElement | null;
-    const searchButton = document.getElementById("searchButton");
-    const closeButton = document.getElementById("closeButton");
-
-    searchButton?.addEventListener("click", () => {
-      dialog?.showModal();
-      document.querySelector<HTMLInputElement>("#search input")?.focus();
-    });
-
-    closeButton?.addEventListener("click", () => {
-      dialog?.close();
-    });
-
-    // Close when clicking the backdrop
-    dialog?.addEventListener("click", (event) => {
-      if (event.target === dialog) {
-        dialog.close();
-      }
-    });
-
-    if (pagefindUI) {
-      pagefindUI.destroy();
-    }
-
-    pagefindUI = new PagefindUI({
-      element: "#search",
-      showSubResults: true,
-      resetStyles: false,
-    });
+  // Watch for dark class changes on <html> (theme toggle)
+  const observer = new MutationObserver(syncPfTheme);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
   });
 </script>
 
 <style is:global>
-  .search-dialog {
-    border: none;
-    padding: 0;
-    background: transparent;
-    max-width: 100vw;
-    max-height: 100vh;
-    margin: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  /* Compact trigger in header bar */
+  pagefind-modal-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit !important;
   }
 
-  .search-dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-
-  .dialog-content {
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    max-height: 70vh;
-    overflow-y: auto;
-    border-radius: 20px;
-  }
-
-  .close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    background: none;
-    border: none;
+  pagefind-modal-trigger .pf-trigger-btn {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    height: 30px !important;
+    width: 30px !important;
+    min-width: unset !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: inherit !important;
     cursor: pointer;
-    line-height: 1;
   }
 
-  .close:hover,
-  .close:focus {
-    color: inherit;
-    opacity: 0.7;
-    text-decoration: none;
+  pagefind-modal-trigger .pf-trigger-btn:hover {
+    opacity: 0.5;
   }
 
-  .dark {
-    --pagefind-ui-text: rgb(245, 245, 245) !important;
-    --pagefind-ui-primary: rgb(245, 245, 245) !important;
-    --pagefind-ui-background: rgb(34, 33, 37) !important;
-    --pagefind-ui-border: rgb(245, 245, 245) !important;
-    --pagefind-ui-tag: rgb(245, 245, 245) !important;
+  pagefind-modal-trigger .pf-trigger-icon {
+    width: 20px !important;
+    height: 20px !important;
+    background: currentColor !important;
+  }
+
+  pagefind-modal-trigger .pf-trigger-text,
+  pagefind-modal-trigger .pf-trigger-shortcut {
+    display: none !important;
+  }
+
+  /* Dark mode theme overrides */
+  [data-pf-theme="dark"] {
+    --pf-text: rgb(245, 245, 245);
+    --pf-text-secondary: rgb(180, 180, 180);
+    --pf-text-muted: rgb(150, 150, 150);
+    --pf-background: rgb(34, 33, 37);
+    --pf-border: rgb(80, 80, 80);
+    --pf-border-focus: rgb(150, 150, 150);
+    --pf-skeleton: rgb(50, 49, 53);
+    --pf-skeleton-shine: rgb(60, 59, 63);
+    --pf-hover: rgb(44, 43, 47);
+    --pf-mark: rgb(245, 245, 245);
+    --pf-modal-backdrop: rgba(0, 0, 0, 0.6);
+  }
+
+  [data-pf-theme="light"] {
+    --pf-background: rgb(244, 242, 238);
+    --pf-hover: rgb(234, 232, 228);
+    --pf-skeleton: rgb(230, 228, 224);
+    --pf-skeleton-shine: rgb(240, 238, 234);
+  }
+
+  /* Font override for the component UI */
+  pagefind-modal .pf-input,
+  pagefind-modal .pf-summary,
+  pagefind-modal .pf-result-title,
+  pagefind-modal .pf-result-excerpt,
+  pagefind-modal .pf-heading-link,
+  pagefind-modal .pf-heading-excerpt,
+  pagefind-modal .pf-empty-text {
+    font-family: "Inconsolata", monospace;
   }
 </style>

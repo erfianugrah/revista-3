@@ -26,7 +26,7 @@ Components are the reusable building blocks of the site. Most are Astro `.astro`
   - **[Hamburger.tsx](Hamburger.tsx)**: Mobile menu toggle (`client:idle`). Uses CSS transitions (no framer-motion). Includes `aria-expanded`, `aria-controls`, Escape key handler, and click-outside-to-close for accessibility.
   - **[ThemeToggle.astro](ThemeToggle.astro)**: Light/dark mode switcher wrapping the React [ThemeToggle.tsx](ThemeToggle.tsx) component (`client:idle`). The React component uses CSS transitions for sun/moon animations and dispatches a `theme-toggle` custom event; [theme.ts](../scripts/theme.ts) handles the actual class toggle and localStorage persistence.
   - **[Navigation.astro](Navigation.astro)**: Site navigation menu with `role="menu"` and `aria-label` attributes
-  - **[Pagefind.astro](Pagefind.astro)**: Search functionality using [Pagefind](https://pagefind.app/), implemented as a native `<dialog>` element
+  - **[Pagefind.astro](Pagefind.astro)**: Search functionality using [Pagefind Component UI](https://pagefind.app/docs/search-ui/) (`@pagefind/component-ui`). Renders the search modal, config, and dark mode theme sync. The compact search trigger (`<pagefind-modal-trigger compact>`) is placed in `Header.astro`.
 
 - **[Footer.astro](Footer.astro)**: Site footer with social media icons from [astro-icon](../../package.json)
 
@@ -78,7 +78,7 @@ Several components carry inline type declarations to satisfy `astro check` witho
 - **Header.astro**: Image `width`/`height` props use numeric literals (`60`) instead of strings to match Astro's `ImageMetadata` types. The favicon is fetched at 60x60 for appropriate display size.
 - **Masonry.astro**: Avoids `key` props on native HTML elements (unlike React, Astro templates don't support `key` on non-component elements).
 - **NextPost.astro**: Uses a `CollectionName` type (from `collections.ts`) for the collection prop, a `PostData` interface for frontmatter fields, and typed `getImage()` parameters.
-- **Pagefind.astro**: Uses a native `<dialog>` element for the search modal. Declares `PagefindUI` as a class in the inline script, and uses optional chaining on all DOM queries to handle nullable elements safely.
+- **Pagefind.astro**: Uses the Pagefind Component UI web components (`<pagefind-modal>`, `<pagefind-modal-trigger>`, etc.) loaded via `is:inline` script from `/pagefind/pagefind-component-ui.js`. Dark mode is synced by setting `data-pf-theme` on `<html>` via a MutationObserver watching the `.dark` class.
 
 ## Shared Utilities
 
