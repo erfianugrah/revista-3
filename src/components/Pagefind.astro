@@ -2,113 +2,379 @@
 
 ---
 
-<pagefind-config bundle-path="/pagefind/"></pagefind-config>
-<pagefind-modal>
-  <pagefind-modal-header>
-    <pagefind-input></pagefind-input>
-  </pagefind-modal-header>
-  <pagefind-modal-body>
-    <pagefind-summary></pagefind-summary>
-    <pagefind-results show-images></pagefind-results>
-  </pagefind-modal-body>
-  <pagefind-modal-footer>
-    <pagefind-keyboard-hints></pagefind-keyboard-hints>
-  </pagefind-modal-footer>
-</pagefind-modal>
+<dialog id="searchDialog" class="search-dialog">
+  <div class="dialog-content">
+    <div class="search-header">
+      <div class="search-input-wrap">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <input id="searchInput" type="search" placeholder="Search..." autocomplete="off" />
+        <button id="searchClear" class="search-clear" aria-label="Clear search" hidden>&times;</button>
+      </div>
+    </div>
+    <div id="searchSummary" class="search-summary"></div>
+    <div id="searchResults" class="search-results"></div>
+    <div class="search-footer">
+      <span><kbd>esc</kbd> close</span>
+    </div>
+  </div>
+</dialog>
 
 <script>
-  import "@pagefind/component-ui";
-  import "@pagefind/component-ui/css";
+  let pagefind: any = null;
 
-  function syncPfTheme() {
-    const isDark = document.documentElement.classList.contains("dark");
-    document.documentElement.setAttribute(
-      "data-pf-theme",
-      isDark ? "dark" : "light",
-    );
+  async function getPagefind() {
+    if (!pagefind) {
+      const path = "/pagefind/pagefind.js";
+      pagefind = await import(/* @vite-ignore */ path);
+      await pagefind.init();
+    }
+    return pagefind;
   }
 
-  // Sync on initial load and after Astro client-side navigations
-  syncPfTheme();
-  document.addEventListener("astro:page-load", syncPfTheme);
-  document.addEventListener("astro:after-swap", syncPfTheme);
+  function setup() {
+    const dialog = document.getElementById("searchDialog") as HTMLDialogElement | null;
+    const trigger = document.getElementById("searchTrigger");
+    const input = document.getElementById("searchInput") as HTMLInputElement | null;
+    const clearBtn = document.getElementById("searchClear") as HTMLButtonElement | null;
+    const results = document.getElementById("searchResults");
+    const summary = document.getElementById("searchSummary");
 
-  // Watch for dark class changes on <html> (theme toggle)
-  const observer = new MutationObserver(syncPfTheme);
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
+    if (!dialog || !trigger || !input || !results || !summary || !clearBtn) return;
+
+    // Non-null aliases (guard above ensures these are set)
+    const d = dialog;
+    const inp = input;
+    const res = results;
+    const sum = summary;
+    const clr = clearBtn;
+
+    let debounceTimer: ReturnType<typeof setTimeout>;
+
+    function openSearch() {
+      d.showModal();
+      inp.focus();
+    }
+
+    function closeSearch() {
+      d.close();
+    }
+
+    trigger.addEventListener("click", openSearch);
+
+    d.addEventListener("click", (e) => {
+      if (e.target === d) closeSearch();
+    });
+
+    clr.addEventListener("click", () => {
+      inp.value = "";
+      clr.hidden = true;
+      res.innerHTML = "";
+      sum.textContent = "";
+      inp.focus();
+    });
+
+    inp.addEventListener("input", () => {
+      const query = inp.value.trim();
+      clr.hidden = query.length === 0;
+      clearTimeout(debounceTimer);
+      if (!query) {
+        res.innerHTML = "";
+        sum.textContent = "";
+        return;
+      }
+      debounceTimer = setTimeout(() => performSearch(query), 150);
+    });
+
+    async function performSearch(query: string) {
+      try {
+        const pf = await getPagefind();
+        const search = await pf.search(query);
+
+        sum.textContent = `${search.results.length} result${search.results.length !== 1 ? "s" : ""} for "${query}"`;
+
+        const fragment = document.createDocumentFragment();
+        const toLoad = search.results.slice(0, 10);
+        const loaded = await Promise.all(toLoad.map((r: any) => r.data()));
+
+        for (const result of loaded) {
+          const card = document.createElement("a");
+          card.href = result.url;
+          card.className = "result-card";
+          card.addEventListener("click", () => closeSearch());
+
+          let inner = "";
+          if (result.meta?.image) {
+            inner += `<img class="result-image" src="${result.meta.image}" alt="${result.meta.title || ""}" loading="lazy" />`;
+          }
+          inner += `<div class="result-content">`;
+          inner += `<div class="result-title">${result.meta?.title || result.url}</div>`;
+          if (result.excerpt) {
+            inner += `<div class="result-excerpt">${result.excerpt}</div>`;
+          }
+          inner += `</div>`;
+          card.innerHTML = inner;
+          fragment.appendChild(card);
+        }
+
+        res.innerHTML = "";
+        if (loaded.length === 0) {
+          res.innerHTML = `<div class="result-empty">No results found</div>`;
+        } else {
+          res.appendChild(fragment);
+        }
+      } catch {
+        res.innerHTML = `<div class="result-empty">Search unavailable</div>`;
+      }
+    }
+
+    // Keyboard shortcut: Ctrl+K / Cmd+K
+    document.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        if (dialog.open) {
+          closeSearch();
+        } else {
+          openSearch();
+        }
+      }
+    });
+  }
+
+  document.addEventListener("astro:page-load", setup);
 </script>
 
 <style is:global>
-  /* Compact trigger in header bar */
-  pagefind-modal-trigger {
+  .search-dialog {
+    border: none;
+    padding: 0;
+    background: transparent;
+    max-width: 100vw;
+    max-height: 100vh;
+    margin: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .search-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .dialog-content {
+    max-width: 560px;
+    max-height: min(80vh, 700px);
+    margin: 10vh auto;
+    background: rgb(244, 242, 238);
+    border-radius: 12px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: "Inconsolata", monospace;
+  }
+
+  .dark .dialog-content {
+    background: rgb(34, 33, 37);
+    color: rgb(245, 245, 245);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  }
+
+  .search-header {
+    padding: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .search-header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .search-input-wrap {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: inherit !important;
   }
 
-  pagefind-modal-trigger .pf-trigger-btn {
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    height: 30px !important;
-    width: 30px !important;
-    min-width: unset !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    color: inherit !important;
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    color: inherit;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  #searchInput {
+    width: 100%;
+    height: 40px;
+    padding: 0 36px 0 34px;
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 16px;
+    color: inherit;
+    outline: none;
+  }
+
+  #searchInput:focus {
+    border-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .dark #searchInput {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .dark #searchInput:focus {
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  #searchInput::placeholder {
+    color: inherit;
+    opacity: 0.4;
+  }
+
+  /* Hide native search clear button */
+  #searchInput::-webkit-search-cancel-button,
+  #searchInput::-webkit-search-decoration {
+    display: none;
+    -webkit-appearance: none;
+  }
+
+  .search-clear {
+    position: absolute;
+    right: 4px;
+    background: none;
+    border: none;
+    font-size: 18px;
     cursor: pointer;
+    color: inherit;
+    opacity: 0.5;
+    padding: 4px 8px;
+    border-radius: 4px;
   }
 
-  pagefind-modal-trigger .pf-trigger-btn:hover {
+  .search-clear:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .dark .search-clear:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .search-summary {
+    padding: 8px 16px 0;
+    font-size: 12px;
+    opacity: 0.6;
+    min-height: 20px;
+  }
+
+  .search-results {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .result-card {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .result-card:hover {
+    border-color: rgba(0, 0, 0, 0.25);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .dark .result-card {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .dark .result-card:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .result-image {
+    width: 64px;
+    height: 48px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .result-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .result-title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .result-excerpt {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-top: 4px;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .result-excerpt mark {
+    background: transparent;
+    font-weight: 600;
+    color: inherit;
+  }
+
+  .result-empty {
+    text-align: center;
+    padding: 32px 16px;
+    opacity: 0.5;
+    font-size: 14px;
+  }
+
+  .search-footer {
+    padding: 10px 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    font-size: 12px;
     opacity: 0.5;
   }
 
-  pagefind-modal-trigger .pf-trigger-icon {
-    width: 20px !important;
-    height: 20px !important;
-    background: currentColor !important;
+  .dark .search-footer {
+    border-top-color: rgba(255, 255, 255, 0.1);
   }
 
-  pagefind-modal-trigger .pf-trigger-text,
-  pagefind-modal-trigger .pf-trigger-shortcut {
-    display: none !important;
+  .search-footer kbd {
+    display: inline-block;
+    padding: 1px 5px;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 10px;
+    opacity: 0.7;
   }
 
-  /* Dark mode theme overrides */
-  [data-pf-theme="dark"] {
-    --pf-text: rgb(245, 245, 245);
-    --pf-text-secondary: rgb(180, 180, 180);
-    --pf-text-muted: rgb(150, 150, 150);
-    --pf-background: rgb(34, 33, 37);
-    --pf-border: rgb(80, 80, 80);
-    --pf-border-focus: rgb(150, 150, 150);
-    --pf-skeleton: rgb(50, 49, 53);
-    --pf-skeleton-shine: rgb(60, 59, 63);
-    --pf-hover: rgb(44, 43, 47);
-    --pf-mark: rgb(245, 245, 245);
-    --pf-modal-backdrop: rgba(0, 0, 0, 0.6);
-  }
-
-  [data-pf-theme="light"] {
-    --pf-background: rgb(244, 242, 238);
-    --pf-hover: rgb(234, 232, 228);
-    --pf-skeleton: rgb(230, 228, 224);
-    --pf-skeleton-shine: rgb(240, 238, 234);
-  }
-
-  /* Font override for the component UI */
-  pagefind-modal .pf-input,
-  pagefind-modal .pf-summary,
-  pagefind-modal .pf-result-title,
-  pagefind-modal .pf-result-excerpt,
-  pagefind-modal .pf-heading-link,
-  pagefind-modal .pf-heading-excerpt,
-  pagefind-modal .pf-empty-text {
-    font-family: "Inconsolata", monospace;
+  @media (max-width: 640px) {
+    .dialog-content {
+      margin: 0;
+      max-width: none;
+      max-height: none;
+      width: 100vw;
+      height: 100dvh;
+      border-radius: 0;
+    }
   }
 </style>
