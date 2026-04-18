@@ -14,7 +14,6 @@
  *
  * Hydrated with client:load since it needs to be visible immediately.
  */
-"use client";
 import { useEffect, useRef, useState } from "react";
 
 interface HeroImageProps {
@@ -137,8 +136,7 @@ export default function HeroImage({
           <img
             ref={imgRef}
             src={mobileBackgroundImage}
-            alt=""
-            aria-hidden="true"
+            alt={alt}
             fetchPriority="high"
             decoding="sync"
             onLoad={() => setImageLoaded(true)}
@@ -187,8 +185,7 @@ export default function HeroImage({
           ))}
         </div>
       </div>
-      {/* Accessible image for screen readers / SEO */}
-      <img src={backgroundImage} alt={alt} className="sr-only" />
+      {/* The <picture> element's <img> fallback provides screen reader / SEO access */}
     </div>
   );
 }

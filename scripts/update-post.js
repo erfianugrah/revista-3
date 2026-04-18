@@ -96,7 +96,7 @@ function setImageProp(lines, prop, value) {
   // Check if it's flow style (everything on one line)
   if (imageLine.match(/^image:\s*\{.*\}\s*$/)) {
     // Flow style — replace or add the property inline
-    const propPattern = new RegExp(`${prop}:\\s*[^,}]+`);
+    const propPattern = new RegExp(`${prop}:\\s*(?:"[^"]*"|'[^']*'|[^,}]+)`);
     if (propPattern.test(imageLine)) {
       lines[imageIdx] = imageLine.replace(propPattern, `${prop}: ${value}`);
     } else {

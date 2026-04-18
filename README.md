@@ -1,6 +1,6 @@
 <p>
   <img alt="Version" src="https://img.shields.io/github/v/tag/erfianugrah/revista-3?label=version" />
-  <img alt="Astro" src="https://img.shields.io/badge/Astro-6.1.4-FF5D01.svg?logo=astro&logoColor=white" />
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-6.1.7-FF5D01.svg?logo=astro&logoColor=white" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.2.2-38B2AC.svg?logo=tailwind-css&logoColor=white" />
   <img alt="React" src="https://img.shields.io/badge/React-19.2.4-61DAFB.svg?logo=react&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9.3-3178C6.svg?logo=typescript&logoColor=white" />
@@ -130,7 +130,7 @@ graph TD
     - `theme.ts`: Shared theme preference, apply, toggle, and init helpers
     - `lightbox.ts`: Custom image lightbox with keyboard/touch navigation
     - `homePage.ts`: Homepage dynamic content and random image selection
-    - `getrandomimage.ts`: Random featured image selection for tag pages
+    - `getRandomImage.ts`: Random featured image selection for tag pages
     - `burgundy.ts`: 404 page quote rotation
     - `rss.ts`: RSS link visibility and URL management
     - `since94.ts`: Years-since-1994 counter (used in MDX)
@@ -293,6 +293,7 @@ Each content collection is defined with a specific schema in `content.config.ts`
 // content.config.ts — shared base schema eliminates duplication across collections
 const baseSchema = z.object({
   title: z.string(),
+  slug: z.string().optional(),
   tags: z.array(z.string()),
   author: z.string(),
   description: z.string(),
@@ -307,7 +308,7 @@ const baseSchema = z.object({
 });
 
 const muses = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/muses" }),
+  loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/muses" }),
   schema: baseSchema,
 });
 
@@ -527,7 +528,7 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
   - Adjacent image preloading, body scroll lock
   - Full View Transitions lifecycle support (destroy/reinit on `astro:page-load`)
 
-- **`getrandomimage.ts`**: Helper utility used by components to select random featured images
+- **`getRandomImage.ts`**: Helper utility used by components to select random featured images
   - Used in both the homepage and tag pages
   - Ensures images don't repeat in the same view
   - Handles empty image arrays gracefully
@@ -577,13 +578,12 @@ All scripts are TypeScript (except the remark plugin which remains `.mjs`), mini
 The `astro.config.mjs` includes several features worth noting:
 
 1. **Math Rendering**: `remark-math` + `rehype-katex` for LaTeX-style equations in MDX content
-2. **MDX remarkPlugins**: The `mdx()` integration carries its own `remarkPlugins` array (`remarkGfm`, `remarkMath`, `remarkReadingTime`) because MDX replaces (not merges with) the base `markdown.remarkPlugins` when it specifies its own. This ensures GFM tables and reading-time estimates work in `.mdx` files.
-3. **Markdoc Integration**: `@astrojs/markdoc` available alongside MDX for content authoring
-4. **Dual Shiki Themes**: Syntax highlighting uses `rose-pine-dawn` (light) and `tokyo-night` (dark) with `defaultColor: false` so both themes are emitted and CSS controls which one is visible
-5. **Sitemap Generation**: `@astrojs/sitemap` automatically generates `sitemap-index.xml` during build
-6. **Experimental Client Prerendering**: `clientPrerender: true` enables speculative prerendering of linked pages for near-instant navigation
-7. **Experimental Fonts API**: Fonts (Inconsolata, Overpass Mono) are loaded via Astro's font provider system with `optimizedFallbacks: true` for reduced CLS
-8. **undici-retry**: Custom Astro integration (`src/scripts/undici-retry.ts`) that patches the global fetch with retry logic for build-time HTTP requests
+2. **MDX remarkPlugins**: The `mdx()` integration inherits `remarkPlugins` and `rehypePlugins` from the base `markdown` config, so plugins only need to be listed once.
+3. **Dual Shiki Themes**: Syntax highlighting uses `rose-pine-dawn` (light) and `tokyo-night` (dark) with `defaultColor: false` so both themes are emitted and CSS controls which one is visible
+4. **Sitemap Generation**: `@astrojs/sitemap` automatically generates `sitemap-index.xml` during build
+5. **Experimental Client Prerendering**: `clientPrerender: true` enables speculative prerendering of linked pages for near-instant navigation
+6. **Experimental Fonts API**: Fonts (Inconsolata, Overpass Mono) are loaded via Astro's font provider system with `optimizedFallbacks: true` for reduced CLS
+7. **undici-retry**: Custom Astro integration (`src/scripts/undici-retry.ts`) that patches the global fetch with retry logic for build-time HTTP requests
 
 ## Performance Optimization
 
@@ -678,6 +678,10 @@ While the site is currently in English, I've structured it with future translati
 4. **Tailwind CSS v4**:
    - The latest Tailwind CSS v4.2.2 with better performance and smaller bundles
    - Configured with the typography plugin for long-form content
+
+5. **Playwright**:
+   - End-to-end test suite with 74 tests across 12 spec files
+   - Run with `bunx playwright test` or target a single file with `bunx playwright test tests/spec-name.spec.ts`
 
 ## CI/CD Workflow
 
@@ -926,7 +930,7 @@ The photo gallery displays use a CSS Grid masonry layout with focal-point-aware 
    .masonry {
      display: grid;
      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-     grid-gap: 12px;
+     gap: 12px;
      grid-auto-flow: dense;
    }
 

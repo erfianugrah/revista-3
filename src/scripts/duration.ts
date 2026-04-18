@@ -106,11 +106,13 @@ export function analyzeDuration(
     }
   } else {
     const { start, end } = dateRange;
-    const [startYear, startMonth] = start.split("-").map((n) => parseInt(n));
+    const [startYear, startMonth] = start
+      .split("-")
+      .map((n) => parseInt(n, 10));
     startDate = new Date(startYear, startMonth - 1, 1);
 
     if (end && end !== "Present") {
-      const [endYear, endMonth] = end.split("-").map((n) => parseInt(n));
+      const [endYear, endMonth] = end.split("-").map((n) => parseInt(n, 10));
       endDate = new Date(endYear, endMonth - 1, 1);
     } else {
       endDate = new Date();

@@ -50,6 +50,7 @@ let pinchBaseZoom = 1;
 
 // Track listeners for proper cleanup
 let keydownHandler: ((e: KeyboardEvent) => void) | null = null;
+let linkController: AbortController | null = null;
 
 // rAF throttle for drag/pan — prevents layout thrash on high-Hz displays
 let dragRafId = 0;
@@ -335,7 +336,8 @@ function bindOverlayEvents(el: HTMLDivElement): void {
     img.style.cursor = "grabbing";
   });
 
-  img.addEventListener("mousemove", (e) => {
+  // Bind mousemove/mouseup to document so drag continues if cursor leaves image
+  document.addEventListener("mousemove", (e) => {
     if (!isDragging) return;
     e.preventDefault();
 
@@ -358,7 +360,8 @@ function bindOverlayEvents(el: HTMLDivElement): void {
     }
   });
 
-  img.addEventListener("mouseup", (e) => {
+  document.addEventListener("mouseup", (e) => {
+    if (!isDragging) return;
     e.preventDefault();
     isDragging = false;
     if (isZoomed()) img.style.cursor = "grab";
@@ -506,6 +509,10 @@ function onKeyDown(e: KeyboardEvent): void {
 // --------------- Cleanup ---------------
 
 function destroy(): void {
+  if (linkController) {
+    linkController.abort();
+    linkController = null;
+  }
   if (keydownHandler) {
     document.removeEventListener("keydown", keydownHandler);
     keydownHandler = null;
@@ -535,7 +542,7 @@ function destroy(): void {
 function initialize(): void {
   destroy();
 
-  const links = document.querySelectorAll<HTMLAnchorElement>("a.glightbox");
+  const links = document.querySelectorAll<HTMLAnchorElement>("a.lightbox-link");
   images = Array.from(links).map((link) => ({
     src: link.href,
     alt: link.querySelector("img")?.alt ?? "",
@@ -543,11 +550,16 @@ function initialize(): void {
 
   if (images.length === 0) return;
 
+  linkController = new AbortController();
   links.forEach((link, i) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      open(i);
-    });
+    link.addEventListener(
+      "click",
+      (e) => {
+        e.preventDefault();
+        open(i);
+      },
+      { signal: linkController!.signal },
+    );
   });
 
   keydownHandler = onKeyDown;

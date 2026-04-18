@@ -54,20 +54,21 @@ jobs:
           MAX_ATTEMPTS: 3
           RETRY_INTERVAL: 30
         run: |
-          attempt=1
-          until bun run build || [ $attempt -eq $MAX_ATTEMPTS ]; do
-            echo "Build attempt $attempt failed. Retrying in $RETRY_INTERVAL seconds..."
-            sleep $RETRY_INTERVAL
-            attempt=$((attempt + 1))
+          for attempt in $(seq 1 $MAX_ATTEMPTS); do
+            if bun run build; then
+              echo "Build succeeded on attempt $attempt."
+              exit 0
+            fi
+            if [ "$attempt" -lt "$MAX_ATTEMPTS" ]; then
+              echo "Build attempt $attempt failed. Retrying in $RETRY_INTERVAL seconds..."
+              sleep $RETRY_INTERVAL
+            fi
           done
-
-          if [ $attempt -eq $MAX_ATTEMPTS ] && ! bun run build; then
-            echo "Build failed after $MAX_ATTEMPTS attempts."
-            exit 1
-          fi
+          echo "Build failed after $MAX_ATTEMPTS attempts."
+          exit 1
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist
@@ -75,7 +76,7 @@ jobs:
 
   deploy-to-deno:
     needs: build-revista
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -101,6 +102,7 @@ jobs:
 
   deploy-to-cloudflare-workers:
     needs: build-revista
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -136,6 +138,7 @@ jobs:
 
   build-and-push-docker:
     needs: build-revista
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     outputs:
       digest: ${{ steps.build.outputs.digest }}
@@ -183,7 +186,7 @@ jobs:
           context: .
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
@@ -323,17 +326,18 @@ jobs:
           MAX_ATTEMPTS: 3
           RETRY_INTERVAL: 30
         run: |
-          attempt=1
-          until bun run build:github-pages || [ $attempt -eq $MAX_ATTEMPTS ]; do
-            echo "Build attempt $attempt failed. Retrying in $RETRY_INTERVAL seconds..."
-            sleep $RETRY_INTERVAL
-            attempt=$((attempt + 1))
+          for attempt in $(seq 1 $MAX_ATTEMPTS); do
+            if bun run build:github-pages; then
+              echo "Build succeeded on attempt $attempt."
+              exit 0
+            fi
+            if [ "$attempt" -lt "$MAX_ATTEMPTS" ]; then
+              echo "Build attempt $attempt failed. Retrying in $RETRY_INTERVAL seconds..."
+              sleep $RETRY_INTERVAL
+            fi
           done
-
-          if [ $attempt -eq $MAX_ATTEMPTS ] && ! bun run build:github-pages; then
-            echo "Build failed after $MAX_ATTEMPTS attempts."
-            exit 1
-          fi
+          echo "Build failed after $MAX_ATTEMPTS attempts."
+          exit 1
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

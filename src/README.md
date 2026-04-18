@@ -83,7 +83,7 @@ graph TD
 .masonry {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-gap: 12px;
+  gap: 12px;
   grid-auto-flow: dense;
 }
 
@@ -168,7 +168,7 @@ These custom utilities provide precise control over image positioning and croppi
 
 ### MDX remarkPlugins Behavior
 
-When `mdx()` specifies its own `remarkPlugins`, it **replaces** (not merges with) the base `markdown.remarkPlugins`. Because all content in this project is `.mdx`, the MDX integration's `remarkPlugins` array must include every remark plugin that content depends on (`remarkGfm`, `remarkMath`, `remarkReadingTime`).
+The `mdx()` integration inherits `remarkPlugins` and `rehypePlugins` from the base `markdown` config, so plugins only need to be listed once in `markdown.remarkPlugins`. The MDX integration does not specify its own `remarkPlugins` array.
 
 ### Schema Definition Pattern
 
@@ -178,6 +178,7 @@ All content is validated using Zod schemas with the following pattern:
 // Shared base schema — all collections use this
 const baseSchema = z.object({
   title: z.string(),
+  slug: z.string().optional(),
   tags: z.array(z.string()),
   author: z.string(),
   description: z.string(),
@@ -194,22 +195,22 @@ const baseSchema = z.object({
 });
 
 const muses = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/muses" }),
+  loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/muses" }),
   schema: baseSchema,
 });
 
 // CV extends the base with professional fields
 const cv = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/cv" }),
+  loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/cv" }),
   schema: baseSchema.extend({ fullName: z.string().optional() /* ... */ }),
 });
 ```
 
 ### Glob Pattern Selection
 
-The `loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/muses" })` configuration:
+The `loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/muses" })` configuration:
 
-1. `**\/` - Recursively searches all subdirectories
+1. `**/` - Recursively searches all subdirectories
 2. `[^_]*` - Ignores files that start with underscore (draft content)
 3. `.mdx` - Only selects MDX files
 4. `base: "./src/content/muses"` - Sets the root directory for the collection

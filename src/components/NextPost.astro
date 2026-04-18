@@ -91,7 +91,7 @@ const favicon = await optimizeImage(CDN_FAVICON_URL, "favicon");
                   <div class="absolute inset-0 bg-gray-200 dark:bg-[rgb(54,53,57)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div class="aspect-video mb-2 md:mb-4 overflow-hidden rounded-sm relative z-10 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
                     <img
-                      src=""
+                      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
                       alt=""
                       class="w-full h-full object-cover transition-all duration-300 group-hover:opacity-90"
                       loading="lazy"
@@ -125,10 +125,10 @@ const favicon = await optimizeImage(CDN_FAVICON_URL, "favicon");
     const container = document.getElementById("randomPosts");
     if (!container) return;
 
-    const posts: PostData[] = JSON.parse(container.dataset.posts || "[]");
+    const posts: PostData[] = JSON.parse(container.dataset.posts ?? "[]");
     const collection = container.dataset.collection;
     const favicon: { src: string } = JSON.parse(
-      container.dataset.favicon || "{}",
+      container.dataset.favicon ?? "{}",
     );
 
     const shuffledPosts = shuffle(posts);

@@ -26,36 +26,37 @@ const baseSchema = z.object({
     .optional(),
   pubDate: z.coerce.date(),
   updatedDate: z.coerce.date().optional(),
+  slug: z.string().optional(),
 });
 
 const muses = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/muses" }),
+  loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/muses" }),
   schema: baseSchema,
 });
 
 const short_form = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/short_form" }),
+  loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/short_form" }),
   schema: baseSchema,
 });
 
 const long_form = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/long_form" }),
+  loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/long_form" }),
   schema: baseSchema,
 });
 
 const zeitweilig = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/zeitweilig" }),
+  loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/zeitweilig" }),
   schema: baseSchema,
 });
 
 const authors = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/authors" }),
+  loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/authors" }),
   schema: baseSchema,
 });
 
 /** CV extends baseSchema with structured professional data. */
 const cv = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/cv" }),
+  loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/cv" }),
   schema: baseSchema.extend({
     fullName: z.string().optional(),
     sections: z

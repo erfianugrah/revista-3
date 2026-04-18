@@ -4,13 +4,27 @@ import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
 
 const collections = ["long_form", "short_form", "muses", "zeitweilig"] as const;
-let allImages: { large: string[]; medium: string[]; small: string[] } = {
-  large: [],
-  medium: [],
-  small: [],
-};
-let allAlts: string[] = [];
-let allUrls: string[] = [];
+const imageCache = new Map<string, { src: string; srcset: string }>();
+
+async function getOptimizedImage(src: string, alt: string) {
+  if (imageCache.has(src)) return imageCache.get(src)!;
+  const result = await getImage({
+    src,
+    alt,
+    widths: [854, 1280, 1920],
+    width: 1920,
+    height: 1080,
+    fit: "inside",
+    format: "avif",
+    quality: 85,
+    decoding: "async",
+  });
+  const optimized = { src: result.src, srcset: result.srcSet.attribute };
+  imageCache.set(src, optimized);
+  return optimized;
+}
+
+const allImages: { src: string; srcset: string; alt: string; url: string }[] = [];
 
 for (const collection of collections) {
   const allContent = await getCollection(collection);
@@ -18,85 +32,25 @@ for (const collection of collections) {
     (post) => post.data.image?.src && post.data.image?.alt,
   );
 
-  const imagePromises = postsWithImages.map(async (post) => {
-    const image = post.data.image!;
-    const [largeImage, mediumImage, smallImage] = await Promise.all([
-      getImage({
-        src: image.src,
+  const results = await Promise.all(
+    postsWithImages.map(async (post) => {
+      const image = post.data.image!;
+      const optimized = await getOptimizedImage(image.src, image.alt);
+      return {
+        ...optimized,
         alt: image.alt,
-        width: 1920,
-        height: 1080,
-        fit: "inside",
-        decoding: "async",
-        format: "avif",
-        quality: 65,
-      }),
-      getImage({
-        src: image.src,
-        alt: image.alt,
-        width: 1280,
-        height: 720,
-        fit: "inside",
-        decoding: "async",
-        format: "avif",
-        quality: 65,
-      }),
-      getImage({
-        src: image.src,
-        alt: image.alt,
-        width: 854,
-        height: 480,
-        fit: "inside",
-        decoding: "async",
-        format: "avif",
-        quality: 65,
-      }),
-    ]);
+        url: `/${collection}/${post.id}`,
+      };
+    }),
+  );
 
-    return {
-      large: largeImage.src,
-      medium: mediumImage.src,
-      small: smallImage.src,
-      alt: image.alt,
-      url: `/${collection}/${post.id}`,
-    };
-  });
-
-  const results = await Promise.all(imagePromises);
-
-  results.forEach((result) => {
-    allImages.large.push(result.large);
-    allImages.medium.push(result.medium);
-    allImages.small.push(result.small);
-    allAlts.push(result.alt);
-    allUrls.push(result.url);
-  });
+  allImages.push(...results);
 }
-
-const imageSizes = {
-  width: {
-    large: 1920,
-    medium: 1280,
-    small: 854,
-  },
-  height: {
-    large: 1080,
-    medium: 720,
-    small: 480,
-  },
-};
 ---
 
 {
-  allImages.large.length > 0 ? (
-    <Homepage
-      title="Home"
-      images={JSON.stringify(allImages)}
-      alt={JSON.stringify(allAlts)}
-      urls={JSON.stringify(allUrls)}
-      width={imageSizes.width}
-      height={imageSizes.height}
-    />
+  allImages.length > 0 ? (
+    <Homepage title="Home" images={JSON.stringify(allImages)} />
   ) : (
     <p>No images found</p>
   )

@@ -3,7 +3,7 @@ title: "Erfi Anugrah"
 description: "Photographer | Writer | Customer Solutions Engineer"
 pubDate: 2023-11-29T11:00:00.000Z
 updatedDate: 2024-10-06T07:04:55.000Z
-tags: ['cv']
+tags: ["cv"]
 author: "Erfi Anugrah"
 slug: resume
 fullName: "ERFI ANUGRAH"
@@ -146,24 +146,32 @@ companies:
           - "Assisted in managing training camp operations, ensuring incident-free operations"
 ---
 
-import { Section, Company, Timeline, SkillBar, EducationTimeline, ColorLegend } from '../../components/cv';
+import {
+  Section,
+  Company,
+  Timeline,
+  SkillBar,
+  EducationTimeline,
+  ColorLegend,
+} from "../../components/cv";
 
 <ColorLegend className="mb-4" />
 
 <Section id="experience" title="Work Experience">
   <div class="company-wrapper">
-    {frontmatter.companies.map(company => (
+    {frontmatter.companies.map((company) => (
       <Company name={company.name}>
-        {company.positions.map(position => (
+        {company.positions.map((position) => (
           <Timeline title={position.title} dateRange={position.dateRange}>
             <ul>
-              {position.responsibilities.map(responsibility => (
+              {position.responsibilities.map((responsibility) => (
                 <li>{responsibility}</li>
               ))}
               {position.achievements && (
-                <li><strong>Awards and Recognition</strong>:
+                <li>
+                  <strong>Awards and Recognition</strong>:
                   <ul>
-                    {position.achievements.map(achievement => (
+                    {position.achievements.map((achievement) => (
                       <li>{achievement}</li>
                     ))}
                   </ul>
@@ -181,13 +189,13 @@ import { Section, Company, Timeline, SkillBar, EducationTimeline, ColorLegend } 
   {/* Add print-specific styles here */}
   {`
     @media print {
-      .work-experience-wrapper {
+      .company-wrapper {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
       }
       
       /* Override any other styles that might cause breaks */
-      .work-experience-wrapper * {
+      .company-wrapper * {
         page-break-before: avoid !important;
         break-before: avoid !important;
       }
@@ -208,18 +216,18 @@ import { Section, Company, Timeline, SkillBar, EducationTimeline, ColorLegend } 
     </div>
   </Section>
 
-  <Section id="languages" title="Languages">
-    <div class="skills-grid grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 gap-2">
-      {frontmatter.languages.map(lang => (
-        <SkillBar 
-          name={lang.language} 
-          level={lang.level} 
-          category="language" 
-          proficiency={lang.proficiency} 
-        />
-      ))}
-    </div>
-  </Section>
+<Section id="languages" title="Languages">
+  <div class="skills-grid grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 gap-2">
+    {frontmatter.languages.map((lang) => (
+      <SkillBar
+        name={lang.language}
+        level={lang.level}
+        category="language"
+        proficiency={lang.proficiency}
+      />
+    ))}
+  </div>
+</Section>
 
   <Section id="education" title="Education">
     <EducationTimeline education={frontmatter.education} />

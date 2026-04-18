@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect, useRef } from "react";
 import { ChevronUp } from "lucide-react";
 import { Button } from "../components/ui/button.tsx";

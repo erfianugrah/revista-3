@@ -56,19 +56,21 @@ node scripts/parser.js         # verify CLI/content schema drift
 
 ## Single-Test / Targeted Verification
 
-There is no unit-test or integration-test suite and no single-test runner in this repository today.
-Use the smallest useful check instead:
+The repository has a Playwright end-to-end test suite (74 tests across 12 spec files).
 
 ```sh
-bun x astro check                              # quickest project-wide type/content check
-bun x prettier --check src/path/to/file.astro  # single-file formatting check
-bun x html-validate dist/path/to/page.html     # validate one generated page
+bunx playwright test                                    # run full test suite
+bunx playwright test tests/spec-name.spec.ts            # run a single spec file
+bunx playwright test -g "test name pattern"             # run tests matching a pattern
+bun x astro check                                       # quickest project-wide type/content check
+bun x prettier --check src/path/to/file.astro           # single-file formatting check
+bun x html-validate dist/path/to/page.html              # validate one generated page
 bun x hyperlink dist/path/to/page.html --skip-external
 ```
 
 - Content-only or markup edits: start with the narrowest command.
 - Layout, routing, or build changes: prefer `bun run lint:site` before handoff.
-- If you add a real test framework later, add package scripts and document single-test usage here.
+- Component or script changes: run relevant Playwright specs to verify behavior.
 
 ## Build Pipeline Facts
 

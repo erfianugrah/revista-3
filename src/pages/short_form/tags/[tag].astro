@@ -18,7 +18,7 @@ const { posts, collectionSlug } = Astro.props;
 
 <BaseLayout title={`${tag} — ${collectionSlug}`} is404Page={false}>
   {
-    posts
+    [...posts]
       .sort(sortByDate)
       .map((post) => (
         <BlogPost

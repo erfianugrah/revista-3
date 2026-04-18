@@ -16,7 +16,7 @@ Components are the reusable building blocks of the site. Most are Astro `.astro`
 
 - **[Homepage.astro](Homepage.astro)**: Landing page component used in [index.astro](../pages/index.astro). References [homePage.ts](../scripts/homePage.ts) for randomizing featured images via Fisher-Yates shuffle.
 
-- **[HeroImage.tsx](HeroImage.tsx)**: React island (`client:load`) for the parallax hero image on content pages. Uses a `<picture>` element with `<source>` for responsive image delivery. An `IntersectionObserver` ensures the parallax scroll handler only runs while visible, and `will-change: transform` keeps it on the compositor. Supports per-image `positionX`/`positionY` focal point overrides and absolute tag links with collection awareness. The `-20%`/`120%` oversized inner div gives headroom for the parallax offset.
+- **[HeroImage.tsx](HeroImage.tsx)**: React island (`client:load`) for the parallax hero image on content pages. Uses a `<picture>` element with `<source>` for responsive image delivery; the `<img>` carries real alt text (no separate sr-only element). An `IntersectionObserver` ensures the parallax scroll handler only runs while visible, and `will-change: transform` keeps it on the compositor. Supports per-image `positionX`/`positionY` focal point overrides and absolute tag links with collection awareness. The `-20%`/`120%` oversized inner div gives headroom for the parallax offset.
 
 - **[NextPost.astro](NextPost.astro)**: Related content suggestion shown at the bottom of posts. Picks a random post from the same collection (excluding the current one) and renders it as a linked preview card.
 
@@ -25,18 +25,16 @@ Components are the reusable building blocks of the site. Most are Astro `.astro`
 - **[Header.astro](Header.astro)**: Main header, incorporates:
   - **[Hamburger.tsx](Hamburger.tsx)**: Mobile menu toggle (`client:idle`). Uses CSS transitions (no framer-motion). Includes `aria-expanded`, `aria-controls`, Escape key handler, and click-outside-to-close for accessibility.
   - **[ThemeToggle.astro](ThemeToggle.astro)**: Light/dark mode switcher wrapping the React [ThemeToggle.tsx](ThemeToggle.tsx) component (`client:idle`). The React component uses CSS transitions for sun/moon animations and dispatches a `theme-toggle` custom event; [theme.ts](../scripts/theme.ts) handles the actual class toggle and localStorage persistence.
-  - **[Navigation.astro](Navigation.astro)**: Site navigation menu with `role="menu"` and `aria-label` attributes
-  - **[Pagefind.astro](Pagefind.astro)**: Search functionality using the raw [Pagefind JS API](https://pagefind.app/docs/api/). Renders a custom `<dialog>` modal with debounced search, result cards, and thumbnail images. The search icon trigger button is placed in `Header.astro`. Reinitializes via `astro:page-load` for ClientRouter compatibility.
+  - **[Navigation.astro](Navigation.astro)**: Site navigation menu with `aria-label` attributes
+  - **[Pagefind.astro](Pagefind.astro)**: Search functionality using the raw [Pagefind JS API](https://pagefind.app/docs/api/). Renders a custom `<dialog>` modal with debounced search, result cards, and thumbnail images. The search icon trigger button is placed in `Header.astro`. Reinitializes via `astro:page-load` for ClientRouter compatibility. Uses `AbortController` for event listener cleanup across navigations.
 
 - **[Footer.astro](Footer.astro)**: Site footer with social media icons from [astro-icon](../../package.json)
 
 ### Content Presentation Components
 
-- **[Masonry.astro](Masonry.astro)**: Photo gallery with CSS Grid masonry layout. Accepts per-image `positionx`/`positiony` focal point overrides (same pattern as hero images). Smart default crop at `center 25%` for portrait photography. Uses [MasonryLayout.css](../styles/MasonryLayout.css) with `@supports` progressive enhancement for native CSS masonry. Integrates with [lightbox.ts](../scripts/lightbox.ts) for fullscreen viewing with multi-level zoom and drag/pan.
+- **[Masonry.astro](Masonry.astro)**: Photo gallery with CSS Grid masonry layout. Accepts per-image `positionx`/`positiony` focal point overrides (same pattern as hero images). Smart default crop at `center 25%` for portrait photography. Uses [MasonryLayout.css](../styles/MasonryLayout.css) with `@supports` progressive enhancement for native CSS masonry. Integrates with [lightbox.ts](../scripts/lightbox.ts) (via `lightbox-link` class on gallery links) for fullscreen viewing with multi-level zoom and drag/pan.
 
 - **[GetRandomImage.astro](GetRandomImage.astro)**: Used in [TagLayout.astro](../layouts/TagLayout.astro) to randomize featured images from content collections. Includes a `<noscript>` fallback for non-JS users.
-
-- **[FormattedDate.astro](FormattedDate.astro)**: Renders a `<time>` element with a formatted date string and a machine-readable `datetime` attribute.
 
 ### Typography Components
 
@@ -85,7 +83,7 @@ Several components carry inline type declarations to satisfy `astro check` witho
 Several components share logic extracted into `src/scripts/`:
 
 - **[duration.ts](../scripts/duration.ts)**: `analyzeDuration()` — computes month counts and duration categories for timeline visualizations. Used by `cv/Timeline.astro` and `cv/EducationTimeline.astro`.
-- **[randomImage.ts](../scripts/randomImage.ts)**: Fisher-Yates shuffle and random image picker logic. Used by `homePage.ts` and `getrandomimage.ts`.
+- **[randomImage.ts](../scripts/randomImage.ts)**: Fisher-Yates shuffle and random image picker logic. Used by `homePage.ts` and `getRandomImage.ts` (renamed from `getrandomimage.ts`).
 - **[consts.ts](../consts.ts)**: Site-wide constants (title, author, CDN URLs, social links) imported by Header, Footer, BaseLayout, NextPost, and collections.ts.
 
 ## Removed Components
@@ -97,4 +95,5 @@ The following were removed during the code quality refactoring:
 - `Social.astro` / `HomepageMasonry.astro` - dead code, no references
 - `fslightbox.js` - vendored lightbox, replaced by custom `lightbox.ts`
 - GLightbox CSS/JS - replaced by custom lightbox (73 KB -> ~2.4 KB gzipped)
+- `FormattedDate.astro` - date formatting now handled inline via `formatDate()` from `utils.ts`
 - `framer-motion` - removed as dependency; Hamburger.tsx and ThemeToggle.tsx now use pure CSS transitions

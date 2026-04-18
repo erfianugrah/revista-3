@@ -81,9 +81,9 @@ function buildFrontmatter({
 }) {
   const lines = [];
 
-  lines.push(`title: ${title}`);
-  lines.push(`slug: ${slug}`);
-  lines.push(`pubDate: ${pubDate}`);
+  lines.push(`title: "${title}"`);
+  lines.push(`slug: "${slug}"`);
+  lines.push(`pubDate: "${pubDate}"`);
 
   // tags — double-quoted, inline array: ["tag1", "tag2"]
   const tagsStr = tags.map((t) => `"${t}"`).join(", ");
@@ -95,12 +95,12 @@ function buildFrontmatter({
   if (image) {
     const props = Object.entries(image)
       .filter(([, v]) => v) // skip empty optional props
-      .map(([k, v]) => `${k}: ${v}`)
+      .map(([k, v]) => `${k}: "${v}"`)
       .join(", ");
     lines.push(`image: { ${props} }`);
   }
 
-  lines.push(`description: ${description}`);
+  lines.push(`description: "${description}"`);
 
   return lines.join("\n");
 }

@@ -29,6 +29,7 @@ Each collection is defined in [content.config.ts](/src/content.config.ts) with a
 // Shared base schema eliminates duplication across collections
 const baseSchema = z.object({
   title: z.string(),
+  slug: z.string().optional(),
   tags: z.array(z.string()),
   author: z.string(),
   description: z.string(),
@@ -46,7 +47,7 @@ const baseSchema = z.object({
 
 const short_form = defineCollection({
   // Modern Astro v6.1 collection pattern
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/short_form" }),
+  loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/short_form" }),
   schema: baseSchema,
 });
 ```
@@ -115,7 +116,7 @@ The CV collection extends `baseSchema` with additional fields for professional i
 
 ```typescript
 const cv = defineCollection({
-  loader: glob({ pattern: "**\/[^_]*.mdx", base: "./src/content/cv" }),
+  loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/cv" }),
   schema: baseSchema.extend({
     fullName: z.string().optional(),
     sections: z

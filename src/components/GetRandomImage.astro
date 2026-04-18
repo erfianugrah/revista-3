@@ -3,31 +3,22 @@ export interface Props {
   images: string;
   tag: string;
   url: string;
-  width: Record<string, number>;
-  height: Record<string, number>;
 }
 
-const { images, tag, url, width, height } = Astro.props;
+const { images, tag, url } = Astro.props;
 ---
 
 <div
   class="randomimage relative group border-0"
   data-images={images}
-  data-width={JSON.stringify(width)}
-  data-height={JSON.stringify(height)}
 >
   <a href={url}>
-    <picture>
-      <source media="(min-width: 1280px)" data-srcset-large />
-      <source media="(min-width: 768px)" data-srcset-medium />
-      <img
-        class="hidden w-full sm:h-[540px] xl:h-[1080px] lg:h-[720px] object-cover object-center"
-        style="object-position: 40% 35%;"
-        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-        alt={tag || "Loading image"}
-        data-srcset-small
-      />
-    </picture>
+    <img
+      class="hidden w-full sm:h-[540px] xl:h-[1080px] lg:h-[720px] object-cover object-center"
+      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+      sizes="(min-width: 800px) 25vw, 100vw"
+      alt={tag || "Loading image"}
+    />
     <noscript>
       <p class="text-center font-overpass-mono">{tag}</p>
     </noscript>
@@ -49,4 +40,4 @@ const { images, tag, url, width, height } = Astro.props;
     opacity: 0.5;
   }
 </style>
-<script src="../scripts/getrandomimage.ts"></script>
+<script src="../scripts/getRandomImage.ts"></script>

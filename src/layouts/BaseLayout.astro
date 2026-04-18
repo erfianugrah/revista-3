@@ -39,8 +39,8 @@ export interface Props {
   image?: string;
   description?: string;
   author?: string;
-  pubDate?: string;
-  updatedDate?: string;
+  pubDate?: string | Date;
+  updatedDate?: string | Date;
   title?: string;
   site_name?: string;
   alt?: string;
@@ -60,6 +60,12 @@ const {
   is404Page = false,
   hideHeaderFooter = false,
 } = Astro.props;
+
+/** Safely serialize JSON for embedding in HTML <script> tags.
+ *  Escapes `<` to `\u003c` to prevent `</script>` injection. */
+function safeJsonLd(obj: Record<string, unknown>): string {
+  return JSON.stringify(obj).replace(/</g, "\\u003c");
+}
 
 // Schema.org structured data
 const personSchema = {
@@ -105,17 +111,19 @@ const breadcrumbSchema = {
   itemListElement: breadcrumbItems,
 };
 
-// Format dates for structured data
-const formattedPubDate = pubDate ? new Date(pubDate).toISOString() : null;
+// Format dates for structured data — accept Date objects or ISO strings
+const formattedPubDate = pubDate
+  ? (pubDate instanceof Date ? pubDate.toISOString() : new Date(pubDate).toISOString())
+  : null;
 const formattedUpdatedDate = updatedDate
-  ? new Date(updatedDate).toISOString()
+  ? (updatedDate instanceof Date ? updatedDate.toISOString() : new Date(updatedDate).toISOString())
   : null;
 ---
 
 <html class="bg-[rgb(244,242,238)] dark:bg-[rgb(34,33,37)]" lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/webp" href={favicon_webp.src} />
+    <link rel="icon" type="image/png" href={favicon_webp.src} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="canonical" href={new URL(Astro.url.pathname, baseUrl).href} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -179,15 +187,15 @@ const formattedUpdatedDate = updatedDate
     <!-- Structured Data -->
     <script
       type="application/ld+json"
-      set:html={JSON.stringify(personSchema)}
+      set:html={safeJsonLd(personSchema)}
     />
     <script
       type="application/ld+json"
-      set:html={JSON.stringify(websiteSchema)}
+      set:html={safeJsonLd(websiteSchema)}
     />
     <script
       type="application/ld+json"
-      set:html={JSON.stringify(breadcrumbSchema)}
+      set:html={safeJsonLd(breadcrumbSchema)}
     />
 
     <ClientRouter />

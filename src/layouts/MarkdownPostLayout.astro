@@ -82,12 +82,12 @@ const metaImage = image
 
 <BaseLayout
   title={title}
-  image={image ? `${baseUrl}${metaImage?.src}` : ""}
-  alt={alt ? metaImage?.attributes.alt : ""}
+  image={image ? `${baseUrl}${metaImage?.src}` : undefined}
+  alt={alt ?? undefined}
   description={description}
-  author={author}
-  pubDate={publishedDate}
-  updatedDate={updatedDate}
+  author={authorFullName}
+  pubDate={frontmatter.pubDate}
+  updatedDate={frontmatter.updatedDate}
   is404Page={false}
 >
   {
@@ -131,7 +131,7 @@ const metaImage = image
     <span data-pagefind-sort={`date:${frontmatter.pubDate.toISOString()}`} class="hidden"></span>
     <Prose>
       <slot />
-      <div class="flex flex-col sm:flex-row align-center">
+      <div class="flex flex-col sm:flex-row items-center">
         <div class="w-full flex-col sm:w-1/2 text-center sm:text-left">
           <p>
             -- <a

@@ -1,7 +1,7 @@
 import { defineConfig, fontProviders } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
-import markdoc from "@astrojs/markdoc";
+
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
@@ -43,23 +43,7 @@ export default defineConfig({
   integrations: [
     icon(),
     sitemap(),
-    mdx({
-      syntaxHighlight: "shiki",
-      shikiConfig: {
-        theme: "rose-pine-dawn",
-        defaultColor: false,
-        themes: {
-          light: "rose-pine-dawn",
-          dark: "tokyo-night",
-        },
-        langs: [],
-        wrap: true,
-      },
-      gfm: false,
-      remarkPlugins: [remarkGfm, remarkMath, remarkReadingTime],
-      rehypePlugins: [rehypeKatex],
-    }),
-    markdoc(),
+    mdx(), // inherits syntaxHighlight, shikiConfig, remarkPlugins, rehypePlugins from markdown config
     undiciRetry(),
     react(),
   ],
