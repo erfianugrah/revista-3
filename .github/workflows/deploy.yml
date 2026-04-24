@@ -42,9 +42,9 @@ jobs:
         uses: actions/cache@v5
         with:
           path: node_modules/.astro
-          key: ${{ runner.os }}-astro-assets-${{ hashFiles('src/content/**/*.mdx', 'src/content/**/*.md') }}
+          key: ${{ runner.os }}-astro-assets-${{ hashFiles('bun.lock') }}-${{ hashFiles('src/content/**/*.mdx', 'src/content/**/*.md') }}
           restore-keys: |
-            ${{ runner.os }}-astro-assets-
+            ${{ runner.os }}-astro-assets-${{ hashFiles('bun.lock') }}-
 
       - name: Install project dependencies
         run: bun install
@@ -314,9 +314,9 @@ jobs:
         uses: actions/cache@v5
         with:
           path: node_modules/.astro
-          key: ${{ runner.os }}-astro-assets-${{ hashFiles('src/content/**/*.mdx', 'src/content/**/*.md') }}
+          key: ${{ runner.os }}-astro-assets-${{ hashFiles('bun.lock') }}-${{ hashFiles('src/content/**/*.mdx', 'src/content/**/*.md') }}
           restore-keys: |
-            ${{ runner.os }}-astro-assets-
+            ${{ runner.os }}-astro-assets-${{ hashFiles('bun.lock') }}-
 
       - name: Install project dependencies
         run: bun install
