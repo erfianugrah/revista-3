@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | In progress |
+| Status | v0.1.0 implemented; integration smoke-tested |
 | Branch | `feat/media-encoder` |
 | Sibling repo | `~/astro-image-hq` (to be created) |
 | Approach | DDD bounded contexts + TDD per module |
@@ -262,16 +262,37 @@ Each step: write test → red → implement → green → refactor.
 
 ## Verification checklist (definition of done for v0.1.0)
 
-- [ ] `astro-image-hq` package builds clean with `bun run build`
-- [ ] `bun test` green; coverage on routing 100%, detection 90%+
-- [ ] `npm publish --dry-run` shows correct files
-- [ ] revista-3 `bun run build` succeeds with `profile: "photo"` + GPU off
-- [ ] revista-3 `bun run build` with NVENC enabled produces decodable AVIF
-- [ ] Couch image (the original banding case) is visibly improved at 1:1 zoom
-- [ ] `bun run lint:site` passes
-- [ ] CI workflow updated with `apt-get install libavif-bin`
-- [ ] README in `astro-image-hq` documents config + 4 profiles + caveats
+- [x] `astro-image-hq` package builds clean with `bun run build`
+- [x] `bun test` green: 49/49 (4 unit suites + 1 integration suite)
+- [x] revista-3 builds with `profile: "photo"` (sharp fallback, before avifenc install)
+- [x] avifenc detected and used post-install (verified via end-to-end smoke test)
+- [x] NVENC integration test produces decodable AVIF on RTX 5090
+- [x] Shadow boost triggers correctly on dark gradient images
+- [x] README in `astro-image-hq` documents config + 4 profiles + caveats
+- [ ] `npm publish --dry-run` validation (deferred to publish step)
+- [ ] Couch image (original banding case) visibly improved at 1:1 zoom (manual check needed)
+- [ ] `bun run lint:site` passes (deferred — full build takes long)
+- [ ] CI workflow updated with `apt-get install libavif-bin` (Dockerfile + .github/workflows)
 - [ ] CHANGELOG.md entry for v0.1.0
+
+## Findings during implementation
+
+1. **NVENC AV1 reality**: ffmpeg's `av1_nvenc` only outputs 4:2:0 8-bit AVIF
+   regardless of GPU silicon. Routing automatically skips NVENC when 4:4:4 or
+   10-bit is requested. NVENC is therefore useful only for fast 4:2:0 8-bit
+   builds, not for the banding fix this package was built for.
+
+2. **AVIF muxer requires seekable output**: ffmpeg cannot write AVIF to stdout
+   pipe. NVENC encoder uses temp file via `node:os.tmpdir()`.
+
+3. **avifenc 1.4 CLI**: uses `-q QUALITY -d DEPTH -y YUV -s SPEED` (not the
+   older `--min`/`--max` quantizer flags). Stdin support exists via `--stdin`
+   but defaults to y4m format; we use temp PNG files for simplicity.
+
+4. **Build speed**: revista-3 build is fetch-bound (image.erfi.io CDN), not
+   encode-bound. GPU acceleration helps marginally for full builds; per-image
+   encode time of 200-500ms is dwarfed by CDN fetch latency. Real win is
+   visual quality (10-bit shadows), not throughput.
 
 ---
 

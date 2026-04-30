@@ -19,7 +19,7 @@
     "lint:site": "bun run build && bun run lint:html && bun run lint:links"
   },
   "dependencies": {
-    "@astrojs/check": "0.9.8",
+    "@astrojs/check": "0.9.9",
     "@astrojs/mdx": "5.0.4",
     "@astrojs/react": "5.0.4",
     "@astrojs/rss": "4.0.18",
@@ -30,7 +30,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/sanitize-html": "^2.16.1",
-    "astro": "6.1.9",
+    "astro": "6.2.1",
     "astro-icon": "^1.1.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
