@@ -275,6 +275,28 @@ Each step: write test → red → implement → green → refactor.
 - [ ] CI workflow updated with `apt-get install libavif-bin` (Dockerfile + .github/workflows)
 - [ ] CHANGELOG.md entry for v0.1.0
 
+## Override precedence (post-tuning)
+
+After initial implementation we reversed the layering of component overrides
+vs content-aware boost. The boost is now a **quality floor** for content
+known to band; the component value is the project-wide baseline.
+
+**Order of operations** (latest):
+
+1. Profile defaults (`photo`: q90, 4:2:0 10-bit, NVENC > avifenc-svt > sharp)
+2. Component override merges (e.g. `<Image quality={85} />` → q85)
+3. Shadow boost merges last (`isDark && hasGradient` → q95, 4:4:4, aom)
+
+**Why:**
+
+- Bright/typical content (90%+ of images) takes the component quality —
+  controls file size project-wide without per-image tuning.
+- Dark gradient content (~6% of images empirically) gets promoted to the
+  banding-free encode regardless of the component's quality cap.
+
+This avoids the previous regression where a global `quality={85}` defeated
+the boost's q95 and reintroduced shadow banding.
+
 ## Findings during implementation
 
 1. **NVENC AV1 reality**: ffmpeg's `av1_nvenc` only outputs 4:2:0 8-bit AVIF

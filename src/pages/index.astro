@@ -16,7 +16,7 @@ async function getOptimizedImage(src: string, alt: string) {
     height: 1080,
     fit: "inside",
     format: "avif",
-    quality: 90,
+    quality: 85,
     decoding: "async",
   });
   const optimized = { src: result.src, srcset: result.srcSet.attribute };
