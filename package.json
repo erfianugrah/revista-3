@@ -24,7 +24,7 @@
     "@astrojs/react": "5.0.4",
     "@astrojs/rss": "4.0.18",
     "@astrojs/sitemap": "3.7.2",
-    "@erfianugrah/astro-image-hq": "^0.1.1",
+    "@erfianugrah/astro-image-hq": "^0.1.2",
     "@iconify-json/mdi": "^1.2.3",
     "@radix-ui/react-slot": "^1.2.4",
     "@tailwindcss/vite": "^4.2.2",
