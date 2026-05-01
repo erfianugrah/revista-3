@@ -90,16 +90,17 @@ bun x hyperlink dist/path/to/page.html --skip-external
 - CI caches the Astro image directory separately from `node_modules` to survive dependency updates.
 - If remote image builds fail in CI, check rate limits on the CDN and verify the Astro image cache is warm.
 
-## Image Service (astro-image-hq)
+## Image Service (@erfianugrah/astro-image-hq)
 
-- Production builds use the `astro-image-hq` custom image service (configured in `astro.config.mjs`).
-- Profile is `photo`: 10-bit 4:4:4 AVIF via `avifenc` (libavif CLI) with content-aware shadow boost for dark gradient images.
-- Falls back to sharp 8-bit 4:4:4 with a warning when `avifenc` is missing — local dev still works.
-- Required system package: `libavif` on Arch, `libavif-bin` on Debian/Ubuntu. The CI runner and Dockerfile must install it before `bun run build`.
-- Optional: ffmpeg + `av1_nvenc` for GPU-accelerated AVIF, but it only outputs 4:2:0 8-bit; routing skips NVENC when 4:4:4 or 10-bit is requested.
-- Source code lives in sibling repo `~/astro-image-hq` (linked via `bun link` during dev). See `MEDIA_ENCODER.md` for design rationale.
-- When running locally without `avifenc`, the build still completes via sharp fallback. Banding will be visible in dark photographs; install `libavif` to get the full fix.
-- Image transforms cost ~2-12s each at 10-bit 4:4:4 (avifenc speed 4); a full build of ~150 source images is fetch-bound, not encode-bound.
+- Production builds use the [`@erfianugrah/astro-image-hq`](https://www.npmjs.com/package/@erfianugrah/astro-image-hq) custom Astro image service (configured in `astro.config.mjs`).
+- Profile is `photo`: hybrid routing — 4:2:0 10-bit fast path (NVENC > avifenc-svt > sharp) for typical content, with content-aware shadow boost promoting dark gradient images to 4:4:4 10-bit aom.
+- Override precedence is **boost-as-floor**: profile defaults → component override (`<Image quality={N} />`) → shadow boost merges last. Bright images take the component value; dark gradients get clamped up by the boost.
+- Falls back to sharp 8-bit with a warning when `avifenc` is missing — local dev still works without it.
+- Required system package: `libavif` on Arch, `libavif-bin` on Debian/Ubuntu. CI installs it via apt before `bun install` (see `.github/workflows/deploy.yml`).
+- Optional: ffmpeg + `av1_nvenc` for GPU-accelerated AVIF — produces 4:2:0 only (8-bit or 10-bit); routing skips NVENC when 4:4:4 chroma is requested.
+- Source code lives at https://github.com/erfianugrah/astro-image-hq (`~/astro-image-hq` for local development). Bump the `@erfianugrah/astro-image-hq` version in `package.json` then `bun install` to consume releases.
+- When running locally without `avifenc`, the build still completes via sharp fallback. Banding may be visible in dark photographs; install `libavif` for the full fix.
+- Image transforms cost ~150-500ms via NVENC (GPU), ~1-2s via avifenc-svt (CPU 4:2:0), ~3-5s via avifenc-aom (CPU 4:4:4 boosted). Full revista build (~462 transforms) takes 5-8 minutes wall clock.
 
 ## Formatting
 
