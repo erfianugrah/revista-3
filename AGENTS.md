@@ -83,12 +83,23 @@ bun x hyperlink dist/path/to/page.html --skip-external
 
 ## Remote Image Handling
 
-- Remote images from `image.erfi.io` are downloaded and transformed by sharp during production builds.
+- Remote images from `image.erfi.io` are downloaded and transformed during production builds.
 - Astro caches processed images in `node_modules/.astro/assets/`; a warm cache avoids re-downloading.
 - `src/scripts/undici-retry.ts` configures a global `RetryAgent` for build-time HTTP fetches with exponential backoff (5 retries, 1s-60s), 120s body timeout, and 6 max connections.
 - The Dockerfile uses a BuildKit cache mount for `node_modules/.astro/` so the image cache persists across Docker builds.
 - CI caches the Astro image directory separately from `node_modules` to survive dependency updates.
 - If remote image builds fail in CI, check rate limits on the CDN and verify the Astro image cache is warm.
+
+## Image Service (astro-image-hq)
+
+- Production builds use the `astro-image-hq` custom image service (configured in `astro.config.mjs`).
+- Profile is `photo`: 10-bit 4:4:4 AVIF via `avifenc` (libavif CLI) with content-aware shadow boost for dark gradient images.
+- Falls back to sharp 8-bit 4:4:4 with a warning when `avifenc` is missing — local dev still works.
+- Required system package: `libavif` on Arch, `libavif-bin` on Debian/Ubuntu. The CI runner and Dockerfile must install it before `bun run build`.
+- Optional: ffmpeg + `av1_nvenc` for GPU-accelerated AVIF, but it only outputs 4:2:0 8-bit; routing skips NVENC when 4:4:4 or 10-bit is requested.
+- Source code lives in sibling repo `~/astro-image-hq` (linked via `bun link` during dev). See `MEDIA_ENCODER.md` for design rationale.
+- When running locally without `avifenc`, the build still completes via sharp fallback. Banding will be visible in dark photographs; install `libavif` to get the full fix.
+- Image transforms cost ~2-12s each at 10-bit 4:4:4 (avifenc speed 4); a full build of ~150 source images is fetch-bound, not encode-bound.
 
 ## Formatting
 
