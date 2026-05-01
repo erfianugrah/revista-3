@@ -10,7 +10,7 @@ import { remarkReadingTime } from "./src/scripts/remark-reading-time.mjs";
 import undiciRetry from "./src/scripts/undici-retry.ts";
 import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
-import hqService from "astro-image-hq";
+import hqService from "@erfianugrah/astro-image-hq";
 // Use no-op passthrough image service in dev to skip Sharp processing.
 // Images are served as-is during development; full optimization runs in production builds.
 const isDev =
