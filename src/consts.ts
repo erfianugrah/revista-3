@@ -5,8 +5,8 @@ export const SITE_DESCRIPTION = "My personal hamster wheel.";
 export const SITE_AUTHOR = "Erfi Anugrah";
 
 /** CDN base URLs for remote images. */
-export const CDN_FAVICON_URL = "https://image.erfi.io/ea_favicon.png";
-export const CDN_COVER_IMAGE_URL = "https://image.erfi.io/tenhult_3.jpg";
+export const CDN_FAVICON_URL = "#";
+export const CDN_COVER_IMAGE_URL = "#";
 
 /** Social media links. */
 export const SOCIAL_LINKS = {
