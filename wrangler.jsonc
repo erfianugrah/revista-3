@@ -1,17 +1,17 @@
 {
-  "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "pong-photo",
-  "pages_build_output_dir": "dist",
-  "compatibility_date": "2025-12-06",
-  "main": "src/index.ts",
-  "routes": [
-    {
-      "pattern": "getponged.com",
-      "custom_domain": true,
-    },
-    {
-      "pattern": "www.getponged.com",
-      "custom_domain": true,
-    },
-  ],
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "pong-photo",
+	"compatibility_date": "2025-12-06",
+	"build": {
+		"command": "bun run build"
+	},
+	"assets": {
+		"directory": "./dist"
+	},
+	"routes": [
+		{
+			"pattern": "dev.getponged.com/*",
+			"custom_domain": true
+		}
+	]
 }
