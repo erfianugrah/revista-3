@@ -4,13 +4,6 @@
   "pages_build_output_dir": "dist",
   "compatibility_date": "2025-12-06",
   "main": "src/index.ts",
-  "assets": {
-    "directory": "./dist",
-    "not_found_handling": "404-page",
-    "html_handling": "auto-trailing-slash",
-    "binding": "ASSETS",
-    "run_worker_first": true,
-  },
   "routes": [
     {
       "pattern": "getponged.com",
