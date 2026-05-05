@@ -1,57 +1,24 @@
 ---
 import Homepage from "../components/Homepage.astro";
-import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
 
-const collections = ["long_form", "short_form", "muses", "zeitweilig"] as const;
-const imageCache = new Map<string, { src: string; srcset: string }>();
+const hero = await getImage({
+  src: "/images/DSC08239.jpg",
+  widths: [854, 1280, 1920],
+  width: 1920,
+  height: 1080,
+  fit: "inside",
+  format: "avif",
+  quality: 85,
+  decoding: "async",
+});
 
-async function getOptimizedImage(src: string, alt: string) {
-  if (imageCache.has(src)) return imageCache.get(src)!;
-  const result = await getImage({
-    src,
-    alt,
-    widths: [854, 1280, 1920],
-    width: 1920,
-    height: 1080,
-    fit: "inside",
-    format: "avif",
-    quality: 85,
-    decoding: "async",
-  });
-  const optimized = { src: result.src, srcset: result.srcSet.attribute };
-  imageCache.set(src, optimized);
-  return optimized;
-}
-
-const allImages: { src: string; srcset: string; alt: string; url: string }[] = [];
-
-for (const collection of collections) {
-  const allContent = await getCollection(collection);
-  const postsWithImages = allContent.filter(
-    (post) => post.data.image?.src && post.data.image?.alt,
-  );
-
-  const results = await Promise.all(
-    postsWithImages.map(async (post) => {
-      const image = post.data.image!;
-      const optimized = await getOptimizedImage(image.src, image.alt);
-      return {
-        ...optimized,
-        alt: image.alt,
-        url: `/${collection}/${post.id}`,
-      };
-    }),
-  );
-
-  allImages.push(...results);
-}
+const heroImage = {
+  src: hero.src,
+  srcset: hero.srcSet.attribute,
+  alt: "Your alt text here",
+  url: "/portfolio", // where the hero links to
+};
 ---
 
-{
-  allImages.length > 0 ? (
-    <Homepage title="Home" images={JSON.stringify(allImages)} />
-  ) : (
-    <p>No images found</p>
-  )
-}
+<Homepage title="Home" images={JSON.stringify([heroImage])} />

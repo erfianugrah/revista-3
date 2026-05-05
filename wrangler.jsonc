@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "revista",
+  "name": "getponged",
   "compatibility_date": "2025-12-06",
   "main": "src/index.ts",
   "assets": {
@@ -12,11 +12,11 @@
   },
   "routes": [
     {
-      "pattern": "erfianugrah.com",
+      "pattern": "getponged.com",
       "custom_domain": true,
     },
     {
-      "pattern": "www.erfianugrah.com",
+      "pattern": "www.getponged.com",
       "custom_domain": true,
     },
   ],
