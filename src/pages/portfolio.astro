@@ -1,0 +1,67 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PortfolioMasonry from "../components/PortfolioMasonry.astro";
+import type { PortfolioImage } from "../components/PortfolioMasonry.astro";
+
+const artists: PortfolioImage[] = [
+  { src: "https://res.cloudinary.com/dvwl2ci5j/image/upload/v1777950985/DSC08327_ktm6kk.jpg", alt: "Violinist" },
+  { src: "https://res.cloudinary.com/dvwl2ci5j/image/upload/v1778007478/DSC03813_tnjn8z.jpg", alt: "Therian" },
+  { src: "https://res.cloudinary.com/dvwl2ci5j/image/upload/v1778007478/DSC03767_nso3qq.jpg", alt: "Therian" },
+  { src: "https://res.cloudinary.com/dvwl2ci5j/image/upload/v1778007477/DSC03101_r6cbff.jpg", alt: "Therian" },
+];
+
+const athletes: PortfolioImage[] = [
+  { src: "https://res.cloudinary.com/dvwl2ci5j/image/upload/v1777950985/DSC08327_ktm6kk.jpg", alt: "Violinist" },
+  { src: "https://res.cloudinary.com/dvwl2ci5j/image/upload/v1778007478/DSC03813_tnjn8z.jpg", alt: "Therian" },
+  { src: "https://res.cloudinary.com/dvwl2ci5j/image/upload/v1778007478/DSC03767_nso3qq.jpg", alt: "Therian" },
+  { src: "https://res.cloudinary.com/dvwl2ci5j/image/upload/v1778007477/DSC03101_r6cbff.jpg", alt: "Therian" },
+];
+
+const families: PortfolioImage[] = [
+  // { src: "https://your-cdn.com/families/photo1.jpg", alt: "Family session" },
+];
+---
+
+<BaseLayout title="Portfolio">
+  <div class="flex flex-col gap-12">
+    {
+      artists.length > 0 && (
+        <section>
+          <h2 class="font-overpass-mono uppercase tracking-widest text-sm mb-6">
+            Artists
+          </h2>
+          <PortfolioMasonry images={artists} />
+        </section>
+      )
+    }
+    {
+      athletes.length > 0 && (
+        <section>
+          <h2 class="font-overpass-mono uppercase tracking-widest text-sm mb-6">
+            Athletes
+          </h2>
+          <PortfolioMasonry images={athletes} />
+        </section>
+      )
+    }
+    {
+      families.length > 0 && (
+        <section>
+          <h2 class="font-overpass-mono uppercase tracking-widest text-sm mb-6">
+            Families
+          </h2>
+          <PortfolioMasonry images={families} />
+        </section>
+      )
+    }
+    {
+      artists.length === 0 &&
+        athletes.length === 0 &&
+        families.length === 0 && (
+          <p class="font-overpass-mono text-sm opacity-50">
+            No images yet.
+          </p>
+        )
+    }
+  </div>
+</BaseLayout>

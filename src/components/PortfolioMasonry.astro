@@ -1,0 +1,43 @@
+---
+import "../styles/MasonryLayout.css";
+import "../styles/lightbox.css";
+
+export interface PortfolioImage {
+  src: string;
+  alt: string;
+  positionx?: string;
+  positiony?: string;
+}
+
+interface Props {
+  images: PortfolioImage[];
+}
+
+const { images } = Astro.props;
+---
+
+<div class="masonry not-prose">
+  {
+    images.map((image) => {
+      const posStyle =
+        image.positionx || image.positiony
+          ? `object-position: ${image.positionx ?? "center"} ${image.positiony ?? "center"}`
+          : undefined;
+      return (
+        <div class="image-container gallery">
+          <a href={image.src} class="image-link lightbox-link">
+            <img
+              src={image.src}
+              alt={image.alt}
+              loading="lazy"
+              decoding="async"
+              class="image"
+              style={posStyle}
+            />
+          </a>
+        </div>
+      );
+    })
+  }
+</div>
+<script src="../scripts/lightbox.ts"></script>
