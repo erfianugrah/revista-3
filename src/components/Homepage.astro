@@ -7,27 +7,23 @@ export interface Props {
 }
 
 const { title, images } = Astro.props;
+const imageList = JSON.parse(images);
+const hero = imageList[0];
 ---
 
 <BaseLayout title={title} is404Page={false}>
   <div
     id="homepage"
     class="flex justify-center items-center"
-    data-images={images}
   >
-    <a href="#">
+    <a href={hero.url}>
       <img
-        id="randomHomePageImage"
-        class="hidden h-[440px] sm:h-[600px] lg:h-[700px] xl:h-[1000px] object-contain w-full object-center"
-        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        class="h-[440px] sm:h-[600px] lg:h-[700px] xl:h-[1000px] object-contain w-full object-center"
+        src={hero.src}
+        srcset={hero.srcset}
         sizes="100vw"
-        alt="Loading image"
+        alt={hero.alt}
       />
     </a>
-    <noscript>
-      <p class="text-center font-overpass-mono">JavaScript is required to display the homepage image.</p>
-    </noscript>
-    <slot />
   </div>
 </BaseLayout>
-<script src="../scripts/homePage.ts"></script>
