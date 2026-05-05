@@ -1,4 +1,7 @@
 {
   "name": "pong-photo",
-  "pages_build_output_dir": "dist"
+  "pages_build_output_dir": "dist",
+  "build": {
+    "command": "bun run build"
+  }
 }
