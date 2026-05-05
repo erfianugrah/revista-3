@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "getponged",
+  "name": "pong-photo",
+  "pages_build_output_dir": "dist",
   "compatibility_date": "2025-12-06",
   "main": "src/index.ts",
   "assets": {
