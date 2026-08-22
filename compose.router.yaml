@@ -1,0 +1,51 @@
+# Router-local compose for revista (2026-08-23 cutover - servarr is
+# being rebuilt, revista rides the MS-01 router until the new server is
+# up). Same image as the servarr deployment (compose.yaml); networking
+# changed to the router conventions:
+#   * no servarr_lan macvlan - the edge caddy is on the SAME host, so a
+#     static bridge IP suffices
+#   * pinned bridge name revista0 (driver_opts) - REQUIRED: the router's
+#     nftables forward chain is policy-drop and only allows bridges
+#     listed in dockerBridges in ~/infra/router/configuration.nix
+#   * subnet from the router-local 172.20.x pool
+#
+# Caddy entries: revista.erfi.io + erfianugrah.com -> 172.20.5.2:80
+# (~/infra/ergo/caddy-compose/deploy/edge/Caddyfile).
+#
+# Deploy via composer (host=local) - point it at this repo + path
+# compose.router.yaml. No .env needed.
+
+name: revista
+
+services:
+  revista:
+    image: erfianugrah/revista-4:latest
+    pull_policy: always
+    hostname: revista
+    container_name: revista
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 64M
+    environment:
+      - TZ=Asia/Singapore
+    expose:
+      - 80
+    networks:
+      revista:
+        ipv4_address: 172.20.5.2
+
+networks:
+  revista:
+    driver: bridge
+    driver_opts:
+      # Pinned bridge name - MUST also appear in dockerBridges in
+      # ~/infra/router/configuration.nix or the nftables forward chain
+      # (policy drop) blocks all traffic to/from this network.
+      com.docker.network.bridge.name: revista0
+    ipam:
+      config:
+        - subnet: 172.20.5.0/24
+          gateway: 172.20.5.1
