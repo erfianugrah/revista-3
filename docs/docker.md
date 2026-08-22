@@ -38,7 +38,34 @@ This covers standard x86_64 servers, ARM-based servers, and Raspberry Pi devices
 
 ## Docker Compose
 
-The `compose.yaml` is configured for running behind a reverse proxy:
+Two compose files, one per deployment target:
+
+- **`compose.router.yaml`** - LIVE since 2026-08-23. Runs on the MS-01
+  NixOS router (composer-managed, host=local) while servarr is rebuilt.
+  Single pinned-bridge network:
+
+```yaml
+networks:
+  revista:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: revista0
+    ipam:
+      config:
+        - subnet: 172.20.5.0/24
+          gateway: 172.20.5.1
+```
+
+The bridge name (`revista0`) must appear in `dockerBridges` in
+`~/infra/router/configuration.nix` (the router's nftables forward chain
+is policy-drop). The edge Caddy runs on the same host
+(`network_mode: host`), so no macvlan is needed - it proxies
+`revista.erfi.io` and `erfianugrah.com` straight to `172.20.5.2:80`.
+
+- **`compose.yaml`** - the servarr deployment (rollback path). Dual
+  network: custom bridge for reverse proxy routing plus a shared macvlan
+  (`servarr_lan`) for a first-class LAN IP reachable by the edge Caddy
+  on MS-01:
 
 ```yaml
 services:
@@ -79,8 +106,9 @@ networks:
 Key aspects:
 
 1. **Resource Limits**: Capped at 1 CPU and 64MB RAM - more than enough for a static site served by BusyBox httpd
-2. **Dual-Network**: Custom bridge network (`revista`) for reverse proxy routing plus a shared macvlan (`servarr_lan`) for a first-class LAN IP reachable by the edge Caddy on MS-01
-3. **No Direct Port Exposure**: Uses `expose` instead of `ports` - the reverse proxy handles external traffic
+2. **Router deployment**: pinned bridge `revista0` / 172.20.5.0/24; the edge Caddy is on the same host, so a bridge IP suffices
+3. **Servarr deployment (rollback)**: custom bridge network (`revista`) plus a shared macvlan (`servarr_lan`) for a first-class LAN IP reachable by the edge Caddy on MS-01
+4. **No Direct Port Exposure**: Uses `expose` instead of `ports` - the reverse proxy handles external traffic
 
 ## Security Considerations
 
