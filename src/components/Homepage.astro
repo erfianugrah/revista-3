@@ -20,12 +20,15 @@ const { title, images } = Astro.props;
         id="randomHomePageImage"
         class="hidden h-[440px] sm:h-[600px] lg:h-[700px] xl:h-[1000px] object-contain w-full object-center"
         src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        data-pagefind-ignore="all"
         sizes="100vw"
         alt="Loading image"
       />
     </a>
     <noscript>
-      <p class="text-center font-overpass-mono">JavaScript is required to display the homepage image.</p>
+      <p class="text-center font-overpass-mono">
+        JavaScript is required to display the homepage image.
+      </p>
     </noscript>
     <slot />
   </div>

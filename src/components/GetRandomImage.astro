@@ -8,14 +8,12 @@ export interface Props {
 const { images, tag, url } = Astro.props;
 ---
 
-<div
-  class="randomimage relative group border-0"
-  data-images={images}
->
+<div class="randomimage relative group border-0" data-images={images}>
   <a href={url}>
     <img
       class="hidden w-full sm:h-[540px] xl:h-[1080px] lg:h-[720px] object-cover object-center"
       src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+      data-pagefind-ignore="all"
       sizes="(min-width: 800px) 25vw, 100vw"
       alt={tag || "Loading image"}
     />
