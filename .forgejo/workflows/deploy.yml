@@ -1,0 +1,153 @@
+name: CI/CD Pipeline for Revista-4
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  release:
+    types: [published]
+
+env:
+  REGISTRY_IMAGE: erfianugrah/revista-4
+
+# The sign-docker-image job was removed: the Forgejo runner has no OIDC, so
+# keyless sigstore/cosign signing (id-token: write) does not work.
+
+jobs:
+  build-revista:
+    runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+      tags: ${{ steps.meta.outputs.tags }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Install Bun
+        run: curl -fsSL https://bun.sh/install -o /tmp/bun.sh && bash /tmp/bun.sh "bun-v1.3.13" && echo "$HOME/.bun/bin" >> "$GITHUB_PATH"
+
+      - name: Install libavif-bin (required for astro-image-hq encoder)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libavif-bin
+          avifenc --version
+
+      - name: Cache Bun packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-cache-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-cache-
+
+      - name: Cache Astro image assets
+        uses: actions/cache@v6
+        with:
+          path: node_modules/.astro
+          key: ${{ runner.os }}-astro-assets-${{ hashFiles('bun.lock') }}-${{ hashFiles('src/content/**/*.mdx', 'src/content/**/*.md') }}
+          restore-keys: |
+            ${{ runner.os }}-astro-assets-${{ hashFiles('bun.lock') }}-
+
+      - name: Install project dependencies
+        run: bun install
+
+      - name: Build project with retry
+        env:
+          MAX_ATTEMPTS: 3
+          RETRY_INTERVAL: 30
+        run: |
+          for attempt in $(seq 1 $MAX_ATTEMPTS); do
+            if bun run build; then
+              echo "Build succeeded on attempt $attempt."
+              exit 0
+            fi
+            if [ "$attempt" -lt "$MAX_ATTEMPTS" ]; then
+              echo "Build attempt $attempt failed. Retrying in $RETRY_INTERVAL seconds..."
+              sleep $RETRY_INTERVAL
+            fi
+          done
+          echo "Build failed after $MAX_ATTEMPTS attempts."
+          exit 1
+
+      # The test, deploy-to-cloudflare-workers and build-and-push-docker jobs
+      # were merged here (upload/download-artifact does not work on the
+      # Forgejo runner). The Playwright failure-screenshot upload-artifact step
+      # was dropped with them. Deploy steps carry the original job conditions.
+
+      # Quality gate: the built artifact is what gets deployed, so test IT.
+      - name: Install Playwright chromium
+        run: bunx playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        run: bunx playwright test
+
+      - name: Deploy to Cloudflare Workers
+        if: github.event_name == 'push'
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
+          packageManager: bun
+          wranglerVersion: "4.75.0"
+
+      - name: Set up QEMU
+        if: github.event_name != 'pull_request'
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        if: github.event_name != 'pull_request'
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
+
+      - name: Docker metadata
+        if: github.event_name != 'pull_request'
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY_IMAGE }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        if: github.event_name != 'pull_request'
+        id: build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # cache-from/cache-to type=gha removed: the runner cache proxy is unreachable.
+          provenance: true
+          sbom: true
+
+  inspect-docker-image:
+    needs: build-revista
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect Docker image
+        run: |
+          echo "Inspecting image digest: ${{ needs.build-revista.outputs.digest }}"
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}@${{ needs.build-revista.outputs.digest }}

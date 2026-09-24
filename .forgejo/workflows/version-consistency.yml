@@ -21,10 +21,8 @@ jobs:
         with:
           fetch-depth: 0 # need tags for comparisons
 
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
+      - name: Install Bun
+        run: curl -fsSL https://bun.sh/install -o /tmp/bun.sh && bash /tmp/bun.sh "bun-v1.3.13" && echo "$HOME/.bun/bin" >> "$GITHUB_PATH"
 
       - name: Verify package version matches tag
         run: bun scripts/check-version-tag.mjs
