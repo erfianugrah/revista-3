@@ -91,7 +91,7 @@ jobs:
         if: github.event_name == 'push'
         uses: cloudflare/wrangler-action@v4
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_WRANGLER_TOKEN }}
+          apiToken: ${{ secrets.WRANGLER_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
           packageManager: bun
