@@ -32,10 +32,16 @@ jobs:
       - name: Install Bun
         run: curl -fsSL https://bun.sh/install -o /tmp/bun.sh && bash /tmp/bun.sh "bun-v1.3.13" && echo "$HOME/.bun/bin" >> "$GITHUB_PATH"
 
-      - name: Install libavif-bin (required for astro-image-hq encoder)
+      # astro-image-hq passes libavif 1.x flags (-q/--qcolor etc). The runner
+      # image is Ubuntu 22.04, whose libavif-bin is 0.9.3 and rejects them
+      # (every AVIF transform fails). Use the pinned upstream release binary
+      # (codecs statically linked; needs only libc/libstdc++).
+      - name: Install avifenc 1.4.2 (required for astro-image-hq encoder)
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends libavif-bin
+          curl -fsSL -o /tmp/libavif.zip https://github.com/AOMediaCodec/libavif/releases/download/v1.4.2/linux-artifacts.zip
+          echo "faf58a670ffbfdc0e3559e6d37592cff277c447dd39453f1cd1d7d7f5a20b8ef  /tmp/libavif.zip" | sha256sum -c -
+          unzip -q -o /tmp/libavif.zip avifenc -d /tmp/libavif
+          sudo install -m 0755 /tmp/libavif/avifenc /usr/local/bin/avifenc
           avifenc --version
 
       - name: Cache Bun packages
