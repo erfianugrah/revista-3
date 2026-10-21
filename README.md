@@ -1,6 +1,6 @@
 <p>
   <img alt="Version" src="https://img.shields.io/github/v/tag/erfianugrah/revista-3?label=version" />
-  <img alt="Astro" src="https://img.shields.io/badge/Astro-7.2.10-FF5D01.svg?logo=astro&logoColor=white" />
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-7.4.1-FF5D01.svg?logo=astro&logoColor=white" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.2.2-38B2AC.svg?logo=tailwind-css&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9.3-3178C6.svg?logo=typescript&logoColor=white" />
   <img alt="MDX" src="https://img.shields.io/badge/%40astrojs%2Fmdx-8.0.0-1B1F24.svg?logo=mdx&logoColor=white" />
@@ -17,7 +17,7 @@
 
 ## Overview
 
-Revista is a photography portfolio and blog built on Astro v7.2.10. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
+Revista is a photography portfolio and blog built on Astro v7.4.1. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
 
 The project deploys to Cloudflare Workers (static assets) and as a Docker image.
 
@@ -575,7 +575,7 @@ I've optimized the site in several ways:
 
 3. **Preloading and Prefetching**: Astro's `prefetch` feature loads linked pages before the user clicks, making navigation feel instant.
 
-4. **Efficient Bundling**: Astro v7.2.10 includes improved bundling and tree-shaking to minimize client-side code, with enhanced hydration strategies and faster component rendering.
+4. **Efficient Bundling**: Astro v7.4.1 includes improved bundling and tree-shaking to minimize client-side code, with enhanced hydration strategies and faster component rendering.
 
 5. **Cloudflare CDN**: The site uses Cloudflare's CDN with custom cache headers to serve content from edge locations worldwide.
 
@@ -759,7 +759,7 @@ To start working with this project:
    ```
 
    This installs:
-   - Astro v7.2.10
+   - Astro v7.4.1
    - Tailwind CSS v4.2.2
    - @astrojs/mdx v8.0.0 and other dependencies
 
