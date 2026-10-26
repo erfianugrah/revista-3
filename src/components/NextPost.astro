@@ -91,7 +91,7 @@ const favicon = await getImage({
             height: favicon.attributes.height,
           })}
         >
-          {[...Array(3)].map((_) => (
+          {[...Array(3)].map((_, i) => (
             <a
               href="#"
               class="no-underline block shrink-0 w-56 md:w-full post-item"
@@ -110,7 +110,9 @@ const favicon = await getImage({
                       decoding="async"
                     />
                   </div>
-                  <h3 class="text-sm md:text-lg font-semibold mb-1 md:mb-2 font-overpass-mono text-gray-900 dark:text-[rgb(245,245,245)] relative z-10 line-clamp-2" />
+                  <h3 class="text-sm md:text-lg font-semibold mb-1 md:mb-2 font-overpass-mono text-gray-900 dark:text-[rgb(245,245,245)] relative z-10 line-clamp-2">
+                    {postsData[i]?.title ?? "Next post"}
+                  </h3>
                   <p class="text-xs md:text-sm line-clamp-2 font-inconsolata grow text-gray-700 dark:text-[rgb(230,230,230)] relative z-10" />
                 </div>
               </div>

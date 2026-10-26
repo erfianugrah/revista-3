@@ -78,6 +78,7 @@ bun x hyperlink dist/path/to/page.html --skip-external
 - `prebuild` runs `scripts/sync-readme-versions.js`.
 - `postbuild` runs `pagefind --site dist` automatically after a successful build.
 - `lint:html` and `lint:links` require built files in `dist/`.
+- `.htmlvalidate.json` = recommended rules minus `no-inline-style` (dynamic style values in hamburger, hero and random-post cards) and `void-style` (`<hr/>` spelling). `lint:links` passes `--canonicalroot` so the site's own absolute URLs (og:image) resolve to `dist/` instead of production, where an undeployed image hash 404s. Both gates passed for the first time on 2026-10-26 (revista-3#1); before that lint:html failed with 1164 errors and lint:links never ran.
 - Build concurrency is set to 4 in `astro.config.mjs` to avoid rate-limiting `image.erfi.io`.
 - `vite.build.assetsInlineLimit` in `astro.config.mjs` vetoes script inlining (returns `false` for `.js`). Astro's plugin-scripts inlines small hoisted script chunks into the HTML, but the inlined copy keeps Vite's raw `__VITE_PRELOAD__` marker (ReferenceError at runtime) when the chunk wraps a dynamic import in `__vitePreload()`. This broke the lazy `/pagefind/pagefind.js` import (search dialog opened, every query showed "Search unavailable"). Scripts must always emit as chunks; do not remove the veto.
 

@@ -14,7 +14,7 @@
     "update-post": "node scripts/update-post.js",
     "update": "node scripts/update-post.js",
     "lint:html": "html-validate \"dist/**/*.html\"",
-    "lint:links": "hyperlink dist/index.html --skip-external",
+    "lint:links": "hyperlink dist/index.html --skip-external --canonicalroot https://www.erfianugrah.com/",
     "lint:site": "bun run build && bun run lint:html && bun run lint:links"
   },
   "dependencies": {
