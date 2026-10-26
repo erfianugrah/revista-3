@@ -23,7 +23,7 @@
     "@astrojs/mdx": "8.1.0",
     "@astrojs/rss": "4.0.19",
     "@astrojs/sitemap": "3.7.4",
-    "@erfianugrah/astro-image-hq": "^0.1.5",
+    "@erfianugrah/astro-image-hq": "^0.1.6",
     "@iconify-json/mdi": "^1.2.3",
     "@tailwindcss/vite": "^4.2.2",
     "@types/sanitize-html": "^2.16.1",
