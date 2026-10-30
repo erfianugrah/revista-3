@@ -118,14 +118,19 @@ test.describe("Lightbox zoom and pan", () => {
     );
     // Open animation (scale 0.92 -> 1) runs 0.4s
     await page.waitForTimeout(600);
+    // Remember the fit width: zoom = rendered width / fit width, whether the
+    // zoom is a scale() transform or committed to layout size
+    await img.evaluate((el) => {
+      el.dataset.fitW = String(el.getBoundingClientRect().width);
+    });
     return img;
   }
 
   const scaleOf = (img: Locator) =>
-    img.evaluate((el: HTMLImageElement) => {
-      const m = el.style.transform.match(/scale\(([\d.]+)\)/);
-      return m ? Number(m[1]) : 1;
-    });
+    img.evaluate(
+      (el: HTMLImageElement) =>
+        el.getBoundingClientRect().width / Number(el.dataset.fitW),
+    );
 
   /** Dispatch one wheel event per animation frame on the image. */
   const wheelFrames = (
@@ -202,9 +207,9 @@ test.describe("Lightbox zoom and pan", () => {
   test("horizontal two-finger swipe does not change zoom", async ({ page }) => {
     const img = await openLightbox(page);
     await page.locator(".lightbox-zoom").click();
-    expect(await scaleOf(img)).toBeCloseTo(2, 5);
+    expect(await scaleOf(img)).toBeCloseTo(2, 2);
     await wheelFrames(img, { deltaX: 20, deltaY: 0 }, 5);
-    expect(await scaleOf(img)).toBeCloseTo(2, 5);
+    expect(await scaleOf(img)).toBeCloseTo(2, 2);
   });
 
   test("dragging cannot push the image off-screen", async ({ page }) => {
@@ -251,6 +256,125 @@ test.describe("Lightbox zoom and pan", () => {
       await page.keyboard.press("Escape");
     }
     expect(await count()).toBe(baseline + 1);
+  });
+});
+
+test.describe("Lightbox zoom rendering and gestures", () => {
+  const galleryPage = "/long_form/adam/";
+
+  async function openLightbox(page: Page): Promise<Locator> {
+    await page.goto(galleryPage);
+    await page.locator("a.lightbox-link").first().click();
+    const img = page.locator(".lightbox-img");
+    await expect(page.locator(".lightbox-overlay")).toBeVisible();
+    await img.evaluate((el: HTMLImageElement) =>
+      el.complete ? undefined : el.decode().catch(() => undefined),
+    );
+    await page.waitForTimeout(600);
+    return img;
+  }
+
+  const rectOf = (img: Locator) =>
+    img.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      return { x: r.left, y: r.top, w: r.width, h: r.height };
+    });
+
+  test("idle zoom is committed to layout size so it renders sharp", async ({
+    page,
+  }) => {
+    const img = await openLightbox(page);
+    const box = (await img.boundingBox())!;
+    await page.mouse.move(box.x + box.width * 0.6, box.y + box.height * 0.4);
+    for (let i = 0; i < 4; i++) {
+      await page.mouse.wheel(0, -100);
+      await page.waitForTimeout(120);
+    }
+    // Mid-gesture: scale transform
+    expect(await img.evaluate((el) => el.style.transform)).toContain("scale(");
+    const during = await rectOf(img);
+    await page.waitForTimeout(500);
+    // Idle: real width/height, translate only, same on-screen geometry
+    const style = await img.evaluate((el) => ({
+      transform: el.style.transform,
+      width: el.style.width,
+    }));
+    expect(style.transform).not.toContain("scale(");
+    expect(style.width).toMatch(/px$/);
+    const after = await rectOf(img);
+    for (const k of ["x", "y", "w", "h"] as const) {
+      expect(Math.abs(after[k] - during[k])).toBeLessThan(1.5);
+    }
+  });
+
+  test("double-click zooms one step, not two", async ({ page }) => {
+    const img = await openLightbox(page);
+    const box = (await img.boundingBox())!;
+    await page.mouse.dblclick(box.x + box.width / 2, box.y + box.height / 2);
+    await page.waitForTimeout(500);
+    const r = await rectOf(img);
+    // One step = 2x the fit size
+    expect(r.w / box.width).toBeGreaterThan(1.9);
+    expect(r.w / box.width).toBeLessThan(2.1);
+  });
+
+  test("two-finger pinch follows the fingers' midpoint", async ({
+    browser,
+    baseURL,
+  }) => {
+    const context = await browser.newContext({
+      baseURL,
+      viewport: { width: 390, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+    });
+    const page = await context.newPage();
+    try {
+      const img = await openLightbox(page);
+      const cdp = await context.newCDPSession(page);
+      const box = (await img.boundingBox())!;
+      const start = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+      const end = { x: start.x + 60, y: start.y + 40 };
+      const frac = (p: { x: number; y: number }) =>
+        img.evaluate((el, q) => {
+          const r = el.getBoundingClientRect();
+          return [(q.x - r.left) / r.width, (q.y - r.top) / r.height];
+        }, p);
+      const before = await frac(start);
+      const touches = (m: { x: number; y: number }, d: number) => [
+        { x: m.x - d / 2, y: m.y, id: 0 },
+        { x: m.x + d / 2, y: m.y, id: 1 },
+      ];
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchStart",
+        touchPoints: touches(start, 80),
+      });
+      for (let i = 1; i <= 10; i++) {
+        const t = i / 10;
+        const m = {
+          x: start.x + (end.x - start.x) * t,
+          y: start.y + (end.y - start.y) * t,
+        };
+        await cdp.send("Input.dispatchTouchEvent", {
+          type: "touchMove",
+          touchPoints: touches(m, 80 + 80 * t),
+        });
+        await page.waitForTimeout(20);
+      }
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchEnd",
+        touchPoints: [],
+      });
+      await page.waitForTimeout(500);
+      const r = await rectOf(img);
+      expect(r.w / box.width).toBeGreaterThan(1.8);
+      // The image point that was under the fingers is still under them
+      const after = await frac(end);
+      expect(Math.abs(after[0] - before[0])).toBeLessThan(0.02);
+      expect(Math.abs(after[1] - before[1])).toBeLessThan(0.02);
+    } finally {
+      await context.close();
+    }
   });
 });
 

@@ -55,9 +55,14 @@ let hasDragged = false;
 let touchStartX = 0;
 let touchDeltaX = 0;
 
-// Pinch state
-let lastPinchDist = 0;
-let pinchBaseZoom = 1;
+// Pinch state: zoom and the image point under the fingers' midpoint at
+// touchstart, so a pinch zooms and pans together
+let pinchStartDist = 0;
+let pinchStartZoom = 1;
+let pinchPointX = 0; // image-local, pre-scale pixels
+let pinchPointY = 0;
+let pinchRafId = 0;
+let pinchPending: [number, number, number] | null = null;
 
 // Track listeners for proper cleanup
 let keydownHandler: ((e: KeyboardEvent) => void) | null = null;
@@ -79,29 +84,107 @@ function isZoomed(): boolean {
 
 // --------------- Zoom ---------------
 
+// While a gesture runs, zoom is a scale() transform: cheap, but it samples
+// the fit-size raster, so it looks soft. SETTLE_MS after the last update the
+// zoom is committed to layout (width/height = fit size * zoom, transform =
+// translate only) and the browser re-rasterises the image at full detail.
+// Measured in Chromium: PSNR vs a Lanczos render of the original 37.18 dB with
+// scale(), 50.39 dB committed (docs/research/2026-10-30-lightbox-comparison.md).
+const SETTLE_MS = 150;
+let committed = false;
+let baseW = 0; // fit-to-viewport layout size, measured while uncommitted
+let baseH = 0;
+let settleTimer = 0;
+
+function uncommit(img: HTMLImageElement): void {
+  if (!committed) return;
+  committed = false;
+  img.style.width = "";
+  img.style.height = "";
+  img.style.maxWidth = "";
+  img.style.maxHeight = "";
+}
+
 /**
- * Apply the current zoom + pan as a single CSS transform.
- * Pure compositor — no layout/reflow.
+ * Apply the current zoom + pan as a scale() transform and schedule the
+ * commit to layout size once input goes idle.
  */
 function applyTransform(img: HTMLImageElement): void {
-  if (zoomLevel > MIN_ZOOM) clampPan(img);
-  img.style.transform =
-    zoomLevel <= MIN_ZOOM
-      ? ""
-      : `scale(${zoomLevel}) translate3d(${panX}px, ${panY}px, 0)`;
+  window.clearTimeout(settleTimer);
+  uncommit(img);
+  if (zoomLevel <= MIN_ZOOM) {
+    img.style.transform = "";
+    return;
+  }
+  baseW = img.offsetWidth;
+  baseH = img.offsetHeight;
+  clampPan();
+  img.style.transform = `scale(${zoomLevel}) translate3d(${panX}px, ${panY}px, 0)`;
+  settleTimer = window.setTimeout(() => settle(img), SETTLE_MS);
+}
+
+function settle(img: HTMLImageElement): void {
+  if (zoomLevel <= MIN_ZOOM) return;
+  committed = true;
+  img.style.maxWidth = "none";
+  img.style.maxHeight = "none";
+  img.style.width = `${baseW * zoomLevel}px`;
+  img.style.height = `${baseH * zoomLevel}px`;
+  // Whole device pixels: a fractional translate resamples the whole raster
+  // (measured: 46.35 dB unrounded, 50.39 dB rounded)
+  const dpr = window.devicePixelRatio || 1;
+  const tx = Math.round(panX * zoomLevel * dpr) / dpr;
+  const ty = Math.round(panY * zoomLevel * dpr) / dpr;
+  img.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
 }
 
 /**
  * Keep the image covering the viewport centre: its edge may reach the
  * centre but not pass it, so a drag can never lose the image off-screen.
- * offsetWidth/Height are the untransformed layout size (transforms do not
- * dirty layout, so this read is cheap).
  */
-function clampPan(img: HTMLImageElement): void {
-  const maxX = img.offsetWidth / 2;
-  const maxY = img.offsetHeight / 2;
+function clampPan(): void {
+  const maxX = baseW / 2;
+  const maxY = baseH / 2;
   panX = Math.max(-maxX, Math.min(maxX, panX));
   panY = Math.max(-maxY, Math.min(maxY, panY));
+}
+
+/**
+ * Viewport position of the image's layout centre, before translation. The
+ * image is flex-centred in the fixed overlay, so this is the same whether
+ * the zoom is committed or not, and offset* ignores transforms.
+ */
+function layoutCentre(img: HTMLImageElement): [number, number] {
+  return [
+    img.offsetLeft + img.offsetWidth / 2,
+    img.offsetTop + img.offsetHeight / 2,
+  ];
+}
+
+/** Set zoom level and pan together (pan in pre-scale pixels). */
+function setZoom(
+  img: HTMLImageElement,
+  level: number,
+  newPanX: number,
+  newPanY: number,
+): void {
+  level = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, level));
+  if (level <= MIN_ZOOM) {
+    zoomOut(img);
+    return;
+  }
+  zoomLevel = level;
+  panX = newPanX;
+  panY = newPanY;
+  img.style.cursor = "grab";
+  // Drop the open animation's transform transition so the commit swap
+  // (scale -> layout size) cannot animate
+  img.style.transition = "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+  applyTransform(img);
+  if (zoomLevel > HIRES_ZOOM) upgradeToOriginal();
+
+  overlay?.classList.add("zoomed");
+  toggleNavVisibility(false);
 }
 
 /**
@@ -118,46 +201,30 @@ function applyZoom(
   newLevel = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, newLevel));
   if (newLevel === prevLevel) return;
 
-  if (newLevel <= MIN_ZOOM) {
-    zoomOut(img);
-    return;
-  }
-
-  // Anchor zoom on cursor position so the point under the cursor stays fixed.
-  // The image center is the transform-origin (set by CSS).
-  // Screen position of image center = viewport center (flexbox) + pan * scale.
+  let nextPanX = panX;
+  let nextPanY = panY;
   if (cx !== undefined && cy !== undefined) {
-    const rect = img.getBoundingClientRect();
-    const imgCx = rect.left + rect.width / 2;
-    const imgCy = rect.top + rect.height / 2;
-
-    // Vector from image center to cursor, in screen pixels
-    const dx = cx - imgCx;
-    const dy = cy - imgCy;
-
-    // transform = scale(z) translate(pan), so the image centre sits at
-    // origin + z*pan and the cursor's image point is dx/prevLevel from it.
-    // Keep that point under the cursor at the new scale:
-    //   origin + newLevel*(pan' + dx/prevLevel) = origin + prevLevel*pan + dx
-    panX = (prevLevel * panX + dx) / newLevel - dx / prevLevel;
-    panY = (prevLevel * panY + dy) / newLevel - dy / prevLevel;
+    // transform = scale(z) translate(pan) about the layout centre O, so the
+    // image centre sits at O + z*pan and the cursor's image point is
+    // dx/prevLevel from it. Keep that point under the cursor:
+    //   O + newLevel*(pan' + dx/prevLevel) = O + prevLevel*pan + dx
+    const [ox, oy] = layoutCentre(img);
+    const dx = cx - (ox + prevLevel * panX);
+    const dy = cy - (oy + prevLevel * panY);
+    nextPanX = (prevLevel * panX + dx) / newLevel - dx / prevLevel;
+    nextPanY = (prevLevel * panY + dy) / newLevel - dy / prevLevel;
   }
-
-  zoomLevel = newLevel;
-  img.style.cursor = "grab";
-  applyTransform(img);
-  if (zoomLevel > HIRES_ZOOM) upgradeToOriginal();
-
-  overlay?.classList.add("zoomed");
-  toggleNavVisibility(false);
+  setZoom(img, newLevel, nextPanX, nextPanY);
 }
 
 function zoomOut(img: HTMLImageElement): void {
+  window.clearTimeout(settleTimer);
+  uncommit(img);
   zoomLevel = MIN_ZOOM;
   panX = 0;
   panY = 0;
   img.style.cursor = "zoom-in";
-  applyTransform(img);
+  img.style.transform = "";
 
   overlay?.classList.remove("zoomed");
   toggleNavVisibility(true);
@@ -379,6 +446,15 @@ function bindOverlayEvents(el: HTMLDivElement): void {
   const img = el.querySelector<HTMLImageElement>(".lightbox-img")!;
   const docSignal = overlayController?.signal;
 
+  // iOS Safari: its own pinch gesture would zoom the page under the overlay
+  document.addEventListener(
+    "gesturestart",
+    (e) => {
+      if (overlay?.classList.contains("lightbox-visible")) e.preventDefault();
+    },
+    { signal: docSignal },
+  );
+
   // Resized variant failed (resizing unavailable, bad path): use the original
   img.addEventListener("error", () => {
     const original = images[currentIndex]?.src;
@@ -409,6 +485,8 @@ function bindOverlayEvents(el: HTMLDivElement): void {
   img.addEventListener("click", (e) => {
     if (hasDragged) return;
     e.stopPropagation();
+    // A double-click fires two clicks; only the first one steps the zoom
+    if (e.detail > 1) return;
     if (!isZoomed()) {
       // First click: zoom to ~2x fit (natural-ish size)
       applyZoom(img, 2, e.clientX, e.clientY);
@@ -488,8 +566,14 @@ function bindOverlayEvents(el: HTMLDivElement): void {
     (e) => {
       if (e.touches.length === 2) {
         e.preventDefault();
-        lastPinchDist = getPinchDist(e);
-        pinchBaseZoom = zoomLevel;
+        isDragging = false;
+        pinchStartDist = getPinchDist(e) || 1;
+        pinchStartZoom = zoomLevel;
+        const [ox, oy] = layoutCentre(img);
+        const [mx, my] = getPinchMid(e);
+        // mid = O + z*(point + pan)  =>  point = (mid - O)/z - pan
+        pinchPointX = (mx - ox) / zoomLevel - panX;
+        pinchPointY = (my - oy) / zoomLevel - panY;
       } else if (e.touches.length === 1) {
         const touch = e.touches[0];
 
@@ -515,11 +599,28 @@ function bindOverlayEvents(el: HTMLDivElement): void {
     (e) => {
       if (e.touches.length === 2) {
         e.preventDefault();
-        const dist = getPinchDist(e);
-        const ratio = dist / lastPinchDist;
-        const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-        const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-        applyZoom(img, pinchBaseZoom * ratio, midX, midY);
+        const level = Math.max(
+          MIN_ZOOM,
+          Math.min(
+            MAX_ZOOM,
+            (pinchStartZoom * getPinchDist(e)) / pinchStartDist,
+          ),
+        );
+        const [ox, oy] = layoutCentre(img);
+        const [mx, my] = getPinchMid(e);
+        // Keep the image point that started under the fingers under them
+        pinchPending = [
+          level,
+          (mx - ox) / level - pinchPointX,
+          (my - oy) / level - pinchPointY,
+        ];
+        if (!pinchRafId) {
+          pinchRafId = requestAnimationFrame(() => {
+            pinchRafId = 0;
+            if (pinchPending) setZoom(img, ...pinchPending);
+            pinchPending = null;
+          });
+        }
       } else if (e.touches.length === 1) {
         if (isDragging && isZoomed()) {
           e.preventDefault();
@@ -596,6 +697,11 @@ function bindOverlayEvents(el: HTMLDivElement): void {
     },
     { passive: false },
   );
+}
+
+function getPinchMid(e: TouchEvent): [number, number] {
+  const [t1, t2] = [e.touches[0], e.touches[1]];
+  return [(t1.clientX + t2.clientX) / 2, (t1.clientY + t2.clientY) / 2];
 }
 
 function getPinchDist(e: TouchEvent): number {
@@ -676,6 +782,13 @@ function destroy(): void {
     cancelAnimationFrame(dragRafId);
     dragRafId = 0;
   }
+  if (pinchRafId) {
+    cancelAnimationFrame(pinchRafId);
+    pinchRafId = 0;
+  }
+  pinchPending = null;
+  window.clearTimeout(settleTimer);
+  committed = false;
 }
 
 // --------------- Init ---------------
