@@ -285,14 +285,36 @@ test.describe("Lightbox zoom rendering and gestures", () => {
   }) => {
     const img = await openLightbox(page);
     const box = (await img.boundingBox())!;
-    await page.mouse.move(box.x + box.width * 0.6, box.y + box.height * 0.4);
-    for (let i = 0; i < 4; i++) {
-      await page.mouse.wheel(0, -100);
-      await page.waitForTimeout(120);
-    }
+    // Zoom and sample inside one page task so the 150ms settle timer cannot
+    // fire between the gesture and the mid-gesture read on a loaded machine
+    const during = await img.evaluate(
+      async (el, p) => {
+        for (let i = 0; i < 4; i++) {
+          el.dispatchEvent(
+            new WheelEvent("wheel", {
+              deltaY: -100,
+              clientX: p.x,
+              clientY: p.y,
+              bubbles: true,
+              cancelable: true,
+            }),
+          );
+          await new Promise((r) => requestAnimationFrame(r));
+        }
+        await new Promise((r) => requestAnimationFrame(r));
+        const r = el.getBoundingClientRect();
+        return {
+          transform: el.style.transform,
+          x: r.left,
+          y: r.top,
+          w: r.width,
+          h: r.height,
+        };
+      },
+      { x: box.x + box.width * 0.6, y: box.y + box.height * 0.4 },
+    );
     // Mid-gesture: scale transform
-    expect(await img.evaluate((el) => el.style.transform)).toContain("scale(");
-    const during = await rectOf(img);
+    expect(during.transform).toContain("scale(");
     await page.waitForTimeout(500);
     // Idle: real width/height, translate only, same on-screen geometry
     const style = await img.evaluate((el) => ({
