@@ -508,7 +508,8 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
   - Multi-level zoom: click cycles 2x -> 3.5x -> reset; scroll wheel for cursor-anchored zoom proportional to scroll distance (up to 5x, trackpad pinch via ctrl+wheel); continuous pinch zoom on touch; pan clamped so the image always covers the viewport centre
   - Opens image.erfi.io originals as a viewport-sized Cloudflare Image Resizing variant (`/cdn-cgi/image/`), swaps to the original past 1.5x zoom or if the resize fails
   - Dialog semantics: focus moves in on open, Tab is trapped, focus returns to the clicked image on close; `aria-live` counter; `prefers-reduced-motion` disables transitions
-  - Zoom uses `scale() + translate3d()` - a single CSS transform, pure compositor operation, no layout recalculation on any frame
+  - Zoom runs as a `scale() + translate3d()` transform during a gesture and is committed to the image's layout size 150 ms after input stops, so zoomed images re-render at full detail instead of a stretched fit-size raster
+  - Two-finger pinch zooms and pans together (the point under the fingers stays put); a double-click is one zoom step
   - Keyboard navigation (arrow keys, Escape zooms out first then closes)
   - Touch swipe navigation at 1x, drag/pan when zoomed
   - Fade transitions, prev/next/close/zoom controls, image counter
@@ -654,7 +655,7 @@ While the site is currently in English, I've structured it with future translati
    - Configured with the typography plugin for long-form content
 
 5. **Playwright**:
-   - End-to-end test suite with 100 tests across 15 spec files
+   - End-to-end test suite with 103 tests across 15 spec files
    - Run with `bunx playwright test` or target a single file with `bunx playwright test tests/spec-name.spec.ts`
 
 ## CI/CD Workflow
