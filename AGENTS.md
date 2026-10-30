@@ -206,7 +206,7 @@ bun x hyperlink dist/path/to/page.html --skip-external
 
 - Deployment target is Cloudflare Workers (static assets); a Docker image is built for container hosting. Deploys are atomic and asset URLs are content-hashed, so no cache purge step exists.
 - `dist/` is generated output and Pagefind indexes it after a successful build.
-- erfianugrah.com is split-horizon. Public DNS reaches the Cloudflare Worker `revista`, updated by `wrangler deploy` in the Forgejo deploy job. LAN clients reach the servarr composer stack `revista` (image `erfianugrah/revista-4:latest`), which redeploys on git sync before CI has pushed the new image, so it runs the previous build until `baton pull revista && baton up revista` after the CI run (revista-3#2). Checking from the LAN hits the servarr copy; check the public one with `curl --resolve erfianugrah.com:443:<Cloudflare IP>`.
+- erfianugrah.com is split-horizon. Public DNS reaches the Cloudflare Worker `revista`, updated by `wrangler deploy` in the Forgejo deploy job. LAN clients reach the servarr composer stack `revista` (image `erfianugrah/revista-4:latest`), which the same job redeploys after the image push via `scripts/composer-deploy.sh` (composer `POST /stacks/revista/deploy`: sync, pull, up; repo secret `COMPOSER_API_KEY`). The stack's composer webhook has `auto_redeploy=false`: on push it only syncs git, because redeploying then ran the previous image (revista-3#2). Checking from the LAN hits the servarr copy; check the public one with `curl --resolve erfianugrah.com:443:<Cloudflare IP>`.
 - The lightbox opens `image.erfi.io` originals through Cloudflare Image Resizing (`/cdn-cgi/image/`) and falls back to the original URL if a resize fails.
 
 ## Agent Workflow Recommendations
