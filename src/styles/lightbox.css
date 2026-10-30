@@ -23,6 +23,12 @@
   opacity: 1;
   visibility: visible;
   background: rgba(0, 0, 0, 0.94);
+  /* visibility flips at once on open so open() can focus the close button;
+     on close the base rule keeps it visible through the fade-out */
+  transition:
+    opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0s,
+    background 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Image – scale up on open, crossfade on navigate.
@@ -215,5 +221,17 @@
 
   .lightbox-counter {
     bottom: 12px;
+  }
+}
+
+/* Reduced motion: no scale/fade animations. !important beats the inline
+   transition lightbox.ts sets after the open animation. */
+@media (prefers-reduced-motion: reduce) {
+  .lightbox-overlay,
+  .lightbox-overlay button,
+  .lightbox-img,
+  .lightbox-visible .lightbox-img,
+  .lightbox-img.lightbox-img-exit {
+    transition: none !important;
   }
 }

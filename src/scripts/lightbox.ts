@@ -9,6 +9,10 @@
  * Zoom uses a single CSS transform: scale() + translate3d(). This is a
  * pure compositor operation — no layout recalculation on zoom or drag,
  * so scroll-wheel zoom is smooth even at high frame rates.
+ *
+ * Images on image.erfi.io open as a viewport-sized resize via Cloudflare
+ * Image Resizing (/cdn-cgi/image/); the original replaces it once zoom
+ * passes HIRES_ZOOM, and on any resize error.
  */
 
 interface LightboxImage {
@@ -26,7 +30,14 @@ let isAnimating = false;
 let zoomLevel = 1;
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 5;
-const WHEEL_STEP = 1.15; // multiplier per scroll tick — small for smooth feel
+// Wheel zoom is exponential in the scroll distance: a 100px mouse notch
+// zooms 1.15x. Trackpad pinch arrives as ctrlKey wheel events carrying
+// -100 * ln(scale) per event, so 0.01/px reproduces the gesture's own scale.
+const WHEEL_ZOOM_PER_PX = Math.log(1.15) / 100;
+const PINCH_ZOOM_PER_PX = 0.01;
+const HIRES_ZOOM = 1.5;
+const RESIZE_HOST = "image.erfi.io";
+const RESIZE_WIDTHS = [1280, 1920, 2560, 3840];
 
 // Pan state (in screen pixels, pre-scale)
 let panX = 0;
@@ -51,6 +62,12 @@ let pinchBaseZoom = 1;
 // Track listeners for proper cleanup
 let keydownHandler: ((e: KeyboardEvent) => void) | null = null;
 let linkController: AbortController | null = null;
+// Document-level listeners added with the overlay (drag tracking)
+let overlayController: AbortController | null = null;
+// Element focused before opening; focus returns here on close
+let returnFocusTo: HTMLElement | null = null;
+// Original URL currently being decoded for the zoom upgrade
+let upgrading = "";
 
 // rAF throttle for drag/pan — prevents layout thrash on high-Hz displays
 let dragRafId = 0;
@@ -67,10 +84,24 @@ function isZoomed(): boolean {
  * Pure compositor — no layout/reflow.
  */
 function applyTransform(img: HTMLImageElement): void {
+  if (zoomLevel > MIN_ZOOM) clampPan(img);
   img.style.transform =
     zoomLevel <= MIN_ZOOM
       ? ""
       : `scale(${zoomLevel}) translate3d(${panX}px, ${panY}px, 0)`;
+}
+
+/**
+ * Keep the image covering the viewport centre: its edge may reach the
+ * centre but not pass it, so a drag can never lose the image off-screen.
+ * offsetWidth/Height are the untransformed layout size (transforms do not
+ * dirty layout, so this read is cheap).
+ */
+function clampPan(img: HTMLImageElement): void {
+  const maxX = img.offsetWidth / 2;
+  const maxY = img.offsetHeight / 2;
+  panX = Math.max(-maxX, Math.min(maxX, panX));
+  panY = Math.max(-maxY, Math.min(maxY, panY));
 }
 
 /**
@@ -104,15 +135,18 @@ function applyZoom(
     const dx = cx - imgCx;
     const dy = cy - imgCy;
 
-    // Adjust pan so the cursor point stays fixed after scale change.
-    // cursor_world = pan + dx/prevLevel → must equal new pan + dx/newLevel
-    panX += dx / prevLevel - dx / newLevel;
-    panY += dy / prevLevel - dy / newLevel;
+    // transform = scale(z) translate(pan), so the image centre sits at
+    // origin + z*pan and the cursor's image point is dx/prevLevel from it.
+    // Keep that point under the cursor at the new scale:
+    //   origin + newLevel*(pan' + dx/prevLevel) = origin + prevLevel*pan + dx
+    panX = (prevLevel * panX + dx) / newLevel - dx / prevLevel;
+    panY = (prevLevel * panY + dy) / newLevel - dy / prevLevel;
   }
 
   zoomLevel = newLevel;
   img.style.cursor = "grab";
   applyTransform(img);
+  if (zoomLevel > HIRES_ZOOM) upgradeToOriginal();
 
   overlay?.classList.add("zoomed");
   toggleNavVisibility(false);
@@ -146,6 +180,7 @@ function toggleNavVisibility(visible: boolean): void {
 function updateZoomIcon(): void {
   const zoomBtn = overlay?.querySelector<HTMLElement>(".lightbox-zoom");
   if (!zoomBtn) return;
+  zoomBtn.setAttribute("aria-label", isZoomed() ? "Zoom out" : "Zoom in");
   zoomBtn.innerHTML = isZoomed()
     ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>`
     : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>`;
@@ -160,23 +195,67 @@ function createOverlay(): HTMLDivElement {
   el.setAttribute("aria-modal", "true");
   el.setAttribute("aria-label", "Image lightbox");
   el.innerHTML = `
-    <button class="lightbox-close" aria-label="Close lightbox">
+    <button type="button" class="lightbox-close" aria-label="Close lightbox">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
-    <button class="lightbox-zoom" aria-label="Zoom in">
+    <button type="button" class="lightbox-zoom" aria-label="Zoom in">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
     </button>
-    <button class="lightbox-prev" aria-label="Previous image">
+    <button type="button" class="lightbox-prev" aria-label="Previous image">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <button class="lightbox-next" aria-label="Next image">
+    <button type="button" class="lightbox-next" aria-label="Next image">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
     </button>
     <img class="lightbox-img" alt="" />
-    <div class="lightbox-counter"></div>
+    <div class="lightbox-counter" aria-live="polite" aria-atomic="true"></div>
   `;
   document.body.appendChild(el);
   return el;
+}
+
+// --------------- Image sources ---------------
+
+/**
+ * Viewport-sized resize for image.erfi.io originals (multi-MB JPEGs);
+ * any other URL is returned unchanged.
+ */
+function displaySrc(src: string): string {
+  let url: URL;
+  try {
+    url = new URL(src);
+  } catch {
+    return src;
+  }
+  if (url.hostname !== RESIZE_HOST || url.pathname.startsWith("/cdn-cgi/")) {
+    return src;
+  }
+  const longest =
+    Math.max(window.innerWidth, window.innerHeight) *
+    Math.min(window.devicePixelRatio || 1, 2);
+  const width =
+    RESIZE_WIDTHS.find((w) => w >= longest) ??
+    RESIZE_WIDTHS[RESIZE_WIDTHS.length - 1];
+  return `${url.origin}/cdn-cgi/image/width=${width},fit=scale-down,format=auto,quality=85${url.pathname}`;
+}
+
+/** Swap in the original once it has decoded, if still on the same image. */
+function upgradeToOriginal(): void {
+  if (!imgEl || images.length === 0) return;
+  const original = images[currentIndex].src;
+  if (imgEl.getAttribute("src") === original || upgrading === original) return;
+  upgrading = original;
+  const index = currentIndex;
+  const hi = new Image();
+  hi.src = original;
+  hi.decode()
+    .then(() => {
+      if (imgEl && currentIndex === index) imgEl.src = original;
+    })
+    .catch(() => undefined)
+    .finally(() => {
+      if (upgrading === original) upgrading = "";
+    });
 }
 
 // --------------- Navigation ---------------
@@ -202,7 +281,7 @@ function showImage(index: number, animate = true): void {
       if (faded) return;
       faded = true;
       el.removeEventListener("transitionend", onFaded);
-      el.src = img.src;
+      el.src = displaySrc(img.src);
       el.alt = img.alt;
       el.style.transform = "";
       el.classList.remove("lightbox-img-exit");
@@ -223,7 +302,7 @@ function showImage(index: number, animate = true): void {
     // Safety net: ensure onFaded fires even if transitionend does not
     setTimeout(onFaded, 200);
   } else {
-    imgEl.src = img.src;
+    imgEl.src = displaySrc(img.src);
     imgEl.alt = img.alt;
     imgEl.style.transform = "";
   }
@@ -239,13 +318,16 @@ function showImage(index: number, animate = true): void {
 
 function preload(index: number): void {
   const img = new Image();
-  img.src = images[index].src;
+  img.src = displaySrc(images[index].src);
 }
 
 // --------------- Open / Close ---------------
 
-function open(index: number): void {
+function open(index: number, trigger?: HTMLElement): void {
+  returnFocusTo =
+    trigger ?? (document.activeElement as HTMLElement | null) ?? null;
   if (!overlay) {
+    overlayController = new AbortController();
     overlay = createOverlay();
     imgEl = overlay.querySelector<HTMLImageElement>(".lightbox-img");
     bindOverlayEvents(overlay);
@@ -254,7 +336,10 @@ function open(index: number): void {
 
   void overlay.offsetHeight;
   overlay.classList.add("lightbox-visible");
-  document.body.style.overflow = "hidden";
+  lockScroll();
+  overlay
+    .querySelector<HTMLButtonElement>(".lightbox-close")
+    ?.focus({ preventScroll: true });
 
   // After open animation, strip the transform transition so drag is instant
   setTimeout(() => {
@@ -271,13 +356,34 @@ function close(): void {
     imgEl.style.transition = "";
   }
   overlay.classList.remove("lightbox-visible");
+  unlockScroll();
+  returnFocusTo?.focus({ preventScroll: true });
+  returnFocusTo = null;
+}
+
+/** Hide page scroll; pad by the scrollbar width so the page does not shift. */
+function lockScroll(): void {
+  const scrollbar = window.innerWidth - document.documentElement.clientWidth;
+  if (scrollbar > 0) document.body.style.paddingRight = `${scrollbar}px`;
+  document.body.style.overflow = "hidden";
+}
+
+function unlockScroll(): void {
   document.body.style.overflow = "";
+  document.body.style.paddingRight = "";
 }
 
 // --------------- Events ---------------
 
 function bindOverlayEvents(el: HTMLDivElement): void {
   const img = el.querySelector<HTMLImageElement>(".lightbox-img")!;
+  const docSignal = overlayController?.signal;
+
+  // Resized variant failed (resizing unavailable, bad path): use the original
+  img.addEventListener("error", () => {
+    const original = images[currentIndex]?.src;
+    if (original && img.getAttribute("src") !== original) img.src = original;
+  });
 
   el.querySelector(".lightbox-close")!.addEventListener("click", close);
   el.querySelector(".lightbox-prev")!.addEventListener("click", () =>
@@ -303,10 +409,6 @@ function bindOverlayEvents(el: HTMLDivElement): void {
   img.addEventListener("click", (e) => {
     if (hasDragged) return;
     e.stopPropagation();
-    if (el.classList.contains("dragging-nav")) {
-      zoomOut(img);
-      return;
-    }
     if (!isZoomed()) {
       // First click: zoom to ~2x fit (natural-ish size)
       applyZoom(img, 2, e.clientX, e.clientY);
@@ -337,40 +439,48 @@ function bindOverlayEvents(el: HTMLDivElement): void {
   });
 
   // Bind mousemove/mouseup to document so drag continues if cursor leaves image
-  document.addEventListener("mousemove", (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
+  document.addEventListener(
+    "mousemove",
+    (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
 
-    // Delta in screen pixels → convert to image-local coords (divide by scale)
-    const dx = (e.clientX - dragStartX) / zoomLevel;
-    const dy = (e.clientY - dragStartY) / zoomLevel;
-    panX = dragPanStartX + dx;
-    panY = dragPanStartY + dy;
+      // Delta in screen pixels → convert to image-local coords (divide by scale)
+      const dx = (e.clientX - dragStartX) / zoomLevel;
+      const dy = (e.clientY - dragStartY) / zoomLevel;
+      panX = dragPanStartX + dx;
+      panY = dragPanStartY + dy;
 
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
-      hasDragged = true;
-    }
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+        hasDragged = true;
+      }
 
-    // Throttle to one transform update per frame — avoids jank on large images
-    if (!dragRafId) {
-      dragRafId = requestAnimationFrame(() => {
-        dragRafId = 0;
-        applyTransform(img);
-      });
-    }
-  });
+      // Throttle to one transform update per frame — avoids jank on large images
+      if (!dragRafId) {
+        dragRafId = requestAnimationFrame(() => {
+          dragRafId = 0;
+          applyTransform(img);
+        });
+      }
+    },
+    { signal: docSignal },
+  );
 
-  document.addEventListener("mouseup", (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    isDragging = false;
-    if (isZoomed()) img.style.cursor = "grab";
+  document.addEventListener(
+    "mouseup",
+    (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      isDragging = false;
+      if (isZoomed()) img.style.cursor = "grab";
 
-    setTimeout(() => {
-      hasDragged = false;
-      img.classList.remove("dragging");
-    }, 100);
-  });
+      setTimeout(() => {
+        hasDragged = false;
+        img.classList.remove("dragging");
+      }, 100);
+    },
+    { signal: docSignal },
+  );
 
   // ── Touch: swipe (1x) / pan (zoomed) / pinch ──
   el.addEventListener(
@@ -456,7 +566,7 @@ function bindOverlayEvents(el: HTMLDivElement): void {
 
   // ── Scroll wheel zoom — centered on cursor, rAF-throttled ──
   let wheelRafId = 0;
-  let pendingWheelLevel = 0;
+  let pendingWheelLog = 0; // accumulated ln(zoom factor) this frame
   let pendingWheelCx = 0;
   let pendingWheelCy = 0;
 
@@ -465,16 +575,22 @@ function bindOverlayEvents(el: HTMLDivElement): void {
     (e) => {
       if (!overlay?.classList.contains("lightbox-visible")) return;
       e.preventDefault();
-      // Accumulate zoom direction — use latest cursor position
-      pendingWheelLevel =
-        e.deltaY < 0 ? zoomLevel * WHEEL_STEP : zoomLevel / WHEEL_STEP;
+      // Horizontal two-finger swipes are not zoom input
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      const px =
+        e.deltaY *
+        (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
+      pendingWheelLog -=
+        px * (e.ctrlKey ? PINCH_ZOOM_PER_PX : WHEEL_ZOOM_PER_PX);
       pendingWheelCx = e.clientX;
       pendingWheelCy = e.clientY;
 
       if (!wheelRafId) {
         wheelRafId = requestAnimationFrame(() => {
           wheelRafId = 0;
-          applyZoom(img, pendingWheelLevel, pendingWheelCx, pendingWheelCy);
+          const level = zoomLevel * Math.exp(pendingWheelLog);
+          pendingWheelLog = 0;
+          applyZoom(img, level, pendingWheelCx, pendingWheelCy);
         });
       }
     },
@@ -503,6 +619,24 @@ function onKeyDown(e: KeyboardEvent): void {
     case "ArrowRight":
       if (!isZoomed()) showImage(currentIndex + 1);
       break;
+    case "Tab": {
+      // Keep focus inside the dialog; skip controls hidden while zoomed
+      const items = Array.from(
+        overlay.querySelectorAll<HTMLElement>("button"),
+      ).filter((b) => b.style.pointerEvents !== "none");
+      if (items.length === 0) break;
+      e.preventDefault();
+      const i = items.indexOf(document.activeElement as HTMLElement);
+      const next = e.shiftKey
+        ? i <= 0
+          ? items.length - 1
+          : i - 1
+        : i === -1 || i === items.length - 1
+          ? 0
+          : i + 1;
+      items[next].focus();
+      break;
+    }
   }
 }
 
@@ -518,9 +652,16 @@ function destroy(): void {
     keydownHandler = null;
   }
 
+  if (overlayController) {
+    overlayController.abort();
+    overlayController = null;
+  }
+  if (overlay?.classList.contains("lightbox-visible")) unlockScroll();
   if (overlay && overlay.parentNode) {
     overlay.parentNode.removeChild(overlay);
   }
+  returnFocusTo = null;
+  upgrading = "";
   overlay = null;
   imgEl = null;
   images = [];
@@ -556,7 +697,7 @@ function initialize(): void {
       "click",
       (e) => {
         e.preventDefault();
-        open(i);
+        open(i, link);
       },
       { signal: linkController!.signal },
     );
