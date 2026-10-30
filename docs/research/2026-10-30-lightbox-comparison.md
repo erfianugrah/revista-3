@@ -59,7 +59,7 @@ Each was reproduced in Playwright (system Chromium; Playwright Firefox 1511 for 
 
 ## What revista-3 should change
 
-> Outcome 2026-10-30: items 1-6 shipped in 4673fd0 with 11 new Playwright specs (`tests/lightbox.spec.ts`); item 7 (state-derived image centre, double-click double-step) shipped later the same day together with a commit-to-layout zoom (scale() during gestures, real width/height once idle): PSNR against a Lanczos render of the original went from 37.18 dB to 50.39 dB in Chromium (2 runs each, identical), with the settled translate rounded to device pixels (unrounded: 46.35 dB).
+> Outcome 2026-10-30: items 1-6 shipped in 4673fd0 with 11 new Playwright specs (`tests/lightbox.spec.ts`); item 7 (state-derived image centre, double-click double-step) shipped later the same day together with a commit-to-layout zoom (scale() during gestures, real width/height once idle): PSNR against a Lanczos render of the original went from 37.18 dB to 50.39 dB in Chromium (2 runs each, identical), with the settled translate rounded to device pixels (unrounded: 46.35 dB). Method, script and all variants: [raw/2026-10-30-lightbox-comparison/zoom-sharpness/](raw/2026-10-30-lightbox-comparison/zoom-sharpness/).
 
 Ordered by user impact. Cards are listed at the end of this doc.
 

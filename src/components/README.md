@@ -93,6 +93,6 @@ The following were removed during the code quality refactoring:
 - `Search.astro` - superseded by Pagefind integration
 - `Social.astro` / `HomepageMasonry.astro` - dead code, no references
 - `fslightbox.js` - vendored lightbox, replaced by custom `lightbox.ts`
-- GLightbox CSS/JS - replaced by custom lightbox (73 KB -> ~2.4 KB gzipped)
+- GLightbox CSS/JS - replaced by custom lightbox (73 KB -> ~3.4 KB gzipped)
 - `FormattedDate.astro` - date formatting now handled inline via `formatDate()` from `utils.ts`
 - `framer-motion` - removed as dependency; Hamburger.astro and ThemeToggle.astro now use pure CSS transitions

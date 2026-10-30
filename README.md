@@ -504,7 +504,7 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
 
 ### Media Management
 
-- **`lightbox.ts`**: Custom image lightbox (replaced GLightbox - 73 KB -> ~3.2 KB gzipped):
+- **`lightbox.ts`**: Custom image lightbox (replaced GLightbox - 73 KB -> ~3.4 KB gzipped):
   - Multi-level zoom: click cycles 2x -> 3.5x -> reset; scroll wheel for cursor-anchored zoom proportional to scroll distance (up to 5x, trackpad pinch via ctrl+wheel); continuous pinch zoom on touch; pan clamped so the image always covers the viewport centre
   - Opens image.erfi.io originals as a viewport-sized Cloudflare Image Resizing variant (`/cdn-cgi/image/`), swaps to the original past 1.5x zoom or if the resize fails
   - Dialog semantics: focus moves in on open, Tab is trapped, focus returns to the clicked image on close; `aria-live` counter; `prefers-reduced-motion` disables transitions
@@ -903,7 +903,7 @@ The photo gallery displays use a CSS Grid masonry layout with focal-point-aware 
 
 3. **Native CSS Masonry (Progressive Enhancement)**: `@supports (grid-template-rows: masonry)` automatically upgrades to true masonry layout when browsers ship CSS Grid Level 3, with no cropping needed.
 
-4. **Custom Lightbox Integration**: Gallery images open in a purpose-built lightbox (~3.2 KB gzipped) with multi-level zoom, cursor-anchored scroll zoom, drag/pan, pinch zoom, keyboard and touch navigation — replacing the 73 KB GLightbox dependency.
+4. **Custom Lightbox Integration**: Gallery images open in a purpose-built lightbox (~3.4 KB gzipped) with multi-level zoom, cursor-anchored scroll zoom, drag/pan, pinch zoom, keyboard and touch navigation — replacing the 73 KB GLightbox dependency.
 
 5. **Image Optimization**: All thumbnails are processed through Astro's `getImage()` to AVIF format, while lightbox `href` links point to original CDN images; the lightbox opens a resized variant and loads the original only when zoomed.
 
