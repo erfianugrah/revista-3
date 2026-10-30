@@ -504,13 +504,15 @@ Client-side JavaScript lives in the `src/scripts/` directory, providing essentia
 
 ### Media Management
 
-- **`lightbox.ts`**: Custom image lightbox (replaced GLightbox - 73 KB -> ~2.4 KB gzipped):
-  - Multi-level zoom: click cycles 2x -> 3.5x -> reset; scroll wheel for cursor-anchored incremental zoom (up to 5x); continuous pinch zoom on touch
+- **`lightbox.ts`**: Custom image lightbox (replaced GLightbox - 73 KB -> ~3.2 KB gzipped):
+  - Multi-level zoom: click cycles 2x -> 3.5x -> reset; scroll wheel for cursor-anchored zoom proportional to scroll distance (up to 5x, trackpad pinch via ctrl+wheel); continuous pinch zoom on touch; pan clamped so the image always covers the viewport centre
+  - Opens image.erfi.io originals as a viewport-sized Cloudflare Image Resizing variant (`/cdn-cgi/image/`), swaps to the original past 1.5x zoom or if the resize fails
+  - Dialog semantics: focus moves in on open, Tab is trapped, focus returns to the clicked image on close; `aria-live` counter; `prefers-reduced-motion` disables transitions
   - Zoom uses `scale() + translate3d()` - a single CSS transform, pure compositor operation, no layout recalculation on any frame
   - Keyboard navigation (arrow keys, Escape zooms out first then closes)
   - Touch swipe navigation at 1x, drag/pan when zoomed
   - Fade transitions, prev/next/close/zoom controls, image counter
-  - Adjacent image preloading, body scroll lock
+  - Adjacent image preloading (resized variants), body scroll lock with scrollbar-width compensation
   - Full View Transitions lifecycle support (destroy/reinit on `astro:page-load`)
 
 - **`getRandomImage.ts`**: Entry point for tag-page random images -- wires the `.randomimage` selector via `initRandomImages()` from `randomImage.ts` on `astro:page-load`
@@ -652,7 +654,7 @@ While the site is currently in English, I've structured it with future translati
    - Configured with the typography plugin for long-form content
 
 5. **Playwright**:
-   - End-to-end test suite with 88 tests across 15 spec files
+   - End-to-end test suite with 100 tests across 15 spec files
    - Run with `bunx playwright test` or target a single file with `bunx playwright test tests/spec-name.spec.ts`
 
 ## CI/CD Workflow
@@ -900,9 +902,9 @@ The photo gallery displays use a CSS Grid masonry layout with focal-point-aware 
 
 3. **Native CSS Masonry (Progressive Enhancement)**: `@supports (grid-template-rows: masonry)` automatically upgrades to true masonry layout when browsers ship CSS Grid Level 3, with no cropping needed.
 
-4. **Custom Lightbox Integration**: Gallery images open in a purpose-built lightbox (~2.4 KB gzipped) with multi-level zoom, cursor-anchored scroll zoom, drag/pan, pinch zoom, keyboard and touch navigation — replacing the 73 KB GLightbox dependency.
+4. **Custom Lightbox Integration**: Gallery images open in a purpose-built lightbox (~3.2 KB gzipped) with multi-level zoom, cursor-anchored scroll zoom, drag/pan, pinch zoom, keyboard and touch navigation — replacing the 73 KB GLightbox dependency.
 
-5. **Image Optimization**: All thumbnails are processed through Astro's `getImage()` to AVIF format, while lightbox `href` links point to original CDN images for full-resolution viewing.
+5. **Image Optimization**: All thumbnails are processed through Astro's `getImage()` to AVIF format, while lightbox `href` links point to original CDN images; the lightbox opens a resized variant and loads the original only when zoomed.
 
 ## Code of Conduct
 

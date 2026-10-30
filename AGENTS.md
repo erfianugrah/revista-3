@@ -56,7 +56,7 @@ node scripts/parser.js         # verify CLI/content schema drift
 
 ## Single-Test / Targeted Verification
 
-The repository has a Playwright end-to-end test suite (88 tests across 15 spec files).
+The repository has a Playwright end-to-end test suite (100 tests across 15 spec files).
 
 ```sh
 bunx playwright test                                    # run full test suite

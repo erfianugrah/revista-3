@@ -12,25 +12,25 @@ Raw research: [raw/2026-10-30-lightbox-comparison/](raw/2026-10-30-lightbox-comp
 
 ## Feature matrix
 
-| Area | revista-3 | GLSSWRKS |
-|---|---|---|
-| Structure | one `<img>`, crossfade on prev/next | horizontal scroll-snap strip of all images (`snap-x snap-mandatory scroll-smooth`) |
-| Library | none (vanilla TS) | none (Vue SFC) |
-| Zoom | click cycle, wheel, touch pinch, button; max 5x | none; only the browser's own page zoom |
-| Pan when zoomed | mouse + touch drag, rAF-throttled, unclamped | n/a |
-| Prev/next | buttons, arrows, swipe, wraps | buttons + arrows + native swipe, stops at ends (buttons vanish) |
-| Close | button, backdrop, Escape | button, backdrop, Escape |
-| Back button closes | no | no |
-| Image in lightbox | original via `link.href` (adam_1.jpg 3,256,327 B JPEG) | Shopify srcset 720-2000w, `sizes="90vw"` |
-| Hi-res on zoom | always hi-res (never anything else) | never |
-| Neighbour preload | yes, both neighbours, full originals | `loading="lazy"` on strip images |
-| Overlay | `rgba(0,0,0,.94)`, no blur | `bg-black/90 backdrop-blur-sm` full-screen |
-| Dialog semantics | `role="dialog"` `aria-modal` `aria-label` | none |
-| Focus on open / trap / restore | none / none / none | none / none / none, plus `focus:outline-none` on every control |
-| Counter live region | no | no counter |
-| Reduced motion | ignored | ignored |
-| Scroll lock | `overflow:hidden`, no gutter compensation | same, restore deferred one rAF |
-| Mobile pinch on images | handled by own JS (`touch-action: none`) | blocked: strip is `touch-action: pan-x`, gallery `pan-x pan-y` |
+| Area                           | revista-3                                              | GLSSWRKS                                                                           |
+| ------------------------------ | ------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| Structure                      | one `<img>`, crossfade on prev/next                    | horizontal scroll-snap strip of all images (`snap-x snap-mandatory scroll-smooth`) |
+| Library                        | none (vanilla TS)                                      | none (Vue SFC)                                                                     |
+| Zoom                           | click cycle, wheel, touch pinch, button; max 5x        | none; only the browser's own page zoom                                             |
+| Pan when zoomed                | mouse + touch drag, rAF-throttled, unclamped           | n/a                                                                                |
+| Prev/next                      | buttons, arrows, swipe, wraps                          | buttons + arrows + native swipe, stops at ends (buttons vanish)                    |
+| Close                          | button, backdrop, Escape                               | button, backdrop, Escape                                                           |
+| Back button closes             | no                                                     | no                                                                                 |
+| Image in lightbox              | original via `link.href` (adam_1.jpg 3,256,327 B JPEG) | Shopify srcset 720-2000w, `sizes="90vw"`                                           |
+| Hi-res on zoom                 | always hi-res (never anything else)                    | never                                                                              |
+| Neighbour preload              | yes, both neighbours, full originals                   | `loading="lazy"` on strip images                                                   |
+| Overlay                        | `rgba(0,0,0,.94)`, no blur                             | `bg-black/90 backdrop-blur-sm` full-screen                                         |
+| Dialog semantics               | `role="dialog"` `aria-modal` `aria-label`              | none                                                                               |
+| Focus on open / trap / restore | none / none / none                                     | none / none / none, plus `focus:outline-none` on every control                     |
+| Counter live region            | no                                                     | no counter                                                                         |
+| Reduced motion                 | ignored                                                | ignored                                                                            |
+| Scroll lock                    | `overflow:hidden`, no gutter compensation              | same, restore deferred one rAF                                                     |
+| Mobile pinch on images         | handled by own JS (`touch-action: none`)               | blocked: strip is `touch-action: pan-x`, gallery `pan-x pan-y`                     |
 
 ## Verified findings
 
@@ -58,6 +58,8 @@ Each was reproduced in Playwright (system Chromium; Playwright Firefox 1511 for 
 6. **Dead ends**: lightbox Prev/Next vanish and arrow keys do nothing at the ends, while the mobile gallery wraps.
 
 ## What revista-3 should change
+
+> Outcome 2026-10-30: items 1-6 shipped in 4673fd0 with 11 new Playwright specs (`tests/lightbox.spec.ts`); item 7 (state-derived image centre, double-click double-step) not done.
 
 Ordered by user impact. Cards are listed at the end of this doc.
 
