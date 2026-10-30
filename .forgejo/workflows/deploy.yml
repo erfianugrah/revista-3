@@ -148,6 +148,16 @@ jobs:
           provenance: true
           sbom: true
 
+      # LAN copy of erfianugrah.com (servarr composer stack). Redeploy only
+      # after the image push; composer's push webhook fires minutes before
+      # the image exists (revista-3#2).
+      - name: Redeploy servarr stack via composer
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          COMPOSER_API_KEY: ${{ secrets.COMPOSER_API_KEY }}
+          EXPECT_SHA: ${{ github.sha }}
+        run: bash scripts/composer-deploy.sh
+
   inspect-docker-image:
     needs: build-revista
     if: github.event_name != 'pull_request'
