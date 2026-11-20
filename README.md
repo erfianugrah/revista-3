@@ -1,7 +1,7 @@
 <p>
   <img alt="Version" src="https://img.shields.io/github/v/tag/erfianugrah/revista-3?label=version" />
-  <img alt="Astro" src="https://img.shields.io/badge/Astro-7.4.1-FF5D01.svg?logo=astro&logoColor=white" />
-  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.2.2-38B2AC.svg?logo=tailwind-css&logoColor=white" />
+  <img alt="Astro" src="https://img.shields.io/badge/Astro-7.4.7-FF5D01.svg?logo=astro&logoColor=white" />
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.3.5-38B2AC.svg?logo=tailwind-css&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9.3-3178C6.svg?logo=typescript&logoColor=white" />
   <img alt="MDX" src="https://img.shields.io/badge/%40astrojs%2Fmdx-8.0.0-1B1F24.svg?logo=mdx&logoColor=white" />
   <img alt="Bun" src="https://img.shields.io/badge/Bun-Latest-F9F1E1.svg?logo=bun&logoColor=black" />
@@ -17,7 +17,7 @@
 
 ## Overview
 
-Revista is a photography portfolio and blog built on Astro v7.4.1. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
+Revista is a photography portfolio and blog built on Astro v7.4.7. I created it to showcase various photography collections and writing organized into different categories like long-form, short-form, muses, zeitweilig, and my CV. The project prioritizes speed and visual design while using Astro's content collection API to manage everything efficiently.
 
 The project deploys to Cloudflare Workers (static assets) and as a Docker image.
 
@@ -417,7 +417,7 @@ Each collection follows the same pattern of routes: index, individual posts, tag
 
 ## Styling System
 
-The site uses Tailwind CSS v4.2.2 for styling, with all configuration living in `src/styles/global.css` via `@theme` blocks, `@plugin` directives, and `@custom-variant` declarations:
+The site uses Tailwind CSS v4.3.5 for styling, with all configuration living in `src/styles/global.css` via `@theme` blocks, `@plugin` directives, and `@custom-variant` declarations:
 
 ### Design System Components
 
@@ -578,11 +578,11 @@ I've optimized the site in several ways:
 
 3. **Preloading and Prefetching**: Astro's `prefetch` feature loads linked pages before the user clicks, making navigation feel instant.
 
-4. **Efficient Bundling**: Astro v7.4.1 includes improved bundling and tree-shaking to minimize client-side code, with enhanced hydration strategies and faster component rendering.
+4. **Efficient Bundling**: Astro v7.4.7 includes improved bundling and tree-shaking to minimize client-side code, with enhanced hydration strategies and faster component rendering.
 
 5. **Cloudflare CDN**: The site uses Cloudflare's CDN with custom cache headers to serve content from edge locations worldwide.
 
-6. **Tailwind Optimizations**: Tailwind CSS v4.2.2's improved performance and lighter bundle size help pages load quickly.
+6. **Tailwind Optimizations**: Tailwind CSS v4.3.5's improved performance and lighter bundle size help pages load quickly.
 
 ## Search Functionality
 
@@ -651,7 +651,7 @@ While the site is currently in English, I've structured it with future translati
    - The Astro Prettier plugin (prettier-plugin-astro v0.14.1) properly formats .astro files
 
 4. **Tailwind CSS v4**:
-   - The latest Tailwind CSS v4.2.2 with better performance and smaller bundles
+   - The latest Tailwind CSS v4.3.5 with better performance and smaller bundles
    - Configured with the typography plugin for long-form content
 
 5. **Playwright**:
@@ -762,8 +762,8 @@ To start working with this project:
    ```
 
    This installs:
-   - Astro v7.4.1
-   - Tailwind CSS v4.2.2
+   - Astro v7.4.7
+   - Tailwind CSS v4.3.5
    - @astrojs/mdx v8.0.0 and other dependencies
 
 1. Run the development server:

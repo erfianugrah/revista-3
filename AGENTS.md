@@ -156,7 +156,7 @@ bun x hyperlink dist/path/to/page.html --skip-external
 
 ## Styling and Tailwind
 
-- Tailwind CSS v4.2.2 is wired through `@tailwindcss/vite` in `astro.config.mjs`.
+- Tailwind CSS v4.3.5 is wired through `@tailwindcss/vite` in `astro.config.mjs`.
 - All config lives in `src/styles/global.css` as `@theme` blocks, `@plugin` directives, and `@custom-variant` declarations. No separate Tailwind config file exists.
 - Dark mode uses `@custom-variant dark (&:where(.dark, .dark *))`.
 - Custom breakpoints are defined in the `@theme` block: `sm=800`, `md=1200`, `lg=1900`, `xl=2500`.
