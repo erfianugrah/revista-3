@@ -2,7 +2,7 @@
 
 > Last verified: 2026-10-30. Subjects: `src/scripts/lightbox.ts` + `src/styles/lightbox.css` at b6a3706 (live https://www.erfianugrah.com/long_form/adam/), and the Vue gallery/lightbox component in `_nuxt/CAiEnZTW.js` on https://glsswrks.gg/products/polarity-series (Nuxt on Vercel, Vue 3.5.27, Shopify headless).
 
-Raw research: [raw/2026-10-30-lightbox-comparison/](raw/2026-10-30-lightbox-comparison/) (`revista-audit.md`, `glsswrks-audit.md` - worker dumps; two of their claims are corrected below). The pretty-printed GLSSWRKS chunk is third-party code and stays local only (`~/.local/state/agent-work/lightbox-comparison/glsswrks-pretty.js`, local only, not in the repo).
+Raw research: [raw/2026-10-30-lightbox-comparison/](raw/2026-10-30-lightbox-comparison/) (`revista-audit.md`, `glsswrks-audit.md` - worker dumps; two of their claims are corrected below). The pretty-printed GLSSWRKS chunk is third-party code and stays local only (a local scratch folder, local only, not in the repo).
 
 ## Verdict
 
@@ -86,4 +86,4 @@ Ordered by user impact. Cards are listed at the end of this doc.
 - Zen itself was not driven; Firefox results come from Playwright's Firefox 1511 build.
 - revista performance counts come from 3 runs of one synthetic pinch on one page; they show absence of jank under software rendering, not GPU timings.
 
-Cards: revista-3#3 (zoom/pan bugs + tests), revista-3#4 (resized AVIF on open), revista-3#5 (accessibility).
+Follow-ups: zoom/pan bugs + tests, resized AVIF on open, accessibility.

@@ -57,10 +57,10 @@ networks:
 ```
 
 The bridge name (`revista0`) must appear in `dockerBridges` in
-`~/infra/router/configuration.nix` (the router's nftables forward chain
+the router NixOS config (the router's nftables forward chain
 is policy-drop). The edge Caddy runs on the same host
 (`network_mode: host`), so no macvlan is needed - it proxies
-`revista.erfi.io` and `erfianugrah.com` straight to `172.20.5.2:80`.
+`revista.erfi.io` and `erfianugrah.com` straight to `<revista-bridge-ip>:80`.
 
 - **`compose.yaml`** - the servarr deployment (rollback path). Dual
   network: custom bridge for reverse proxy routing plus a shared macvlan
@@ -87,7 +87,7 @@ services:
       revista:
         ipv4_address: 172.19.23.2
       lan:
-        ipv4_address: 10.0.71.58
+        ipv4_address: <lan-ip>
         mac_address: "02:42:0a:00:47:3a"
         gw_priority: 100
 

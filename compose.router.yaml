@@ -6,11 +6,11 @@
 #     static bridge IP suffices
 #   * pinned bridge name revista0 (driver_opts) - REQUIRED: the router's
 #     nftables forward chain is policy-drop and only allows bridges
-#     listed in dockerBridges in ~/infra/router/configuration.nix
+#     listed in dockerBridges in the router NixOS config
 #   * subnet from the router-local 172.20.x pool
 #
 # Caddy entries: revista.erfi.io + erfianugrah.com -> 172.20.5.2:80
-# (~/infra/ergo/caddy-compose/deploy/edge/Caddyfile).
+# (the edge Caddyfile in the Caddy stack repo).
 #
 # Deploy via composer (host=local) - point it at this repo + path
 # compose.router.yaml. No .env needed.
@@ -42,7 +42,7 @@ networks:
     driver: bridge
     driver_opts:
       # Pinned bridge name - MUST also appear in dockerBridges in
-      # ~/infra/router/configuration.nix or the nftables forward chain
+      # the router NixOS config or the nftables forward chain
       # (policy drop) blocks all traffic to/from this network.
       com.docker.network.bridge.name: revista0
     ipam:

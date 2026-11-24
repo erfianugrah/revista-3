@@ -28,7 +28,7 @@ networks:
       config:
         - subnet: 172.19.23.0/24
           gateway: 172.19.23.1
-  # Shared macvlan from the servarr stack (servarr-compose
+  # Shared macvlan from the servarr stack (the servarr stack repo
   # runbooks/lan-macvlan.md): first-class LAN IP for the edge caddy on MS-01.
   lan:
     external: true

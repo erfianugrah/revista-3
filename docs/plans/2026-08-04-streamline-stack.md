@@ -1353,7 +1353,7 @@ The loop reads a fixed path, `.pi/harness.json`. That file currently holds the
 - [ ] **Step 1: Park the existing manifest**
 
 ```bash
-cd /home/erfi/revista-3
+cd <repo>
 cp .pi/harness.json .pi/harness.docs.json
 git add .pi/harness.docs.json
 ```

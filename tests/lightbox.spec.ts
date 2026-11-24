@@ -103,7 +103,7 @@ test.describe("Lightbox", () => {
   });
 });
 
-// ── Zoom, pan, image loading, accessibility (revista-3#3, #4, #5) ──
+// ── Zoom, pan, image loading, accessibility (2026-10) ──
 
 test.describe("Lightbox zoom and pan", () => {
   const galleryPage = "/long_form/adam/";

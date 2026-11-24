@@ -82,7 +82,7 @@
 
 ## De-minified Script (readable reconstruction)
 
-Removed from the repo: it is a readable copy of third-party code. Kept at `~/.local/state/agent-work/lightbox-comparison/glsswrks-deminified.md` (local only, not in the repo). Line numbers below refer to `glsswrks-pretty.js` in the same local folder.
+Removed from the repo: it is a readable copy of third-party code. Kept at a local scratch file (local only, not in the repo). Line numbers below refer to `glsswrks-pretty.js` in the same local folder.
 
 ## Section Audits
 

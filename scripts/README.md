@@ -195,7 +195,7 @@ The tool supports all content collections defined in `content.config.ts`:
    description: A winter wander through Stockholm's glass-filled business district
    ---
 
-   ? Create file at /home/erfi/revista-3/src/content/muses/2025-05-19-stockholm-urban-reflections.mdx? Yes
+   ? Create file at <repo>/src/content/muses/2025-05-19-stockholm-urban-reflections.mdx? Yes
    ```
 
 5. File is created and next steps are shown

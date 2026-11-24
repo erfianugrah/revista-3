@@ -4,11 +4,11 @@
 # POST /stacks/revista/deploy = git sync -> compose pull -> compose up -d.
 # Before this ran from CI, composer's push webhook redeployed at push time,
 # minutes before the image existed, so the LAN copy ran the previous build
-# (revista-3#2).
+# (2026-10).
 #
 # Job containers on the router's forgejo bridge can only reach the host
 # through the edge Caddy at 10.0.10.1:443, so the public hostname is pinned
-# there with --resolve (same reasoning as memledger scripts/composer-deploy.sh).
+# there with --resolve (same reasoning as the session-ledger deploy script).
 #
 # Needs COMPOSER_API_KEY in the env. Never prints it.
 #   COMPOSER_URL  default https://composer.erfi.io
